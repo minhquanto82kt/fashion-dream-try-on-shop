@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { ProductCard } from "@/components/product-card";
-import { CATEGORIES, PRODUCTS } from "@/data/products";
+import { PRODUCTS } from "@/data/products";
 
 const HERO_SLIDES = [
   {
@@ -72,7 +72,7 @@ function Index() {
           <div className="fashion-hero__primary">
             <p className="fashion-eyebrow">01 / AI FASHION SYSTEM</p>
             <h1 className="fashion-display">
-              Dress the<br /><i>future.</i>
+              Dress the<br /><span className="fashion-accent">future.</span>
             </h1>
             <p className="fashion-hero__lede">
               Một wardrobe được chọn theo gu của bạn — kết hợp commerce, AI styling và virtual try-on trong cùng một trải nghiệm.
@@ -122,7 +122,12 @@ function Index() {
           <div className="fashion-section-number">02</div>
           <div>
             <p className="fashion-eyebrow">From browsing to fitting</p>
-            <h2 className="fashion-section-title">Không chỉ chọn đồ.<br /><i>Chọn cách bạn xuất hiện.</i></h2>
+            <h2 className="fashion-section-title fashion-section-title--statement">
+              <span className="statement-line statement-line--solid">KHÔNG CHỈ</span>
+              <span className="statement-line statement-line--solid statement-line--offset">CHỌN ĐỒ.</span>
+              <span className="statement-line statement-line--accent-small">CHỌN CÁCH BẠN</span>
+              <span className="statement-line statement-line--accent-display">XUẤT HIỆN.</span>
+            </h2>
           </div>
           <p className="fashion-intro-copy">
             Fashion Dream giữ AI try-on làm core. Commerce được thiết kế lại để sản phẩm, outfit và AI stylist nối liền thành một hành trình mua sắm tự nhiên.
@@ -136,7 +141,7 @@ function Index() {
           </div>
           <div className="fashion-ai-feature__copy">
             <p className="fashion-eyebrow">Personal styling system</p>
-            <h2 className="fashion-section-title">Your look,<br /><i>your logic.</i></h2>
+            <h2 className="fashion-section-title">Your look,<br /><span className="fashion-accent">your logic.</span></h2>
             <p>Chọn một món đồ, đưa ảnh của bạn vào, rồi để AI giúp hình dung outfit trước khi quyết định mua.</p>
             <div className="fashion-feature-list">
               <div><b>01</b><span>Concept theo mood</span></div>
@@ -149,7 +154,7 @@ function Index() {
 
         <section className="fashion-products-section">
           <div className="fashion-section-head">
-            <div><p className="fashion-eyebrow">03 / THE COLLECTION</p><h2 className="fashion-section-title">New<br /><i>drop.</i></h2></div>
+            <div><p className="fashion-eyebrow">03 / THE COLLECTION</p><h2 className="fashion-section-title">New<br /><span className="fashion-accent">drop.</span></h2></div>
             <Link to="/shop" className="fashion-text-link">View all products ↗</Link>
           </div>
           <div className="fashion-product-grid">
@@ -158,7 +163,7 @@ function Index() {
         </section>
 
         <section className="fashion-flow">
-          <div><p className="fashion-eyebrow">04 / THE EXPERIENCE</p><h2 className="fashion-section-title">See it.<br /><i>Try it.</i><br />Wear it.</h2></div>
+          <div><p className="fashion-eyebrow">04 / THE EXPERIENCE</p><h2 className="fashion-section-title">See it.<br /><span className="fashion-accent">Try it.</span><br />Wear it.</h2></div>
           <div className="fashion-flow__steps">
             <div><span>01</span><h3>Discover</h3><p>Browse curated products and collections.</p></div>
             <div><span>02</span><h3>Try</h3><p>Upload your photo and visualize the fit with AI.</p></div>
@@ -169,7 +174,7 @@ function Index() {
 
         <section className="fashion-editorial">
           <img src="https://images.pexels.com/photos/18698406/pexels-photo-18698406.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="UpThink streetwear editorial" loading="lazy" />
-          <div><p className="fashion-eyebrow">EDITORIAL / SAIGON</p><h2>Street is<br /><i>the studio.</i></h2><Link to="/about" className="fashion-btn fashion-btn--light">Our story ↗</Link></div>
+          <div><p className="fashion-eyebrow">EDITORIAL / SAIGON</p><h2>Street is<br /><span className="fashion-accent">the studio.</span></h2><Link to="/about" className="fashion-btn fashion-btn--light">Our story ↗</Link></div>
         </section>
       </main>
       <SiteFooter />
