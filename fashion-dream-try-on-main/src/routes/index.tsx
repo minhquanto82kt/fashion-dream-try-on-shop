@@ -1,11 +1,29 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { ProductCard } from "@/components/product-card";
 import { CATEGORIES, PRODUCTS } from "@/data/products";
 
-const HERO =
-  "https://images.pexels.com/photos/7271149/pexels-photo-7271149.jpeg?auto=compress&cs=tinysrgb&w=1920";
+const HERO_SLIDES = [
+  {
+    image: "https://images.pexels.com/photos/7271149/pexels-photo-7271149.jpeg?auto=compress&cs=tinysrgb&w=1920",
+    label: "LOOK / 001",
+    title: "STREET / PERSONAL",
+  },
+  {
+    image: "https://images.pexels.com/photos/17037339/pexels-photo-17037339.jpeg?auto=compress&cs=tinysrgb&w=1920",
+    label: "LOOK / 002",
+    title: "AI / FITTING",
+  },
+  {
+    image: "https://images.pexels.com/photos/18698406/pexels-photo-18698406.jpeg?auto=compress&cs=tinysrgb&w=1920",
+    label: "LOOK / 003",
+    title: "SAIGON / AFTER DARK",
+  },
+];
+
+const HERO = HERO_SLIDES[0].image;
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,13 +48,28 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const featured = PRODUCTS.slice(0, 6);
+  const [slide, setSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const active = HERO_SLIDES[slide];
+
+  useEffect(() => {
+    if (isPaused) return;
+    const timer = window.setInterval(() => {
+      setSlide((current) => (current + 1) % HERO_SLIDES.length);
+    }, 5200);
+    return () => window.clearInterval(timer);
+  }, [isPaused]);
 
   return (
     <div className="min-h-screen fashion-site">
       <SiteNav />
-      <header className="fashion-hero">
+      <header
+        className="fashion-hero"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+      >
         <div className="fashion-hero__copy">
-          <div>
+          <div className="fashion-hero__primary">
             <p className="fashion-eyebrow">01 / AI FASHION SYSTEM</p>
             <h1 className="fashion-display">
               Dress the<br /><i>future.</i>
@@ -44,23 +77,46 @@ function Index() {
             <p className="fashion-hero__lede">
               Một wardrobe được chọn theo gu của bạn — kết hợp commerce, AI styling và virtual try-on trong cùng một trải nghiệm.
             </p>
-          </div>
-          <div className="fashion-hero__actions">
-            <Link to="/shop" className="fashion-btn">Explore collection ↗</Link>
-            <Link to="/ai" className="fashion-btn fashion-btn--ghost">Start AI try-on</Link>
+            <div className="fashion-hero__actions">
+              <Link to="/shop" className="fashion-btn">Explore collection ↗</Link>
+              <Link to="/ai" className="fashion-btn fashion-btn--ghost">Start AI try-on</Link>
+            </div>
           </div>
           <div className="fashion-hero__meta">
             <span>UPTHINK / IUH</span><span>SAIGON — 2026</span><span>SYS_02 // ONLINE</span>
           </div>
         </div>
         <div className="fashion-hero__art">
-          <img src={HERO} alt="Streetwear fashion editorial" fetchPriority="high" />
+          {HERO_SLIDES.map((item, index) => (
+            <img
+              key={item.image}
+              src={item.image}
+              alt="Streetwear fashion editorial"
+              fetchPriority={index === 0 ? "high" : undefined}
+              className={index === slide ? "is-active" : ""}
+            />
+          ))}
           <div className="fashion-hero__overlay" />
-          <span className="fashion-hero__label">LOOK / 001</span>
+          <div className="fashion-hero__scan" />
+          <div className="fashion-hero__hud">
+            <span className="fashion-hero__status"><b /> AI VISION / LIVE</span>
+            <span>{active.title}</span>
+          </div>
+          <span className="fashion-hero__label">{active.label}</span>
           <span className="fashion-hero__vertical">VIRTUAL FIT / PERSONAL EDIT</span>
+          <div className="fashion-hero__dots" aria-label="Hero slides">
+            {HERO_SLIDES.map((item, index) => (
+              <button
+                key={item.label}
+                type="button"
+                aria-label={`Xem ${item.label}`}
+                className={index === slide ? "is-active" : ""}
+                onClick={() => setSlide(index)}
+              />
+            ))}
+          </div>
         </div>
       </header>
-
       <main>
         <section className="fashion-intro-section">
           <div className="fashion-section-number">02</div>
