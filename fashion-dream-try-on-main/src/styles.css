@@ -1,0 +1,123 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-electric: var(--electric);
+  --color-beige: var(--beige);
+  --color-silver: var(--silver);
+  --color-cyan: var(--y2k-cyan);
+  --font-display: "Oswald", sans-serif;
+  --font-sans: "Work Sans", sans-serif;
+}
+
+:root {
+  --radius: 0px;
+  --ink: oklch(0.19 0.006 196);
+  --background: oklch(0.19 0.006 196);
+  --foreground: oklch(0.95 0.008 85);
+  --card: oklch(0.24 0.004 240);
+  --card-foreground: oklch(0.95 0.008 85);
+  --popover: oklch(0.22 0.004 240);
+  --popover-foreground: oklch(0.95 0.008 85);
+  --primary: oklch(0.91 0.22 128);
+  --primary-foreground: oklch(0.19 0.006 196);
+  --secondary: oklch(0.28 0.004 240);
+  --secondary-foreground: oklch(0.95 0.008 85);
+  --muted: oklch(0.26 0.004 240);
+  --muted-foreground: oklch(0.65 0.008 240);
+  --accent: oklch(0.83 0.13 205);
+  --accent-foreground: oklch(0.19 0.006 196);
+  --destructive: oklch(0.62 0.23 27);
+  --destructive-foreground: oklch(0.97 0 0);
+  --border: oklch(0.33 0.004 240);
+  --input: oklch(0.33 0.004 240);
+  --ring: oklch(0.91 0.22 128);
+  --electric: oklch(0.91 0.22 128);
+  --beige: oklch(0.86 0.017 80);
+  --silver: oklch(0.62 0.006 240);
+  --y2k-cyan: oklch(0.83 0.13 205);
+  --gradient-gloss: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--electric) 20%, transparent),
+    transparent 60%
+  );
+  --shadow-lift: 0 24px 60px -30px color-mix(in oklab, var(--electric) 45%, transparent);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+  }
+}
+
+@utility eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--silver);
+}
+
+@utility gloss {
+  background-image: var(--gradient-gloss);
+}
+
+/* FashionTry / Atelier commerce layer */
+:root { --ft-paper:#f3e4c9; --ft-ink:#0a2947; --ft-acid:#08cb00; --ft-muted:#d3d4c0; --ft-serif:"Bodoni Moda", Georgia, serif; --ft-sans:"Space Grotesk", sans-serif; --ft-impact:"Anton", Impact, sans-serif; }
+:root[data-theme="cream"] { --background:var(--ft-paper); --foreground:var(--ft-ink); --card:#d3d4c0; --card-foreground:var(--ft-ink); --popover:var(--ft-paper); --popover-foreground:var(--ft-ink); --muted:#d3d4c0; --muted-foreground:#253900; --border:rgba(10,41,71,.28); --primary:var(--ft-acid); --primary-foreground:#000; --accent:var(--ft-acid); --accent-foreground:#000; --input:#d3d4c0; --ring:var(--ft-acid); --electric:var(--ft-acid); --beige:#253900; --silver:#4e5c63; }
+.fashion-site{font-family:var(--ft-sans); background:var(--background); color:var(--foreground)}
+.fashion-nav{position:fixed;inset:0 0 auto;z-index:50;border-bottom:1px solid var(--border);background:color-mix(in oklab,var(--background) 90%,transparent);backdrop-filter:blur(14px)}
+.fashion-nav__inner{width:min(1240px,calc(100% - 48px));height:74px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.fashion-brand{display:flex;align-items:center;gap:11px;color:inherit;text-decoration:none}.fashion-brand__mark{width:28px;height:28px;display:grid;place-items:center;background:var(--primary);color:#000;font-family:var(--ft-impact);font-size:15px}.fashion-brand__name{font-family:var(--ft-impact);letter-spacing:.1em;font-size:19px}.fashion-brand__name span{color:var(--primary)}.fashion-brand__meta{font:9px var(--ft-sans);letter-spacing:.18em;color:var(--primary);margin-left:4px}
+.fashion-nav__links{display:flex;gap:32px}.fashion-nav__links a{font-size:11px;text-transform:uppercase;letter-spacing:.16em;color:inherit;text-decoration:none;opacity:.72}.fashion-nav__links a:hover,.fashion-nav__links a.is-active{opacity:1;color:var(--primary)}
+.fashion-nav__actions{display:flex;align-items:center;gap:12px}.fashion-icon-btn,.fashion-mobile-btn,.fashion-cart-btn,.fashion-heart{border:0;background:none;color:inherit}.fashion-icon-btn{display:grid;place-items:center;padding:5px}.fashion-ai-btn,.fashion-cart-btn{display:flex;align-items:center;gap:7px;text-decoration:none;color:inherit}.fashion-ai-btn{border:1px solid var(--primary);padding:9px 12px;font:10px var(--ft-sans);letter-spacing:.1em;text-transform:uppercase}.fashion-ai-btn:hover{background:var(--primary);color:#000}.fashion-cart-btn{position:relative;padding:4px}.fashion-cart-btn span{position:absolute;right:-8px;top:-7px;width:16px;height:16px;display:grid;place-items:center;background:var(--primary);color:#000;font-size:9px}.fashion-mobile-btn{display:none}.fashion-mobile-menu{display:none}
+.fashion-hero{min-height:100vh;padding:74px max(24px,calc((100% - 1240px)/2)) 0;display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)}
+.fashion-hero__copy{padding:70px 7vw 45px 0;display:flex;flex-direction:column;justify-content:space-between}.fashion-eyebrow{font:10px var(--ft-sans);letter-spacing:.22em;text-transform:uppercase;color:var(--primary)}.fashion-display{font-family:var(--ft-serif);font-size:clamp(72px,9vw,132px);line-height:.78;letter-spacing:-.075em;margin:26px 0 0;font-weight:600}.fashion-display i,.fashion-section-title i,.fashion-editorial h2 i{font-family:Caveat,cursive;color:var(--primary);font-weight:600;letter-spacing:-.02em}.fashion-hero__lede{max-width:480px;margin-top:30px;font:15px/1.7 Georgia,serif;opacity:.78}.fashion-hero__actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:35px}.fashion-btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--primary);background:var(--primary);color:#000;text-decoration:none;padding:13px 17px;font:10px var(--ft-impact);letter-spacing:.11em;text-transform:uppercase;box-shadow:4px 4px 0 currentColor;transition:.18s}.fashion-btn:hover{transform:translate(2px,2px);box-shadow:none}.fashion-btn--ghost{background:transparent;color:inherit;box-shadow:none}.fashion-btn--light{background:var(--ft-paper);color:var(--ft-ink);border-color:var(--ft-paper)}.fashion-hero__meta{display:flex;justify-content:space-between;gap:20px;font:9px var(--ft-sans);letter-spacing:.16em;color:var(--silver);padding-top:35px}.fashion-hero__art{position:relative;min-height:650px;overflow:hidden;border-left:1px solid var(--primary);box-shadow:12px 12px 0 color-mix(in oklab,var(--primary) 65%,transparent)}.fashion-hero__art img{width:100%;height:100%;object-fit:cover;filter:saturate(.68) contrast(1.08)}.fashion-hero__overlay{position:absolute;inset:0;background:linear-gradient(145deg,rgba(10,41,71,.35),transparent 50%),repeating-linear-gradient(0deg,transparent 0 5px,rgba(8,203,0,.05) 6px 7px)}.fashion-hero__label{position:absolute;left:18px;bottom:18px;background:var(--primary);color:#000;padding:7px 9px;font:9px var(--ft-sans);letter-spacing:.15em}.fashion-hero__vertical{position:absolute;right:12px;top:18px;writing-mode:vertical-rl;font:9px var(--ft-sans);letter-spacing:.18em;color:#fff}
+.fashion-intro-section{width:min(1240px,calc(100% - 48px));margin:0 auto;padding:100px 0;display:grid;grid-template-columns:80px 1fr .7fr;gap:30px;border-bottom:1px solid var(--border)}.fashion-section-number{font:10px var(--ft-sans);color:var(--primary);letter-spacing:.16em}.fashion-section-title{font-family:var(--ft-serif);font-size:clamp(46px,5vw,76px);line-height:.86;letter-spacing:-.07em;margin:14px 0;font-weight:600}.fashion-intro-copy{align-self:end;max-width:420px;font:15px/1.7 Georgia,serif;opacity:.72}
+.fashion-ai-feature{width:min(1240px,calc(100% - 48px));margin:0 auto;padding:100px 0;display:grid;grid-template-columns:1fr .85fr;gap:70px}.fashion-ai-feature__visual{position:relative;min-height:540px;border:1px solid var(--primary);box-shadow:9px 9px 0 color-mix(in oklab,var(--primary) 70%,transparent);overflow:hidden}.fashion-ai-feature__visual img{width:100%;height:100%;object-fit:cover}.fashion-ai-feature__visual span{position:absolute;left:15px;top:15px;background:var(--ft-ink);color:var(--primary);padding:7px 9px;font:9px var(--ft-sans);letter-spacing:.15em}.fashion-ai-feature__copy{display:flex;flex-direction:column;justify-content:center}.fashion-ai-feature__copy>p:not(.fashion-eyebrow){font:15px/1.7 Georgia,serif;max-width:470px;opacity:.75}.fashion-feature-list{margin:35px 0;border-top:1px solid var(--border)}.fashion-feature-list div{display:flex;gap:25px;padding:14px 0;border-bottom:1px solid var(--border);font-size:12px}.fashion-feature-list b{color:var(--primary);font-weight:500}.fashion-text-link{color:var(--primary);text-decoration:none;font:10px var(--ft-sans);letter-spacing:.15em;text-transform:uppercase}
+.fashion-products-section{background:color-mix(in oklab,var(--foreground) 92%,var(--background));color:var(--background);padding:100px max(24px,calc((100% - 1240px)/2));border-top:1px solid var(--border);border-bottom:1px solid var(--border)}.fashion-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:30px;margin-bottom:42px}.fashion-section-head .fashion-section-title{margin-bottom:0}.fashion-product-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.fashion-product-card{min-width:0}.fashion-product-image{display:block;position:relative;aspect-ratio:3/4;overflow:hidden;background:var(--ft-muted);color:var(--ft-ink);border:1px solid var(--border)}.fashion-product-image img{width:100%;height:100%;object-fit:cover;transition:transform .5s cubic-bezier(.23,1,.32,1)}.fashion-product-card:hover .fashion-product-image img{transform:scale(1.05)}.fashion-product-badge{position:absolute;left:12px;top:12px;background:var(--primary);color:#000;padding:6px 8px;font:9px var(--ft-sans);letter-spacing:.13em;text-transform:uppercase}.fashion-product-index{position:absolute;right:12px;top:12px;font:9px var(--ft-sans);letter-spacing:.12em}.fashion-product-arrow{position:absolute;right:12px;bottom:12px;width:34px;height:34px;display:grid;place-items:center;background:var(--primary);color:#000;opacity:0;transform:translateY(6px);transition:.2s}.fashion-product-card:hover .fashion-product-arrow{opacity:1;transform:none}.fashion-product-meta{padding:17px 0;display:flex;justify-content:space-between;gap:15px;border-bottom:1px solid var(--border)}.fashion-product-category,.fashion-product-spec{font:9px var(--ft-sans);letter-spacing:.13em;text-transform:uppercase;opacity:.6}.fashion-product-title{display:block;color:inherit;text-decoration:none;font:600 clamp(25px,2.5vw,38px)/.88 var(--ft-serif);letter-spacing:-.06em;margin:8px 0}.fashion-product-price-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:15px}.fashion-product-price{font:11px var(--ft-sans);white-space:nowrap;color:var(--primary)}.fashion-heart{padding:2px;opacity:.55}.fashion-heart:hover{opacity:1;color:var(--primary)}
+.fashion-flow{width:min(1240px,calc(100% - 48px));margin:0 auto;padding:100px 0;display:grid;grid-template-columns:.8fr 1.2fr;gap:80px}.fashion-flow__steps{border-top:1px solid var(--border)}.fashion-flow__steps>div{display:grid;grid-template-columns:50px 1fr 1.2fr;gap:15px;align-items:center;padding:22px 0;border-bottom:1px solid var(--border)}.fashion-flow__steps span{color:var(--primary);font:10px var(--ft-sans)}.fashion-flow__steps h3{font:600 24px var(--ft-serif);margin:0}.fashion-flow__steps p{font:12px/1.5 Georgia,serif;opacity:.65;margin:0}
+.fashion-editorial{display:grid;grid-template-columns:1.35fr .65fr;min-height:520px;background:var(--ft-ink);color:var(--ft-paper)}.fashion-editorial img{width:100%;height:100%;min-height:520px;object-fit:cover;opacity:.8}.fashion-editorial>div{padding:70px;display:flex;flex-direction:column;justify-content:center}.fashion-editorial h2{font:600 clamp(58px,6vw,95px)/.8 var(--ft-serif);letter-spacing:-.07em;margin:20px 0 40px}
+@media(max-width:800px){.fashion-nav__inner{width:calc(100% - 32px);height:64px}.fashion-nav__links,.fashion-ai-btn,.fashion-brand__meta,.fashion-icon-btn{display:none}.fashion-mobile-btn{display:block}.fashion-mobile-menu{display:flex;flex-direction:column;padding:12px 16px;border-top:1px solid var(--border);background:var(--background)}.fashion-mobile-menu a{padding:12px 0;color:inherit;text-decoration:none;text-transform:uppercase;letter-spacing:.14em;font-size:10px}.fashion-hero{padding-top:64px;display:block}.fashion-hero__copy{padding:55px 0 38px}.fashion-display{font-size:clamp(68px,19vw,105px)}.fashion-hero__art{min-height:500px;border-left:0;box-shadow:8px 8px 0 color-mix(in oklab,var(--primary) 65%,transparent)}.fashion-hero__meta{font-size:8px;flex-wrap:wrap}.fashion-intro-section,.fashion-ai-feature,.fashion-flow{width:calc(100% - 32px);display:block;padding:70px 0}.fashion-section-number{margin-bottom:20px}.fashion-intro-copy{margin-top:30px}.fashion-ai-feature__visual{min-height:420px;margin-bottom:50px}.fashion-products-section{padding:70px 16px}.fashion-product-grid{grid-template-columns:1fr 1fr;gap:14px}.fashion-product-title{font-size:25px}.fashion-product-meta{display:block}.fashion-product-price-wrap{margin-top:12px;align-items:flex-start;flex-direction:row;justify-content:space-between}.fashion-flow__steps{margin-top:40px}.fashion-flow__steps>div{grid-template-columns:38px 1fr}.fashion-flow__steps p{grid-column:2}.fashion-editorial{display:block}.fashion-editorial img{min-height:380px}.fashion-editorial>div{padding:50px 24px}.fashion-hero__vertical{display:none}}
