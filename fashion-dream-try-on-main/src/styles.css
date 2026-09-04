@@ -540,3 +540,53 @@
     margin: -22px 0 26px;
   }
 }
+
+.fashion-intro-section {
+  position: relative;
+  isolation: isolate;
+  grid-template-columns: 80px minmax(0, 1fr);
+  overflow: hidden;
+  background-image: url("https://images.pexels.com/photos/7271149/pexels-photo-7271149.jpeg?auto=compress&cs=tinysrgb&w=1600");
+  background-size: cover;
+  background-position: center;
+  color: var(--ft-paper);
+}
+
+.fashion-intro-section::before {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(90deg, rgba(10, 41, 71, .94), rgba(10, 41, 71, .68) 58%, rgba(10, 41, 71, .82));
+  content: "";
+}
+
+.fashion-intro-section > * {
+  position: relative;
+  z-index: 1;
+}
+
+.fashion-intro-section > .fashion-section-number {
+  align-self: start;
+}
+
+.fashion-intro-content {
+  min-width: 0;
+}
+
+.fashion-intro-copy {
+  align-self: auto;
+  max-width: 640px;
+  margin: 42px 0 0;
+  color: var(--ft-paper);
+  opacity: .9;
+}
+
+@media (max-width: 800px) {
+  .fashion-intro-section {
+    display: block;
+  }
+
+  .fashion-intro-copy {
+    margin-top: 36px;
+  }
+}

@@ -144,7 +144,7 @@ function Index() {
       <main>
         <section className="fashion-intro-section">
           <div className="fashion-section-number">02</div>
-          <div>
+          <div className="fashion-intro-content">
             <p className="fashion-eyebrow">From browsing to fitting</p>
             <h2 className="fashion-section-title fashion-section-title--statement">
               <span
@@ -162,10 +162,10 @@ function Index() {
               <span className="statement-line statement-line--accent-small">CHỌN CÁCH BẠN</span>
               <span className="statement-line statement-line--accent-display">XUẤT HIỆN.</span>
             </h2>
+            <p className="fashion-intro-copy">
+              Fashion Dream giữ AI try-on làm core. Commerce được thiết kế lại để sản phẩm, outfit và AI stylist nối liền thành một hành trình mua sắm tự nhiên.
+            </p>
           </div>
-          <p className="fashion-intro-copy">
-            Fashion Dream giữ AI try-on làm core. Commerce được thiết kế lại để sản phẩm, outfit và AI stylist nối liền thành một hành trình mua sắm tự nhiên.
-          </p>
         </section>
 
         <section className="fashion-ai-feature">
