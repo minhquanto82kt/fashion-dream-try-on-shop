@@ -39,7 +39,7 @@ function ShopPage() {
   );
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen fashion-site">
       <SiteNav />
       <main className="mx-auto max-w-7xl px-6 pb-24 pt-28 sm:px-12 lg:px-20">
         <p className="eyebrow">Collection 2026</p>

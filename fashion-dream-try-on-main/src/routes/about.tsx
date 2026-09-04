@@ -29,9 +29,9 @@ const STATS = [
 
 function AboutPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen fashion-site">
       <SiteNav />
-      <main className="pt-16">
+      <main className="pt-28">
         <section className="relative">
           <img
             src="https://images.pexels.com/photos/18698406/pexels-photo-18698406.jpeg?auto=compress&cs=tinysrgb&w=1600"

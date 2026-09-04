@@ -5,7 +5,7 @@ import { useCart } from "@/lib/cart";
 
 const LINKS = [
   { to: "/shop", label: "Collections" },
-  { to: "/ai", label: "AI Studio" },
+  { to: "/ai", label: "AI Lab" },
   { to: "/about", label: "About" },
 ] as const;
 
@@ -46,14 +46,20 @@ export function SiteNav() {
             <ShoppingBag size={17} />
             {count > 0 && <span>{count}</span>}
           </Link>
-          <button className="fashion-mobile-btn" aria-label="Mở menu" onClick={() => setOpen((v) => !v)}>
+          <button
+            className="fashion-mobile-btn"
+            aria-label="Mở menu"
+            aria-expanded={open}
+            aria-controls="site-mobile-menu"
+            onClick={() => setOpen((v) => !v)}
+          >
             {open ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </div>
 
       {open && (
-        <div className="fashion-mobile-menu">
+        <div className="fashion-mobile-menu" id="site-mobile-menu">
           {LINKS.map((link) => (
             <Link key={link.to} to={link.to} onClick={() => setOpen(false)}>
               {link.label}

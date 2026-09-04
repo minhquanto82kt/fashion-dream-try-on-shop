@@ -42,7 +42,7 @@ function ProductPage() {
   const related = PRODUCTS.filter((p) => p.id !== product.id).slice(0, 3);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen fashion-site">
       <SiteNav />
       <main className="mx-auto max-w-7xl px-6 pb-24 pt-28 sm:px-12 lg:px-20">
         <div className="grid gap-10 lg:grid-cols-2">
@@ -53,10 +53,11 @@ function ProductPage() {
               className="aspect-[4/5] w-full border border-border object-cover"
             />
             <div className="mt-4 flex gap-3">
-              {product.gallery.map((g) => (
+              {product.gallery.map((g, index) => (
                 <button
                   key={g}
                   onClick={() => setShot(g)}
+                  aria-label={`Xem ảnh ${product.name} ${index + 1}`}
                   className={`size-20 border ${g === shot ? "border-primary" : "border-border"}`}
                 >
                   <img src={g} alt="" className="size-full object-cover" />
