@@ -375,13 +375,13 @@
 }
 
 .statement-line--offset {
-  margin-left: clamp(24px, 3.5vw, 62px);
+  margin-left: clamp(42px, 5vw, 90px);
   margin-top: -2px;
 }
 
 .statement-line--accent-small {
   margin-top: 18px;
-  margin-left: clamp(4px, 1vw, 18px);
+  margin-left: clamp(84px, 10vw, 170px);
   color: var(--primary);
   font: 600 clamp(17px, 1.55vw, 25px)/1 var(--ft-sans);
   letter-spacing: .16em;
@@ -389,7 +389,7 @@
 }
 
 .statement-line--accent-display {
-  margin-left: clamp(12px, 2vw, 34px);
+  margin-left: clamp(126px, 15vw, 250px);
   color: var(--primary);
   font: 400 clamp(45px, 5.1vw, 76px)/.82 var(--ft-impact);
   letter-spacing: -.055em;
@@ -422,7 +422,14 @@
     font-size: 12px;
     letter-spacing: .12em;
   }
+  .statement-line--offset {
+    margin-left: 30px;
+  }
+  .statement-line--accent-small {
+    margin-left: 58px;
+  }
   .statement-line--accent-display {
+    margin-left: 86px;
     font-size: clamp(38px, 11vw, 60px);
   }
 }
