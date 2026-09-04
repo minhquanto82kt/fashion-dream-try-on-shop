@@ -90,8 +90,20 @@ function Index() {
               Một wardrobe được chọn theo gu của bạn — kết hợp commerce, AI styling và virtual try-on trong cùng một trải nghiệm.
             </p>
             <div className="fashion-hero__actions">
-              <Link to="/shop" className="fashion-btn">Explore collection ↗</Link>
-              <Link to="/ai" className="fashion-btn fashion-btn--ghost">Start AI try-on</Link>
+              <Link
+                to="/shop"
+                className="fashion-btn"
+                style={{ fontFamily: "__Inter_d65c78, sans-serif", fontWeight: 700 }}
+              >
+                Explore collection ↗
+              </Link>
+              <Link
+                to="/ai"
+                className="fashion-btn fashion-btn--ghost"
+                style={{ fontFamily: "__Inter_d65c78, sans-serif", fontWeight: 700 }}
+              >
+                Start AI try-on
+              </Link>
             </div>
           </div>
           <div className="fashion-hero__meta">
@@ -135,8 +147,18 @@ function Index() {
           <div>
             <p className="fashion-eyebrow">From browsing to fitting</p>
             <h2 className="fashion-section-title fashion-section-title--statement">
-              <span className="statement-line statement-line--solid">KHÔNG CHỈ</span>
-              <span className="statement-line statement-line--solid statement-line--offset">CHỌN ĐỒ.</span>
+              <span
+                className="statement-line statement-line--solid"
+                style={{ letterSpacing: "-1.5px", lineHeight: "50px" }}
+              >
+                KHÔNG CHỈ
+              </span>
+              <span
+                className="statement-line statement-line--solid statement-line--offset"
+                style={{ letterSpacing: "-1.5px", lineHeight: "90px" }}
+              >
+                CHỌN ĐỒ.
+              </span>
               <span className="statement-line statement-line--accent-small">CHỌN CÁCH BẠN</span>
               <span className="statement-line statement-line--accent-display">XUẤT HIỆN.</span>
             </h2>
