@@ -54,7 +54,9 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const [activeCategory, setActiveCategory] = useState<(typeof COLLECTION_CATEGORIES)[number]["slug"]>("all");
+  const [activeCategory, setActiveCategory] = useState<
+    (typeof COLLECTION_CATEGORIES)[number]["slug"]
+  >("all");
   const [slide, setSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const active = HERO_SLIDES[slide];
@@ -164,7 +166,7 @@ function Index() {
 
         <section className="fashion-products-section">
           <div className="fashion-section-head">
-            <div><p className="fashion-eyebrow">03 / THE COLLECTION</p><h2 className="fashion-section-title">New<br /><span className="fashion-accent">drop.</span></h2></div>
+            <div><p className="fashion-eyebrow">03 / THE COLLECTION</p><h2 className="fashion-section-title">NEW <span className="fashion-accent">DROP</span></h2></div>
             <Link to="/shop" className="fashion-text-link">View all products ↗</Link>
           </div>
           <div className="fashion-category-filters" aria-label="Danh mục sản phẩm">

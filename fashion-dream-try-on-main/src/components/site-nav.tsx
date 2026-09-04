@@ -29,8 +29,12 @@ export function SiteNav() {
       <div className="fashion-nav__inner">
         <Link to="/" className="fashion-brand" aria-label="UpThink home">
           <span className="fashion-brand__mark">U</span>
-          <span className="fashion-brand__name">UPTHINK<span>.</span></span>
-          <span className="fashion-brand__meta">AI FASHION / 2026</span>
+          <span className="fashion-brand__copy">
+            <span className="fashion-brand__name">
+              UPTHINK<span>.</span>
+            </span>
+            <span className="fashion-brand__meta">AI FASHION / 2026</span>
+          </span>
         </Link>
 
         <div className="fashion-nav__links">
