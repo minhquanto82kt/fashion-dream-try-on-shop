@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, type HTMLAttributes } from "react";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { formatVnd } from "@/data/products";
@@ -25,7 +25,7 @@ function CheckoutPage() {
 
   if (done) {
     return (
-      <div className="min-h-screen">
+      <div className="min-h-screen fashion-site">
         <SiteNav />
         <main className="mx-auto max-w-2xl px-6 pb-24 pt-32 text-center">
           <p className="eyebrow">Đặt hàng thành công</p>
@@ -49,7 +49,7 @@ function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen fashion-site">
       <SiteNav />
       <main className="mx-auto max-w-5xl px-6 pb-24 pt-28 sm:px-12">
         <h1 className="text-4xl leading-none">Thanh toán</h1>
@@ -72,13 +72,13 @@ function CheckoutPage() {
             }}
           >
             <div className="space-y-4">
-              <Field label="Họ và tên" name="name" />
-              <Field label="Số điện thoại" name="phone" type="tel" />
-              <Field label="Email" name="email" type="email" />
-              <Field label="Địa chỉ giao hàng" name="address" />
+              <Field label="Họ và tên" name="name" autoComplete="name" />
+              <Field label="Số điện thoại" name="phone" type="tel" autoComplete="tel" inputMode="tel" />
+              <Field label="Email" name="email" type="email" autoComplete="email" inputMode="email" />
+              <Field label="Địa chỉ giao hàng" name="address" autoComplete="street-address" />
               <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Tỉnh / Thành phố" name="city" />
-                <Field label="Quận / Huyện" name="district" />
+                <Field label="Tỉnh / Thành phố" name="city" autoComplete="address-level1" />
+                <Field label="Quận / Huyện" name="district" autoComplete="address-level2" />
               </div>
 
               <p className="pt-4 text-xs uppercase tracking-[0.2em] text-silver">Phương thức thanh toán</p>
@@ -139,7 +139,19 @@ function CheckoutPage() {
   );
 }
 
-function Field({ label, name, type = "text" }: { label: string; name: string; type?: string }) {
+function Field({
+  label,
+  name,
+  type = "text",
+  autoComplete,
+  inputMode,
+}: {
+  label: string;
+  name: string;
+  type?: string;
+  autoComplete?: string;
+  inputMode?: HTMLAttributes<HTMLInputElement>["inputMode"];
+}) {
   return (
     <label className="block">
       <span className="text-xs uppercase tracking-[0.2em] text-silver">{label}</span>
@@ -147,6 +159,8 @@ function Field({ label, name, type = "text" }: { label: string; name: string; ty
         required
         name={name}
         type={type}
+        autoComplete={autoComplete}
+        inputMode={inputMode}
         className="mt-2 w-full border border-border bg-card px-4 py-3 text-sm outline-none focus:border-primary"
       />
     </label>
