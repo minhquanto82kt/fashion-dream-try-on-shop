@@ -508,3 +508,35 @@
   font-size: 20px;
   text-shadow: 2px 2px 3px rgba(0, 0, 0, 1);
 }
+
+.fashion-category-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: -18px 0 32px;
+}
+
+.fashion-category-filter {
+  border: 1px solid color-mix(in oklab, currentColor 38%, transparent);
+  background: transparent;
+  color: inherit;
+  padding: 8px 13px;
+  font: 10px var(--ft-meta);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background .18s, color .18s, border-color .18s;
+}
+
+.fashion-category-filter:hover,
+.fashion-category-filter.is-active {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--ft-ink);
+}
+
+@media (max-width: 800px) {
+  .fashion-category-filters {
+    margin: -22px 0 26px;
+  }
+}

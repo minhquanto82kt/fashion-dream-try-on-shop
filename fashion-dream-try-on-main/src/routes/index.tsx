@@ -25,6 +25,13 @@ const HERO_SLIDES = [
 
 const HERO = HERO_SLIDES[0].image;
 
+const COLLECTION_CATEGORIES = [
+  { slug: "all", label: "All" },
+  { slug: "hoodies", label: "Hoodies" },
+  { slug: "tees", label: "Tees" },
+  { slug: "outerwear", label: "Outerwear" },
+] as const;
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -47,10 +54,13 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const featured = PRODUCTS.slice(0, 6);
+  const [activeCategory, setActiveCategory] = useState<(typeof COLLECTION_CATEGORIES)[number]["slug"]>("all");
   const [slide, setSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const active = HERO_SLIDES[slide];
+  const featured = PRODUCTS.slice(0, 6).filter(
+    (product) => activeCategory === "all" || product.category === activeCategory,
+  );
 
   useEffect(() => {
     if (isPaused) return;
@@ -156,6 +166,19 @@ function Index() {
           <div className="fashion-section-head">
             <div><p className="fashion-eyebrow">03 / THE COLLECTION</p><h2 className="fashion-section-title">New<br /><span className="fashion-accent">drop.</span></h2></div>
             <Link to="/shop" className="fashion-text-link">View all products ↗</Link>
+          </div>
+          <div className="fashion-category-filters" aria-label="Danh mục sản phẩm">
+            {COLLECTION_CATEGORIES.map((category) => (
+              <button
+                key={category.slug}
+                type="button"
+                className={`fashion-category-filter${activeCategory === category.slug ? " is-active" : ""}`}
+                aria-pressed={activeCategory === category.slug}
+                onClick={() => setActiveCategory(category.slug)}
+              >
+                {category.label}
+              </button>
+            ))}
           </div>
           <div className="fashion-product-grid">
             {featured.map((p) => <ProductCard key={p.id} product={p} />)}
