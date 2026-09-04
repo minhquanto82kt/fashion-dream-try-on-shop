@@ -479,3 +479,32 @@
   font-family: var(--ft-meta);
   font-style: normal;
 }
+
+.fashion-editorial .fashion-eyebrow {
+  font-size: 12px;
+}
+
+.fashion-flow__steps span {
+  font-size: 20px;
+}
+
+.fashion-flow__steps h3 {
+  font-size: 30px;
+}
+
+.fashion-flow__steps p {
+  font-size: 15px;
+}
+
+.fashion-editorial h2 {
+  line-height: 60px;
+}
+
+.fashion-editorial .fashion-accent {
+  line-height: 65px;
+}
+
+.fashion-product-price {
+  font-size: 20px;
+  text-shadow: 2px 2px 3px rgba(0, 0, 0, 1);
+}
