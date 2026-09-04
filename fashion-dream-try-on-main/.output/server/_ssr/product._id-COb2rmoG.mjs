@@ -1,7 +1,7 @@
 import { i as getProduct, r as formatVnd } from "./products--eiF-4or.mjs";
 import { M as notFound, f as lazyRouteComponent, p as createFileRoute } from "../_libs/@tanstack/react-router+[...].mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/product._id-CTgegPxU.js
-var $$splitComponentImporter = () => import("./product._id-NZEXLe8Q.mjs");
+//#region node_modules/.nitro/vite/services/ssr/assets/product._id-COb2rmoG.js
+var $$splitComponentImporter = () => import("./product._id-CQvzoqep.mjs");
 var Route = createFileRoute("/product/$id")({
 	loader: ({ params }) => {
 		const product = getProduct(params.id);

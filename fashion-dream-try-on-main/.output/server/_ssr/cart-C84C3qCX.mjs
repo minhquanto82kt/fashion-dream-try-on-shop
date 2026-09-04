@@ -3,8 +3,8 @@ import { t as require_jsx_dev_runtime } from "../_libs/react.mjs";
 import { n as useCart } from "./cart-BJWoGGHj.mjs";
 import { h as Link } from "../_libs/@tanstack/react-router+[...].mjs";
 import { l as Minus, r as Trash2, s as Plus } from "../_libs/lucide-react.mjs";
-import { n as SiteNav, t as SiteFooter } from "./site-footer-nwee6DhI.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/cart-Csw_XGTX.js
+import { n as SiteNav, t as SiteFooter } from "./site-footer-DF39JNOL.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/cart-C84C3qCX.js
 var import_jsx_dev_runtime = require_jsx_dev_runtime();
 var _jsxFileName = "/root/app/code/fashion-dream-try-on-main/src/routes/cart.tsx?tsr-split=component";
 function CartPage() {

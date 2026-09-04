@@ -3,10 +3,10 @@ import { n as PRODUCTS } from "./products--eiF-4or.mjs";
 import { i as require_react } from "../_libs/react+tanstack__react-query.mjs";
 import { t as require_jsx_dev_runtime } from "../_libs/react.mjs";
 import { h as Link } from "../_libs/@tanstack/react-router+[...].mjs";
-import { n as SiteNav, t as SiteFooter } from "./site-footer-nwee6DhI.mjs";
+import { n as SiteNav, t as SiteFooter } from "./site-footer-DF39JNOL.mjs";
 import { t as ProductCard } from "./product-card-uAaCiHnz.mjs";
 import { t as HERO_SLIDES } from "./routes-Bj3hJEGc.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/routes-BCVp4xXA.js
+//#region node_modules/.nitro/vite/services/ssr/assets/routes-CYpplwaK.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_dev_runtime = require_jsx_dev_runtime();
 var _jsxFileName = "/root/app/code/fashion-dream-try-on-main/src/routes/index.tsx?tsr-split=component";
@@ -465,22 +465,14 @@ function Index() {
 								columnNumber: 18
 							}, this), /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("h2", {
 								className: "fashion-section-title",
-								children: [
-									"New",
-									/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("br", {}, void 0, false, {
-										fileName: _jsxFileName,
-										lineNumber: 107,
-										columnNumber: 113
-									}, this),
-									/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", {
-										className: "fashion-accent",
-										children: "drop."
-									}, void 0, false, {
-										fileName: _jsxFileName,
-										lineNumber: 107,
-										columnNumber: 119
-									}, this)
-								]
+								children: ["NEW ", /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", {
+									className: "fashion-accent",
+									children: "DROP"
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 107,
+									columnNumber: 114
+								}, this)]
 							}, void 0, true, {
 								fileName: _jsxFileName,
 								lineNumber: 107,

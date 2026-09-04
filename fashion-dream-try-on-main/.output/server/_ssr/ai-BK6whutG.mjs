@@ -5,13 +5,13 @@ import { t as require_jsx_dev_runtime } from "../_libs/react.mjs";
 import { n as useCart } from "./cart-BJWoGGHj.mjs";
 import { D as isRedirect, _ as useRouter, h as Link } from "../_libs/@tanstack/react-router+[...].mjs";
 import { d as LoaderCircle, n as Upload } from "../_libs/lucide-react.mjs";
-import { n as SiteNav, t as SiteFooter } from "./site-footer-nwee6DhI.mjs";
+import { n as SiteNav, t as SiteFooter } from "./site-footer-DF39JNOL.mjs";
 import { t as getServerFnById } from "../__23tanstack-start-server-fn-resolver-BP__v-i7.mjs";
 import { c as createServerFn, i as TSS_SERVER_FUNCTION } from "./createServerFn-CIHAFgYl.mjs";
-import { t as Route } from "./ai-pVdSKno7.mjs";
+import { t as Route } from "./ai-rm54RMff.mjs";
 import { n as objectType, r as stringType, t as arrayType } from "../_libs/zod.mjs";
 import { n as toast } from "../_libs/sonner.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/ai-Dk7o6hmp.js
+//#region node_modules/.nitro/vite/services/ssr/assets/ai-BK6whutG.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_dev_runtime = require_jsx_dev_runtime();
 function useServerFn(serverFn) {
