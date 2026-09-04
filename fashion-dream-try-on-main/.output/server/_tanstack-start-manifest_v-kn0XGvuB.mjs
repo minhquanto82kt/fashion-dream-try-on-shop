@@ -1,4 +1,4 @@
-//#region node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-LxQG2bcQ.js
+//#region node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-kn0XGvuB.js
 var tsrStartManifest = () => ({ routes: {
 	__root__: {
 		filePath: "/root/app/code/fashion-dream-try-on-main/src/routes/__root.tsx",
@@ -11,18 +11,18 @@ var tsrStartManifest = () => ({ routes: {
 			"/shop",
 			"/product/$id"
 		],
-		preloads: ["/assets/index-DLpDjctX.js", "/assets/cart-1XA9XTrl.js"],
+		preloads: ["/assets/index-DG1fzAB6.js", "/assets/cart-1XA9XTrl.js"],
 		scripts: [{ attrs: {
 			type: "module",
 			async: !0,
-			src: "/assets/index-DLpDjctX.js"
+			src: "/assets/index-DG1fzAB6.js"
 		} }]
 	},
 	"/": {
 		filePath: "/root/app/code/fashion-dream-try-on-main/src/routes/index.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/routes-CpuJOz2q.js",
+			"/assets/routes-DwvKjUmK.js",
 			"/assets/site-footer-D-64rXbS.js",
 			"/assets/product-card-Dhl2tVug.js"
 		]
@@ -35,7 +35,7 @@ var tsrStartManifest = () => ({ routes: {
 	"/ai": {
 		filePath: "/root/app/code/fashion-dream-try-on-main/src/routes/ai.tsx",
 		children: void 0,
-		preloads: ["/assets/ai-DNQxlCAr.js", "/assets/site-footer-D-64rXbS.js"]
+		preloads: ["/assets/ai-pwFBX9Fd.js", "/assets/site-footer-D-64rXbS.js"]
 	},
 	"/cart": {
 		filePath: "/root/app/code/fashion-dream-try-on-main/src/routes/cart.tsx",
@@ -60,7 +60,7 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "/root/app/code/fashion-dream-try-on-main/src/routes/product.$id.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/product._id-Cc7TsDtg.js",
+			"/assets/product._id-CcJHv9Cx.js",
 			"/assets/site-footer-D-64rXbS.js",
 			"/assets/product-card-Dhl2tVug.js"
 		]

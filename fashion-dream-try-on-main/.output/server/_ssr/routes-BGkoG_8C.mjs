@@ -6,7 +6,7 @@ import { h as Link } from "../_libs/@tanstack/react-router+[...].mjs";
 import { n as SiteNav, t as SiteFooter } from "./site-footer-DF39JNOL.mjs";
 import { t as ProductCard } from "./product-card-uAaCiHnz.mjs";
 import { t as HERO_SLIDES } from "./routes-Bj3hJEGc.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/routes-QzueArV5.js
+//#region node_modules/.nitro/vite/services/ssr/assets/routes-BGkoG_8C.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_dev_runtime = require_jsx_dev_runtime();
 var _jsxFileName = "/root/app/code/fashion-dream-try-on-main/src/routes/index.tsx?tsr-split=component";
@@ -256,84 +256,87 @@ function Index() {
 			/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("main", { children: [
 				/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("section", {
 					className: "fashion-intro-section",
-					children: [
-						/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", {
-							className: "fashion-section-number",
-							children: "02"
-						}, void 0, false, {
-							fileName: _jsxFileName,
-							lineNumber: 82,
-							columnNumber: 11
-						}, this),
-						/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", { children: [/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("p", {
-							className: "fashion-eyebrow",
-							children: "From browsing to fitting"
-						}, void 0, false, {
-							fileName: _jsxFileName,
-							lineNumber: 84,
-							columnNumber: 13
-						}, this), /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("h2", {
-							className: "fashion-section-title fashion-section-title--statement",
-							children: [
-								/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", {
-									className: "statement-line statement-line--solid",
-									style: {
-										letterSpacing: "-1.5px",
-										lineHeight: "50px"
-									},
-									children: "KHÔNG CHỈ"
-								}, void 0, false, {
-									fileName: _jsxFileName,
-									lineNumber: 86,
-									columnNumber: 15
-								}, this),
-								/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", {
-									className: "statement-line statement-line--solid statement-line--offset",
-									style: {
-										letterSpacing: "-1.5px",
-										lineHeight: "90px"
-									},
-									children: "CHỌN ĐỒ."
-								}, void 0, false, {
-									fileName: _jsxFileName,
-									lineNumber: 92,
-									columnNumber: 15
-								}, this),
-								/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", {
-									className: "statement-line statement-line--accent-small",
-									children: "CHỌN CÁCH BẠN"
-								}, void 0, false, {
-									fileName: _jsxFileName,
-									lineNumber: 98,
-									columnNumber: 15
-								}, this),
-								/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", {
-									className: "statement-line statement-line--accent-display",
-									children: "XUẤT HIỆN."
-								}, void 0, false, {
-									fileName: _jsxFileName,
-									lineNumber: 99,
-									columnNumber: 15
-								}, this)
-							]
-						}, void 0, true, {
-							fileName: _jsxFileName,
-							lineNumber: 85,
-							columnNumber: 13
-						}, this)] }, void 0, true, {
-							fileName: _jsxFileName,
-							lineNumber: 83,
-							columnNumber: 11
-						}, this),
-						/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("p", {
-							className: "fashion-intro-copy",
-							children: "Fashion Dream giữ AI try-on làm core. Commerce được thiết kế lại để sản phẩm, outfit và AI stylist nối liền thành một hành trình mua sắm tự nhiên."
-						}, void 0, false, {
-							fileName: _jsxFileName,
-							lineNumber: 102,
-							columnNumber: 11
-						}, this)
-					]
+					children: [/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", {
+						className: "fashion-section-number",
+						children: "02"
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 82,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", {
+						className: "fashion-intro-content",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("p", {
+								className: "fashion-eyebrow",
+								children: "From browsing to fitting"
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 84,
+								columnNumber: 13
+							}, this),
+							/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("h2", {
+								className: "fashion-section-title fashion-section-title--statement",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", {
+										className: "statement-line statement-line--solid",
+										style: {
+											letterSpacing: "-1.5px",
+											lineHeight: "50px"
+										},
+										children: "KHÔNG CHỈ"
+									}, void 0, false, {
+										fileName: _jsxFileName,
+										lineNumber: 86,
+										columnNumber: 15
+									}, this),
+									/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", {
+										className: "statement-line statement-line--solid statement-line--offset",
+										style: {
+											letterSpacing: "-1.5px",
+											lineHeight: "90px"
+										},
+										children: "CHỌN ĐỒ."
+									}, void 0, false, {
+										fileName: _jsxFileName,
+										lineNumber: 92,
+										columnNumber: 15
+									}, this),
+									/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", {
+										className: "statement-line statement-line--accent-small",
+										children: "CHỌN CÁCH BẠN"
+									}, void 0, false, {
+										fileName: _jsxFileName,
+										lineNumber: 98,
+										columnNumber: 15
+									}, this),
+									/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", {
+										className: "statement-line statement-line--accent-display",
+										children: "XUẤT HIỆN."
+									}, void 0, false, {
+										fileName: _jsxFileName,
+										lineNumber: 99,
+										columnNumber: 15
+									}, this)
+								]
+							}, void 0, true, {
+								fileName: _jsxFileName,
+								lineNumber: 85,
+								columnNumber: 13
+							}, this),
+							/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("p", {
+								className: "fashion-intro-copy",
+								children: "Fashion Dream giữ AI try-on làm core. Commerce được thiết kế lại để sản phẩm, outfit và AI stylist nối liền thành một hành trình mua sắm tự nhiên."
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 101,
+								columnNumber: 13
+							}, this)
+						]
+					}, void 0, true, {
+						fileName: _jsxFileName,
+						lineNumber: 83,
+						columnNumber: 11
+					}, this)]
 				}, void 0, true, {
 					fileName: _jsxFileName,
 					lineNumber: 81,
