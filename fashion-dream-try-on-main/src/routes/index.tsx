@@ -143,7 +143,7 @@ function Index() {
       </header>
       <main>
         <section className="fashion-intro-section">
-          <div className="fashion-section-number">02</div>
+          <div className="fashion-section-number" style={{ fontSize: "15px" }}>02</div>
           <div className="fashion-intro-content">
             <p className="fashion-eyebrow" style={{ fontSize: "12px" }}>From browsing to fitting</p>
             <h2 className="fashion-section-title fashion-section-title--statement">
@@ -161,7 +161,7 @@ function Index() {
               </span>
               <span
                 className="statement-line statement-line--accent-small"
-                style={{ margin: "20px 0 15px 434.1px", fontFamily: "Oswald, sans-serif", fontWeight: 400 }}
+                style={{ margin: "20px 0 15px 443.1px", fontFamily: "Oswald, sans-serif", fontWeight: 400, fontSize: "12px" }}
               >
                 CHỌN CÁCH BẠN
               </span>
@@ -198,7 +198,7 @@ function Index() {
 
         <section className="fashion-products-section">
           <div className="fashion-section-head">
-            <div><p className="fashion-eyebrow">03 / THE COLLECTION</p><h2 className="fashion-section-title">NEW <span className="fashion-accent">DROP</span></h2></div>
+            <div><p className="fashion-eyebrow" style={{ fontSize: "15px" }}>03 / THE COLLECTION</p><h2 className="fashion-section-title">NEW <span className="fashion-accent">DROP</span></h2></div>
             <Link to="/shop" className="fashion-text-link">View all products ↗</Link>
           </div>
           <div className="fashion-category-filters" aria-label="Danh mục sản phẩm">
@@ -220,7 +220,7 @@ function Index() {
         </section>
 
         <section className="fashion-flow">
-          <div><p className="fashion-eyebrow">04 / THE EXPERIENCE</p><h2 className="fashion-section-title">See it.<br /><span className="fashion-accent">Try it.</span><br />Wear it.</h2></div>
+          <div><p className="fashion-eyebrow" style={{ fontSize: "15px" }}>04 / THE EXPERIENCE</p><h2 className="fashion-section-title" style={{ lineHeight: "50.323px" }}>See it.<br /><span className="fashion-accent">Try it.</span><br />Wear it.</h2></div>
           <div className="fashion-flow__steps">
             <div><span>01</span><h3>Discover</h3><p>Browse curated products and collections.</p></div>
             <div><span>02</span><h3>Try</h3><p>Upload your photo and visualize the fit with AI.</p></div>
