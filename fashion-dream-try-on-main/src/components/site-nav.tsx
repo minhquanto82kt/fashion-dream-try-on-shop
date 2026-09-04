@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Menu, Moon, ShoppingBag, Sparkles, Sun, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Menu, ShoppingBag, Sparkles, X } from "lucide-react";
+import { useState } from "react";
 import { useCart } from "@/lib/cart";
 
 const LINKS = [
@@ -12,25 +12,18 @@ const LINKS = [
 export function SiteNav() {
   const { count } = useCart();
   const [open, setOpen] = useState(false);
-  const [dark, setDark] = useState(true);
-
-  useEffect(() => {
-    const saved = localStorage.getItem("fashiontry-theme");
-    if (saved) setDark(saved === "dark");
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = dark ? "dark" : "cream";
-    localStorage.setItem("fashiontry-theme", dark ? "dark" : "cream");
-  }, [dark]);
 
   return (
     <nav className="fashion-nav">
       <div className="fashion-nav__inner">
         <Link to="/" className="fashion-brand" aria-label="UpThink home">
           <span className="fashion-brand__mark">U</span>
-          <span className="fashion-brand__name">UPTHINK<span>.</span></span>
-          <span className="fashion-brand__meta">AI FASHION / 2026</span>
+          <span className="fashion-brand__copy">
+            <span className="fashion-brand__name">
+              UPTHINK<span>.</span>
+            </span>
+            <span className="fashion-brand__meta">AI FASHION / 2026</span>
+          </span>
         </Link>
 
         <div className="fashion-nav__links">
@@ -46,9 +39,6 @@ export function SiteNav() {
         </div>
 
         <div className="fashion-nav__actions">
-          <button className="fashion-icon-btn" aria-label="Đổi giao diện" onClick={() => setDark((v) => !v)}>
-            {dark ? <Sun size={16} /> : <Moon size={16} />}
-          </button>
           <Link to="/ai" className="fashion-ai-btn">
             <Sparkles size={14} /> Try-on
           </Link>

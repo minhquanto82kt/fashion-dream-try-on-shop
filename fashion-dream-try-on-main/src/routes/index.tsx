@@ -25,6 +25,15 @@ const HERO_SLIDES = [
 
 const HERO = HERO_SLIDES[0].image;
 
+const COLLECTION_CATEGORIES = [
+  { slug: "all", label: "All" },
+  { slug: "hoodies", label: "Hoodies" },
+  { slug: "tees", label: "Tees" },
+  { slug: "outerwear", label: "Outerwear" },
+  { slug: "cap", label: "Caps" },
+  { slug: "sunglass", label: "Sunglasses" },
+] as const;
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -47,10 +56,15 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const featured = PRODUCTS.slice(0, 6);
+  const [activeCategory, setActiveCategory] = useState<
+    (typeof COLLECTION_CATEGORIES)[number]["slug"]
+  >("all");
   const [slide, setSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const active = HERO_SLIDES[slide];
+  const featured = PRODUCTS.filter(
+    (product) => activeCategory === "all" || product.category === activeCategory,
+  );
 
   useEffect(() => {
     if (isPaused) return;
@@ -78,8 +92,20 @@ function Index() {
               Một wardrobe được chọn theo gu của bạn — kết hợp commerce, AI styling và virtual try-on trong cùng một trải nghiệm.
             </p>
             <div className="fashion-hero__actions">
-              <Link to="/shop" className="fashion-btn">Explore collection ↗</Link>
-              <Link to="/ai" className="fashion-btn fashion-btn--ghost">Start AI try-on</Link>
+              <Link
+                to="/shop"
+                className="fashion-btn"
+                style={{ fontFamily: "__Inter_d65c78, sans-serif", fontWeight: 700 }}
+              >
+                Explore collection ↗
+              </Link>
+              <Link
+                to="/ai"
+                className="fashion-btn fashion-btn--ghost"
+                style={{ fontFamily: "__Inter_d65c78, sans-serif", fontWeight: 700 }}
+              >
+                Start AI try-on
+              </Link>
             </div>
           </div>
           <div className="fashion-hero__meta">
@@ -119,19 +145,39 @@ function Index() {
       </header>
       <main>
         <section className="fashion-intro-section">
-          <div className="fashion-section-number">02</div>
-          <div>
-            <p className="fashion-eyebrow">From browsing to fitting</p>
+          <div className="fashion-section-number" style={{ fontSize: "15px" }}>02</div>
+          <div className="fashion-intro-content">
+            <p className="fashion-eyebrow" style={{ fontSize: "12px" }}>From browsing to fitting</p>
             <h2 className="fashion-section-title fashion-section-title--statement">
-              <span className="statement-line statement-line--solid">KHÔNG CHỈ</span>
-              <span className="statement-line statement-line--solid statement-line--offset">CHỌN ĐỒ.</span>
-              <span className="statement-line statement-line--accent-small">CHỌN CÁCH BẠN</span>
-              <span className="statement-line statement-line--accent-display">XUẤT HIỆN.</span>
+              <span
+                className="statement-line statement-line--solid"
+                style={{ letterSpacing: "-1.5px", lineHeight: "50px" }}
+              >
+                KHÔNG CHỈ
+              </span>
+              <span
+                className="statement-line statement-line--solid statement-line--offset"
+                style={{ letterSpacing: "-1.5px", lineHeight: "90px" }}
+              >
+                CHỌN ĐỒ.
+              </span>
+              <span
+                className="statement-line statement-line--accent-small"
+                style={{ margin: "20px 0 15px 443.1px", fontFamily: "Oswald, sans-serif", fontWeight: 400, fontSize: "12px" }}
+              >
+                CHỌN CÁCH BẠN
+              </span>
+              <span
+                className="statement-line statement-line--accent-display"
+                style={{ margin: "0 0 0 444.15px", letterSpacing: "-1px" }}
+              >
+                XUẤT HIỆN.
+              </span>
             </h2>
+            <p className="fashion-intro-copy">
+              Fashion Dream giữ AI try-on làm core. Commerce được thiết kế lại để sản phẩm, outfit và AI stylist nối liền thành một hành trình mua sắm tự nhiên.
+            </p>
           </div>
-          <p className="fashion-intro-copy">
-            Fashion Dream giữ AI try-on làm core. Commerce được thiết kế lại để sản phẩm, outfit và AI stylist nối liền thành một hành trình mua sắm tự nhiên.
-          </p>
         </section>
 
         <section className="fashion-ai-feature">
@@ -140,13 +186,13 @@ function Index() {
             <span>AI STUDIO / 01</span>
           </div>
           <div className="fashion-ai-feature__copy">
-            <p className="fashion-eyebrow">Personal styling system</p>
-            <h2 className="fashion-section-title">Your look,<br /><span className="fashion-accent">your logic.</span></h2>
-            <p>Chọn một món đồ, đưa ảnh của bạn vào, rồi để AI giúp hình dung outfit trước khi quyết định mua.</p>
+            <p className="fashion-eyebrow" style={{ fontSize: "15px" }}>Personal styling system</p>
+            <h2 className="fashion-section-title" style={{ lineHeight: "50.323px" }}>Your look,<br /><span className="fashion-accent">your logic.</span></h2>
+            <p style={{ fontSize: "16px" }}>Chọn một món đồ, đưa ảnh của bạn vào, rồi để AI giúp hình dung outfit trước khi quyết định mua.</p>
             <div className="fashion-feature-list">
-              <div><b>01</b><span>Concept theo mood</span></div>
-              <div><b>02</b><span>Virtual try-on</span></div>
-              <div><b>03</b><span>AI styling recommendations</span></div>
+              <div><b style={{ fontSize: "20px" }}>01</b><span style={{ fontSize: "20px" }}>Concept theo mood</span></div>
+              <div><b style={{ fontSize: "20px" }}>02</b><span style={{ fontSize: "20px" }}>Virtual try-on</span></div>
+              <div><b style={{ fontSize: "20px" }}>03</b><span style={{ fontSize: "20px" }}>AI styling recommendations</span></div>
             </div>
             <Link to="/ai" className="fashion-text-link">Open AI Studio ↗</Link>
           </div>
@@ -154,8 +200,21 @@ function Index() {
 
         <section className="fashion-products-section">
           <div className="fashion-section-head">
-            <div><p className="fashion-eyebrow">03 / THE COLLECTION</p><h2 className="fashion-section-title">New<br /><span className="fashion-accent">drop.</span></h2></div>
+            <div><p className="fashion-eyebrow" style={{ fontSize: "15px" }}>03 / THE COLLECTION</p></div>
             <Link to="/shop" className="fashion-text-link">View all products ↗</Link>
+          </div>
+          <div className="fashion-category-filters" aria-label="Danh mục sản phẩm">
+            {COLLECTION_CATEGORIES.map((category) => (
+              <button
+                key={category.slug}
+                type="button"
+                className={`fashion-category-filter${activeCategory === category.slug ? " is-active" : ""}`}
+                aria-pressed={activeCategory === category.slug}
+                onClick={() => setActiveCategory(category.slug)}
+              >
+                {category.label}
+              </button>
+            ))}
           </div>
           <div className="fashion-product-grid">
             {featured.map((p) => <ProductCard key={p.id} product={p} />)}
@@ -163,7 +222,7 @@ function Index() {
         </section>
 
         <section className="fashion-flow">
-          <div><p className="fashion-eyebrow">04 / THE EXPERIENCE</p><h2 className="fashion-section-title">See it.<br /><span className="fashion-accent">Try it.</span><br />Wear it.</h2></div>
+          <div><p className="fashion-eyebrow" style={{ fontSize: "15px" }}>04 / THE EXPERIENCE</p><h2 className="fashion-section-title" style={{ lineHeight: "50.323px" }}>See it.<br /><span className="fashion-accent">Try it.</span><br />Wear it.</h2></div>
           <div className="fashion-flow__steps">
             <div><span>01</span><h3>Discover</h3><p>Browse curated products and collections.</p></div>
             <div><span>02</span><h3>Try</h3><p>Upload your photo and visualize the fit with AI.</p></div>

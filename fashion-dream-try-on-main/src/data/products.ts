@@ -2,7 +2,7 @@ export type Product = {
   id: string;
   name: string;
   price: number; // VND
-  category: "hoodies" | "tees" | "outerwear" | "accessories";
+  category: "hoodies" | "tees" | "outerwear" | "accessories" | "cap" | "sunglass";
   image: string;
   gallery: string[];
   sizes: string[];
@@ -19,6 +19,8 @@ export const CATEGORIES = [
   { slug: "tees", name: "Tees", image: px("1311588", 800) },
   { slug: "outerwear", name: "Outerwear", image: px("19273260", 800) },
   { slug: "accessories", name: "Accessories", image: px("30989278", 800) },
+  { slug: "cap", name: "Caps", image: px("6612173", 800) },
+  { slug: "sunglass", name: "Sunglasses", image: px("30989278", 800) },
 ] as const;
 
 export const PRODUCTS: Product[] = [
@@ -114,6 +116,29 @@ export const PRODUCTS: Product[] = [
     colors: ["Beige", "Charcoal"],
     badge: "IUH edition",
     description: "Sweater cổ tròn thêu chữ UpThink, form vừa, mặc quanh năm.",
+  },
+  {
+    id: "street-cap",
+    name: "Street Cap",
+    price: 490000,
+    category: "cap",
+    image: px("6612173"),
+    gallery: [px("6612173"), px("30989278")],
+    sizes: ["Freesize"],
+    colors: ["Black", "Electric"],
+    badge: "New accessory",
+    description: "Mũ lưỡi trai cotton 6 mảnh, logo thêu nổi và khóa điều chỉnh phía sau.",
+  },
+  {
+    id: "shade-runner",
+    name: "Shade Runner",
+    price: 750000,
+    category: "sunglass",
+    image: px("30989278"),
+    gallery: [px("30989278"), px("28484979")],
+    sizes: ["Freesize"],
+    colors: ["Black"],
+    description: "Kính râm gọng vuông nhẹ, tròng tối và thiết kế gọn cho mọi outfit.",
   },
 ];
 
