@@ -1,8 +1,8 @@
 import { n as __toESM } from "../_runtime.mjs";
-import { n as PRODUCTS } from "./products--eiF-4or.mjs";
+import { n as PRODUCTS } from "./products-jMfr2MY-.mjs";
 import { i as require_react } from "../_libs/react+tanstack__react-query.mjs";
 import { t as require_jsx_dev_runtime } from "../_libs/react.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/cart-BJWoGGHj.js
+//#region node_modules/.nitro/vite/services/ssr/assets/cart-Cjci71s0.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_dev_runtime = require_jsx_dev_runtime();
 var _jsxFileName = "/root/app/code/fashion-dream-try-on-main/src/lib/cart.tsx";

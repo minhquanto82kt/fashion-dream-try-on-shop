@@ -1,8 +1,8 @@
-import { r as formatVnd } from "./products--eiF-4or.mjs";
+import { r as formatVnd } from "./products-jMfr2MY-.mjs";
 import { t as require_jsx_dev_runtime } from "../_libs/react.mjs";
 import { h as Link } from "../_libs/@tanstack/react-router+[...].mjs";
-import { f as Heart, p as ArrowUpRight } from "../_libs/lucide-react.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/product-card-uAaCiHnz.js
+import { d as ArrowUpRight, u as Heart } from "../_libs/lucide-react.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/product-card-CDX_VKkG.js
 var import_jsx_dev_runtime = require_jsx_dev_runtime();
 var _jsxFileName = "/root/app/code/fashion-dream-try-on-main/src/components/product-card.tsx";
 function ProductCard({ product }) {

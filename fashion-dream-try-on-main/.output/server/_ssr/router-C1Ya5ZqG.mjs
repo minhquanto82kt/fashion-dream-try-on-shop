@@ -1,14 +1,14 @@
 import { n as __toESM } from "../_runtime.mjs";
 import { i as require_react, n as QueryClientProvider } from "../_libs/react+tanstack__react-query.mjs";
 import { t as require_jsx_dev_runtime } from "../_libs/react.mjs";
-import { t as CartProvider } from "./cart-BJWoGGHj.mjs";
+import { t as CartProvider } from "./cart-Cjci71s0.mjs";
 import { _ as useRouter, c as HeadContent, d as Outlet, f as lazyRouteComponent, h as Link, m as createRootRouteWithContext, p as createFileRoute, s as Scripts, u as createRouter } from "../_libs/@tanstack/react-router+[...].mjs";
-import { t as Route$6 } from "./ai-rm54RMff.mjs";
+import { t as Route$6 } from "./ai-CcOVbSYM.mjs";
 import { t as QueryClient } from "../_libs/tanstack__query-core.mjs";
 import { t as Toaster } from "../_libs/sonner.mjs";
-import { t as Route$7 } from "./product._id-COb2rmoG.mjs";
+import { t as Route$7 } from "./product._id-Di0k6RFB.mjs";
 import { t as HERO_SLIDES } from "./routes-Bj3hJEGc.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-CfmGW5d3.js
+//#region node_modules/.nitro/vite/services/ssr/assets/router-C1Ya5ZqG.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_dev_runtime = require_jsx_dev_runtime();
 var styles_default = "/assets/styles-CRnCprAN.css";
@@ -290,7 +290,7 @@ function RootComponent() {
 		columnNumber: 5
 	}, this);
 }
-var $$splitComponentImporter$4 = () => import("./routes-DSyk0bx2.mjs");
+var $$splitComponentImporter$4 = () => import("./routes-E860OpOZ.mjs");
 var HERO = HERO_SLIDES[0].image;
 var Route$4 = createFileRoute("/")({
 	head: () => ({ meta: [
@@ -318,7 +318,7 @@ var Route$4 = createFileRoute("/")({
 	] }),
 	component: lazyRouteComponent($$splitComponentImporter$4, "component")
 });
-var $$splitComponentImporter$3 = () => import("./about-EiCMbbny.mjs");
+var $$splitComponentImporter$3 = () => import("./about-BH59VCWL.mjs");
 var Route$3 = createFileRoute("/about")({
 	head: () => ({ meta: [
 		{ title: "Về UpThink — Ý tưởng khởi nghiệp sinh viên IUH" },
@@ -337,7 +337,7 @@ var Route$3 = createFileRoute("/about")({
 	] }),
 	component: lazyRouteComponent($$splitComponentImporter$3, "component")
 });
-var $$splitComponentImporter$2 = () => import("./cart-C84C3qCX.mjs");
+var $$splitComponentImporter$2 = () => import("./cart-D4yta7gP.mjs");
 var Route$2 = createFileRoute("/cart")({
 	head: () => ({ meta: [
 		{ title: "Giỏ hàng | UpThink" },
@@ -356,7 +356,7 @@ var Route$2 = createFileRoute("/cart")({
 	] }),
 	component: lazyRouteComponent($$splitComponentImporter$2, "component")
 });
-var $$splitComponentImporter$1 = () => import("./checkout-9Q09p0a6.mjs");
+var $$splitComponentImporter$1 = () => import("./checkout-Bk0vgm0w.mjs");
 var Route$1 = createFileRoute("/checkout")({
 	head: () => ({ meta: [
 		{ title: "Thanh toán | UpThink" },
@@ -375,7 +375,7 @@ var Route$1 = createFileRoute("/checkout")({
 	] }),
 	component: lazyRouteComponent($$splitComponentImporter$1, "component")
 });
-var $$splitComponentImporter = () => import("./shop-CLDfjr8s.mjs");
+var $$splitComponentImporter = () => import("./shop-CTHkF5Rm.mjs");
 var Route = createFileRoute("/shop")({
 	head: () => ({ meta: [
 		{ title: "Cửa hàng — Streetwear cá nhân hóa | UpThink" },

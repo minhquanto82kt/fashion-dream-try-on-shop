@@ -1,10 +1,10 @@
 import { n as __toESM } from "../_runtime.mjs";
 import { i as require_react } from "../_libs/react+tanstack__react-query.mjs";
 import { t as require_jsx_dev_runtime } from "../_libs/react.mjs";
-import { n as useCart } from "./cart-BJWoGGHj.mjs";
+import { n as useCart } from "./cart-Cjci71s0.mjs";
 import { h as Link } from "../_libs/@tanstack/react-router+[...].mjs";
-import { a as Sparkles, c as Moon, i as Sun, o as ShoppingBag, t as X, u as Menu } from "../_libs/lucide-react.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/site-footer-DF39JNOL.js
+import { a as ShoppingBag, c as Menu, i as Sparkles, t as X } from "../_libs/lucide-react.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/site-footer-C81mFqjI.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_dev_runtime = require_jsx_dev_runtime();
 var _jsxFileName$1 = "/root/app/code/fashion-dream-try-on-main/src/components/site-nav.tsx";
@@ -25,15 +25,6 @@ var LINKS = [
 function SiteNav() {
 	const { count } = useCart();
 	const [open, setOpen] = (0, import_react.useState)(false);
-	const [dark, setDark] = (0, import_react.useState)(true);
-	(0, import_react.useEffect)(() => {
-		const saved = localStorage.getItem("fashiontry-theme");
-		if (saved) setDark(saved === "dark");
-	}, []);
-	(0, import_react.useEffect)(() => {
-		document.documentElement.dataset.theme = dark ? "dark" : "cream";
-		localStorage.setItem("fashiontry-theme", dark ? "dark" : "cream");
-	}, [dark]);
 	return /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("nav", {
 		className: "fashion-nav",
 		children: [/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", {
@@ -48,7 +39,7 @@ function SiteNav() {
 						children: "U"
 					}, void 0, false, {
 						fileName: _jsxFileName$1,
-						lineNumber: 31,
+						lineNumber: 20,
 						columnNumber: 11
 					}, this), /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", {
 						className: "fashion-brand__copy",
@@ -56,29 +47,29 @@ function SiteNav() {
 							className: "fashion-brand__name",
 							children: ["UPTHINK", /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", { children: "." }, void 0, false, {
 								fileName: _jsxFileName$1,
-								lineNumber: 34,
+								lineNumber: 23,
 								columnNumber: 22
 							}, this)]
 						}, void 0, true, {
 							fileName: _jsxFileName$1,
-							lineNumber: 33,
+							lineNumber: 22,
 							columnNumber: 13
 						}, this), /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", {
 							className: "fashion-brand__meta",
 							children: "AI FASHION / 2026"
 						}, void 0, false, {
 							fileName: _jsxFileName$1,
-							lineNumber: 36,
+							lineNumber: 25,
 							columnNumber: 13
 						}, this)]
 					}, void 0, true, {
 						fileName: _jsxFileName$1,
-						lineNumber: 32,
+						lineNumber: 21,
 						columnNumber: 11
 					}, this)]
 				}, void 0, true, {
 					fileName: _jsxFileName$1,
-					lineNumber: 30,
+					lineNumber: 19,
 					columnNumber: 9
 				}, this),
 				/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", {
@@ -89,46 +80,28 @@ function SiteNav() {
 						children: link.label
 					}, link.to, false, {
 						fileName: _jsxFileName$1,
-						lineNumber: 42,
+						lineNumber: 31,
 						columnNumber: 13
 					}, this))
 				}, void 0, false, {
 					fileName: _jsxFileName$1,
-					lineNumber: 40,
+					lineNumber: 29,
 					columnNumber: 9
 				}, this),
 				/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", {
 					className: "fashion-nav__actions",
 					children: [
-						/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("button", {
-							className: "fashion-icon-btn",
-							"aria-label": "Đổi giao diện",
-							onClick: () => setDark((v) => !v),
-							children: dark ? /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Sun, { size: 16 }, void 0, false, {
-								fileName: _jsxFileName$1,
-								lineNumber: 54,
-								columnNumber: 21
-							}, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Moon, { size: 16 }, void 0, false, {
-								fileName: _jsxFileName$1,
-								lineNumber: 54,
-								columnNumber: 41
-							}, this)
-						}, void 0, false, {
-							fileName: _jsxFileName$1,
-							lineNumber: 53,
-							columnNumber: 11
-						}, this),
 						/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Link, {
 							to: "/ai",
 							className: "fashion-ai-btn",
 							children: [/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Sparkles, { size: 14 }, void 0, false, {
 								fileName: _jsxFileName$1,
-								lineNumber: 57,
+								lineNumber: 43,
 								columnNumber: 13
 							}, this), " Try-on"]
 						}, void 0, true, {
 							fileName: _jsxFileName$1,
-							lineNumber: 56,
+							lineNumber: 42,
 							columnNumber: 11
 						}, this),
 						/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Link, {
@@ -137,16 +110,16 @@ function SiteNav() {
 							"aria-label": "Giỏ hàng",
 							children: [/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(ShoppingBag, { size: 17 }, void 0, false, {
 								fileName: _jsxFileName$1,
-								lineNumber: 60,
+								lineNumber: 46,
 								columnNumber: 13
 							}, this), count > 0 && /* @__PURE__ */ (void 0)("span", { children: count }, void 0, false, {
 								fileName: _jsxFileName$1,
-								lineNumber: 61,
+								lineNumber: 47,
 								columnNumber: 27
 							}, this)]
 						}, void 0, true, {
 							fileName: _jsxFileName$1,
-							lineNumber: 59,
+							lineNumber: 45,
 							columnNumber: 11
 						}, this),
 						/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("button", {
@@ -155,28 +128,28 @@ function SiteNav() {
 							onClick: () => setOpen((v) => !v),
 							children: open ? /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(X, { size: 20 }, void 0, false, {
 								fileName: _jsxFileName$1,
-								lineNumber: 64,
+								lineNumber: 50,
 								columnNumber: 21
 							}, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Menu, { size: 20 }, void 0, false, {
 								fileName: _jsxFileName$1,
-								lineNumber: 64,
+								lineNumber: 50,
 								columnNumber: 39
 							}, this)
 						}, void 0, false, {
 							fileName: _jsxFileName$1,
-							lineNumber: 63,
+							lineNumber: 49,
 							columnNumber: 11
 						}, this)
 					]
 				}, void 0, true, {
 					fileName: _jsxFileName$1,
-					lineNumber: 52,
+					lineNumber: 41,
 					columnNumber: 9
 				}, this)
 			]
 		}, void 0, true, {
 			fileName: _jsxFileName$1,
-			lineNumber: 29,
+			lineNumber: 18,
 			columnNumber: 7
 		}, this), open && /* @__PURE__ */ (void 0)("div", {
 			className: "fashion-mobile-menu",
@@ -187,7 +160,7 @@ function SiteNav() {
 					children: link.label
 				}, link.to, false, {
 					fileName: _jsxFileName$1,
-					lineNumber: 72,
+					lineNumber: 58,
 					columnNumber: 13
 				}, this)),
 				/* @__PURE__ */ (void 0)(Link, {
@@ -196,7 +169,7 @@ function SiteNav() {
 					children: "AI Try-On ↗"
 				}, void 0, false, {
 					fileName: _jsxFileName$1,
-					lineNumber: 76,
+					lineNumber: 62,
 					columnNumber: 11
 				}, this),
 				/* @__PURE__ */ (void 0)(Link, {
@@ -205,18 +178,18 @@ function SiteNav() {
 					children: ["Cart / ", String(count).padStart(2, "0")]
 				}, void 0, true, {
 					fileName: _jsxFileName$1,
-					lineNumber: 77,
+					lineNumber: 63,
 					columnNumber: 11
 				}, this)
 			]
 		}, void 0, true, {
 			fileName: _jsxFileName$1,
-			lineNumber: 70,
+			lineNumber: 56,
 			columnNumber: 9
 		}, this)]
 	}, void 0, true, {
 		fileName: _jsxFileName$1,
-		lineNumber: 28,
+		lineNumber: 17,
 		columnNumber: 5
 	}, this);
 }

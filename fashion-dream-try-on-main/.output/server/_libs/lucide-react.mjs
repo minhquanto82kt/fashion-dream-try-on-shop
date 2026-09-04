@@ -178,16 +178,6 @@ var Minus = createLucideIcon("minus", [["path", {
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
 */
-var Moon = createLucideIcon("moon", [["path", {
-	d: "M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401",
-	key: "kfwtm"
-}]]);
-/**
-* @license lucide-react v0.575.0 - ISC
-*
-* This source code is licensed under the ISC license.
-* See the LICENSE file in the root directory of this source tree.
-*/
 var Plus = createLucideIcon("plus", [["path", {
 	d: "M5 12h14",
 	key: "1ays0h"
@@ -239,52 +229,6 @@ var Sparkles = createLucideIcon("sparkles", [
 		cy: "20",
 		r: "2",
 		key: "6kqj1y"
-	}]
-]);
-/**
-* @license lucide-react v0.575.0 - ISC
-*
-* This source code is licensed under the ISC license.
-* See the LICENSE file in the root directory of this source tree.
-*/
-var Sun = createLucideIcon("sun", [
-	["circle", {
-		cx: "12",
-		cy: "12",
-		r: "4",
-		key: "4exip2"
-	}],
-	["path", {
-		d: "M12 2v2",
-		key: "tus03m"
-	}],
-	["path", {
-		d: "M12 20v2",
-		key: "1lh1kg"
-	}],
-	["path", {
-		d: "m4.93 4.93 1.41 1.41",
-		key: "149t6j"
-	}],
-	["path", {
-		d: "m17.66 17.66 1.41 1.41",
-		key: "ptbguv"
-	}],
-	["path", {
-		d: "M2 12h2",
-		key: "1t8f8n"
-	}],
-	["path", {
-		d: "M20 12h2",
-		key: "1q8mjw"
-	}],
-	["path", {
-		d: "m6.34 17.66-1.41 1.41",
-		key: "1m8zz5"
-	}],
-	["path", {
-		d: "m19.07 4.93-1.41 1.41",
-		key: "1shlcs"
 	}]
 ]);
 /**
@@ -349,4 +293,4 @@ var X = createLucideIcon("x", [["path", {
 	key: "d8bk6v"
 }]]);
 //#endregion
-export { Sparkles as a, Moon as c, LoaderCircle as d, Heart as f, Sun as i, Minus as l, Upload as n, ShoppingBag as o, ArrowUpRight as p, Trash2 as r, Plus as s, X as t, Menu as u };
+export { ShoppingBag as a, Menu as c, ArrowUpRight as d, Sparkles as i, LoaderCircle as l, Upload as n, Plus as o, Trash2 as r, Minus as s, X as t, Heart as u };

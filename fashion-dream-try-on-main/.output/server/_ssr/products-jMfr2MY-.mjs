@@ -1,4 +1,4 @@
-//#region node_modules/.nitro/vite/services/ssr/assets/products--eiF-4or.js
+//#region node_modules/.nitro/vite/services/ssr/assets/products-jMfr2MY-.js
 var px = (id, w = 900) => `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=${w}`;
 var CATEGORIES = [
 	{
@@ -19,6 +19,16 @@ var CATEGORIES = [
 	{
 		slug: "accessories",
 		name: "Accessories",
+		image: px("30989278", 800)
+	},
+	{
+		slug: "cap",
+		name: "Caps",
+		image: px("6612173", 800)
+	},
+	{
+		slug: "sunglass",
+		name: "Sunglasses",
 		image: px("30989278", 800)
 	}
 ];
@@ -157,6 +167,29 @@ var PRODUCTS = [
 		colors: ["Beige", "Charcoal"],
 		badge: "IUH edition",
 		description: "Sweater cổ tròn thêu chữ UpThink, form vừa, mặc quanh năm."
+	},
+	{
+		id: "street-cap",
+		name: "Street Cap",
+		price: 49e4,
+		category: "cap",
+		image: px("6612173"),
+		gallery: [px("6612173"), px("30989278")],
+		sizes: ["Freesize"],
+		colors: ["Black", "Electric"],
+		badge: "New accessory",
+		description: "Mũ lưỡi trai cotton 6 mảnh, logo thêu nổi và khóa điều chỉnh phía sau."
+	},
+	{
+		id: "shade-runner",
+		name: "Shade Runner",
+		price: 75e4,
+		category: "sunglass",
+		image: px("30989278"),
+		gallery: [px("30989278"), px("28484979")],
+		sizes: ["Freesize"],
+		colors: ["Black"],
+		description: "Kính râm gọng vuông nhẹ, tròng tối và thiết kế gọn cho mọi outfit."
 	}
 ];
 function getProduct(id) {

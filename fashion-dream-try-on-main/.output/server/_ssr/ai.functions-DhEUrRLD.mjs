@@ -1,8 +1,8 @@
-import { n as PRODUCTS } from "./products--eiF-4or.mjs";
+import { n as PRODUCTS } from "./products-jMfr2MY-.mjs";
 import { c as createServerFn, i as TSS_SERVER_FUNCTION } from "./createServerFn-CIHAFgYl.mjs";
 import { n as objectType, r as stringType, t as arrayType } from "../_libs/zod.mjs";
 import processModule from "node:process";
-//#region node_modules/.nitro/vite/services/ssr/assets/ai.functions-BEXOtz1E.js
+//#region node_modules/.nitro/vite/services/ssr/assets/ai.functions-DhEUrRLD.js
 var createServerRpc = (serverFnMeta, splitImportFn) => {
 	const url = "/_serverFn/" + serverFnMeta.id;
 	return Object.assign(splitImportFn, {
