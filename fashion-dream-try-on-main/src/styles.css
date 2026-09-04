@@ -596,4 +596,12 @@
   .fashion-intro-copy {
     margin-top: 36px;
   }
+
+  .fashion-intro-content .statement-line--accent-small {
+    margin: 20px 0 15px 58px !important;
+  }
+
+  .fashion-intro-content .statement-line--accent-display {
+    margin-left: 86px !important;
+  }
 }

@@ -145,7 +145,7 @@ function Index() {
         <section className="fashion-intro-section">
           <div className="fashion-section-number">02</div>
           <div className="fashion-intro-content">
-            <p className="fashion-eyebrow">From browsing to fitting</p>
+            <p className="fashion-eyebrow" style={{ fontSize: "12px" }}>From browsing to fitting</p>
             <h2 className="fashion-section-title fashion-section-title--statement">
               <span
                 className="statement-line statement-line--solid"
@@ -159,8 +159,18 @@ function Index() {
               >
                 CHỌN ĐỒ.
               </span>
-              <span className="statement-line statement-line--accent-small">CHỌN CÁCH BẠN</span>
-              <span className="statement-line statement-line--accent-display">XUẤT HIỆN.</span>
+              <span
+                className="statement-line statement-line--accent-small"
+                style={{ margin: "20px 0 15px 434.1px", fontFamily: "Oswald, sans-serif", fontWeight: 400 }}
+              >
+                CHỌN CÁCH BẠN
+              </span>
+              <span
+                className="statement-line statement-line--accent-display"
+                style={{ margin: "0 0 0 444.15px", letterSpacing: "-1px" }}
+              >
+                XUẤT HIỆN.
+              </span>
             </h2>
             <p className="fashion-intro-copy">
               Fashion Dream giữ AI try-on làm core. Commerce được thiết kế lại để sản phẩm, outfit và AI stylist nối liền thành một hành trình mua sắm tự nhiên.
@@ -174,13 +184,13 @@ function Index() {
             <span>AI STUDIO / 01</span>
           </div>
           <div className="fashion-ai-feature__copy">
-            <p className="fashion-eyebrow">Personal styling system</p>
-            <h2 className="fashion-section-title">Your look,<br /><span className="fashion-accent">your logic.</span></h2>
-            <p>Chọn một món đồ, đưa ảnh của bạn vào, rồi để AI giúp hình dung outfit trước khi quyết định mua.</p>
+            <p className="fashion-eyebrow" style={{ fontSize: "15px" }}>Personal styling system</p>
+            <h2 className="fashion-section-title" style={{ lineHeight: "50.323px" }}>Your look,<br /><span className="fashion-accent">your logic.</span></h2>
+            <p style={{ fontSize: "16px" }}>Chọn một món đồ, đưa ảnh của bạn vào, rồi để AI giúp hình dung outfit trước khi quyết định mua.</p>
             <div className="fashion-feature-list">
-              <div><b>01</b><span>Concept theo mood</span></div>
-              <div><b>02</b><span>Virtual try-on</span></div>
-              <div><b>03</b><span>AI styling recommendations</span></div>
+              <div><b style={{ fontSize: "20px" }}>01</b><span style={{ fontSize: "20px" }}>Concept theo mood</span></div>
+              <div><b style={{ fontSize: "20px" }}>02</b><span style={{ fontSize: "20px" }}>Virtual try-on</span></div>
+              <div><b style={{ fontSize: "20px" }}>03</b><span style={{ fontSize: "20px" }}>AI styling recommendations</span></div>
             </div>
             <Link to="/ai" className="fashion-text-link">Open AI Studio ↗</Link>
           </div>
