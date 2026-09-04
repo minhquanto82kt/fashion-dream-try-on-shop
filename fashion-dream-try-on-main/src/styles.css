@@ -605,3 +605,25 @@
     margin-left: 86px !important;
   }
 }
+
+.statement-line--accent-display {
+  font-size: clamp(56px, 6vw, 95px);
+}
+
+.statement-line--accent-display::after {
+  display: none;
+}
+
+.fashion-hero__meta > span {
+  font-size: 13px;
+}
+
+@media (max-width: 800px) {
+  .statement-line--accent-display {
+    font-size: clamp(44px, 12vw, 68px);
+  }
+
+  .fashion-hero__meta > span {
+    font-size: 10px;
+  }
+}
