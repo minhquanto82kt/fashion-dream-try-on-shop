@@ -8,10 +8,10 @@ import { t as QueryClient } from "../_libs/tanstack__query-core.mjs";
 import { t as Toaster } from "../_libs/sonner.mjs";
 import { t as Route$7 } from "./product._id-COb2rmoG.mjs";
 import { t as HERO_SLIDES } from "./routes-Bj3hJEGc.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-9jQdBUKL.js
+//#region node_modules/.nitro/vite/services/ssr/assets/router-_bZCUPHW.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_dev_runtime = require_jsx_dev_runtime();
-var styles_default = "/assets/styles-D1GJQ269.css";
+var styles_default = "/assets/styles-oq4-368w.css";
 var _jsxFileName$1 = "/root/app/code/fashion-dream-try-on-main/src/components/ui/sonner.tsx";
 var Toaster$1 = ({ ...props }) => {
 	return /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Toaster, {
