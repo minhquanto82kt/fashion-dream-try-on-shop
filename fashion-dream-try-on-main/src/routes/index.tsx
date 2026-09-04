@@ -198,7 +198,7 @@ function Index() {
 
         <section className="fashion-products-section">
           <div className="fashion-section-head">
-            <div><p className="fashion-eyebrow" style={{ fontSize: "15px" }}>03 / THE COLLECTION</p><h2 className="fashion-section-title">NEW <span className="fashion-accent">DROP</span></h2></div>
+            <div><p className="fashion-eyebrow" style={{ fontSize: "15px" }}>03 / THE COLLECTION</p><h2 className="fashion-section-title" style={{ display: "flex", alignItems: "stretch", overflow: "auto", whiteSpace: "nowrap" }}>NEW <span className="fashion-accent" style={{ color: "#a0fd4c", textShadow: "none", marginLeft: "auto", marginRight: "auto", display: "flex", justifyContent: "flex-start", alignItems: "stretch", overflow: "auto" }}>DROP</span></h2></div>
             <Link to="/shop" className="fashion-text-link">View all products ↗</Link>
           </div>
           <div className="fashion-category-filters" aria-label="Danh mục sản phẩm">
