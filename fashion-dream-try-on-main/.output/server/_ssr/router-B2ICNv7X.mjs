@@ -8,7 +8,7 @@ import { t as QueryClient } from "../_libs/tanstack__query-core.mjs";
 import { t as Toaster } from "../_libs/sonner.mjs";
 import { t as Route$7 } from "./product._id-COb2rmoG.mjs";
 import { t as HERO_SLIDES } from "./routes-Bj3hJEGc.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-CH0dC4Sd.js
+//#region node_modules/.nitro/vite/services/ssr/assets/router-B2ICNv7X.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_dev_runtime = require_jsx_dev_runtime();
 var styles_default = "/assets/styles-CRnCprAN.css";
@@ -290,7 +290,7 @@ function RootComponent() {
 		columnNumber: 5
 	}, this);
 }
-var $$splitComponentImporter$4 = () => import("./routes-NT4dmii7.mjs");
+var $$splitComponentImporter$4 = () => import("./routes-BlV9OZ3S.mjs");
 var HERO = HERO_SLIDES[0].image;
 var Route$4 = createFileRoute("/")({
 	head: () => ({ meta: [
