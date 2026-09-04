@@ -30,6 +30,8 @@ const COLLECTION_CATEGORIES = [
   { slug: "hoodies", label: "Hoodies" },
   { slug: "tees", label: "Tees" },
   { slug: "outerwear", label: "Outerwear" },
+  { slug: "cap", label: "Caps" },
+  { slug: "sunglass", label: "Sunglasses" },
 ] as const;
 
 export const Route = createFileRoute("/")({
@@ -60,7 +62,7 @@ function Index() {
   const [slide, setSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const active = HERO_SLIDES[slide];
-  const featured = PRODUCTS.slice(0, 6).filter(
+  const featured = PRODUCTS.filter(
     (product) => activeCategory === "all" || product.category === activeCategory,
   );
 
