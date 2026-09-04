@@ -8,10 +8,10 @@ import { t as QueryClient } from "../_libs/tanstack__query-core.mjs";
 import { t as Toaster } from "../_libs/sonner.mjs";
 import { t as Route$7 } from "./product._id-COb2rmoG.mjs";
 import { t as HERO_SLIDES } from "./routes-Bj3hJEGc.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-_bZCUPHW.js
+//#region node_modules/.nitro/vite/services/ssr/assets/router-T-VbSWnj.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_dev_runtime = require_jsx_dev_runtime();
-var styles_default = "/assets/styles-oq4-368w.css";
+var styles_default = "/assets/styles-CfFMbKrR.css";
 var _jsxFileName$1 = "/root/app/code/fashion-dream-try-on-main/src/components/ui/sonner.tsx";
 var Toaster$1 = ({ ...props }) => {
 	return /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Toaster, {
@@ -290,7 +290,7 @@ function RootComponent() {
 		columnNumber: 5
 	}, this);
 }
-var $$splitComponentImporter$4 = () => import("./routes-BGkoG_8C.mjs");
+var $$splitComponentImporter$4 = () => import("./routes-DSokkIQK.mjs");
 var HERO = HERO_SLIDES[0].image;
 var Route$4 = createFileRoute("/")({
 	head: () => ({ meta: [
