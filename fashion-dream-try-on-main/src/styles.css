@@ -615,7 +615,9 @@
 }
 
 .fashion-hero__meta > span {
+  color: var(--foreground);
   font-size: 13px;
+  opacity: .78;
 }
 
 @media (max-width: 800px) {
