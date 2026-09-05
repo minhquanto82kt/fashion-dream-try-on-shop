@@ -6,7 +6,7 @@ import { h as Link } from "../_libs/@tanstack/react-router+[...].mjs";
 import { n as SiteNav, t as SiteFooter } from "./site-footer-C81mFqjI.mjs";
 import { t as ProductCard } from "./product-card-CDX_VKkG.mjs";
 import { t as HERO_SLIDES } from "./routes-Bj3hJEGc.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/routes-E860OpOZ.js
+//#region node_modules/.nitro/vite/services/ssr/assets/routes-BeRgkx2C.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_dev_runtime = require_jsx_dev_runtime();
 var _jsxFileName = "/root/app/code/fashion-dream-try-on-main/src/routes/index.tsx?tsr-split=component";
@@ -266,7 +266,6 @@ function Index() {
 					className: "fashion-intro-section",
 					children: [/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", {
 						className: "fashion-section-number",
-						style: { fontSize: "15px" },
 						children: "02"
 					}, void 0, false, {
 						fileName: _jsxFileName,
@@ -277,11 +276,10 @@ function Index() {
 						children: [
 							/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("p", {
 								className: "fashion-eyebrow",
-								style: { fontSize: "12px" },
 								children: "From browsing to fitting"
 							}, void 0, false, {
 								fileName: _jsxFileName,
-								lineNumber: 92,
+								lineNumber: 90,
 								columnNumber: 13
 							}, this),
 							/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("h2", {
@@ -289,58 +287,40 @@ function Index() {
 								children: [
 									/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", {
 										className: "statement-line statement-line--solid",
-										style: {
-											letterSpacing: "-1.5px",
-											lineHeight: "50px"
-										},
 										children: "KHÔNG CHỈ"
 									}, void 0, false, {
 										fileName: _jsxFileName,
-										lineNumber: 96,
+										lineNumber: 92,
 										columnNumber: 15
 									}, this),
 									/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", {
 										className: "statement-line statement-line--solid statement-line--offset",
-										style: {
-											letterSpacing: "-1.5px",
-											lineHeight: "90px"
-										},
 										children: "CHỌN ĐỒ."
 									}, void 0, false, {
 										fileName: _jsxFileName,
-										lineNumber: 102,
+										lineNumber: 95,
 										columnNumber: 15
 									}, this),
 									/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", {
 										className: "statement-line statement-line--accent-small",
-										style: {
-											margin: "20px 0 15px 443.1px",
-											fontFamily: "Oswald, sans-serif",
-											fontWeight: 400,
-											fontSize: "12px"
-										},
 										children: "CHỌN CÁCH BẠN"
 									}, void 0, false, {
 										fileName: _jsxFileName,
-										lineNumber: 108,
+										lineNumber: 98,
 										columnNumber: 15
 									}, this),
 									/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", {
 										className: "statement-line statement-line--accent-display",
-										style: {
-											margin: "0 0 0 444.15px",
-											letterSpacing: "-1px"
-										},
 										children: "XUẤT HIỆN."
 									}, void 0, false, {
 										fileName: _jsxFileName,
-										lineNumber: 116,
+										lineNumber: 101,
 										columnNumber: 15
 									}, this)
 								]
 							}, void 0, true, {
 								fileName: _jsxFileName,
-								lineNumber: 95,
+								lineNumber: 91,
 								columnNumber: 13
 							}, this),
 							/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("p", {
@@ -348,13 +328,13 @@ function Index() {
 								children: "Fashion Dream giữ AI try-on làm core. Commerce được thiết kế lại để sản phẩm, outfit và AI stylist nối liền thành một hành trình mua sắm tự nhiên."
 							}, void 0, false, {
 								fileName: _jsxFileName,
-								lineNumber: 123,
+								lineNumber: 105,
 								columnNumber: 13
 							}, this)
 						]
 					}, void 0, true, {
 						fileName: _jsxFileName,
-						lineNumber: 91,
+						lineNumber: 89,
 						columnNumber: 11
 					}, this)]
 				}, void 0, true, {
@@ -372,125 +352,102 @@ function Index() {
 							loading: "lazy"
 						}, void 0, false, {
 							fileName: _jsxFileName,
-							lineNumber: 131,
+							lineNumber: 113,
 							columnNumber: 13
 						}, this), /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", { children: "AI STUDIO / 01" }, void 0, false, {
 							fileName: _jsxFileName,
-							lineNumber: 132,
+							lineNumber: 114,
 							columnNumber: 13
 						}, this)]
 					}, void 0, true, {
 						fileName: _jsxFileName,
-						lineNumber: 130,
+						lineNumber: 112,
 						columnNumber: 11
 					}, this), /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", {
 						className: "fashion-ai-feature__copy",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("p", {
 								className: "fashion-eyebrow",
-								style: { fontSize: "15px" },
 								children: "Personal styling system"
 							}, void 0, false, {
 								fileName: _jsxFileName,
-								lineNumber: 135,
+								lineNumber: 117,
 								columnNumber: 13
 							}, this),
 							/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("h2", {
 								className: "fashion-section-title",
-								style: { lineHeight: "50.323px" },
 								children: [
 									"Your look,",
 									/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("br", {}, void 0, false, {
 										fileName: _jsxFileName,
-										lineNumber: 140,
-										columnNumber: 24
+										lineNumber: 118,
+										columnNumber: 61
 									}, this),
 									/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", {
 										className: "fashion-accent",
 										children: "your logic."
 									}, void 0, false, {
 										fileName: _jsxFileName,
-										lineNumber: 140,
-										columnNumber: 30
+										lineNumber: 118,
+										columnNumber: 67
 									}, this)
 								]
 							}, void 0, true, {
 								fileName: _jsxFileName,
-								lineNumber: 138,
+								lineNumber: 118,
 								columnNumber: 13
 							}, this),
-							/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("p", {
-								style: { fontSize: "16px" },
-								children: "Chọn một món đồ, đưa ảnh của bạn vào, rồi để AI giúp hình dung outfit trước khi quyết định mua."
-							}, void 0, false, {
+							/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("p", { children: "Chọn một món đồ, đưa ảnh của bạn vào, rồi để AI giúp hình dung outfit trước khi quyết định mua." }, void 0, false, {
 								fileName: _jsxFileName,
-								lineNumber: 141,
+								lineNumber: 119,
 								columnNumber: 13
 							}, this),
 							/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", {
 								className: "fashion-feature-list",
 								children: [
-									/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", { children: [/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("b", {
-										style: { fontSize: "20px" },
-										children: "01"
-									}, void 0, false, {
+									/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", { children: [/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("b", { children: "01" }, void 0, false, {
 										fileName: _jsxFileName,
-										lineNumber: 145,
+										lineNumber: 121,
 										columnNumber: 20
-									}, this), /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", {
-										style: { fontSize: "20px" },
-										children: "Concept theo mood"
-									}, void 0, false, {
+									}, this), /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", { children: "Concept theo mood" }, void 0, false, {
 										fileName: _jsxFileName,
-										lineNumber: 147,
-										columnNumber: 24
+										lineNumber: 121,
+										columnNumber: 29
 									}, this)] }, void 0, true, {
 										fileName: _jsxFileName,
-										lineNumber: 145,
+										lineNumber: 121,
 										columnNumber: 15
 									}, this),
-									/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", { children: [/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("b", {
-										style: { fontSize: "20px" },
-										children: "02"
-									}, void 0, false, {
+									/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", { children: [/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("b", { children: "02" }, void 0, false, {
 										fileName: _jsxFileName,
-										lineNumber: 150,
+										lineNumber: 122,
 										columnNumber: 20
-									}, this), /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", {
-										style: { fontSize: "20px" },
-										children: "Virtual try-on"
-									}, void 0, false, {
+									}, this), /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", { children: "Virtual try-on" }, void 0, false, {
 										fileName: _jsxFileName,
-										lineNumber: 152,
-										columnNumber: 24
+										lineNumber: 122,
+										columnNumber: 29
 									}, this)] }, void 0, true, {
 										fileName: _jsxFileName,
-										lineNumber: 150,
+										lineNumber: 122,
 										columnNumber: 15
 									}, this),
-									/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", { children: [/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("b", {
-										style: { fontSize: "20px" },
-										children: "03"
-									}, void 0, false, {
+									/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", { children: [/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("b", { children: "03" }, void 0, false, {
 										fileName: _jsxFileName,
-										lineNumber: 155,
+										lineNumber: 123,
 										columnNumber: 20
-									}, this), /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", {
-										style: { fontSize: "20px" },
-										children: "AI styling recommendations"
-									}, void 0, false, {
+									}, this), /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", { children: "AI styling recommendations" }, void 0, false, {
 										fileName: _jsxFileName,
-										lineNumber: 157,
-										columnNumber: 24
+										lineNumber: 123,
+										columnNumber: 29
 									}, this)] }, void 0, true, {
 										fileName: _jsxFileName,
-										lineNumber: 155,
+										lineNumber: 123,
 										columnNumber: 15
 									}, this)
 								]
 							}, void 0, true, {
 								fileName: _jsxFileName,
-								lineNumber: 144,
+								lineNumber: 120,
 								columnNumber: 13
 							}, this),
 							/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Link, {
@@ -499,18 +456,18 @@ function Index() {
 								children: "Open AI Studio ↗"
 							}, void 0, false, {
 								fileName: _jsxFileName,
-								lineNumber: 161,
+								lineNumber: 125,
 								columnNumber: 13
 							}, this)
 						]
 					}, void 0, true, {
 						fileName: _jsxFileName,
-						lineNumber: 134,
+						lineNumber: 116,
 						columnNumber: 11
 					}, this)]
 				}, void 0, true, {
 					fileName: _jsxFileName,
-					lineNumber: 129,
+					lineNumber: 111,
 					columnNumber: 9
 				}, this),
 				/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("section", {
@@ -520,15 +477,14 @@ function Index() {
 							className: "fashion-section-head",
 							children: [/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("p", {
 								className: "fashion-eyebrow",
-								style: { fontSize: "15px" },
 								children: "03 / THE COLLECTION"
 							}, void 0, false, {
 								fileName: _jsxFileName,
-								lineNumber: 167,
+								lineNumber: 131,
 								columnNumber: 18
 							}, this) }, void 0, false, {
 								fileName: _jsxFileName,
-								lineNumber: 167,
+								lineNumber: 131,
 								columnNumber: 13
 							}, this), /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Link, {
 								to: "/shop",
@@ -536,12 +492,12 @@ function Index() {
 								children: "View all products ↗"
 							}, void 0, false, {
 								fileName: _jsxFileName,
-								lineNumber: 170,
+								lineNumber: 132,
 								columnNumber: 13
 							}, this)]
 						}, void 0, true, {
 							fileName: _jsxFileName,
-							lineNumber: 166,
+							lineNumber: 130,
 							columnNumber: 11
 						}, this),
 						/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", {
@@ -555,74 +511,72 @@ function Index() {
 								children: category.label
 							}, category.slug, false, {
 								fileName: _jsxFileName,
-								lineNumber: 173,
+								lineNumber: 135,
 								columnNumber: 52
 							}, this))
 						}, void 0, false, {
 							fileName: _jsxFileName,
-							lineNumber: 172,
+							lineNumber: 134,
 							columnNumber: 11
 						}, this),
 						/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", {
 							className: "fashion-product-grid",
 							children: featured.map((p) => /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(ProductCard, { product: p }, p.id, false, {
 								fileName: _jsxFileName,
-								lineNumber: 178,
+								lineNumber: 140,
 								columnNumber: 32
 							}, this))
 						}, void 0, false, {
 							fileName: _jsxFileName,
-							lineNumber: 177,
+							lineNumber: 139,
 							columnNumber: 11
 						}, this)
 					]
 				}, void 0, true, {
 					fileName: _jsxFileName,
-					lineNumber: 165,
+					lineNumber: 129,
 					columnNumber: 9
 				}, this),
 				/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("section", {
 					className: "fashion-flow",
 					children: [/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", { children: [/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("p", {
 						className: "fashion-eyebrow",
-						style: { fontSize: "15px" },
 						children: "04 / THE EXPERIENCE"
 					}, void 0, false, {
 						fileName: _jsxFileName,
-						lineNumber: 183,
+						lineNumber: 145,
 						columnNumber: 16
 					}, this), /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("h2", {
 						className: "fashion-section-title",
-						style: { lineHeight: "50.323px" },
 						children: [
 							"See it.",
 							/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("br", {}, void 0, false, {
 								fileName: _jsxFileName,
-								lineNumber: 187,
-								columnNumber: 21
+								lineNumber: 145,
+								columnNumber: 115
 							}, this),
 							/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", {
 								className: "fashion-accent",
 								children: "Try it."
 							}, void 0, false, {
 								fileName: _jsxFileName,
-								lineNumber: 187,
-								columnNumber: 27
+								lineNumber: 145,
+								columnNumber: 121
 							}, this),
 							/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("br", {}, void 0, false, {
 								fileName: _jsxFileName,
-								lineNumber: 187,
-								columnNumber: 74
+								lineNumber: 145,
+								columnNumber: 168
 							}, this),
 							"Wear it."
 						]
 					}, void 0, true, {
 						fileName: _jsxFileName,
-						lineNumber: 185,
-						columnNumber: 37
+						lineNumber: 145,
+						columnNumber: 70
 					}, this)] }, void 0, true, {
 						fileName: _jsxFileName,
-						lineNumber: 183,
+						lineNumber: 145,
 						columnNumber: 11
 					}, this), /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", {
 						className: "fashion-flow__steps",
@@ -630,96 +584,96 @@ function Index() {
 							/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", { children: [
 								/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", { children: "01" }, void 0, false, {
 									fileName: _jsxFileName,
-									lineNumber: 189,
+									lineNumber: 147,
 									columnNumber: 18
 								}, this),
 								/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("h3", { children: "Discover" }, void 0, false, {
 									fileName: _jsxFileName,
-									lineNumber: 189,
+									lineNumber: 147,
 									columnNumber: 33
 								}, this),
 								/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("p", { children: "Browse curated products and collections." }, void 0, false, {
 									fileName: _jsxFileName,
-									lineNumber: 189,
+									lineNumber: 147,
 									columnNumber: 50
 								}, this)
 							] }, void 0, true, {
 								fileName: _jsxFileName,
-								lineNumber: 189,
+								lineNumber: 147,
 								columnNumber: 13
 							}, this),
 							/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", { children: [
 								/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", { children: "02" }, void 0, false, {
 									fileName: _jsxFileName,
-									lineNumber: 190,
+									lineNumber: 148,
 									columnNumber: 18
 								}, this),
 								/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("h3", { children: "Try" }, void 0, false, {
 									fileName: _jsxFileName,
-									lineNumber: 190,
+									lineNumber: 148,
 									columnNumber: 33
 								}, this),
 								/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("p", { children: "Upload your photo and visualize the fit with AI." }, void 0, false, {
 									fileName: _jsxFileName,
-									lineNumber: 190,
+									lineNumber: 148,
 									columnNumber: 45
 								}, this)
 							] }, void 0, true, {
 								fileName: _jsxFileName,
-								lineNumber: 190,
+								lineNumber: 148,
 								columnNumber: 13
 							}, this),
 							/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", { children: [
 								/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", { children: "03" }, void 0, false, {
 									fileName: _jsxFileName,
-									lineNumber: 191,
+									lineNumber: 149,
 									columnNumber: 18
 								}, this),
 								/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("h3", { children: "Style" }, void 0, false, {
 									fileName: _jsxFileName,
-									lineNumber: 191,
+									lineNumber: 149,
 									columnNumber: 33
 								}, this),
 								/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("p", { children: "Build a complete look with AI recommendations." }, void 0, false, {
 									fileName: _jsxFileName,
-									lineNumber: 191,
+									lineNumber: 149,
 									columnNumber: 47
 								}, this)
 							] }, void 0, true, {
 								fileName: _jsxFileName,
-								lineNumber: 191,
+								lineNumber: 149,
 								columnNumber: 13
 							}, this),
 							/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", { children: [
 								/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", { children: "04" }, void 0, false, {
 									fileName: _jsxFileName,
-									lineNumber: 192,
+									lineNumber: 150,
 									columnNumber: 18
 								}, this),
 								/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("h3", { children: "Shop" }, void 0, false, {
 									fileName: _jsxFileName,
-									lineNumber: 192,
+									lineNumber: 150,
 									columnNumber: 33
 								}, this),
 								/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("p", { children: "Add the pieces you love and check out." }, void 0, false, {
 									fileName: _jsxFileName,
-									lineNumber: 192,
+									lineNumber: 150,
 									columnNumber: 46
 								}, this)
 							] }, void 0, true, {
 								fileName: _jsxFileName,
-								lineNumber: 192,
+								lineNumber: 150,
 								columnNumber: 13
 							}, this)
 						]
 					}, void 0, true, {
 						fileName: _jsxFileName,
-						lineNumber: 188,
+						lineNumber: 146,
 						columnNumber: 11
 					}, this)]
 				}, void 0, true, {
 					fileName: _jsxFileName,
-					lineNumber: 182,
+					lineNumber: 144,
 					columnNumber: 9
 				}, this),
 				/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("section", {
@@ -730,7 +684,7 @@ function Index() {
 						loading: "lazy"
 					}, void 0, false, {
 						fileName: _jsxFileName,
-						lineNumber: 197,
+						lineNumber: 155,
 						columnNumber: 11
 					}, this), /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", { children: [
 						/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("p", {
@@ -738,14 +692,14 @@ function Index() {
 							children: "EDITORIAL / SAIGON"
 						}, void 0, false, {
 							fileName: _jsxFileName,
-							lineNumber: 198,
+							lineNumber: 156,
 							columnNumber: 16
 						}, this),
 						/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("h2", { children: [
 							"Street is",
 							/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("br", {}, void 0, false, {
 								fileName: _jsxFileName,
-								lineNumber: 198,
+								lineNumber: 156,
 								columnNumber: 82
 							}, this),
 							/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", {
@@ -753,12 +707,12 @@ function Index() {
 								children: "the studio."
 							}, void 0, false, {
 								fileName: _jsxFileName,
-								lineNumber: 198,
+								lineNumber: 156,
 								columnNumber: 88
 							}, this)
 						] }, void 0, true, {
 							fileName: _jsxFileName,
-							lineNumber: 198,
+							lineNumber: 156,
 							columnNumber: 69
 						}, this),
 						/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Link, {
@@ -767,17 +721,17 @@ function Index() {
 							children: "Our story ↗"
 						}, void 0, false, {
 							fileName: _jsxFileName,
-							lineNumber: 198,
+							lineNumber: 156,
 							columnNumber: 144
 						}, this)
 					] }, void 0, true, {
 						fileName: _jsxFileName,
-						lineNumber: 198,
+						lineNumber: 156,
 						columnNumber: 11
 					}, this)]
 				}, void 0, true, {
 					fileName: _jsxFileName,
-					lineNumber: 196,
+					lineNumber: 154,
 					columnNumber: 9
 				}, this)
 			] }, void 0, true, {
@@ -787,7 +741,7 @@ function Index() {
 			}, this),
 			/* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(SiteFooter, {}, void 0, false, {
 				fileName: _jsxFileName,
-				lineNumber: 201,
+				lineNumber: 159,
 				columnNumber: 7
 			}, this)
 		]

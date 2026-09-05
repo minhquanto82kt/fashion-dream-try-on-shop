@@ -145,32 +145,20 @@ function Index() {
       </header>
       <main>
         <section className="fashion-intro-section">
-          <div className="fashion-section-number" style={{ fontSize: "15px" }}>02</div>
+          <div className="fashion-section-number">02</div>
           <div className="fashion-intro-content">
-            <p className="fashion-eyebrow" style={{ fontSize: "12px" }}>From browsing to fitting</p>
+            <p className="fashion-eyebrow">From browsing to fitting</p>
             <h2 className="fashion-section-title fashion-section-title--statement">
-              <span
-                className="statement-line statement-line--solid"
-                style={{ letterSpacing: "-1.5px", lineHeight: "50px" }}
-              >
+              <span className="statement-line statement-line--solid">
                 KHÔNG CHỈ
               </span>
-              <span
-                className="statement-line statement-line--solid statement-line--offset"
-                style={{ letterSpacing: "-1.5px", lineHeight: "90px" }}
-              >
+              <span className="statement-line statement-line--solid statement-line--offset">
                 CHỌN ĐỒ.
               </span>
-              <span
-                className="statement-line statement-line--accent-small"
-                style={{ margin: "20px 0 15px 443.1px", fontFamily: "Oswald, sans-serif", fontWeight: 400, fontSize: "12px" }}
-              >
+              <span className="statement-line statement-line--accent-small">
                 CHỌN CÁCH BẠN
               </span>
-              <span
-                className="statement-line statement-line--accent-display"
-                style={{ margin: "0 0 0 444.15px", letterSpacing: "-1px" }}
-              >
+              <span className="statement-line statement-line--accent-display">
                 XUẤT HIỆN.
               </span>
             </h2>
@@ -186,13 +174,13 @@ function Index() {
             <span>AI STUDIO / 01</span>
           </div>
           <div className="fashion-ai-feature__copy">
-            <p className="fashion-eyebrow" style={{ fontSize: "15px" }}>Personal styling system</p>
-            <h2 className="fashion-section-title" style={{ lineHeight: "50.323px" }}>Your look,<br /><span className="fashion-accent">your logic.</span></h2>
-            <p style={{ fontSize: "16px" }}>Chọn một món đồ, đưa ảnh của bạn vào, rồi để AI giúp hình dung outfit trước khi quyết định mua.</p>
+            <p className="fashion-eyebrow">Personal styling system</p>
+            <h2 className="fashion-section-title">Your look,<br /><span className="fashion-accent">your logic.</span></h2>
+            <p>Chọn một món đồ, đưa ảnh của bạn vào, rồi để AI giúp hình dung outfit trước khi quyết định mua.</p>
             <div className="fashion-feature-list">
-              <div><b style={{ fontSize: "20px" }}>01</b><span style={{ fontSize: "20px" }}>Concept theo mood</span></div>
-              <div><b style={{ fontSize: "20px" }}>02</b><span style={{ fontSize: "20px" }}>Virtual try-on</span></div>
-              <div><b style={{ fontSize: "20px" }}>03</b><span style={{ fontSize: "20px" }}>AI styling recommendations</span></div>
+              <div><b>01</b><span>Concept theo mood</span></div>
+              <div><b>02</b><span>Virtual try-on</span></div>
+              <div><b>03</b><span>AI styling recommendations</span></div>
             </div>
             <Link to="/ai" className="fashion-text-link">Open AI Studio ↗</Link>
           </div>
@@ -200,7 +188,7 @@ function Index() {
 
         <section className="fashion-products-section">
           <div className="fashion-section-head">
-            <div><p className="fashion-eyebrow" style={{ fontSize: "15px" }}>03 / THE COLLECTION</p></div>
+            <div><p className="fashion-eyebrow">03 / THE COLLECTION</p></div>
             <Link to="/shop" className="fashion-text-link">View all products ↗</Link>
           </div>
           <div className="fashion-category-filters" aria-label="Danh mục sản phẩm">
@@ -222,7 +210,7 @@ function Index() {
         </section>
 
         <section className="fashion-flow">
-          <div><p className="fashion-eyebrow" style={{ fontSize: "15px" }}>04 / THE EXPERIENCE</p><h2 className="fashion-section-title" style={{ lineHeight: "50.323px" }}>See it.<br /><span className="fashion-accent">Try it.</span><br />Wear it.</h2></div>
+          <div><p className="fashion-eyebrow">04 / THE EXPERIENCE</p><h2 className="fashion-section-title">See it.<br /><span className="fashion-accent">Try it.</span><br />Wear it.</h2></div>
           <div className="fashion-flow__steps">
             <div><span>01</span><h3>Discover</h3><p>Browse curated products and collections.</p></div>
             <div><span>02</span><h3>Try</h3><p>Upload your photo and visualize the fit with AI.</p></div>
