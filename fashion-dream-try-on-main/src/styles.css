@@ -942,6 +942,7 @@
   max-width: min(720px, 70%);
   margin: 0;
   align-items: flex-start;
+  row-gap: clamp(6px, .8vw, 10px);
 }
 
 .fashion-section-title--statement .statement-line--solid {
@@ -966,7 +967,7 @@
 }
 
 .fashion-section-title--statement .statement-line--accent-small {
-  bottom: clamp(112px, 11vw, 148px);
+  bottom: clamp(124px, 11.5vw, 152px);
   color: var(--ft-acid);
   font-size: clamp(.75rem, 1.4vw, 1.1rem);
 }
