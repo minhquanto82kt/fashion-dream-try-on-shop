@@ -41,26 +41,26 @@
   --radius: 0px;
   --ink: #212121;
   --background: #212121;
-  --foreground: #14ffec;
+  --foreground: #F2EFE7;
   --card: #323232;
-  --card-foreground: #14ffec;
+  --card-foreground: #F2EFE7;
   --popover: #323232;
-  --popover-foreground: #14ffec;
+  --popover-foreground: #F2EFE7;
   --primary: #14ffec;
   --primary-foreground: #212121;
   --secondary: #323232;
-  --secondary-foreground: #14ffec;
+  --secondary-foreground: #F2EFE7;
   --muted: #323232;
   --muted-foreground: #0d7377;
   --accent: #0d7377;
-  --accent-foreground: #14ffec;
+  --accent-foreground: #F2EFE7;
   --destructive: #ff5c5c;
   --destructive-foreground: #212121;
   --border: #0d7377;
   --input: #0d7377;
   --ring: #14ffec;
   --electric: #14ffec;
-  --beige: #14ffec;
+  --beige: #F2EFE7;
   --silver: #0d7377;
   --y2k-cyan: #14ffec;
   --gradient-gloss: linear-gradient(
@@ -119,8 +119,8 @@
 .type-meta{font-family:var(--ft-meta);font-weight:500;letter-spacing:.12em;text-transform:uppercase}
 
 /* FashionTry / Atelier commerce layer */
-:root { --ft-paper:#14ffec; --ft-ink:#212121; --ft-acid:#14ffec; --ft-muted:#323232; --ft-serif:"Bodoni Moda", Georgia, serif; --ft-editorial:"Bodoni Moda", Georgia, serif; --ft-display:"Anton", Impact, sans-serif; --ft-body:"Space Grotesk", sans-serif; --ft-meta:"Oswald", Arial, sans-serif; --ft-sans:"Space Grotesk", sans-serif; --ft-impact:"Anton", Impact, sans-serif; }
-:root[data-theme="cream"] { --background:#212121; --foreground:#14ffec; --card:#323232; --card-foreground:#14ffec; --popover:#323232; --popover-foreground:#14ffec; --muted:#323232; --muted-foreground:#0d7377; --border:#0d7377; --primary:#14ffec; --primary-foreground:#212121; --accent:#0d7377; --accent-foreground:#14ffec; --input:#0d7377; --ring:#14ffec; --electric:#14ffec; --beige:#14ffec; --silver:#0d7377; }
+:root { --ft-paper:#F2EFE7; --ft-ink:#212121; --ft-acid:#14ffec; --ft-muted:#323232; --ft-serif:"Bodoni Moda", Georgia, serif; --ft-editorial:"Bodoni Moda", Georgia, serif; --ft-display:"Anton", Impact, sans-serif; --ft-body:"Space Grotesk", sans-serif; --ft-meta:"Oswald", Arial, sans-serif; --ft-sans:"Space Grotesk", sans-serif; --ft-impact:"Anton", Impact, sans-serif; }
+:root[data-theme="cream"] { --background:#212121; --foreground:#F2EFE7; --card:#323232; --card-foreground:#F2EFE7; --popover:#323232; --popover-foreground:#F2EFE7; --muted:#323232; --muted-foreground:#0d7377; --border:#0d7377; --primary:#14ffec; --primary-foreground:#212121; --accent:#0d7377; --accent-foreground:#F2EFE7; --input:#0d7377; --ring:#14ffec; --electric:#14ffec; --beige:#F2EFE7; --silver:#0d7377; }
 .fashion-site{font-family:var(--ft-sans); background:var(--background); color:var(--foreground)}
 .fashion-nav{position:fixed;inset:0 0 auto;z-index:50;border-bottom:1px solid var(--border);background:color-mix(in oklab,var(--background) 90%,transparent);backdrop-filter:blur(14px)}
 .fashion-nav__inner{width:min(1240px,calc(100% - 48px));height:74px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:24px}
