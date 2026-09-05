@@ -3,10 +3,10 @@ import { n as PRODUCTS } from "./products-jMfr2MY-.mjs";
 import { i as require_react } from "../_libs/react+tanstack__react-query.mjs";
 import { t as require_jsx_dev_runtime } from "../_libs/react.mjs";
 import { h as Link } from "../_libs/@tanstack/react-router+[...].mjs";
-import { n as SiteNav, t as SiteFooter } from "./site-footer-C81mFqjI.mjs";
+import { n as SiteNav, t as SiteFooter } from "./site-footer-g1PhCRAn.mjs";
 import { t as ProductCard } from "./product-card-CDX_VKkG.mjs";
 import { t as HERO_SLIDES } from "./routes-Bj3hJEGc.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/routes-BeRgkx2C.js
+//#region node_modules/.nitro/vite/services/ssr/assets/routes-UM2odVjt.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_dev_runtime = require_jsx_dev_runtime();
 var _jsxFileName = "/root/app/code/fashion-dream-try-on-main/src/routes/index.tsx?tsr-split=component";
