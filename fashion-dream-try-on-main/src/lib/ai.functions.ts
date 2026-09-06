@@ -1,46 +1,47 @@
+```ts
 import { createServerFn } from "@tanstack/react-start";
+import { generateImage } from "ai";
 import { z } from "zod";
 import { PRODUCTS } from "@/data/products";
 
+const IMAGE_MODEL = "openai/gpt-image-2";
 
-const GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
-const IMAGE_MODEL = "google/gemini-2.5-flash-image";
+type GeneratedImage = {
+  image: string;
+  text: string;
+};
 
-type Content =
-  | { type: "text"; text: string }
-  | { type: "image_url"; image_url: { url: string } };
-
-async function generateImage(content: Content[]) {
-  const key = process.env["LOVABLE_API_KEY"];
-  if (!key) throw new Error("Thiếu cấu hình AI (LOVABLE_API_KEY).");
-
-  const res = await fetch(GATEWAY, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${key}`,
-    },
-    body: JSON.stringify({
+async function generateFashionImage(
+  prompt: string,
+  images: string[] = [],
+): Promise<GeneratedImage> {
+  try {
+    const result = await generateImage({
       model: IMAGE_MODEL,
-      modalities: ["image", "text"],
-      messages: [{ role: "user", content }],
-    }),
-  });
+      prompt,
+      images: images.length > 0 ? images : undefined,
+      n: 1,
+    });
 
-  if (!res.ok) {
-    if (res.status === 429) throw new Error("AI đang quá tải, vui lòng thử lại sau ít phút.");
-    if (res.status === 402) throw new Error("Đã hết credit AI. Vui lòng nạp thêm trong Lovable.");
-    const detail = await res.text();
-    throw new Error(`AI lỗi (${res.status}): ${detail.slice(0, 200)}`);
+    const image = result.image;
+
+    if (!image) {
+      throw new Error("AI không trả về hình ảnh.");
+    }
+
+    return {
+      image: `data:${image.mediaType};base64,${image.base64}`,
+      text: "",
+    };
+  } catch (error) {
+    console.error("AI Gateway image generation error:", error);
+
+    if (error instanceof Error) {
+      throw new Error(`AI tạo ảnh thất bại: ${error.message}`);
+    }
+
+    throw new Error("AI tạo ảnh thất bại. Vui lòng thử lại.");
   }
-
-  const data = (await res.json()) as {
-    choices?: { message?: { content?: string; images?: { image_url?: { url?: string } }[] } }[];
-  };
-  const message = data.choices?.[0]?.message;
-  const image = message?.images?.[0]?.image_url?.url;
-  if (!image) throw new Error("AI không trả về hình ảnh. Hãy thử mô tả khác.");
-  return { image, text: message?.content ?? "" };
 }
 
 const ConceptInput = z.object({
@@ -58,23 +59,35 @@ export const generateConcept = createServerFn({ method: "POST" })
       .filter(Boolean) as (typeof PRODUCTS)[number][];
 
     const items = mentioned
-      .map((p) => `${p.name} (${p.category}, màu ${p.colors.join("/")}): ${p.description}`)
+      .map(
+        (p) =>
+          `${p.name} (${p.category}, màu ${p.colors.join("/")})`
+      )
       .join(" | ");
 
     const prompt = [
-      "Full-body fashion editorial photograph of a young Vietnamese university student model,",
-      `styled in a ${data.style} outfit for the occasion: ${data.occasion}.`,
-      items ? `The outfit MUST feature these UpThink pieces: ${items}.` : "",
+      "Create a full-body fashion editorial photograph of a young Vietnamese university student model.",
+      `Style: ${data.style}.`,
+      `Occasion: ${data.occasion}.`,
+      items
+        ? `The outfit MUST feature these UpThink clothing pieces: ${items}.`
+        : "",
       data.prompt ? `Additional direction: ${data.prompt}.` : "",
-      "Streetwear brand aesthetic: charcoal and ivory palette with a lime-green accent, urban concrete backdrop,",
-      "natural daylight, 35mm lens, sharp detail, no text or watermark.",
+      "Streetwear brand aesthetic.",
+      "Charcoal and ivory palette with a lime-green accent.",
+      "Urban concrete backdrop.",
+      "Natural daylight.",
+      "35mm photography.",
+      "Sharp realistic detail.",
+      "Photorealistic.",
+      "No text.",
+      "No watermark.",
     ]
       .filter(Boolean)
       .join(" ");
 
-    return generateImage([{ type: "text", text: prompt }]);
+    return generateFashionImage(prompt);
   });
-
 
 const TryOnInput = z.object({
   personImage: z.string().min(20),
@@ -86,19 +99,28 @@ const TryOnInput = z.object({
 export const generateTryOn = createServerFn({ method: "POST" })
   .validator((input: unknown) => TryOnInput.parse(input))
   .handler(async ({ data }) => {
-    const instruction = [
-      `Virtual try-on: dress the person in the first image with the garment "${data.garmentName}" shown in the second image.`,
-      "Keep the person's face, body proportions, pose, skin tone and background exactly the same.",
-      "Fit the garment naturally with realistic folds, shadows and lighting.",
-      data.note ? `Extra request: ${data.note}.` : "",
-      "Photorealistic result, no text or watermark.",
+    const prompt = [
+      "Perform a realistic virtual try-on edit.",
+      `Dress the person in the first reference image with the garment "${data.garmentName}" shown in the second reference image.`,
+      "Preserve the person's identity and facial features.",
+      "Preserve body proportions, skin tone, pose and hairstyle.",
+      "Keep the original background and camera composition.",
+      "Replace only the clothing.",
+      "Make the garment fit naturally according to the person's body shape.",
+      "Preserve the garment's design, color, material, pattern, seams and important details.",
+      "Add realistic fabric folds, shadows and lighting consistent with the original photograph.",
+      "Do not change the person's face or body.",
+      data.note ? `Additional request: ${data.note}.` : "",
+      "Photorealistic result.",
+      "No text.",
+      "No watermark.",
     ]
       .filter(Boolean)
       .join(" ");
 
-    return generateImage([
-      { type: "text", text: instruction },
-      { type: "image_url", image_url: { url: data.personImage } },
-      { type: "image_url", image_url: { url: data.garmentImage } },
+    return generateFashionImage(prompt, [
+      data.personImage,
+      data.garmentImage,
     ]);
   });
+```
