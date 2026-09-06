@@ -1,4 +1,4 @@
-import { n as __toESM, t as __commonJSMin } from "../../_runtime.mjs";
+import { r as __toESM, t as __commonJSMin } from "../../_runtime.mjs";
 import { i as require_react, r as require_jsx_runtime } from "../react+tanstack__react-query.mjs";
 import { r as parseHref } from "../tanstack__history.mjs";
 import { PassThrough, Readable } from "node:stream";

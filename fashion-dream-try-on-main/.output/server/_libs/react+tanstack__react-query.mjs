@@ -1,4 +1,4 @@
-import { n as __toESM, t as __commonJSMin } from "../_runtime.mjs";
+import { r as __toESM, t as __commonJSMin } from "../_runtime.mjs";
 import { a as shouldThrowError, i as noop, n as MutationObserver, r as notifyManager } from "./tanstack__query-core.mjs";
 import processModule from "node:process";
 //#region node_modules/react/cjs/react.production.js
