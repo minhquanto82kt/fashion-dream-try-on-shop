@@ -4,7 +4,7 @@ import { t as require_jsx_dev_runtime } from "../_libs/react.mjs";
 import { n as useCart } from "./cart-Cjci71s0.mjs";
 import { h as Link } from "../_libs/@tanstack/react-router+[...].mjs";
 import { a as ShoppingBag, c as Menu, i as Sparkles, t as X } from "../_libs/lucide-react.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/site-footer-C81mFqjI.js
+//#region node_modules/.nitro/vite/services/ssr/assets/site-footer-g1PhCRAn.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_dev_runtime = require_jsx_dev_runtime();
 var _jsxFileName$1 = "/root/app/code/fashion-dream-try-on-main/src/components/site-nav.tsx";
@@ -222,7 +222,7 @@ function SiteFooter() {
 					lineNumber: 8,
 					columnNumber: 11
 				}, this), /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("p", {
-					className: "max-w-sm text-sm text-silver",
+					className: "max-w-sm text-sm text-foreground",
 					children: "Một ý tưởng khởi nghiệp của sinh viên IUH: thời trang cá nhân hóa với AI concept và virtual try-on."
 				}, void 0, false, {
 					fileName: _jsxFileName,
@@ -318,7 +318,7 @@ function SiteFooter() {
 			lineNumber: 6,
 			columnNumber: 7
 		}, this), /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("p", {
-			className: "mx-auto mt-10 max-w-7xl text-xs text-silver",
+			className: "mx-auto mt-10 max-w-7xl text-xs text-foreground",
 			children: "© 2026 UpThink — Đại học Công nghiệp TP.HCM / IUH"
 		}, void 0, false, {
 			fileName: _jsxFileName,

@@ -1,7 +1,7 @@
 import { t as require_jsx_dev_runtime } from "../_libs/react.mjs";
 import { h as Link } from "../_libs/@tanstack/react-router+[...].mjs";
-import { n as SiteNav, t as SiteFooter } from "./site-footer-C81mFqjI.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/about-BH59VCWL.js
+import { n as SiteNav, t as SiteFooter } from "./site-footer-g1PhCRAn.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/about-COMQ4Ugb.js
 var import_jsx_dev_runtime = require_jsx_dev_runtime();
 var _jsxFileName = "/root/app/code/fashion-dream-try-on-main/src/routes/about.tsx?tsr-split=component";
 var STATS = [

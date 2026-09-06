@@ -11,7 +11,7 @@ export function SiteFooter() {
             </span>
             <span className="font-display text-lg tracking-[0.12em]">UpThink</span>
           </div>
-          <p className="max-w-sm text-sm text-silver">
+          <p className="max-w-sm text-sm text-foreground">
             Một ý tưởng khởi nghiệp của sinh viên IUH: thời trang cá nhân hóa với AI concept và
             virtual try-on.
           </p>
@@ -33,7 +33,7 @@ export function SiteFooter() {
           </div>
         </div>
       </div>
-      <p className="mx-auto mt-10 max-w-7xl text-xs text-silver">
+      <p className="mx-auto mt-10 max-w-7xl text-xs text-foreground">
         © 2026 UpThink — Đại học Công nghiệp TP.HCM / IUH
       </p>
     </footer>

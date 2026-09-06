@@ -1,4 +1,4 @@
-//#region node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-D5QJ3stR.js
+//#region node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-DIcmAn0n.js
 var tsrStartManifest = () => ({ routes: {
 	__root__: {
 		filePath: "/root/app/code/fashion-dream-try-on-main/src/routes/__root.tsx",
@@ -11,58 +11,58 @@ var tsrStartManifest = () => ({ routes: {
 			"/shop",
 			"/product/$id"
 		],
-		preloads: ["/assets/index-R90SpRPz.js", "/assets/cart-BG2QLpM3.js"],
+		preloads: ["/assets/index-CO9HeOuG.js", "/assets/cart-BG2QLpM3.js"],
 		scripts: [{ attrs: {
 			type: "module",
 			async: !0,
-			src: "/assets/index-R90SpRPz.js"
+			src: "/assets/index-CO9HeOuG.js"
 		} }]
 	},
 	"/": {
 		filePath: "/root/app/code/fashion-dream-try-on-main/src/routes/index.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/routes-GzLFM36S.js",
-			"/assets/site-footer-iF_63c-g.js",
-			"/assets/product-card-C4v7JSHy.js"
+			"/assets/routes-DSoBVAfx.js",
+			"/assets/site-footer-CVoTvrJ2.js",
+			"/assets/product-card-LlTtwdwu.js"
 		]
 	},
 	"/about": {
 		filePath: "/root/app/code/fashion-dream-try-on-main/src/routes/about.tsx",
 		children: void 0,
-		preloads: ["/assets/about-CNZ94vUm.js", "/assets/site-footer-iF_63c-g.js"]
+		preloads: ["/assets/about-CvYmnDrG.js", "/assets/site-footer-CVoTvrJ2.js"]
 	},
 	"/ai": {
 		filePath: "/root/app/code/fashion-dream-try-on-main/src/routes/ai.tsx",
 		children: void 0,
-		preloads: ["/assets/ai-C_SKM1Hy.js", "/assets/site-footer-iF_63c-g.js"]
+		preloads: ["/assets/ai-D6711RRP.js", "/assets/site-footer-CVoTvrJ2.js"]
 	},
 	"/cart": {
 		filePath: "/root/app/code/fashion-dream-try-on-main/src/routes/cart.tsx",
 		children: void 0,
-		preloads: ["/assets/cart-DKvys_5l.js", "/assets/site-footer-iF_63c-g.js"]
+		preloads: ["/assets/cart-ChMR3OPj.js", "/assets/site-footer-CVoTvrJ2.js"]
 	},
 	"/checkout": {
 		filePath: "/root/app/code/fashion-dream-try-on-main/src/routes/checkout.tsx",
 		children: void 0,
-		preloads: ["/assets/checkout-wzr9DO4l.js", "/assets/site-footer-iF_63c-g.js"]
+		preloads: ["/assets/checkout-_5Wb5lN_.js", "/assets/site-footer-CVoTvrJ2.js"]
 	},
 	"/shop": {
 		filePath: "/root/app/code/fashion-dream-try-on-main/src/routes/shop.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/shop-KXzLgJHl.js",
-			"/assets/site-footer-iF_63c-g.js",
-			"/assets/product-card-C4v7JSHy.js"
+			"/assets/shop-V2JMWxoJ.js",
+			"/assets/site-footer-CVoTvrJ2.js",
+			"/assets/product-card-LlTtwdwu.js"
 		]
 	},
 	"/product/$id": {
 		filePath: "/root/app/code/fashion-dream-try-on-main/src/routes/product.$id.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/product._id-BFtUOC45.js",
-			"/assets/site-footer-iF_63c-g.js",
-			"/assets/product-card-C4v7JSHy.js"
+			"/assets/product._id-fZy6-gtb.js",
+			"/assets/site-footer-CVoTvrJ2.js",
+			"/assets/product-card-LlTtwdwu.js"
 		]
 	}
 } });
