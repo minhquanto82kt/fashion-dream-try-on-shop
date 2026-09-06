@@ -39,30 +39,30 @@
 
 :root {
   --radius: 0px;
-  --ink: #27364a;
-  --background: #f8f6f2;
-  --foreground: #27364a;
-  --card: #ffffff;
-  --card-foreground: #27364a;
-  --popover: #ffffff;
-  --popover-foreground: #27364a;
-  --primary: #ad482f;
-  --primary-foreground: #ffffff;
-  --secondary: #e9f1f0;
-  --secondary-foreground: #27364a;
-  --muted: #f0ece5;
-  --muted-foreground: #657185;
-  --accent: #e9f1f0;
-  --accent-foreground: #27364a;
-  --destructive: #c94040;
-  --destructive-foreground: #ffffff;
-  --border: #d8dee6;
-  --input: #ffffff;
-  --ring: #ad482f;
-  --electric: #ad482f;
-  --beige: #44536a;
-  --silver: #657185;
-  --y2k-cyan: #3d7f81;
+  --ink: #010626;
+  --background: #010626;
+  --foreground: #fff89c;
+  --card: #010626;
+  --card-foreground: #fff89c;
+  --popover: #010626;
+  --popover-foreground: #fff89c;
+  --primary: #f2e205;
+  --primary-foreground: #010626;
+  --secondary: #d9b504;
+  --secondary-foreground: #010626;
+  --muted: #594b02;
+  --muted-foreground: #fff89c;
+  --accent: #fff89c;
+  --accent-foreground: #010626;
+  --destructive: #d9b504;
+  --destructive-foreground: #010626;
+  --border: #594b02;
+  --input: #010626;
+  --ring: #f2e205;
+  --electric: #f2e205;
+  --beige: #594b02;
+  --silver: #d9b504;
+  --y2k-cyan: #fff89c;
   --gradient-gloss: linear-gradient(
     135deg,
     color-mix(in oklab, var(--electric) 20%, transparent),
@@ -119,8 +119,8 @@
 .type-meta{font-family:var(--ft-meta);font-weight:500;letter-spacing:.12em;text-transform:uppercase}
 
 /* FashionTry / Atelier commerce layer */
-:root { --ft-paper:#fffdf9; --ft-ink:#27364a; --ft-acid:#ad482f; --ft-muted:#e9f1f0; --ft-serif:"Bodoni Moda", Georgia, serif; --ft-editorial:"Bodoni Moda", Georgia, serif; --ft-display:"Anton", Impact, sans-serif; --ft-body:"Space Grotesk", sans-serif; --ft-meta:"Oswald", Arial, sans-serif; --ft-sans:"Space Grotesk", sans-serif; --ft-impact:"Anton", Impact, sans-serif; }
-:root[data-theme="cream"] { --background:#f8f6f2; --foreground:#27364a; --card:#ffffff; --card-foreground:#27364a; --popover:#ffffff; --popover-foreground:#27364a; --muted:#f0ece5; --muted-foreground:#657185; --border:#d8dee6; --primary:#ad482f; --primary-foreground:#ffffff; --accent:#e9f1f0; --accent-foreground:#27364a; --input:#ffffff; --ring:#ad482f; --electric:#ad482f; --beige:#44536a; --silver:#657185; }
+:root { --ft-paper:#fff89c; --ft-ink:#010626; --ft-acid:#f2e205; --ft-muted:#594b02; --ft-serif:"Bodoni Moda", Georgia, serif; --ft-editorial:"Bodoni Moda", Georgia, serif; --ft-display:"Anton", Impact, sans-serif; --ft-body:"Space Grotesk", sans-serif; --ft-meta:"Oswald", Arial, sans-serif; --ft-sans:"Space Grotesk", sans-serif; --ft-impact:"Anton", Impact, sans-serif; }
+:root[data-theme="cream"] { --background:#010626; --foreground:#fff89c; --card:#010626; --card-foreground:#fff89c; --popover:#010626; --popover-foreground:#fff89c; --muted:#594b02; --muted-foreground:#fff89c; --border:#594b02; --primary:#f2e205; --primary-foreground:#010626; --accent:#fff89c; --accent-foreground:#010626; --input:#010626; --ring:#f2e205; --electric:#f2e205; --beige:#594b02; --silver:#d9b504; }
 .fashion-site{font-family:var(--ft-sans); background:var(--background); color:var(--foreground)}
 .fashion-nav{position:fixed;inset:0 0 auto;z-index:50;border-bottom:1px solid var(--border);background:color-mix(in oklab,var(--background) 90%,transparent);backdrop-filter:blur(14px)}
 .fashion-nav__inner{width:min(1240px,calc(100% - 48px));height:74px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:24px}
@@ -128,7 +128,7 @@
 .fashion-nav__links{display:flex;gap:32px}.fashion-nav__links a{font-size:11px;text-transform:uppercase;letter-spacing:.16em;color:inherit;text-decoration:none;opacity:.72}.fashion-nav__links a:hover,.fashion-nav__links a.is-active{opacity:1;color:var(--primary)}
 .fashion-nav__actions{display:flex;align-items:center;gap:12px}.fashion-icon-btn,.fashion-mobile-btn,.fashion-cart-btn,.fashion-heart{border:0;background:none;color:inherit}.fashion-icon-btn{display:grid;place-items:center;padding:5px}.fashion-ai-btn,.fashion-cart-btn{display:flex;align-items:center;gap:7px;text-decoration:none;color:inherit}.fashion-ai-btn{border:1px solid var(--primary);padding:9px 12px;font:10px var(--ft-sans);letter-spacing:.1em;text-transform:uppercase}.fashion-ai-btn:hover{background:var(--primary);color:var(--primary-foreground)}.fashion-cart-btn{position:relative;padding:4px}.fashion-cart-btn span{position:absolute;right:-8px;top:-7px;width:16px;height:16px;display:grid;place-items:center;background:var(--primary);color:var(--primary-foreground);font-size:9px}.fashion-mobile-btn{display:none}.fashion-mobile-menu{display:none}
 .fashion-hero{min-height:100vh;padding:74px max(24px,calc((100% - 1240px)/2)) 0;display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)}
-.fashion-hero__copy{padding:70px 7vw 45px 0;display:flex;flex-direction:column;justify-content:space-between}.fashion-eyebrow{font:10px var(--ft-sans);letter-spacing:.22em;text-transform:uppercase;color:var(--primary)}.fashion-display{font-family:var(--ft-editorial);font-style:normal;font-size:clamp(72px,9vw,132px);line-height:.78;letter-spacing:-.075em;margin:26px 0 0;font-weight:600}.fashion-hero__lede{max-width:480px;margin-top:30px;font:15px/1.7 var(--ft-body);opacity:.78}.fashion-hero__actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:35px}.fashion-btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--primary);background:var(--primary);color:var(--primary-foreground);text-decoration:none;padding:13px 17px;font:10px var(--ft-impact);letter-spacing:.11em;text-transform:uppercase;box-shadow:4px 4px 0 currentColor;transition:.18s}.fashion-btn:hover{transform:translate(2px,2px);box-shadow:none}.fashion-btn--ghost{background:transparent;color:inherit;box-shadow:none}.fashion-btn--light{background:var(--ft-paper);color:var(--ft-ink);border-color:var(--ft-paper)}.fashion-hero__meta{display:flex;justify-content:space-between;gap:20px;font:9px var(--ft-sans);letter-spacing:.16em;color:var(--silver);padding-top:35px}.fashion-hero__art{position:relative;min-height:650px;overflow:hidden;border-left:1px solid var(--primary);box-shadow:12px 12px 0 color-mix(in oklab,var(--primary) 65%,transparent)}.fashion-hero__art img{width:100%;height:100%;object-fit:cover;filter:saturate(.68) contrast(1.08)}.fashion-hero__overlay{position:absolute;inset:0;background:linear-gradient(145deg,rgba(10,41,71,.35),transparent 50%),repeating-linear-gradient(0deg,transparent 0 5px,rgba(8,203,0,.05) 6px 7px)}.fashion-hero__label{position:absolute;left:18px;bottom:18px;background:var(--primary);color:var(--primary-foreground);padding:7px 9px;font:9px var(--ft-sans);letter-spacing:.15em}.fashion-hero__vertical{position:absolute;right:12px;top:18px;writing-mode:vertical-rl;font:9px var(--ft-sans);letter-spacing:.18em;color:#fff}
+.fashion-hero__copy{padding:70px 7vw 45px 0;display:flex;flex-direction:column;justify-content:space-between}.fashion-eyebrow{font:10px var(--ft-sans);letter-spacing:.22em;text-transform:uppercase;color:var(--primary)}.fashion-display{font-family:var(--ft-editorial);font-style:normal;font-size:clamp(72px,9vw,132px);line-height:.78;letter-spacing:-.075em;margin:26px 0 0;font-weight:600}.fashion-hero__lede{max-width:480px;margin-top:30px;font:15px/1.7 var(--ft-body);opacity:.78}.fashion-hero__actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:35px}.fashion-btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--primary);background:var(--primary);color:var(--primary-foreground);text-decoration:none;padding:13px 17px;font:10px var(--ft-impact);letter-spacing:.11em;text-transform:uppercase;box-shadow:4px 4px 0 currentColor;transition:.18s}.fashion-btn:hover{transform:translate(2px,2px);box-shadow:none}.fashion-btn--ghost{background:transparent;color:inherit;box-shadow:none}.fashion-btn--light{background:var(--ft-paper);color:var(--ft-ink);border-color:var(--ft-paper)}.fashion-hero__meta{display:flex;justify-content:space-between;gap:20px;font:9px var(--ft-sans);letter-spacing:.16em;color:var(--silver);padding-top:35px}.fashion-hero__art{position:relative;min-height:650px;overflow:hidden;border-left:1px solid var(--primary);box-shadow:12px 12px 0 color-mix(in oklab,var(--primary) 65%,transparent)}.fashion-hero__art img{width:100%;height:100%;object-fit:cover;filter:saturate(.68) contrast(1.08)}.fashion-hero__overlay{position:absolute;inset:0;background:linear-gradient(145deg,rgba(1,6,38,.62),transparent 50%),repeating-linear-gradient(0deg,transparent 0 5px,rgba(242,226,5,.08) 6px 7px)}.fashion-hero__label{position:absolute;left:18px;bottom:18px;background:var(--primary);color:var(--primary-foreground);padding:7px 9px;font:9px var(--ft-sans);letter-spacing:.15em}.fashion-hero__vertical{position:absolute;right:12px;top:18px;writing-mode:vertical-rl;font:9px var(--ft-sans);letter-spacing:.18em;color:#fff89c}
 .fashion-intro-section{width:min(1240px,calc(100% - 48px));margin:0 auto;padding:100px 0;display:grid;grid-template-columns:80px 1fr .7fr;gap:30px;border-bottom:1px solid var(--border)}.fashion-section-number{font:10px var(--ft-sans);color:var(--primary);letter-spacing:.16em}.fashion-section-title{font-family:var(--ft-editorial);font-style:normal;font-size:clamp(46px,5vw,76px);line-height:.86;letter-spacing:-.07em;margin:14px 0;font-weight:600}.fashion-intro-copy{align-self:end;max-width:420px;font:15px/1.7 var(--ft-body);opacity:.72}
 .fashion-ai-feature{width:min(1240px,calc(100% - 48px));margin:0 auto;padding:100px 0;display:grid;grid-template-columns:1fr .85fr;gap:70px}.fashion-ai-feature__visual{position:relative;min-height:540px;border:1px solid var(--primary);box-shadow:9px 9px 0 color-mix(in oklab,var(--primary) 70%,transparent);overflow:hidden}.fashion-ai-feature__visual img{width:100%;height:100%;object-fit:cover}.fashion-ai-feature__visual span{position:absolute;left:15px;top:15px;background:var(--ft-ink);color:var(--primary);padding:7px 9px;font:9px var(--ft-sans);letter-spacing:.15em}.fashion-ai-feature__copy{display:flex;flex-direction:column;justify-content:center}.fashion-ai-feature__copy>p:not(.fashion-eyebrow){font:15px/1.7 var(--ft-body);max-width:470px;opacity:.75}.fashion-feature-list{margin:35px 0;border-top:1px solid var(--border)}.fashion-feature-list div{display:flex;gap:25px;padding:14px 0;border-bottom:1px solid var(--border);font-size:12px}.fashion-feature-list b{color:var(--primary);font-weight:500}.fashion-text-link{color:var(--primary);text-decoration:none;font:10px var(--ft-sans);letter-spacing:.15em;text-transform:uppercase}
 .fashion-products-section{background:color-mix(in oklab,var(--foreground) 92%,var(--background));color:var(--background);padding:100px max(24px,calc((100% - 1240px)/2));border-top:1px solid var(--border);border-bottom:1px solid var(--border)}.fashion-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:30px;margin-bottom:42px}.fashion-section-head .fashion-section-title{margin-bottom:0}.fashion-product-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.fashion-product-card{min-width:0}.fashion-product-image{display:block;position:relative;aspect-ratio:3/4;overflow:hidden;background:var(--ft-muted);color:var(--ft-ink);border:1px solid var(--border)}.fashion-product-image img{width:100%;height:100%;object-fit:cover;transition:transform .5s cubic-bezier(.23,1,.32,1)}.fashion-product-card:hover .fashion-product-image img{transform:scale(1.05)}.fashion-product-badge{position:absolute;left:12px;top:12px;background:var(--primary);color:var(--primary-foreground);padding:6px 8px;font:9px var(--ft-sans);letter-spacing:.13em;text-transform:uppercase}.fashion-product-index{position:absolute;right:12px;top:12px;font:9px var(--ft-sans);letter-spacing:.12em}.fashion-product-arrow{position:absolute;right:12px;bottom:12px;width:34px;height:34px;display:grid;place-items:center;background:var(--primary);color:var(--primary-foreground);opacity:0;transform:translateY(6px);transition:.2s}.fashion-product-card:hover .fashion-product-arrow{opacity:1;transform:none}.fashion-product-meta{padding:17px 0;display:flex;justify-content:space-between;gap:15px;border-bottom:1px solid var(--border)}.fashion-product-category,.fashion-product-spec{font:9px var(--ft-sans);letter-spacing:.13em;text-transform:uppercase;opacity:.6}.fashion-product-title{display:block;color:inherit;text-decoration:none;font-style:normal;font:600 clamp(25px,2.5vw,38px)/.88 var(--ft-serif);letter-spacing:-.06em;margin:8px 0}.fashion-product-price-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:15px}.fashion-product-price{font:11px var(--ft-sans);white-space:nowrap;color:var(--primary)}.fashion-heart{padding:2px;opacity:.55}.fashion-heart:hover{opacity:1;color:var(--primary)}
@@ -192,9 +192,9 @@
 .fashion-hero__overlay {
   z-index: 2;
   background:
-    linear-gradient(145deg, rgba(29,33,40,.45), transparent 46%),
-    linear-gradient(180deg, rgba(29,33,40,.08), rgba(29,33,40,.48)),
-    repeating-linear-gradient(0deg, transparent 0 5px, rgba(255,158,32,.055) 6px 7px);
+    linear-gradient(145deg, rgba(1,6,38,.62), transparent 46%),
+    linear-gradient(180deg, rgba(1,6,38,.18), rgba(1,6,38,.62)),
+    repeating-linear-gradient(0deg, transparent 0 5px, rgba(242,226,5,.085) 6px 7px);
   pointer-events: none;
 }
 
@@ -230,7 +230,7 @@
   font: 9px var(--ft-sans);
   letter-spacing: .16em;
   text-transform: uppercase;
-  color: rgba(255,255,255,.82);
+  color: rgba(255,248,156,.92);
   pointer-events: none;
 }
 
@@ -273,7 +273,7 @@
   height: 2px;
   padding: 0;
   border: 0;
-  background: rgba(255,255,255,.35);
+  background: rgba(255,248,156,.35);
   cursor: pointer;
   transition: width .25s ease, background .25s ease;
 }
@@ -563,7 +563,7 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: linear-gradient(90deg, rgba(29, 94, 97, .94), rgba(29, 94, 97, .68) 58%, rgba(29, 94, 97, .82));
+  background: linear-gradient(90deg, rgba(89, 75, 2, .86), rgba(217, 181, 4, .58) 58%, rgba(89, 75, 2, .8));
   content: "";
 }
 
@@ -902,7 +902,7 @@
   overflow: hidden;
   isolation: isolate;
   background: var(--ft-ink);
-  background-image: linear-gradient(to top, rgba(29, 33, 40, .88) 0%, rgba(29, 33, 40, .42) 42%, rgba(29, 33, 40, 0) 78%), url("https://cdn.builder.io/api/v1/image/assets%2Fa8cc818942044ac39bb81f5eaf3b051c%2Ffb7f96c4487844e9af8fec2c7e54bd4c");
+  background-image: linear-gradient(to top, rgba(1, 6, 38, .9) 0%, rgba(1, 6, 38, .5) 42%, rgba(1, 6, 38, 0) 78%), url("https://cdn.builder.io/api/v1/image/assets%2Fa8cc818942044ac39bb81f5eaf3b051c%2Ffb7f96c4487844e9af8fec2c7e54bd4c");
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
