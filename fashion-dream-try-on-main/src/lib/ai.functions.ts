@@ -122,4 +122,3 @@ export const generateTryOn = createServerFn({ method: "POST" })
       data.garmentImage,
     ]);
   });
-```
