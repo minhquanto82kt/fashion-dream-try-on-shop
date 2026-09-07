@@ -1,1 +1,76 @@
+name: Deploy Check
 
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  production-check:
+    name: Production Readiness
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify required project files
+        run: |
+          test -f package.json
+          test -f tsconfig.json
+          test -f vite.config.ts
+          test -f eslint.config.js
+
+      - name: Check for committed environment files
+        run: |
+          if [ -f .env ]; then
+            echo "ERROR: .env must not be committed."
+            exit 1
+          fi
+
+          if [ -f .env.local ]; then
+            echo "ERROR: .env.local must not be committed."
+            exit 1
+          fi
+
+      - name: Check environment template
+        run: |
+          if [ ! -f .env.example ]; then
+            echo "ERROR: .env.example is missing."
+            exit 1
+          fi
+
+      - name: TypeScript check
+        run: npx tsc --noEmit
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Production build
+        run: npm run build
+
+      - name: Verify build output
+        run: |
+          if [ ! -d dist ]; then
+            echo "ERROR: dist directory was not generated."
+            exit 1
+          fi
+
+          echo "Production build output verified."
