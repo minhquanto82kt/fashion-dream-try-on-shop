@@ -1,0 +1,158 @@
+/*
+ * UPTHINK — Typography
+ *
+ * Existing typography system — DO NOT replace.
+ *
+ * Anton
+ * → Display / Hero / CTA / Brand impact / Price
+ *
+ * Bodoni Moda
+ * → Editorial headline / Fashion statement / Product title
+ *
+ * Space Grotesk
+ * → Body / Navigation / UI / Description / Forms
+ *
+ * Oswald
+ * → Metadata / Category / Labels / Technical information
+ */
+
+:root {
+  --font-display: "Anton", sans-serif;
+  --font-editorial: "Bodoni Moda", serif;
+  --font-sans: "Space Grotesk", sans-serif;
+  --font-meta: "Oswald", sans-serif;
+}
+
+/* =========================================================
+   DISPLAY
+   ========================================================= */
+
+.type-display,
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+}
+
+/* =========================================================
+   EDITORIAL
+   ========================================================= */
+
+.type-editorial,
+.font-editorial {
+  font-family: var(--font-editorial);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+
+/* =========================================================
+   BODY / UI
+   ========================================================= */
+
+.type-body,
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+/* =========================================================
+   META
+   ========================================================= */
+
+.type-meta,
+.font-meta {
+  font-family: var(--font-meta);
+  font-weight: 500;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   GLOBAL TYPOGRAPHY
+   ========================================================= */
+
+body {
+  font-family: var(--font-sans);
+}
+
+/*
+ * Editorial headlines use Bodoni Moda.
+ * This gives the storefront its fashion-editorial identity.
+ */
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: var(--font-editorial);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+}
+
+/* =========================================================
+   EYEBROW / LABEL
+   ========================================================= */
+
+.eyebrow {
+  font-family: var(--font-meta);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.editorial-label {
+  color: var(--muted-foreground);
+  font-family: var(--font-meta);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   PRICE
+   ========================================================= */
+
+.price {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
+}
+
+/* =========================================================
+   PRODUCT TITLE
+   ========================================================= */
+
+.product-title {
+  font-family: var(--font-editorial);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+
+/* =========================================================
+   BUTTON / UI LABEL
+   ========================================================= */
+
+.ui-label {
+  font-family: var(--font-sans);
+  font-weight: 600;
+}
+
+/* =========================================================
+   TECHNICAL / METADATA
+   ========================================================= */
+
+.meta {
+  font-family: var(--font-meta);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
