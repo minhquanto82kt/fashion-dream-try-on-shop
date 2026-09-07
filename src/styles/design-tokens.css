@@ -11,7 +11,7 @@
 
 :root {
   /* =======================================================
-     BRAND COLORS
+     BRAND
      ======================================================= */
 
   --brand-ink: #1b1a17;
@@ -20,14 +20,9 @@
   --brand-cream: #e6d5b8;
 
   /* =======================================================
-     SURFACES
+     SURFACE
      ======================================================= */
 
-  /*
-   * Derived neutral background.
-   * Kept intentionally warm so the four brand colors
-   * remain visually dominant.
-   */
   --background: #f7f2e8;
   --foreground: #1b1a17;
 
@@ -38,7 +33,7 @@
   --popover-foreground: #1b1a17;
 
   /* =======================================================
-     SEMANTIC COLORS
+     SEMANTIC
      ======================================================= */
 
   --primary: #1b1a17;
@@ -53,15 +48,11 @@
   --accent: #f0a500;
   --accent-foreground: #1b1a17;
 
-  /*
-   * Orange is intentionally reserved for strong emphasis,
-   * especially AI Try-On and important campaign states.
-   */
   --destructive: #e45826;
   --destructive-foreground: #fffdf8;
 
   /* =======================================================
-     BORDERS / INPUTS / FOCUS
+     BORDERS / INPUT / FOCUS
      ======================================================= */
 
   --border: rgba(27, 26, 23, 0.16);
@@ -76,15 +67,12 @@
      ======================================================= */
 
   --page-padding: clamp(1rem, 3vw, 3.5rem);
-
   --content-max-width: 1600px;
-
   --section-space: clamp(5rem, 10vw, 10rem);
-
   --grid-gap: clamp(1rem, 2vw, 2rem);
 
   /* =======================================================
-     SPACING SCALE
+     SPACING
      ======================================================= */
 
   --space-1: 0.25rem;
@@ -105,10 +93,6 @@
      RADIUS
      ======================================================= */
 
-  /*
-   * Fashion editorial UI should feel structured rather
-   * than overly rounded.
-   */
   --radius-sm: 2px;
   --radius-md: 4px;
   --radius-lg: 8px;
@@ -124,14 +108,9 @@
   --duration-base: 240ms;
   --duration-slow: 420ms;
 
-  --transition-fast:
-    var(--duration-fast) var(--ease-fashion);
-
-  --transition-base:
-    var(--duration-base) var(--ease-fashion);
-
-  --transition-slow:
-    var(--duration-slow) var(--ease-fashion);
+  --transition-fast: var(--duration-fast) var(--ease-fashion);
+  --transition-base: var(--duration-base) var(--ease-fashion);
+  --transition-slow: var(--duration-slow) var(--ease-fashion);
 
   /* =======================================================
      IMAGE
@@ -141,7 +120,7 @@
 }
 
 /* =========================================================
-   TAILWIND THEME TOKENS
+   TAILWIND V4 THEME
    ========================================================= */
 
 @theme inline {
@@ -178,10 +157,14 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  --radius-sm: var(--radius-sm);
-  --radius-md: var(--radius-md);
-  --radius-lg: var(--radius-lg);
-  --radius-xl: var(--radius-xl);
+  /*
+   * Keep radius values explicit here.
+   * Do not self-reference --radius-* variables.
+   */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
 }
 
 @media (max-width: 767px) {
