@@ -4,12 +4,17 @@ import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { formatVnd } from "@/data/products";
 import { useCart } from "@/lib/cart";
+import { createOrder } from "@/lib/order.functions";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
     meta: [
       { title: "Thanh toán | UpThink" },
-      { name: "description", content: "Hoàn tất đơn hàng UpThink: giao hàng toàn quốc, thanh toán khi nhận hàng hoặc chuyển khoản." },
+      {
+        name: "description",
+        content:
+          "Hoàn tất đơn hàng UpThink: giao hàng toàn quốc, thanh toán khi nhận hàng.",
+      },
       { property: "og:title", content: "Thanh toán | UpThink" },
       { property: "og:description", content: "Hoàn tất đơn hàng UpThink của bạn." },
     ],
@@ -20,7 +25,7 @@ export const Route = createFileRoute("/checkout")({
 function CheckoutPage() {
   const { items, subtotal, clear } = useCart();
   const [done, setDone] = useState<string | null>(null);
-  const [payment, setPayment] = useState("cod");
+  const [submitting, setSubmitting] = useState(false);
   const shipping = subtotal >= 1000000 ? 0 : 30000;
 
   if (done) {
@@ -56,7 +61,7 @@ function CheckoutPage() {
 
         {items.length === 0 ? (
           <p className="mt-8 text-beige">
-            Giỏ hàng trống.{" "}
+            Giỏ hàng trống. {" "}
             <Link to="/shop" className="text-primary">
               Chọn sản phẩm
             </Link>
@@ -64,11 +69,38 @@ function CheckoutPage() {
         ) : (
           <form
             className="mt-10 grid gap-10 lg:grid-cols-[1.3fr_0.7fr]"
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
               e.preventDefault();
-              const code = `UT${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
-              clear();
-              setDone(code);
+              setSubmitting(true);
+
+              const form = new FormData(e.currentTarget);
+
+              try {
+                const result = await createOrder({
+                  data: {
+                    customerName: String(form.get("name") || ""),
+                    phone: String(form.get("phone") || ""),
+                    email: String(form.get("email") || ""),
+                    address: String(form.get("address") || ""),
+                    city: String(form.get("city") || ""),
+                    district: String(form.get("district") || ""),
+                    paymentMethod: "cod",
+                    items: items.map((item) => ({
+                      productId: item.productId,
+                      size: item.size,
+                      color: item.color,
+                      quantity: item.qty,
+                    })),
+                  },
+                });
+
+                clear();
+                setDone(result.orderCode);
+              } catch (error) {
+                alert(error instanceof Error ? error.message : "Không thể tạo đơn hàng.");
+              } finally {
+                setSubmitting(false);
+              }
             }}
           >
             <div className="space-y-4">
@@ -81,38 +113,29 @@ function CheckoutPage() {
                 <Field label="Quận / Huyện" name="district" />
               </div>
 
-              <p className="pt-4 text-xs uppercase tracking-[0.2em] text-silver">Phương thức thanh toán</p>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {[
-                  { id: "cod", label: "Thanh toán khi nhận hàng" },
-                  { id: "bank", label: "Chuyển khoản ngân hàng" },
-                ].map((p) => (
-                  <button
-                    key={p.id}
-                    type="button"
-                    onClick={() => setPayment(p.id)}
-                    className={`border p-4 text-left text-sm ${
-                      payment === p.id ? "border-primary text-primary" : "border-border text-beige"
-                    }`}
-                  >
-                    {p.label}
-                  </button>
-                ))}
+              <p className="pt-4 text-xs uppercase tracking-[0.2em] text-silver">
+                Phương thức thanh toán
+              </p>
+              <div className="border border-primary p-4 text-sm text-primary">
+                Thanh toán khi nhận hàng (COD)
               </div>
             </div>
 
             <aside className="h-fit border border-border bg-card p-6">
               <p className="eyebrow">Đơn hàng</p>
               <div className="mt-4 space-y-3 text-sm">
-                {items.map((i) => (
-                  <div key={`${i.productId}-${i.size}-${i.color}`} className="flex justify-between gap-3">
+                {items.map((item) => (
+                  <div
+                    key={`${item.productId}-${item.size}-${item.color}`}
+                    className="flex justify-between gap-3"
+                  >
                     <span className="text-beige">
-                      {i.product.name} × {i.qty}
+                      {item.product.name} × {item.qty}
                       <span className="block text-xs text-silver">
-                        {i.size} · {i.color}
+                        {item.size} · {item.color}
                       </span>
                     </span>
-                    <span>{formatVnd(i.product.price * i.qty)}</span>
+                    <span>{formatVnd(item.product.price * item.qty)}</span>
                   </div>
                 ))}
               </div>
@@ -126,9 +149,10 @@ function CheckoutPage() {
               </div>
               <button
                 type="submit"
-                className="mt-6 w-full bg-primary px-6 py-3 text-xs uppercase tracking-[0.15em] text-primary-foreground"
+                disabled={submitting}
+                className="mt-6 w-full bg-primary px-6 py-3 text-xs uppercase tracking-[0.15em] text-primary-foreground disabled:opacity-50"
               >
-                Đặt hàng
+                {submitting ? "Đang tạo đơn..." : "Đặt hàng COD"}
               </button>
             </aside>
           </form>
