@@ -30,18 +30,18 @@ Không duplicate product data vào component nếu repository đã có data sour
 
 Kiểm tra:
 
-* product ID
-* name
-* description
-* price
-* sale price
-* images
-* category
-* brand
-* variants
-* size
-* color
-* inventory nếu có.
+- product ID
+- name
+- description
+- price
+- sale price
+- images
+- category
+- brand
+- variants
+- size
+- color
+- inventory nếu có.
 
 Không hardcode dữ liệu mới nếu hệ thống đã có data source.
 
@@ -67,9 +67,9 @@ Product Image
 
 Khi user thay đổi variant:
 
-* image phải cập nhật đúng.
-* price phải cập nhật đúng nếu variant có giá khác.
-* selected option phải đồng bộ.
+- image phải cập nhật đúng.
+- price phải cập nhật đúng nếu variant có giá khác.
+- selected option phải đồng bộ.
 
 Không để UI hiển thị một variant nhưng cart chứa variant khác.
 
@@ -116,11 +116,11 @@ phải duy trì identity riêng của từng item.
 
 Khi user tạo outfit:
 
-* không duplicate item ngoài ý muốn.
-* không mất selected variant.
-* không mất product ID.
-* không nhầm image.
-* không gửi product không còn tồn tại.
+- không duplicate item ngoài ý muốn.
+- không mất selected variant.
+- không mất product ID.
+- không nhầm image.
+- không gửi product không còn tồn tại.
 
 Nếu repository có giới hạn số item trong outfit, phải tuân thủ giới hạn hiện tại.
 
@@ -146,12 +146,12 @@ Nếu có variant ID, không dùng product ID thay thế variant identity.
 
 Kiểm tra:
 
-* add item
-* increase quantity
-* decrease quantity
-* remove item
-* duplicate product with different variants
-* cart persistence nếu có.
+- add item
+- increase quantity
+- decrease quantity
+- remove item
+- duplicate product with different variants
+- cart persistence nếu có.
 
 Ví dụ:
 
@@ -175,11 +175,11 @@ Không tính giá bằng giá hiển thị trên UI nếu backend/data source c�
 
 Kiểm tra:
 
-* original price
-* sale price
-* discount
-* quantity
-* subtotal.
+- original price
+- sale price
+- discount
+- quantity
+- subtotal.
 
 Không để client tự quyết định final price trong flow cần server validation.
 
@@ -189,10 +189,10 @@ Không để client tự quyết định final price trong flow cần server val
 
 Nếu project có wishlist:
 
-* product identity phải ổn định.
-* không tạo duplicate item.
-* remove phải đúng product.
-* state phải đồng bộ với UI.
+- product identity phải ổn định.
+- không tạo duplicate item.
+- remove phải đúng product.
+- state phải đồng bộ với UI.
 
 ---
 
@@ -269,10 +269,10 @@ Không truyền toàn bộ product object qua nhiều layer nếu chỉ cần ID
 
 Không tạo hai source of truth cho:
 
-* price
-* product image
-* product ID
-* variant.
+- price
+- product image
+- product ID
+- variant.
 
 ---
 

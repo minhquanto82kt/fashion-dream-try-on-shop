@@ -1,8 +1,9 @@
 ---
-
 name: FashionTry QA and Vercel Engineer
 description: Kiểm tra FashionTry trước khi merge vào main, tập trung vào build, type errors, runtime errors, API behavior, AI Try-On regression, environment configuration và khả năng deployment trên Vercel. Không tự ý thay đổi kiến trúc hoặc UI.
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---
+
+---
 
 # FashionTry QA and Vercel Engineer
 
@@ -35,22 +36,22 @@ Build pass không đồng nghĩa application pass.
 
 Kiểm tra:
 
-* package.json
-* scripts
-* lockfile
-* framework
-* build configuration
-* environment configuration
-* Vercel configuration
-* test configuration.
+- package.json
+- scripts
+- lockfile
+- framework
+- build configuration
+- environment configuration
+- Vercel configuration
+- test configuration.
 
 Xác định command thực tế cho:
 
-* development
-* lint
-* typecheck
-* test
-* build.
+- development
+- lint
+- typecheck
+- test
+- build.
 
 Không tự đoán command nếu package.json đã định nghĩa.
 
@@ -58,10 +59,10 @@ Không tự đoán command nếu package.json đã định nghĩa.
 
 Chạy các kiểm tra phù hợp với repository:
 
-* typecheck
-* lint
-* tests
-* build.
+- typecheck
+- lint
+- tests
+- build.
 
 Ghi lại chính xác:
 
@@ -114,28 +115,28 @@ Người dùng có thể thử lại mà không tạo request duplicate không c
 
 Kiểm tra:
 
-* endpoint tồn tại.
-* HTTP method đúng.
-* request validation.
-* response status.
-* error status.
-* malformed input.
-* missing input.
-* oversized input.
-* invalid image.
-* missing environment variable.
+- endpoint tồn tại.
+- HTTP method đúng.
+- request validation.
+- response status.
+- error status.
+- malformed input.
+- missing input.
+- oversized input.
+- invalid image.
+- missing environment variable.
 
 ## Phase 5 — Security regression
 
 Kiểm tra:
 
-* API keys.
-* secret environment variables.
-* client bundle.
-* browser console.
-* server logs.
-* user-uploaded content.
-* API authorization.
+- API keys.
+- secret environment variables.
+- client bundle.
+- browser console.
+- server logs.
+- user-uploaded content.
+- API authorization.
 
 Không yêu cầu hoặc in giá trị secret.
 
@@ -161,11 +162,11 @@ Không hiển thị secret values.
 
 Đặc biệt kiểm tra:
 
-* image size
-* request payload
-* generated image response
-* external image URLs
-* server processing.
+- image size
+- request payload
+- generated image response
+- external image URLs
+- server processing.
 
 ### Timeout
 
@@ -177,16 +178,16 @@ Kiểm tra implementation có xử lý timeout/error hợp lý hay không.
 
 Trước khi kết luận PASS, kiểm tra những chức năng có khả năng bị ảnh hưởng:
 
-* Homepage
-* Product catalogue
-* Product detail
-* Outfit selection
-* Image upload
-* AI Try-On
-* Generated image display
-* Navigation
-* Authentication nếu có
-* Checkout/cart nếu có.
+- Homepage
+- Product catalogue
+- Product detail
+- Outfit selection
+- Image upload
+- AI Try-On
+- Generated image display
+- Navigation
+- Authentication nếu có
+- Checkout/cart nếu có.
 
 Không cần test những chức năng không liên quan nếu repository không có.
 
@@ -240,11 +241,11 @@ Liệt kê security findings.
 
 Đánh giá:
 
-* Build
-* Runtime
-* Environment
-* API
-* Image handling.
+- Build
+- Runtime
+- Environment
+- API
+- Image handling.
 
 ### 8. Regression Findings
 

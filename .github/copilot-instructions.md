@@ -6,13 +6,13 @@
 
 UpThink là nền tảng **fashion e-commerce tích hợp AI Virtual Try-On**, cho phép người dùng:
 
-* Duyệt catalogue sản phẩm thời trang.
-* Xem chi tiết sản phẩm.
-* Chọn sản phẩm/outfit.
-* Tải ảnh người dùng lên.
-* Tạo hình ảnh thử đồ bằng AI.
-* Xem kết quả outfit được tạo.
-* Tiếp tục hành trình mua sắm từ sản phẩm đã thử.
+- Duyệt catalogue sản phẩm thời trang.
+- Xem chi tiết sản phẩm.
+- Chọn sản phẩm/outfit.
+- Tải ảnh người dùng lên.
+- Tạo hình ảnh thử đồ bằng AI.
+- Xem kết quả outfit được tạo.
+- Tiếp tục hành trình mua sắm từ sản phẩm đã thử.
 
 Mọi thay đổi phải bảo vệ hai nhóm chức năng cốt lõi:
 
@@ -33,26 +33,26 @@ Không chuyển framework, router, build system hoặc architecture hiện tại
 
 Trước khi sửa architecture, phải xác định:
 
-* framework hiện tại
-* package manager
-* entry point
-* routing
-* frontend structure
-* server/API structure
-* build system
-* deployment configuration.
+- framework hiện tại
+- package manager
+- entry point
+- routing
+- frontend structure
+- server/API structure
+- build system
+- deployment configuration.
 
 ## Preserve Existing Architecture
 
 Không thực hiện các thay đổi sau nếu user không yêu cầu trực tiếp:
 
-* đổi framework
-* đổi router
-* đổi package manager
-* rewrite toàn bộ application
-* thay đổi database architecture
-* thay đổi AI provider
-* thay đổi UI architecture trên diện rộng.
+- đổi framework
+- đổi router
+- đổi package manager
+- rewrite toàn bộ application
+- thay đổi database architecture
+- thay đổi AI provider
+- thay đổi UI architecture trên diện rộng.
 
 Ưu tiên **minimal change**: sửa đúng nguyên nhân, không rewrite những phần đang hoạt động.
 
@@ -80,13 +80,13 @@ Không tạo component, utility, API hoặc dependency mới nếu không cần 
 
 Không xóa:
 
-* component
-* route
-* API
-* dependency
-* configuration
-* environment variable reference
-* existing feature
+- component
+- route
+- API
+- dependency
+- configuration
+- environment variable reference
+- existing feature
 
 chỉ vì chúng có vẻ không cần thiết.
 
@@ -126,14 +126,14 @@ Frontend Rendering
 
 Khi debug AI, phải xác định chính xác:
 
-* file frontend
-* component/function
-* API endpoint
-* server function
-* AI SDK call
-* provider
-* model
-* response format.
+- file frontend
+- component/function
+- API endpoint
+- server function
+- AI SDK call
+- provider
+- model
+- response format.
 
 Không được kết luận AI "không hoạt động" chỉ dựa trên UI.
 
@@ -141,26 +141,26 @@ Không được kết luận AI "không hoạt động" chỉ dựa trên UI.
 
 Không được tự giả định project đang sử dụng:
 
-* OpenAI
-* GPT Image
-* Gemini
-* Flux
-* Replicate
-* Vercel AI Gateway
-* hoặc provider/model bất kỳ.
+- OpenAI
+- GPT Image
+- Gemini
+- Flux
+- Replicate
+- Vercel AI Gateway
+- hoặc provider/model bất kỳ.
 
 Phải kiểm tra implementation thực tế.
 
 Nếu muốn thay model/provider, phải đánh giá:
 
-* API compatibility
-* input format
-* output format
-* latency
-* cost
-* image quality
-* environment variables
-* Vercel compatibility.
+- API compatibility
+- input format
+- output format
+- latency
+- cost
+- image quality
+- environment variables
+- Vercel compatibility.
 
 ---
 
@@ -168,12 +168,12 @@ Nếu muốn thay model/provider, phải đánh giá:
 
 Nếu repository sử dụng package `ai`:
 
-* kiểm tra version thực tế trong `package.json`.
-* kiểm tra API đang được import.
-* kiểm tra provider adapter.
-* kiểm tra model identifier.
-* kiểm tra server/client boundary.
-* không sử dụng API của version khác nếu chưa xác nhận compatibility.
+- kiểm tra version thực tế trong `package.json`.
+- kiểm tra API đang được import.
+- kiểm tra provider adapter.
+- kiểm tra model identifier.
+- kiểm tra server/client boundary.
+- không sử dụng API của version khác nếu chưa xác nhận compatibility.
 
 Không cập nhật AI SDK chỉ để dùng API mới hơn nếu task không yêu cầu.
 
@@ -189,24 +189,24 @@ AI API phải được xử lý server-side khi có secret/API key.
 
 Không đưa secret vào:
 
-* client component
-* browser bundle
-* public environment variable
-* frontend source code.
+- client component
+- browser bundle
+- public environment variable
+- frontend source code.
 
 API phải validate input trước khi gọi AI.
 
 Tối thiểu phải xử lý:
 
-* missing input
-* invalid image
-* unsupported file type
-* oversized image
-* malformed request
-* missing environment variable
-* provider error
-* timeout
-* rate limit.
+- missing input
+- invalid image
+- unsupported file type
+- oversized image
+- malformed request
+- missing environment variable
+- provider error
+- timeout
+- rate limit.
 
 Không trả về lỗi generic nếu có thể cung cấp nguyên nhân an toàn và cụ thể.
 
@@ -218,12 +218,12 @@ User-uploaded images là input quan trọng của AI Try-On.
 
 Phải kiểm tra:
 
-* MIME type
-* file extension
-* file size
-* image dimensions
-* encoding format
-* request payload size.
+- MIME type
+- file extension
+- file size
+- image dimensions
+- encoding format
+- request payload size.
 
 Không chuyển image sang base64 nếu việc đó làm payload tăng đáng kể mà không cần thiết.
 
@@ -241,11 +241,11 @@ Luôn kiểm tra input/output format thực tế của provider.
 
 Không hardcode:
 
-* API keys
-* tokens
-* passwords
-* private URLs
-* credentials.
+- API keys
+- tokens
+- passwords
+- private URLs
+- credentials.
 
 Không đưa secret vào log.
 
@@ -261,9 +261,9 @@ Không tin tưởng file do người dùng upload.
 
 Phải validate:
 
-* type
-* size
-* format
+- type
+- size
+- format
 
 trước khi xử lý.
 
@@ -273,10 +273,10 @@ Không cho phép user input trực tiếp tạo ra server-side command hoặc ar
 
 User input không được phép kiểm soát tùy ý:
 
-* system instructions
-* API configuration
-* provider credentials
-* server-side tools.
+- system instructions
+- API configuration
+- provider credentials
+- server-side tools.
 
 Không bypass safety mechanism của AI provider.
 
@@ -301,10 +301,10 @@ Product
 
 Nếu AI Try-On được gọi từ product:
 
-* phải giữ đúng product.
-* phải giữ đúng variant nếu có.
-* phải giữ đúng image sản phẩm.
-* không tự thay đổi product metadata.
+- phải giữ đúng product.
+- phải giữ đúng variant nếu có.
+- phải giữ đúng image sản phẩm.
+- không tự thay đổi product metadata.
 
 Không hardcode product data nếu repository đã có data source.
 
@@ -318,12 +318,12 @@ Không tự ý redesign UI khi task chỉ yêu cầu sửa logic.
 
 Không thay đổi:
 
-* màu sắc
-* typography
-* layout
-* spacing
-* navigation
-* branding
+- màu sắc
+- typography
+- layout
+- spacing
+- navigation
+- branding
 
 nếu không liên quan đến task.
 
@@ -351,9 +351,9 @@ Error message phải giúp người dùng hiểu cần làm gì tiếp theo.
 
 Mọi UI change phải kiểm tra tối thiểu:
 
-* Desktop
-* Tablet
-* Mobile.
+- Desktop
+- Tablet
+- Mobile.
 
 Không giải quyết desktop bằng cách làm hỏng mobile.
 
@@ -361,13 +361,13 @@ Không dùng fixed dimensions cho UI quan trọng nếu layout responsive yêu c
 
 Đặc biệt kiểm tra:
 
-* image preview
-* product cards
-* catalogue
-* AI result
-* upload area
-* buttons
-* modal/dialog.
+- image preview
+- product cards
+- catalogue
+- AI result
+- upload area
+- buttons
+- modal/dialog.
 
 ---
 
@@ -377,21 +377,21 @@ Không dùng fixed dimensions cho UI quan trọng nếu layout responsive yêu c
 
 ### Frontend
 
-* unnecessary re-render
-* oversized bundle
-* duplicate requests
-* unnecessary client-side processing
-* large images
-* blocking operations.
+- unnecessary re-render
+- oversized bundle
+- duplicate requests
+- unnecessary client-side processing
+- large images
+- blocking operations.
 
 ### AI
 
-* duplicate generation requests
-* oversized image payload
-* unnecessary image conversion
-* missing loading state
-* excessive retry
-* timeout handling.
+- duplicate generation requests
+- oversized image payload
+- unnecessary image conversion
+- missing loading state
+- excessive retry
+- timeout handling.
 
 Không tối ưu bằng cách làm giảm chất lượng AI hoặc image một cách tùy tiện.
 
@@ -426,14 +426,14 @@ Không assume Vercel project sử dụng Next.js.
 
 Khi thay đổi server/API phải kiểm tra:
 
-* runtime compatibility
-* Node.js compatibility
-* build command
-* environment variables
-* function behavior
-* request/response size
-* timeout
-* external API calls.
+- runtime compatibility
+- Node.js compatibility
+- build command
+- environment variables
+- function behavior
+- request/response size
+- timeout
+- external API calls.
 
 Không commit Vercel secrets vào repository.
 
@@ -513,10 +513,10 @@ Mặc định:
 
 Nếu task yêu cầu sửa một lỗi:
 
-* không refactor toàn repo.
-* không đổi architecture.
-* không đổi UI không liên quan.
-* không cập nhật dependency không cần thiết.
+- không refactor toàn repo.
+- không đổi architecture.
+- không đổi UI không liên quan.
+- không cập nhật dependency không cần thiết.
 
 Nếu phát hiện vấn đề ngoài scope:
 
@@ -590,10 +590,10 @@ Vấn đề chưa giải quyết.
 
 Không dùng các kết luận generic như:
 
-* "Code improved."
-* "Performance optimized."
-* "Security enhanced."
-* "Everything works."
+- "Code improved."
+- "Performance optimized."
+- "Security enhanced."
+- "Everything works."
 
 Nếu nói một điều đã được sửa, phải chỉ ra **file/function hoặc evidence tương ứng**.
 
@@ -603,9 +603,9 @@ Nếu nói một điều đã được sửa, phải chỉ ra **file/function ho
 
 Nếu task có thể gây thay đổi architecture, data model, AI provider hoặc production behavior:
 
-* Không tự đoán.
-* Kiểm tra repository trước.
-* Nếu vẫn không đủ thông tin, hỏi user trước khi thực hiện thay đổi lớn.
+- Không tự đoán.
+- Kiểm tra repository trước.
+- Nếu vẫn không đủ thông tin, hỏi user trước khi thực hiện thay đổi lớn.
 
 Đối với thay đổi nhỏ, an toàn và có thể đảo ngược, ưu tiên implementation trực tiếp.
 
@@ -615,17 +615,17 @@ Nếu task có thể gây thay đổi architecture, data model, AI provider ho�
 
 Một task chỉ được xem là hoàn thành khi:
 
-* Đúng phạm vi yêu cầu.
-* Không phá architecture hiện tại.
-* Không expose secret.
-* Không phá AI Try-On.
-* Không phá e-commerce flow.
-* Không tạo dependency không cần thiết.
-* Typecheck pass nếu được cấu hình.
-* Lint pass nếu được cấu hình.
-* Tests pass nếu được cấu hình.
-* Build pass.
-* Các thay đổi được báo cáo rõ ràng.
+- Đúng phạm vi yêu cầu.
+- Không phá architecture hiện tại.
+- Không expose secret.
+- Không phá AI Try-On.
+- Không phá e-commerce flow.
+- Không tạo dependency không cần thiết.
+- Typecheck pass nếu được cấu hình.
+- Lint pass nếu được cấu hình.
+- Tests pass nếu được cấu hình.
+- Build pass.
+- Các thay đổi được báo cáo rõ ràng.
 
 Nếu một tiêu chí chưa đạt, phải ghi rõ thay vì tuyên bố task hoàn thành.
 

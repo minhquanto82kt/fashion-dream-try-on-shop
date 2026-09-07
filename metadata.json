@@ -1,0 +1,6 @@
+{
+  "name": "UpThink — AI Streetwear & Virtual Try-On",
+  "description": "Nền tảng thời trang streetwear của sinh viên IUH: streetwear, AI concept styling và virtual try-on.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
