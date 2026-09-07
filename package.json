@@ -9,7 +9,9 @@
     "build:dev": "vite build --mode development",
     "preview": "vite preview --host 0.0.0.0 --port 3000",
     "lint": "eslint .",
-    "format": "prettier --write --ignore-path .gitignore ."
+    "format": "prettier --write --ignore-path .gitignore .",
+    "format:check": "prettier --check --ignore-path .gitignore .",
+    "typecheck": "tsc --noEmit"
   },
   "overrides": {
     "rolldown": "1.2.1"
