@@ -1112,3 +1112,28 @@
 .fashion-intro-copy {
   text-shadow: 2px 1px 8px rgba(0, 0, 0, 1);
 }
+
+
+.fashion-beta-label {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid currentColor;
+  padding: 2px 4px;
+  font-size: 8px;
+  line-height: 1;
+  letter-spacing: 0.12em;
+}
+
+.fashion-ai-btn .fashion-beta-label {
+  margin-left: 1px;
+  color: var(--primary);
+}
+
+.fashion-ai-btn:hover .fashion-beta-label {
+  color: var(--primary-foreground);
+}
+
+.fashion-mobile-menu .fashion-beta-label {
+  margin-left: 5px;
+  vertical-align: middle;
+}
