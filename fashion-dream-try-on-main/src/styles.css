@@ -33,6 +33,9 @@
   --color-beige: var(--beige);
   --color-silver: var(--silver);
   --color-cyan: var(--y2k-cyan);
+  /* Màu cấp 3 của FashionTry */
+  --color-mustard: var(--ft-mustard);
+  --color-olive: var(--ft-olive);
   --font-display: "Anton", sans-serif;
   --font-sans: "Space Grotesk", sans-serif;
 }
@@ -63,6 +66,17 @@
   --beige: #594b02;
   --silver: #d9b504;
   --y2k-cyan: #fff89c;
+
+  /* Màu cấp 3: vàng mù tạt và nâu ô liu */
+  --ft-mustard: #d9b504;
+  --ft-olive: #594b02;
+
+  --gradient-mustard-olive: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--ft-mustard) 25%, transparent),
+    color-mix(in oklab, var(--ft-olive) 18%, transparent) 60%
+  );
+
   --gradient-gloss: linear-gradient(
     135deg,
     color-mix(in oklab, var(--electric) 20%, transparent),
@@ -104,6 +118,45 @@
 
 @utility gloss {
   background-image: var(--gradient-gloss);
+}
+
+/* Utility cho bảng màu cấp 3 */
+@utility gradient-mustard-olive {
+  background-image: var(--gradient-mustard-olive);
+}
+
+/* FashionTry color variants */
+.fashion-btn--mustard {
+  background: var(--ft-mustard);
+  border-color: var(--ft-mustard);
+  color: var(--ft-ink);
+}
+
+.fashion-btn--mustard:hover {
+  background: color-mix(in oklab, var(--ft-mustard) 86%, white);
+}
+
+.fashion-product-badge--olive {
+  background: var(--ft-olive);
+  border: 1px solid var(--ft-mustard);
+  color: var(--ft-paper);
+}
+
+.fashion-category-filter--olive {
+  background: color-mix(in oklab, var(--ft-olive) 35%, transparent);
+  border: 1px solid var(--ft-olive);
+  color: var(--ft-paper);
+}
+
+.fashion-category-filter--olive:hover,
+.fashion-category-filter--olive.is-active {
+  background: var(--ft-olive);
+  border-color: var(--ft-mustard);
+  color: var(--ft-paper);
+}
+
+.fashion-section-number--mustard {
+  color: var(--ft-mustard);
 }
 
 /* FashionTry Typography System — v1
