@@ -40,7 +40,9 @@ export function SiteNav() {
 
         <div className="fashion-nav__actions">
           <Link to="/ai" className="fashion-ai-btn">
-            <Sparkles size={14} /> Try-on
+            <Sparkles size={14} />
+            <span>AI Try-On</span>
+            <span className="fashion-beta-label">BETA</span>
           </Link>
           <Link to="/cart" className="fashion-cart-btn" aria-label="Giỏ hàng">
             <ShoppingBag size={17} />
@@ -59,7 +61,7 @@ export function SiteNav() {
               {link.label}
             </Link>
           ))}
-          <Link to="/ai" onClick={() => setOpen(false)}>AI Try-On ↗</Link>
+          <Link to="/ai" onClick={() => setOpen(false)}>AI Try-On <span className="fashion-beta-label">BETA</span> ↗</Link>
           <Link to="/cart" onClick={() => setOpen(false)}>Cart / {String(count).padStart(2, "0")}</Link>
         </div>
       )}
