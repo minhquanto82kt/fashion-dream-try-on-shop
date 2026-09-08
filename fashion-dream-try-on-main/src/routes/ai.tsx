@@ -46,7 +46,10 @@ function AiPage() {
         <h1 className="mt-3 text-4xl leading-none sm:text-5xl">
           Concept + <span className="text-primary">Virtual Try-On</span>
         </h1>
-        <p className="mt-4 max-w-2xl text-beige">
+        <h3 className="mt-5 text-xl font-medium uppercase tracking-[0.08em] text-foreground">
+          AI workspace
+        </h3>
+        <p className="mt-3 max-w-2xl text-[13px] leading-6 text-beige">
           Hai luồng trong một workspace: tạo concept outfit theo mood, hoặc thử sản phẩm UpThink
           ngay trên ảnh của bạn.
         </p>
