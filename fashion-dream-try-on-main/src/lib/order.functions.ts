@@ -15,7 +15,7 @@ type CreateOrderInput = {
   address: string;
   city: string;
   district: string;
-  paymentMethod: "cod";
+  paymentMethod: "cod" | "vietqr";
   items: OrderItemInput[];
 };
 
@@ -98,7 +98,7 @@ export const createOrder = createServerFn({ method: "POST" }).handler(
           address: data.address,
           city: data.city,
           district: data.district,
-          payment_method: "cod",
+          payment_method: data.paymentMethod,
           payment_status: "pending",
           order_status: "new",
           subtotal,
