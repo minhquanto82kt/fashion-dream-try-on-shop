@@ -26,6 +26,7 @@ function CheckoutPage() {
   const { items, subtotal, clear } = useCart();
   const [done, setDone] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<"cod" | "vietqr">("cod");
   const shipping = subtotal >= 1000000 ? 0 : 30000;
 
   if (done) {
@@ -113,12 +114,57 @@ function CheckoutPage() {
                 <Field label="Quận / Huyện" name="district" />
               </div>
 
-              <p className="pt-4 text-xs uppercase tracking-[0.2em] text-silver">
-                Phương thức thanh toán
-              </p>
-              <div className="border border-primary p-4 text-sm text-primary">
-                Thanh toán khi nhận hàng (COD)
-              </div>
+<p className="pt-4 text-xs uppercase tracking-[0.2em] text-silver">
+  Phương thức thanh toán
+</p>
+
+<div className="space-y-3">
+  <label
+    className={`block cursor-pointer border p-4 text-sm transition ${
+      paymentMethod === "cod"
+        ? "border-primary text-primary"
+        : "border-border text-beige"
+    }`}
+  >
+    <input
+      type="radio"
+      name="paymentMethod"
+      value="cod"
+      checked={paymentMethod === "cod"}
+      onChange={() => setPaymentMethod("cod")}
+      className="sr-only"
+    />
+    <span className="block font-medium">
+      Thanh toán khi nhận hàng (COD)
+    </span>
+    <span className="mt-1 block text-xs text-silver">
+      Thanh toán khi nhận hàng
+    </span>
+  </label>
+
+  <label
+    className={`block cursor-pointer border p-4 text-sm transition ${
+      paymentMethod === "vietqr"
+        ? "border-primary text-primary"
+        : "border-border text-beige"
+    }`}
+  >
+    <input
+      type="radio"
+      name="paymentMethod"
+      value="vietqr"
+      checked={paymentMethod === "vietqr"}
+      onChange={() => setPaymentMethod("vietqr")}
+      className="sr-only"
+    />
+    <span className="block font-medium">
+      Thanh toán qua VietQR
+    </span>
+    <span className="mt-1 block text-xs text-silver">
+      Quét mã QR để thanh toán
+    </span>
+  </label>
+</div>
             </div>
 
             <aside className="h-fit border border-border bg-card p-6">
