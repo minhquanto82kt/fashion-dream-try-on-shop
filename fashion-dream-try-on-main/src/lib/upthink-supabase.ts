@@ -1,28 +1,52 @@
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined;
+/**
+ * UpThink Supabase helpers
+ *
+ * Browser-safe REST client for the Product Admin page.
+ * Required Vercel Preview environment variables:
+ *   VITE_SUPABASE_URL
+ *   VITE_SUPABASE_PUBLISHABLE_KEY
+ *
+ * IMPORTANT:
+ * Never put a Supabase secret/service_role key in frontend code.
+ */
 
-if (!SUPABASE_URL || !SUPABASE_KEY) {
-  console.warn(
-    "[UpThink Admin] Missing VITE_SUPABASE_URL or VITE_SUPABASE_PUBLISHABLE_KEY."
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL?.trim() as string | undefined;
+const SUPABASE_KEY =
+  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY?.trim() as string | undefined;
+
+if (!SUPABASE_URL) {
+  throw new Error(
+    "Missing VITE_SUPABASE_URL. Add it to the Vercel Preview environment variables."
+  );
+}
+
+if (!SUPABASE_KEY) {
+  throw new Error(
+    "Missing VITE_SUPABASE_PUBLISHABLE_KEY. Add it to the Vercel Preview environment variables."
   );
 }
 
 export const supabaseConfig = {
-  url: SUPABASE_URL ?? "",
-  key: SUPABASE_KEY ?? "",
+  url: SUPABASE_URL,
+  key: SUPABASE_KEY,
 };
 
-type Session = {
+export type Session = {
   access_token: string;
   refresh_token?: string;
+  expires_in?: number;
+  expires_at?: number;
+  token_type?: string;
   user?: { id: string; email?: string };
 };
 
 const SESSION_KEY = "upthink_admin_session";
 
 export function getSession(): Session | null {
+  if (typeof window === "undefined") return null;
+
   try {
-    const raw = sessionStorage.getItem(SESSION_KEY);
+    const raw = window.sessionStorage.getItem(SESSION_KEY);
     return raw ? (JSON.parse(raw) as Session) : null;
   } catch {
     return null;
@@ -30,12 +54,18 @@ export function getSession(): Session | null {
 }
 
 export function setSession(session: Session | null) {
-  if (!session) sessionStorage.removeItem(SESSION_KEY);
-  else sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+  if (typeof window === "undefined") return;
+
+  if (!session) {
+    window.sessionStorage.removeItem(SESSION_KEY);
+  } else {
+    window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+  }
 }
 
 function headers(extra?: Record<string, string>) {
   const session = getSession();
+
   return {
     apikey: supabaseConfig.key,
     Authorization: `Bearer ${session?.access_token ?? supabaseConfig.key}`,
@@ -46,15 +76,32 @@ function headers(extra?: Record<string, string>) {
 
 async function parseResponse<T>(response: Response): Promise<T> {
   const text = await response.text();
+
   if (!response.ok) {
     let message = text || `Request failed (${response.status})`;
+
     try {
       const json = JSON.parse(text);
-      message = json.message || json.error_description || json.hint || message;
-    } catch {}
+      message =
+        json.message ||
+        json.error_description ||
+        json.error ||
+        json.hint ||
+        message;
+    } catch {
+      // Keep the original response text.
+    }
+
     throw new Error(message);
   }
-  return text ? (JSON.parse(text) as T) : (undefined as T);
+
+  if (!text) return undefined as T;
+
+  try {
+    return JSON.parse(text) as T;
+  } catch {
+    return text as T;
+  }
 }
 
 export async function signIn(email: string, password: string) {
@@ -69,12 +116,27 @@ export async function signIn(email: string, password: string) {
       body: JSON.stringify({ email, password }),
     }
   );
+
   const data = await parseResponse<Session>(response);
   setSession(data);
   return data;
 }
 
-export function signOut() {
+export async function signOut() {
+  const session = getSession();
+
+  // Best-effort server logout. Clear the local session even if the request fails.
+  if (session?.access_token) {
+    try {
+      await fetch(`${supabaseConfig.url}/auth/v1/logout`, {
+        method: "POST",
+        headers: headers(),
+      });
+    } catch {
+      // Ignore logout network errors.
+    }
+  }
+
   setSession(null);
 }
 
@@ -82,6 +144,7 @@ export async function getUser() {
   const response = await fetch(`${supabaseConfig.url}/auth/v1/user`, {
     headers: headers(),
   });
+
   return parseResponse<{ id: string; email?: string }>(response);
 }
 
@@ -91,6 +154,7 @@ export async function checkAdmin() {
     headers: headers(),
     body: JSON.stringify({}),
   });
+
   return parseResponse<boolean>(response);
 }
 
@@ -124,29 +188,52 @@ export async function listProducts() {
   const url =
     `${supabaseConfig.url}/rest/v1/products` +
     `?select=*&order=created_at.desc`;
-  const response = await fetch(url, { headers: headers() });
+
+  const response = await fetch(url, {
+    headers: headers(),
+  });
+
   return parseResponse<Product[]>(response);
 }
 
-export async function createProduct(payload: Partial<Product> & { id: string; name: string; slug: string; price: number; category: string }) {
+export async function createProduct(
+  payload: Partial<Product> & {
+    id: string;
+    name: string;
+    slug: string;
+    price: number;
+    category: string;
+  }
+) {
   const response = await fetch(`${supabaseConfig.url}/rest/v1/products`, {
     method: "POST",
-    headers: { ...headers(), Prefer: "return=representation" },
+    headers: {
+      ...headers(),
+      Prefer: "return=representation",
+    },
     body: JSON.stringify(payload),
   });
+
   const data = await parseResponse<Product[]>(response);
   return data[0];
 }
 
-export async function updateProduct(id: string, payload: Partial<Product>) {
+export async function updateProduct(
+  id: string,
+  payload: Partial<Product>
+) {
   const response = await fetch(
     `${supabaseConfig.url}/rest/v1/products?id=eq.${encodeURIComponent(id)}`,
     {
       method: "PATCH",
-      headers: { ...headers(), Prefer: "return=representation" },
+      headers: {
+        ...headers(),
+        Prefer: "return=representation",
+      },
       body: JSON.stringify(payload),
     }
   );
+
   const data = await parseResponse<Product[]>(response);
   return data[0];
 }
@@ -159,13 +246,23 @@ export async function deleteProduct(id: string) {
       headers: headers(),
     }
   );
+
   await parseResponse<unknown>(response);
 }
 
 export async function uploadProductImage(productId: string, file: File) {
-  const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
-  const safeName = `${Date.now()}-${crypto.randomUUID()}.${extension}`;
+  const extension =
+    file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "") ||
+    "jpg";
+
+  const randomId =
+    typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+  const safeName = `${Date.now()}-${randomId}.${extension}`;
   const path = `${productId}/${safeName}`;
+
   const response = await fetch(
     `${supabaseConfig.url}/storage/v1/object/product-images/${path}`,
     {
@@ -179,21 +276,34 @@ export async function uploadProductImage(productId: string, file: File) {
       body: file,
     }
   );
+
   await parseResponse<unknown>(response);
+
   return `${supabaseConfig.url}/storage/v1/object/public/product-images/${path}`;
 }
 
-export async function addProductImage(productId: string, imageUrl: string, isPrimary: boolean) {
-  const response = await fetch(`${supabaseConfig.url}/rest/v1/product_images`, {
-    method: "POST",
-    headers: { ...headers(), Prefer: "return=representation" },
-    body: JSON.stringify({
-      product_id: productId,
-      image_url: imageUrl,
-      sort_order: 0,
-      is_primary: isPrimary,
-    }),
-  });
+export async function addProductImage(
+  productId: string,
+  imageUrl: string,
+  isPrimary: boolean
+) {
+  const response = await fetch(
+    `${supabaseConfig.url}/rest/v1/product_images`,
+    {
+      method: "POST",
+      headers: {
+        ...headers(),
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify({
+        product_id: productId,
+        image_url: imageUrl,
+        sort_order: 0,
+        is_primary: isPrimary,
+      }),
+    }
+  );
+
   const data = await parseResponse<ProductImage[]>(response);
   return data[0];
 }
