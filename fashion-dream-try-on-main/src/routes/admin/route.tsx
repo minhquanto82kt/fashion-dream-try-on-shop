@@ -13,6 +13,7 @@ function AdminLayout() {
   const [authorized, setAuthorized] = useState(false);
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [loggingIn, setLoggingIn] = useState(false);
 
@@ -95,14 +96,37 @@ function AdminLayout() {
             </label>
             <label>
               Mật khẩu
-              <input
-                type="password"
-                value={loginPassword}
-                onChange={(event) => setLoginPassword(event.target.value)}
-                placeholder="••••••••"
-                autoComplete="current-password"
-                required
-              />
+              <div className="up-admin-password-field">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={loginPassword}
+                  onChange={(event) => setLoginPassword(event.target.value)}
+                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  required
+                />
+                <button
+                  type="button"
+                  className="up-admin-password-toggle"
+                  onClick={() => setShowPassword((visible) => !visible)}
+                  aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                  title={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                >
+                  {showPassword ? (
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M3 3l18 18" />
+                      <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
+                      <path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c6.2 0 10 7 10 7a18 18 0 0 1-3.1 3.8" />
+                      <path d="M6.1 6.1C3.7 7.7 2 12 2 12s3.8 7 10 7a10.7 10.7 0 0 0 4-.8" />
+                    </svg>
+                  ) : (
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M2 12s3.8-7 10-7 10 7 10 7-3.8 7-10 7S2 12 2 12Z" />
+                      <circle cx="12" cy="12" r="2.5" />
+                    </svg>
+                  )}
+                </button>
+              </div>
             </label>
             {loginError && <div className="up-admin-error">{loginError}</div>}
             <button className="up-admin-primary" type="submit" disabled={loggingIn}>

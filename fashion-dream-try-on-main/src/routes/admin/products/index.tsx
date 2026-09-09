@@ -57,7 +57,39 @@ function ProductAdminPage() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadProducts() {
+      setLoading(true);
+      try {
+        const data = await listProducts();
+        if (!cancelled) {
+          setProducts(data);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setMessage(
+            error instanceof Error
+              ? error.message
+              : "Không thể tải danh sách sản phẩm.",
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    void loadProducts();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const filtered = useMemo(() => {
     return products.filter((product) => {
@@ -202,7 +234,10 @@ function ProductAdminPage() {
             <table className="up-admin-table">
               <thead><tr><th>SẢN PHẨM</th><th>DANH MỤC</th><th>GIÁ</th><th>TRẠNG THÁI</th><th>NỔI BẬT</th><th></th></tr></thead>
               <tbody>
-                {filtered.map((product) => (
+                {loading ? (
+                  <tr><td colSpan={6} className="up-admin-empty">Đang tải sản phẩm…</td></tr>
+                ) : filtered.length ? (
+                  filtered.map((product) => (
                   <tr key={product.id}>
                     <td>
                       <div className="up-product-cell">
@@ -216,10 +251,11 @@ function ProductAdminPage() {
                     <td>{product.featured ? "●" : "—"}</td>
                     <td><button className="up-row-action" onClick={() => openEdit(product)}>SỬA</button></td>
                   </tr>
-                ))}
+                  ))
+                ) : null}
               </tbody>
             </table>
-            {!filtered.length && <div className="up-admin-empty">Không có sản phẩm phù hợp.</div>}
+            {!loading && !filtered.length && <div className="up-admin-empty">Không có sản phẩm phù hợp.</div>}
           </section>
 
           {message && <div className="up-admin-toast">{message}</div>}
