@@ -30,16 +30,6 @@ Vite
 CSS
 Vercel
 AI / Virtual Try-On
-📂 Cấu trúc dự án
-fashion-dream-try-on-shop/
-├── src/
-│   ├── routes/
-│   ├── components/
-│   ├── styles/
-│   └── ...
-├── public/
-├── package.json
-└── README.md
 🚀 Deployment
 
 Dự án được triển khai trên Vercel.
