@@ -5,6 +5,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { formatVnd } from "@/data/products";
 import { useCart } from "@/lib/cart";
 import { createOrder } from "@/lib/order.functions";
+import { createVietQrUrl } from "@/lib/vietqr";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
@@ -27,7 +28,95 @@ function CheckoutPage() {
   const [done, setDone] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<"cod" | "vietqr">("cod");
+  const [paymentInfo, setPaymentInfo] = useState<{
+    orderCode: string;
+    total: number;
+    qrUrl: string;
+  } | null>(null);
+  
   const shipping = subtotal >= 1000000 ? 0 : 30000;
+    //_____________KHỐI VIETQR______________//
+  if (paymentInfo) {
+    return (
+      <div className="min-h-screen">
+        <SiteNav />
+
+        <main className="mx-auto max-w-2xl px-6 pb-24 pt-32 text-center">
+          <p className="eyebrow">Thanh toán VietQR</p>
+
+          <h1 className="mt-3 text-4xl leading-none">
+            Quét mã để thanh toán
+            <span className="text-primary">.</span>
+          </h1>
+
+          <p className="mt-4 text-beige">
+            Sử dụng ứng dụng ngân hàng để quét mã QR bên dưới.
+          </p>
+
+          <div className="mx-auto mt-8 max-w-sm border border-border bg-card p-6">
+            <img
+              src={paymentInfo.qrUrl}
+              alt="Mã QR thanh toán VietQR"
+              className="mx-auto h-auto w-full"
+            />
+          </div>
+
+          <div className="mx-auto mt-6 max-w-sm space-y-3 border border-border bg-card p-5 text-left text-sm">
+            <div className="flex justify-between gap-4">
+              <span className="text-silver">Ngân hàng</span>
+              <span>MB Bank</span>
+            </div>
+
+            <div className="flex justify-between gap-4">
+              <span className="text-silver">Người nhận</span>
+              <span>UPTHINK</span>
+            </div>
+
+            <div className="flex justify-between gap-4">
+              <span className="text-silver">Số tiền</span>
+              <span className="text-primary">
+                {formatVnd(paymentInfo.total)}
+              </span>
+            </div>
+
+            <div className="flex justify-between gap-4">
+              <span className="text-silver">Nội dung</span>
+              <span className="text-right">{paymentInfo.orderCode}</span>
+            </div>
+          </div>
+
+          <p className="mt-6 text-xs text-silver">
+            Sau khi chuyển khoản, nhấn nút bên dưới để hoàn tất đơn hàng.
+          </p>
+
+          <button
+            type="button"
+            onClick={() => {
+              clear();
+              setDone(paymentInfo.orderCode);
+              setPaymentInfo(null);
+            }}
+            className="mt-6 bg-primary px-7 py-3 text-xs uppercase tracking-[0.15em] text-primary-foreground"
+          >
+            Tôi đã thanh toán
+          </button>
+
+          <div>
+            <button
+              type="button"
+              onClick={() => setPaymentInfo(null)}
+              className="mt-4 text-xs text-silver underline underline-offset-4"
+            >
+              Quay lại
+            </button>
+          </div>
+        </main>
+
+        <SiteFooter />
+      </div>
+    );
+  }
+
 
   if (done) {
     return (
@@ -95,8 +184,16 @@ function CheckoutPage() {
                   },
                 });
 
-                clear();
-                setDone(result.orderCode);
+        if (paymentMethod === "vietqr") {
+          setPaymentInfo({
+            orderCode: result.orderCode,
+            total: result.total,
+            qrUrl: createVietQrUrl(result.total, result.orderCode),
+          });
+        } else {
+          clear();
+          setDone(result.orderCode);
+        }
               } catch (error) {
                 alert(error instanceof Error ? error.message : "Không thể tạo đơn hàng.");
               } finally {
