@@ -30,6 +30,7 @@ const COLLECTION_CATEGORIES = [
   { slug: "hoodies", label: "Hoodies" },
   { slug: "tees", label: "Tees" },
   { slug: "outerwear", label: "Outerwear" },
+  { slug: "accessories", label: "Accessories" },
   { slug: "cap", label: "Caps" },
   { slug: "sunglass", label: "Sunglasses" },
 ] as const;
@@ -95,14 +96,12 @@ function Index() {
               <Link
                 to="/shop"
                 className="fashion-btn"
-                style={{ fontFamily: "__Inter_d65c78, sans-serif", fontWeight: 700 }}
               >
                 Explore collection ↗
               </Link>
               <Link
                 to="/ai"
                 className="fashion-btn fashion-btn--ghost"
-                style={{ fontFamily: "__Inter_d65c78, sans-serif", fontWeight: 700 }}
               >
                 Start AI try-on
               </Link>
@@ -163,7 +162,7 @@ function Index() {
               </span>
             </h2>
             <p className="fashion-intro-copy">
-              Fashion Dream giữ AI try-on làm core. Commerce được thiết kế lại để sản phẩm, outfit và AI stylist nối liền thành một hành trình mua sắm tự nhiên.
+              UpThink giữ AI try-on làm cốt lõi. Commerce được thiết kế lại để sản phẩm, outfit và AI stylist nối liền thành một hành trình mua sắm tự nhiên.
             </p>
           </div>
         </section>
@@ -182,7 +181,7 @@ function Index() {
               <div><b>02</b><span>Virtual try-on</span></div>
               <div><b>03</b><span>AI styling recommendations</span></div>
             </div>
-            <Link to="/ai" className="fashion-text-link">Open AI Studio ↗</Link>
+            <Link to="/ai" className="fashion-text-link">Open AI Lab ↗</Link>
           </div>
         </section>
 
