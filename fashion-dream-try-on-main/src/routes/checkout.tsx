@@ -85,7 +85,7 @@ function CheckoutPage() {
                     address: String(form.get("address") || ""),
                     city: String(form.get("city") || ""),
                     district: String(form.get("district") || ""),
-                    paymentMethod: "cod",
+                    paymentMethod,
                     items: items.map((item) => ({
                       productId: item.productId,
                       size: item.size,
@@ -198,7 +198,11 @@ function CheckoutPage() {
                 disabled={submitting}
                 className="mt-6 w-full bg-primary px-6 py-3 text-xs uppercase tracking-[0.15em] text-primary-foreground disabled:opacity-50"
               >
-                {submitting ? "Đang tạo đơn..." : "Đặt hàng COD"}
+                {submitting
+                  ? "Đang tạo đơn..."
+                  : paymentMethod === "vietqr"
+                    ? "Tiếp tục thanh toán"
+                    : "Đặt hàng COD"}
               </button>
             </aside>
           </form>
