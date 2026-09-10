@@ -53,7 +53,7 @@ export const createOrder = createServerFn({ method: "POST" }).handler(
     const orderCode = createOrderCode();
 
     const rpcItems = data.items.map((item) => ({
-      product_id: item.productId,
+      productId: item.productId,
       size: item.size,
       color: item.color,
       quantity: item.quantity,
