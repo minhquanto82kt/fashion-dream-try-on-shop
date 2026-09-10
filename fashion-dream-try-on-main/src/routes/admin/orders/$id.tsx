@@ -56,6 +56,14 @@ type Payment = {
   updated_at: string;
 };
 
+const ORDER_STATUSES = [
+  { value: "new", label: "Mới" },
+  { value: "confirmed", label: "Đã xác nhận" },
+  { value: "shipping", label: "Đang giao" },
+  { value: "completed", label: "Hoàn thành" },
+  { value: "cancelled", label: "Đã hủy" },
+] as const;
+
 function money(value: number) {
   return new Intl.NumberFormat("vi-VN").format(value) + " ₫";
 }
@@ -115,6 +123,7 @@ function OrderDetailAdminPage() {
 
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
+  const [updatingStatus, setUpdatingStatus] = useState(false);
 
   const loadOrder = useCallback(async () => {
     if (!supabaseConfig.url || !supabaseConfig.key) {
@@ -194,6 +203,88 @@ function OrderDetailAdminPage() {
     }
   }, [id]);
 
+  const updateOrderStatus = useCallback(
+    async (nextStatus: string) => {
+      if (!supabaseConfig.url || !supabaseConfig.key) {
+        setMessage("Supabase chưa được cấu hình.");
+        return;
+      }
+
+      if (!order) {
+        return;
+      }
+
+      if (nextStatus === order.order_status) {
+        return;
+      }
+
+      const isValidStatus = ORDER_STATUSES.some(
+        (status) => status.value === nextStatus,
+      );
+
+      if (!isValidStatus) {
+        setMessage("Trạng thái đơn hàng không hợp lệ.");
+        return;
+      }
+
+      try {
+        setUpdatingStatus(true);
+        setMessage("");
+
+        const headers = {
+          apikey: supabaseConfig.key,
+          Authorization: `Bearer ${supabaseConfig.key}`,
+          "Content-Type": "application/json",
+          Prefer: "return=representation",
+        };
+
+        const response = await fetch(
+          `${supabaseConfig.url}/rest/v1/orders?id=eq.${encodeURIComponent(
+            order.id,
+          )}`,
+          {
+            method: "PATCH",
+            headers,
+            body: JSON.stringify({
+              order_status: nextStatus,
+            }),
+          },
+        );
+
+        if (!response.ok) {
+          const errorBody = await response.text();
+
+          throw new Error(
+            errorBody || "Không thể cập nhật trạng thái đơn hàng.",
+          );
+        }
+
+        const updatedOrders = (await response.json()) as Order[];
+
+        if (!updatedOrders.length) {
+          throw new Error(
+            "Không cập nhật được đơn hàng. Có thể quyền RLS chưa cho phép UPDATE.",
+          );
+        }
+
+        await loadOrder();
+
+        setMessage(
+          `Đã cập nhật trạng thái: ${orderStatusLabel(nextStatus)}.`,
+        );
+      } catch (error) {
+        setMessage(
+          error instanceof Error
+            ? error.message
+            : "Không thể cập nhật trạng thái đơn hàng.",
+        );
+      } finally {
+        setUpdatingStatus(false);
+      }
+    },
+    [loadOrder, order],
+  );
+
   useEffect(() => {
     void loadOrder();
   }, [loadOrder]);
@@ -233,9 +324,7 @@ function OrderDetailAdminPage() {
 
           <h1>{order.order_code}</h1>
 
-          <p>
-            Tạo ngày {formatDate(order.created_at)}
-          </p>
+          <p>Tạo ngày {formatDate(order.created_at)}</p>
         </div>
 
         <Link to="/admin/orders" className="up-admin-primary">
@@ -264,6 +353,71 @@ function OrderDetailAdminPage() {
         <div>
           <span>TỔNG ĐƠN</span>
           <strong>{money(order.total)}</strong>
+        </div>
+      </section>
+
+      <section
+        className="up-admin-table-wrap"
+        style={{ marginTop: 24 }}
+      >
+        <div
+          style={{
+            padding: "24px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 24,
+            flexWrap: "wrap",
+          }}
+        >
+          <div>
+            <h2 style={{ marginBottom: 8 }}>
+              Cập nhật trạng thái đơn hàng
+            </h2>
+
+            <p style={{ margin: 0 }}>
+              Trạng thái hiện tại:{" "}
+              <strong>
+                {orderStatusLabel(order.order_status)}
+              </strong>
+            </p>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+            }}
+          >
+            <select
+              value={order.order_status}
+              disabled={updatingStatus}
+              onChange={(event) => {
+                void updateOrderStatus(event.target.value);
+              }}
+              style={{
+                minWidth: 190,
+                padding: "10px 12px",
+                border: "1px solid #d8d8d4",
+                background: "#fff",
+                fontSize: 13,
+                cursor: updatingStatus ? "wait" : "pointer",
+              }}
+            >
+              {ORDER_STATUSES.map((status) => (
+                <option key={status.value} value={status.value}>
+                  {status.label}
+                </option>
+              ))}
+            </select>
+
+            {updatingStatus && (
+              <span style={{ fontSize: 12 }}>
+                Đang cập nhật…
+              </span>
+            )}
+          </div>
         </div>
       </section>
 
@@ -297,7 +451,10 @@ function OrderDetailAdminPage() {
         </div>
       </section>
 
-      <section className="up-admin-table-wrap" style={{ marginTop: 24 }}>
+      <section
+        className="up-admin-table-wrap"
+        style={{ marginTop: 24 }}
+      >
         <div style={{ padding: "24px" }}>
           <h2>Sản phẩm trong đơn</h2>
 
@@ -346,7 +503,10 @@ function OrderDetailAdminPage() {
         </div>
       </section>
 
-      <section className="up-admin-table-wrap" style={{ marginTop: 24 }}>
+      <section
+        className="up-admin-table-wrap"
+        style={{ marginTop: 24 }}
+      >
         <div style={{ padding: "24px" }}>
           <h2>Tổng thanh toán</h2>
 
@@ -367,7 +527,10 @@ function OrderDetailAdminPage() {
         </div>
       </section>
 
-      <section className="up-admin-table-wrap" style={{ marginTop: 24 }}>
+      <section
+        className="up-admin-table-wrap"
+        style={{ marginTop: 24 }}
+      >
         <div style={{ padding: "24px" }}>
           <h2>Thanh toán</h2>
 
