@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
-import { supabaseConfig } from "@/lib/upthink-supabase";
+import {
+  getSession,
+  supabaseConfig,
+} from "@/lib/upthink-supabase";
 
 export const Route = createFileRoute("/admin/orders/$id")({
   component: OrderDetailAdminPage,
@@ -114,6 +117,31 @@ function paymentMethodLabel(method: string) {
   }
 }
 
+async function getErrorMessage(
+  response: Response,
+  fallback: string,
+) {
+  const text = await response.text();
+
+  if (!text) {
+    return fallback;
+  }
+
+  try {
+    const data = JSON.parse(text);
+
+    return (
+      data.message ||
+      data.error_description ||
+      data.error ||
+      data.hint ||
+      fallback
+    );
+  } catch {
+    return text;
+  }
+}
+
 function OrderDetailAdminPage() {
   const { id } = Route.useParams();
 
@@ -132,13 +160,23 @@ function OrderDetailAdminPage() {
       return;
     }
 
+    const session = getSession();
+
+    if (!session?.access_token) {
+      setMessage(
+        "Phiên đăng nhập quản trị đã hết hạn. Vui lòng đăng nhập lại.",
+      );
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       setMessage("");
 
       const headers = {
         apikey: supabaseConfig.key,
-        Authorization: `Bearer ${supabaseConfig.key}`,
+        Authorization: `Bearer ${session.access_token}`,
       };
 
       const [orderResponse, itemsResponse, paymentResponse] =
@@ -166,15 +204,30 @@ function OrderDetailAdminPage() {
         ]);
 
       if (!orderResponse.ok) {
-        throw new Error("Không thể tải thông tin đơn hàng.");
+        throw new Error(
+          await getErrorMessage(
+            orderResponse,
+            "Không thể tải thông tin đơn hàng.",
+          ),
+        );
       }
 
       if (!itemsResponse.ok) {
-        throw new Error("Không thể tải sản phẩm trong đơn hàng.");
+        throw new Error(
+          await getErrorMessage(
+            itemsResponse,
+            "Không thể tải sản phẩm trong đơn hàng.",
+          ),
+        );
       }
 
       if (!paymentResponse.ok) {
-        throw new Error("Không thể tải thông tin thanh toán.");
+        throw new Error(
+          await getErrorMessage(
+            paymentResponse,
+            "Không thể tải thông tin thanh toán.",
+          ),
+        );
       }
 
       const orderData = (await orderResponse.json()) as Order[];
@@ -218,6 +271,15 @@ function OrderDetailAdminPage() {
         return;
       }
 
+      const session = getSession();
+
+      if (!session?.access_token) {
+        setMessage(
+          "Phiên đăng nhập quản trị đã hết hạn. Vui lòng đăng nhập lại.",
+        );
+        return;
+      }
+
       const isValidStatus = ORDER_STATUSES.some(
         (status) => status.value === nextStatus,
       );
@@ -231,20 +293,18 @@ function OrderDetailAdminPage() {
         setUpdatingStatus(true);
         setMessage("");
 
-        const headers = {
-          apikey: supabaseConfig.key,
-          Authorization: `Bearer ${supabaseConfig.key}`,
-          "Content-Type": "application/json",
-          Prefer: "return=representation",
-        };
-
         const response = await fetch(
           `${supabaseConfig.url}/rest/v1/orders?id=eq.${encodeURIComponent(
             order.id,
           )}`,
           {
             method: "PATCH",
-            headers,
+            headers: {
+              apikey: supabaseConfig.key,
+              Authorization: `Bearer ${session.access_token}`,
+              "Content-Type": "application/json",
+              Prefer: "return=representation",
+            },
             body: JSON.stringify({
               order_status: nextStatus,
             }),
@@ -252,10 +312,11 @@ function OrderDetailAdminPage() {
         );
 
         if (!response.ok) {
-          const errorBody = await response.text();
-
           throw new Error(
-            errorBody || "Không thể cập nhật trạng thái đơn hàng.",
+            await getErrorMessage(
+              response,
+              "Không thể cập nhật trạng thái đơn hàng.",
+            ),
           );
         }
 
@@ -263,7 +324,7 @@ function OrderDetailAdminPage() {
 
         if (!updatedOrders.length) {
           throw new Error(
-            "Không cập nhật được đơn hàng. Có thể quyền RLS chưa cho phép UPDATE.",
+            "Không cập nhật được đơn hàng. Vui lòng kiểm tra quyền RLS.",
           );
         }
 
@@ -302,16 +363,24 @@ function OrderDetailAdminPage() {
       <div>
         <header className="up-admin-topbar">
           <div>
-            <div className="up-admin-kicker">COMMERCE / ORDERS</div>
+            <div className="up-admin-kicker">
+              COMMERCE / ORDERS
+            </div>
+
             <h1>Không tìm thấy đơn hàng</h1>
           </div>
 
-          <Link to="/admin/orders" className="up-admin-primary">
+          <Link
+            to="/admin/orders"
+            className="up-admin-primary"
+          >
             ← QUAY LẠI
           </Link>
         </header>
 
-        {message && <div className="up-admin-toast">{message}</div>}
+        {message && (
+          <div className="up-admin-toast">{message}</div>
+        )}
       </div>
     );
   }
@@ -320,14 +389,19 @@ function OrderDetailAdminPage() {
     <div>
       <header className="up-admin-topbar">
         <div>
-          <div className="up-admin-kicker">COMMERCE / ORDERS / DETAIL</div>
+          <div className="up-admin-kicker">
+            COMMERCE / ORDERS / DETAIL
+          </div>
 
           <h1>{order.order_code}</h1>
 
           <p>Tạo ngày {formatDate(order.created_at)}</p>
         </div>
 
-        <Link to="/admin/orders" className="up-admin-primary">
+        <Link
+          to="/admin/orders"
+          className="up-admin-primary"
+        >
           ← DANH SÁCH ĐƠN
         </Link>
       </header>
@@ -335,12 +409,16 @@ function OrderDetailAdminPage() {
       <section className="up-admin-stats">
         <div>
           <span>TRẠNG THÁI ĐƠN</span>
-          <strong>{orderStatusLabel(order.order_status)}</strong>
+          <strong>
+            {orderStatusLabel(order.order_status)}
+          </strong>
         </div>
 
         <div>
           <span>THANH TOÁN</span>
-          <strong>{paymentLabel(order.payment_status)}</strong>
+          <strong>
+            {paymentLabel(order.payment_status)}
+          </strong>
         </div>
 
         <div>
@@ -402,11 +480,16 @@ function OrderDetailAdminPage() {
                 border: "1px solid #d8d8d4",
                 background: "#fff",
                 fontSize: 13,
-                cursor: updatingStatus ? "wait" : "pointer",
+                cursor: updatingStatus
+                  ? "wait"
+                  : "pointer",
               }}
             >
               {ORDER_STATUSES.map((status) => (
-                <option key={status.value} value={status.value}>
+                <option
+                  key={status.value}
+                  value={status.value}
+                >
                   {status.label}
                 </option>
               ))}
@@ -426,11 +509,13 @@ function OrderDetailAdminPage() {
           <h2>Thông tin khách hàng</h2>
 
           <p>
-            <strong>Họ tên:</strong> {order.customer_name}
+            <strong>Họ tên:</strong>{" "}
+            {order.customer_name}
           </p>
 
           <p>
-            <strong>Số điện thoại:</strong> {order.phone}
+            <strong>Số điện thoại:</strong>{" "}
+            {order.phone}
           </p>
 
           <p>
@@ -440,7 +525,8 @@ function OrderDetailAdminPage() {
 
           <p>
             <strong>Địa chỉ:</strong>{" "}
-            {order.address}, {order.district}, {order.city}
+            {order.address}, {order.district},{" "}
+            {order.city}
           </p>
 
           {order.note && (
@@ -492,7 +578,10 @@ function OrderDetailAdminPage() {
 
                     <td>
                       <strong>
-                        {money(item.unit_price * item.quantity)}
+                        {money(
+                          item.unit_price *
+                            item.quantity,
+                        )}
                       </strong>
                     </td>
                   </tr>
@@ -537,14 +626,16 @@ function OrderDetailAdminPage() {
           <p>
             <strong>Phương thức:</strong>{" "}
             {paymentMethodLabel(
-              payment?.method ?? order.payment_method,
+              payment?.method ??
+                order.payment_method,
             )}
           </p>
 
           <p>
             <strong>Trạng thái:</strong>{" "}
             {paymentLabel(
-              payment?.status ?? order.payment_status,
+              payment?.status ??
+                order.payment_status,
             )}
           </p>
 
@@ -578,7 +669,9 @@ function OrderDetailAdminPage() {
         </div>
       </section>
 
-      {message && <div className="up-admin-toast">{message}</div>}
+      {message && (
+        <div className="up-admin-toast">{message}</div>
+      )}
     </div>
   );
 }
