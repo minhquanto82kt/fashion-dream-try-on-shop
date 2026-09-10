@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { supabaseConfig } from "@/lib/upthink-supabase";
 
@@ -45,6 +45,8 @@ function paymentLabel(status: string) {
       return "Đã thanh toán";
     case "failed":
       return "Thất bại";
+    case "refunded":
+      return "Đã hoàn tiền";
     case "cancelled":
       return "Đã hủy";
     default:
@@ -54,8 +56,8 @@ function paymentLabel(status: string) {
 
 function orderStatusLabel(status: string) {
   switch (status) {
-    case "processing":
-      return "Đang xử lý";
+    case "confirmed":
+      return "Đã xác nhận";
     case "shipping":
       return "Đang giao";
     case "completed":
@@ -162,8 +164,8 @@ function OrdersAdminPage() {
       pendingPayment: orders.filter(
         (order) => order.payment_status === "pending",
       ).length,
-      processing: orders.filter(
-        (order) => order.order_status === "processing",
+      confirmed: orders.filter(
+        (order) => order.order_status === "confirmed",
       ).length,
       revenue: orders
         .filter((order) => order.payment_status === "paid")
@@ -202,8 +204,8 @@ function OrdersAdminPage() {
         </div>
 
         <div>
-          <span>ĐANG XỬ LÝ</span>
-          <strong>{stats.processing}</strong>
+          <span>ĐÃ XÁC NHẬN</span>
+          <strong>{stats.confirmed}</strong>
         </div>
 
         <div>
@@ -227,6 +229,7 @@ function OrdersAdminPage() {
           <option value="pending">Chờ thanh toán</option>
           <option value="paid">Đã thanh toán</option>
           <option value="failed">Thất bại</option>
+          <option value="refunded">Đã hoàn tiền</option>
           <option value="cancelled">Đã hủy</option>
         </select>
 
@@ -236,7 +239,7 @@ function OrdersAdminPage() {
         >
           <option value="all">Tất cả đơn hàng</option>
           <option value="new">Mới</option>
-          <option value="processing">Đang xử lý</option>
+          <option value="confirmed">Đã xác nhận</option>
           <option value="shipping">Đang giao</option>
           <option value="completed">Hoàn thành</option>
           <option value="cancelled">Đã hủy</option>
@@ -253,13 +256,14 @@ function OrdersAdminPage() {
               <th>THANH TOÁN</th>
               <th>ĐƠN HÀNG</th>
               <th>NGÀY TẠO</th>
+              <th>THAO TÁC</th>
             </tr>
           </thead>
 
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={6} className="up-admin-empty">
+                <td colSpan={7} className="up-admin-empty">
                   Đang tải đơn hàng…
                 </td>
               </tr>
@@ -299,11 +303,21 @@ function OrdersAdminPage() {
                   </td>
 
                   <td>{formatDate(order.created_at)}</td>
+
+                  <td>
+                    <Link
+                      to="/admin/orders/$id"
+                      params={{ id: order.id }}
+                      className="up-admin-primary"
+                    >
+                      XEM CHI TIẾT
+                    </Link>
+                  </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={6} className="up-admin-empty">
+                <td colSpan={7} className="up-admin-empty">
                   Không có đơn hàng phù hợp.
                 </td>
               </tr>
