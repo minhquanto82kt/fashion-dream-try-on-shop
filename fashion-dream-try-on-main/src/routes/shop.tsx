@@ -145,7 +145,7 @@ function ShopPage() {
         </h1>
 
         <div className="shop-controls mt-10 border-y border-border py-4">
-          <div className="shop-category-scroll flex gap-2">
+          <div className="shop-category-scroll flex flex-nowrap gap-2 overflow-x-auto overscroll-x-contain pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {[{ slug: "all", name: "Tất cả" }, ...CATEGORIES].map((c) => (
               <button
                 key={c.slug}
@@ -161,7 +161,7 @@ function ShopPage() {
             ))}
           </div>
 
-          <div className="shop-sort flex gap-2">
+          <div className="shop-sort mt-3 flex flex-wrap gap-x-5 gap-y-1 border-t border-border pt-3 sm:mt-0 sm:border-t-0 sm:pt-0">
             {SORTS.map((s) => (
               <button
                 key={s.id}
