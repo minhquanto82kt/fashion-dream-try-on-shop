@@ -43,7 +43,7 @@ type ProductDetailResult = {
 };
 
 const getProductDetail = createServerFn({ method: "GET" })
-  .inputValidator((productId: string) => productId)
+  .validator((productId: string) => productId)
   .handler(async ({ data: productId }) => {
     const { supabaseRequest } = await import("@/lib/supabase.server");
 
