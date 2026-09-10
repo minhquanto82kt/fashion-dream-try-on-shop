@@ -1,4 +1,4 @@
-/* Admin login heading spacing / overlap guard. Visual-only. */
+/* ADMIN HEADING SPACING FIX — prevents editorial/login heading overlap. */
 
 .fd-admin-login-page .fd-admin-editorial h1 {
   line-height: 1.08 !important;
@@ -8,6 +8,7 @@
 }
 
 .fd-admin-login-page .fd-admin-editorial h1 em {
+  display: block !important;
   margin-top: 16px !important;
   line-height: 1.08 !important;
 }
@@ -15,7 +16,7 @@
 .fd-admin-login-page .fd-admin-login-card h2 {
   line-height: 1.08 !important;
   letter-spacing: .025em !important;
-  margin-bottom: 24px !important;
+  margin: 0 0 24px !important;
 }
 
 @media (max-width: 1200px) {
