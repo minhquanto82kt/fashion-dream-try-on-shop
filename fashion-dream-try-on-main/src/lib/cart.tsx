@@ -1,5 +1,13 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { PRODUCTS, type Product } from "@/data/products";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
+import { createServerFn } from "@tanstack/react-start";
+import { type Product } from "@/data/products";
 
 export type CartLine = {
   productId: string;
@@ -8,79 +16,312 @@ export type CartLine = {
   qty: number;
 };
 
+type CartProduct = Product;
+
+type DbProduct = {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: Product["category"];
+  image: string | null;
+  active: boolean;
+  status: string;
+  featured: boolean;
+};
+
+type DbImage = {
+  id: string;
+  product_id: string;
+  image_url: string;
+  sort_order: number;
+  is_primary: boolean;
+};
+
+const getCartProducts = createServerFn({ method: "GET" })
+  .inputValidator((productIds: string[]) => productIds)
+  .handler(async ({ data: productIds }) => {
+    if (productIds.length === 0) {
+      return [] as CartProduct[];
+    }
+
+    const { supabaseRequest } = await import("@/lib/supabase.server");
+
+    const encodedIds = productIds
+      .map((id) => `"${id.replace(/"/g, '\\"')}"`)
+      .join(",");
+
+    const [products, images] = await Promise.all([
+      supabaseRequest<DbProduct[]>(
+        `products?id=in.(${encodedIds})&active=eq.true&status=eq.published&select=id,name,description,price,category,image,active,status,featured`,
+      ),
+      supabaseRequest<DbImage[]>(
+        `product_images?product_id=in.(${encodedIds})&select=id,product_id,image_url,sort_order,is_primary&order=sort_order.asc`,
+      ),
+    ]);
+
+    return products.map((product): CartProduct => {
+      const productImages = images
+        .filter((image) => image.product_id === product.id)
+        .sort((a, b) => a.sort_order - b.sort_order);
+
+      const gallery = productImages.map(
+        (image) => image.image_url,
+      );
+
+      const primaryImage =
+        productImages.find((image) => image.is_primary)
+          ?.image_url ??
+        gallery[0] ??
+        product.image ??
+        "";
+
+      return {
+        id: product.id,
+        name: product.name,
+        price: Number(product.price),
+        category: product.category,
+        image: primaryImage,
+        gallery: gallery.length > 0 ? gallery : [primaryImage],
+        sizes: [],
+        colors: [],
+        badge: product.featured ? "Featured" : undefined,
+        description: product.description,
+      };
+    });
+  });
+
+type CartItem = CartLine & {
+  product: CartProduct;
+};
+
 type CartContextValue = {
   lines: CartLine[];
-  items: (CartLine & { product: Product })[];
+  items: CartItem[];
   count: number;
   subtotal: number;
+  loading: boolean;
   add: (line: CartLine) => void;
   setQty: (index: number, qty: number) => void;
   remove: (index: number) => void;
   clear: () => void;
 };
 
-const CartContext = createContext<CartContextValue | null>(null);
 const STORAGE_KEY = "upthink-cart";
 
-export function CartProvider({ children }: { children: ReactNode }) {
-  const [lines, setLines] = useState<CartLine[]>([]);
-  const [hydrated, setHydrated] = useState(false);
+const CartContext = createContext<CartContextValue | null>(
+  null,
+);
 
+export function CartProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const [lines, setLines] = useState<CartLine[]>([]);
+  const [products, setProducts] = useState<CartProduct[]>([]);
+  const [hydrated, setHydrated] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // Hydrate cart from localStorage
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setLines(JSON.parse(raw) as CartLine[]);
+
+      if (raw) {
+        const parsed = JSON.parse(raw);
+
+        if (Array.isArray(parsed)) {
+          setLines(parsed);
+        }
+      }
     } catch {
-      /* ignore */
+      setLines([]);
+    } finally {
+      setHydrated(true);
     }
-    setHydrated(true);
   }, []);
 
+  // Persist cart lines
   useEffect(() => {
     if (!hydrated) return;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(lines));
+
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(lines),
+    );
   }, [lines, hydrated]);
 
-  const value = useMemo<CartContextValue>(() => {
-    const items = lines
-      .map((line) => {
-        const product = PRODUCTS.find((p) => p.id === line.productId);
-        return product ? { ...line, product } : null;
-      })
-      .filter(Boolean) as (CartLine & { product: Product })[];
+  // Load current product information from Supabase
+  useEffect(() => {
+    let cancelled = false;
 
-    return {
-      lines,
-      items,
-      count: items.reduce((n, i) => n + i.qty, 0),
-      subtotal: items.reduce((n, i) => n + i.qty * i.product.price, 0),
-      add: (line) =>
-        setLines((prev) => {
-          const idx = prev.findIndex(
-            (l) => l.productId === line.productId && l.size === line.size && l.color === line.color,
-          );
-          const existing = prev[idx];
-          if (existing) {
-            const next = [...prev];
-            next[idx] = { ...existing, qty: existing.qty + line.qty };
-            return next;
-          }
-          return [...prev, line];
-        }),
-      setQty: (index, qty) =>
-        setLines((prev) =>
-          prev.map((l, i) => (i === index ? { ...l, qty: Math.max(1, Math.min(99, qty)) } : l)),
-        ),
-      remove: (index) => setLines((prev) => prev.filter((_, i) => i !== index)),
-      clear: () => setLines([]),
+    async function loadProducts() {
+      const productIds = Array.from(
+        new Set(lines.map((line) => line.productId)),
+      );
+
+      if (productIds.length === 0) {
+        setProducts([]);
+        return;
+      }
+
+      setLoading(true);
+
+      try {
+        const result = await getCartProducts({
+          data: productIds,
+        });
+
+        if (!cancelled) {
+          setProducts(result);
+        }
+      } catch (error) {
+        console.error(
+          "Không thể tải sản phẩm trong giỏ hàng:",
+          error,
+        );
+
+        if (!cancelled) {
+          setProducts([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadProducts();
+
+    return () => {
+      cancelled = true;
     };
   }, [lines]);
 
-  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+  const items = useMemo<CartItem[]>(() => {
+    return lines
+      .map((line) => {
+        const product = products.find(
+          (item) => item.id === line.productId,
+        );
+
+        if (!product) {
+          return null;
+        }
+
+        return {
+          ...line,
+          product,
+        };
+      })
+      .filter((item): item is CartItem => item !== null);
+  }, [lines, products]);
+
+  const count = useMemo(
+    () => lines.reduce((sum, line) => sum + line.qty, 0),
+    [lines],
+  );
+
+  const subtotal = useMemo(
+    () =>
+      items.reduce(
+        (sum, item) => sum + item.product.price * item.qty,
+        0,
+      ),
+    [items],
+  );
+
+  function add(line: CartLine) {
+    setLines((current) => {
+      const index = current.findIndex(
+        (item) =>
+          item.productId === line.productId &&
+          item.size === line.size &&
+          item.color === line.color,
+      );
+
+      if (index === -1) {
+        return [
+          ...current,
+          {
+            ...line,
+            qty: Math.max(1, Math.min(99, line.qty)),
+          },
+        ];
+      }
+
+      return current.map((item, itemIndex) =>
+        itemIndex === index
+          ? {
+              ...item,
+              qty: Math.min(99, item.qty + line.qty),
+            }
+          : item,
+      );
+    });
+  }
+
+  function setQty(index: number, qty: number) {
+    setLines((current) =>
+      current.map((item, itemIndex) =>
+        itemIndex === index
+          ? {
+              ...item,
+              qty: Math.max(1, Math.min(99, qty)),
+            }
+          : item,
+      ),
+    );
+  }
+
+  function remove(index: number) {
+    setLines((current) =>
+      current.filter((_, itemIndex) => itemIndex !== index),
+    );
+  }
+
+  function clear() {
+    setLines([]);
+    setProducts([]);
+  }
+
+  const value = useMemo<CartContextValue>(
+    () => ({
+      lines,
+      items,
+      count,
+      subtotal,
+      loading,
+      add,
+      setQty,
+      remove,
+      clear,
+    }),
+    [
+      lines,
+      items,
+      count,
+      subtotal,
+      loading,
+    ],
+  );
+
+  return (
+    <CartContext.Provider value={value}>
+      {children}
+    </CartContext.Provider>
+  );
 }
 
 export function useCart() {
-  const ctx = useContext(CartContext);
-  if (!ctx) throw new Error("useCart must be used inside CartProvider");
-  return ctx;
+  const context = useContext(CartContext);
+
+  if (!context) {
+    throw new Error(
+      "useCart phải được sử dụng bên trong CartProvider.",
+    );
+  }
+
+  return context;
 }
