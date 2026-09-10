@@ -7,7 +7,7 @@ export const Route = createFileRoute("/admin/")({
 
 const cards = [
   ["Products", "Manage catalog, pricing and publishing", "/admin/products"],
-  ["Orders", "Review and manage customer orders", "#"],
+  ["Orders", "Review and manage customer orders", "/admin/orders"],
   ["Customers", "View customer accounts and activity", "#"],
   ["Inventory", "Track stock and availability", "#"],
 ] as const;
@@ -50,7 +50,7 @@ function AdminDashboardPage() {
         <p>Start with the area you want to manage.</p>
         <div className="up-admin-dashboard-actions">
           {cards.map(([label, desc, href]) =>
-            href === "/admin/products" ? (
+            href.startsWith("/admin/") ? (
               <Link key={label} to={href} className="up-admin-dashboard-action">
                 <div className="up-admin-dashboard-action-title">{label}</div>
                 <div className="up-admin-dashboard-action-desc">{desc}</div>
