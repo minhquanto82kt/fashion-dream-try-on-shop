@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import uiStabilizationCss from "../ui-stabilization.css?url";
+import adminUiCss from "../admin-ui.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { CartProvider } from "@/lib/cart";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -105,9 +106,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: uiStabilizationCss,
       },
+      {
+        rel: "stylesheet",
+        href: adminUiCss,
+      },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com" },
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Anton&family=Bodoni+Moda:opsz,wght@6..96,400..700&family=Oswald:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600&display=swap",
