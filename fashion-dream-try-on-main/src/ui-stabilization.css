@@ -245,25 +245,109 @@ footer span {
   word-break: normal;
 }
 
-/* Public page Tailwind headings: soften the overly compressed leading used by some routes. */
-.fashion-site .leading-none {
-  line-height: 1.05;
-}
-
-.fashion-site .leading-tight {
-  line-height: 1.15;
-}
-
-/* Form controls: readable Vietnamese labels and stable button widths. */
-.fashion-site input,
-.fashion-site textarea,
-.fashion-site select {
+/* Public Tailwind pages: normalize compressed editorial headings and flex/grid children. */
+main {
   min-width: 0;
+}
+
+main h1,
+main h2,
+main h3,
+main h4 {
+  max-width: 100%;
+  text-wrap: balance;
+}
+
+main .leading-none {
+  line-height: 1.08;
+}
+
+main .leading-tight {
+  line-height: 1.18;
+}
+
+main .tracking-\[0\.15em\],
+main .tracking-\[0\.2em\] {
+  line-height: 1.35;
+}
+
+main .flex > *,
+main .grid > * {
+  min-width: 0;
+}
+
+main input,
+main textarea,
+main select {
+  min-width: 0;
+  max-width: 100%;
   line-height: 1.45;
 }
 
-.fashion-site button {
+main button,
+main a {
+  max-width: 100%;
+}
+
+/* Long labels and Vietnamese copy should wrap before they collide with prices/icons. */
+main p,
+main label,
+main button,
+main a,
+main span {
+  overflow-wrap: anywhere;
+}
+
+/* Keep compact control labels readable without forcing one-line overflow. */
+main .uppercase {
+  line-height: 1.4;
+}
+
+/* Cart: item rows collapse cleanly instead of squeezing product name, controls and price. */
+main.max-w-5xl .divide-y > div {
   min-width: 0;
+}
+
+main.max-w-5xl .divide-y > div > div {
+  min-width: 0;
+}
+
+main.max-w-5xl .divide-y > div > p {
+  flex: 0 0 auto;
+  max-width: 45%;
+  text-align: right;
+  overflow-wrap: normal;
+}
+
+/* Product detail: prevent option/CTA rows from creating horizontal pressure. */
+main.max-w-7xl .flex-wrap {
+  row-gap: 10px;
+}
+
+main.max-w-7xl .grid {
+  min-width: 0;
+}
+
+/* AI Studio: long controls and result copy should remain inside their panels. */
+main .rounded-\[2px\],
+main .border {
+  min-width: 0;
+}
+
+/* Forms and interactive controls: keep text vertically centered and tappable. */
+main button,
+main [role="button"] {
+  line-height: 1.35;
+  min-height: 40px;
+}
+
+main input,
+main select {
+  min-height: 42px;
+}
+
+main textarea {
+  min-height: 110px;
 }
 
 /* Tablet */
@@ -322,6 +406,14 @@ footer span {
 
   .fashion-product-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Public Tailwind pages: reduce side padding before mobile. */
+  main.max-w-7xl,
+  main.max-w-5xl,
+  main.max-w-2xl {
+    padding-left: 32px;
+    padding-right: 32px;
   }
 }
 
@@ -475,6 +567,72 @@ footer span {
   .fashion-product-price-wrap {
     gap: 7px;
   }
+
+  /* Public Tailwind pages: use consistent mobile gutters. */
+  main.max-w-7xl,
+  main.max-w-5xl,
+  main.max-w-2xl {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  main.max-w-7xl,
+  main.max-w-5xl,
+  main.max-w-2xl {
+    padding-top: 96px;
+    padding-bottom: 64px;
+  }
+
+  main h1.text-4xl,
+  main h1.text-5xl {
+    font-size: clamp(34px, 10vw, 48px);
+    line-height: 1.05;
+  }
+
+  /* Cart rows: stack price below product info on narrow screens. */
+  main.max-w-5xl .divide-y > div {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  main.max-w-5xl .divide-y > div > img {
+    width: 76px;
+    height: 76px;
+    flex: 0 0 76px;
+  }
+
+  main.max-w-5xl .divide-y > div > div {
+    flex: 1 1 calc(100% - 90px);
+  }
+
+  main.max-w-5xl .divide-y > div > p {
+    width: 100%;
+    max-width: none;
+    padding-left: 88px;
+    text-align: left;
+  }
+
+  /* Summary panels become full-width and stop competing with the form/content. */
+  main.max-w-5xl > .grid {
+    gap: 24px;
+  }
+
+  /* Two-column product/detail layouts collapse before content becomes cramped. */
+  main.max-w-7xl > .grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+
+  main .flex.gap-3,
+  main .flex.gap-4,
+  main .flex.gap-6 {
+    row-gap: 10px;
+  }
+
+  main button,
+  main a[class*="px-"] {
+    max-width: 100%;
+  }
 }
 
 @media (max-width: 420px) {
@@ -509,6 +667,17 @@ footer span {
   .fashion-product-price-wrap {
     justify-content: space-between;
     margin-top: 10px;
+  }
+
+  main.max-w-7xl,
+  main.max-w-5xl,
+  main.max-w-2xl {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  main .uppercase {
+    letter-spacing: .1em;
   }
 }
 
