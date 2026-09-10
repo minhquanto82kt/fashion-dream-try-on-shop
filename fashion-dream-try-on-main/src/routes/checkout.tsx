@@ -50,19 +50,19 @@ function CheckoutPage() {
       <div className="min-h-screen">
         <SiteNav />
 
-        <main className="mx-auto max-w-2xl px-6 pb-24 pt-32 text-center">
+        <main className="mx-auto max-w-2xl px-6 pb-24 pt-32 text-center sm:px-12">
           <p className="eyebrow">Thanh toán VietQR</p>
 
-          <h1 className="mt-3 text-4xl leading-none">
+          <h1 className="mt-3 text-4xl leading-tight sm:text-5xl">
             Quét mã để thanh toán
             <span className="text-primary">.</span>
           </h1>
 
-          <p className="mt-4 text-beige">
+          <p className="mt-4 leading-7 text-beige">
             Sử dụng ứng dụng ngân hàng để quét mã QR bên dưới.
           </p>
 
-          <div className="mx-auto mt-8 max-w-sm border border-border bg-card p-6">
+          <div className="mx-auto mt-8 max-w-sm border border-border bg-card p-4 sm:p-6">
             <img
               src={paymentInfo.qrUrl}
               alt="Mã QR thanh toán VietQR"
@@ -70,37 +70,34 @@ function CheckoutPage() {
             />
           </div>
 
-          <div className="mx-auto mt-6 max-w-sm space-y-3 border border-border bg-card p-5 text-left text-sm">
-            <div className="flex justify-between gap-4">
+          <div className="mx-auto mt-6 max-w-sm space-y-3 border border-border bg-card p-4 text-left text-sm sm:p-5">
+            <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-4">
               <span className="text-silver">Ngân hàng</span>
-              <span>MB Bank</span>
+              <span className="text-right">MB Bank</span>
             </div>
 
-            <div className="flex justify-between gap-4">
+            <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-4">
               <span className="text-silver">Người nhận</span>
-              <span>UPTHINK</span>
+              <span className="text-right">UPTHINK</span>
             </div>
 
-            <div className="flex justify-between gap-4">
+            <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-4">
               <span className="text-silver">Số tiền</span>
-              <span className="text-primary">
+              <span className="text-right text-primary">
                 {formatVnd(paymentInfo.total)}
               </span>
             </div>
 
-            <div className="flex justify-between gap-4">
+            <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-4">
               <span className="text-silver">Nội dung</span>
-              <span className="text-right">
+              <span className="break-words text-right">
                 {paymentInfo.orderCode}
               </span>
             </div>
           </div>
 
           <p className="mt-6 text-xs leading-6 text-silver">
-            Sau khi chuyển khoản, nhấn nút bên dưới để hoàn tất
-            bước xác nhận từ phía khách hàng. Trạng thái thanh toán
-            vẫn là <strong>Chờ thanh toán</strong> cho đến khi hệ
-            thống xác minh giao dịch thành công.
+            Sau khi chuyển khoản, nhấn nút bên dưới để hoàn tất bước xác nhận từ phía khách hàng. Trạng thái thanh toán vẫn là <strong>Chờ thanh toán</strong> cho đến khi hệ thống xác minh giao dịch thành công.
           </p>
 
           <button
@@ -109,7 +106,7 @@ function CheckoutPage() {
               setDone(paymentInfo.orderCode);
               setPaymentInfo(null);
             }}
-            className="mt-6 bg-primary px-7 py-3 text-xs uppercase tracking-[0.15em] text-primary-foreground"
+            className="mt-6 min-h-11 w-full bg-primary px-7 py-3 text-xs uppercase tracking-[0.15em] text-primary-foreground sm:w-auto"
           >
             Tôi đã chuyển khoản
           </button>
@@ -118,7 +115,7 @@ function CheckoutPage() {
             <button
               type="button"
               onClick={() => setPaymentInfo(null)}
-              className="mt-4 text-xs text-silver underline underline-offset-4"
+              className="mt-4 min-h-10 px-2 text-xs text-silver underline underline-offset-4"
             >
               Quay lại
             </button>
@@ -135,31 +132,29 @@ function CheckoutPage() {
       <div className="min-h-screen">
         <SiteNav />
 
-        <main className="mx-auto max-w-2xl px-6 pb-24 pt-32 text-center">
+        <main className="mx-auto max-w-2xl px-6 pb-24 pt-32 text-center sm:px-12">
           <p className="eyebrow">Đơn hàng đã được tạo</p>
 
-          <h1 className="mt-3 text-4xl leading-none">
+          <h1 className="mt-3 text-4xl leading-tight sm:text-5xl">
             Cảm ơn bạn
             <span className="text-primary">!</span>
           </h1>
 
-          <p className="mt-4 text-beige">
+          <p className="mt-4 leading-7 text-beige">
             Mã đơn hàng của bạn là{" "}
-            <span className="text-primary">{done}</span>.
+            <span className="break-words text-primary">{done}</span>.
           </p>
 
-          <div className="mt-6 border border-border bg-card p-5 text-left text-sm leading-6">
+          <div className="mt-6 border border-border bg-card p-4 text-left text-sm leading-6 sm:p-5">
             <p>
-              Đơn hàng đã được ghi nhận vào hệ thống. Nếu bạn thanh
-              toán VietQR, trạng thái thanh toán sẽ chỉ chuyển sang
-              <strong> Đã thanh toán</strong> sau khi giao dịch được
-              xác minh.
+              Đơn hàng đã được ghi nhận vào hệ thống. Nếu bạn thanh toán VietQR, trạng thái thanh toán sẽ chỉ chuyển sang
+              <strong> Đã thanh toán</strong> sau khi giao dịch được xác minh.
             </p>
           </div>
 
           <Link
             to="/shop"
-            className="mt-8 inline-block bg-primary px-7 py-3 text-xs uppercase tracking-[0.15em] text-primary-foreground"
+            className="mt-8 inline-flex min-h-11 items-center justify-center bg-primary px-7 py-3 text-xs uppercase tracking-[0.15em] text-primary-foreground"
           >
             Tiếp tục mua sắm
           </Link>
@@ -175,10 +170,10 @@ function CheckoutPage() {
       <SiteNav />
 
       <main className="mx-auto max-w-5xl px-6 pb-24 pt-28 sm:px-12">
-        <h1 className="text-4xl leading-none">Thanh toán</h1>
+        <h1 className="text-4xl leading-tight sm:text-5xl">Thanh toán</h1>
 
         {items.length === 0 ? (
-          <p className="mt-8 text-beige">
+          <p className="mt-8 leading-7 text-beige">
             Giỏ hàng trống.{" "}
             <Link to="/shop" className="text-primary">
               Chọn sản phẩm
@@ -186,7 +181,7 @@ function CheckoutPage() {
           </p>
         ) : (
           <form
-            className="mt-10 grid gap-10 lg:grid-cols-[1.3fr_0.7fr]"
+            className="mt-10 grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(280px,0.7fr)] lg:gap-10"
             onSubmit={async (event) => {
               event.preventDefault();
 
@@ -221,9 +216,6 @@ function CheckoutPage() {
                   },
                 });
 
-                // The order has been created successfully. Clear the
-                // cart immediately so refreshing checkout cannot create
-                // the same order again from the same cart.
                 clear();
 
                 if (paymentMethod === "vietqr") {
@@ -249,7 +241,7 @@ function CheckoutPage() {
               }
             }}
           >
-            <div className="space-y-4">
+            <div className="min-w-0 space-y-4">
               <Field label="Họ và tên" name="name" />
               <Field
                 label="Số điện thoại"
@@ -266,7 +258,7 @@ function CheckoutPage() {
                 name="address"
               />
 
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid min-w-0 gap-4 sm:grid-cols-2">
                 <Field
                   label="Tỉnh / Thành phố"
                   name="city"
@@ -277,7 +269,7 @@ function CheckoutPage() {
                 />
               </div>
 
-              <p className="pt-4 text-xs uppercase tracking-[0.2em] text-silver">
+              <p className="pt-4 text-xs uppercase leading-5 tracking-[0.2em] text-silver">
                 Phương thức thanh toán
               </p>
 
@@ -300,11 +292,11 @@ function CheckoutPage() {
                     className="sr-only"
                   />
 
-                  <span className="block font-medium">
+                  <span className="block font-medium leading-6">
                     Thanh toán khi nhận hàng (COD)
                   </span>
 
-                  <span className="mt-1 block text-xs text-silver">
+                  <span className="mt-1 block text-xs leading-5 text-silver">
                     Thanh toán khi nhận hàng
                   </span>
                 </label>
@@ -327,35 +319,35 @@ function CheckoutPage() {
                     className="sr-only"
                   />
 
-                  <span className="block font-medium">
+                  <span className="block font-medium leading-6">
                     Thanh toán qua VietQR
                   </span>
 
-                  <span className="mt-1 block text-xs text-silver">
+                  <span className="mt-1 block text-xs leading-5 text-silver">
                     Quét mã QR để thanh toán
                   </span>
                 </label>
               </div>
             </div>
 
-            <aside className="h-fit border border-border bg-card p-6">
+            <aside className="h-fit min-w-0 border border-border bg-card p-5 sm:p-6 lg:sticky lg:top-24">
               <p className="eyebrow">Đơn hàng</p>
 
               <div className="mt-4 space-y-3 text-sm">
                 {items.map((item) => (
                   <div
                     key={`${item.productId}-${item.size}-${item.color}`}
-                    className="flex justify-between gap-3"
+                    className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] gap-3"
                   >
-                    <span className="text-beige">
+                    <span className="min-w-0 break-words text-beige leading-6">
                       {item.product.name} × {item.qty}
 
-                      <span className="block text-xs text-silver">
+                      <span className="block text-xs leading-5 text-silver">
                         {item.size} · {item.color}
                       </span>
                     </span>
 
-                    <span>
+                    <span className="whitespace-nowrap text-right">
                       {formatVnd(
                         item.product.price * item.qty,
                       )}
@@ -364,22 +356,20 @@ function CheckoutPage() {
                 ))}
               </div>
 
-              <div className="mt-4 flex justify-between border-t border-border pt-4 text-sm">
-                <span className="text-silver">
-                  Vận chuyển
-                </span>
+              <div className="mt-4 flex items-start justify-between gap-4 border-t border-border pt-4 text-sm">
+                <span className="text-silver">Vận chuyển</span>
 
-                <span>
+                <span className="text-right">
                   {shipping === 0
                     ? "Miễn phí"
                     : formatVnd(shipping)}
                 </span>
               </div>
 
-              <div className="mt-3 flex justify-between font-display text-lg">
+              <div className="mt-3 flex items-start justify-between gap-4 font-display text-lg leading-tight">
                 <span>Tổng</span>
 
-                <span className="text-primary">
+                <span className="text-right text-primary">
                   {formatVnd(subtotal + shipping)}
                 </span>
               </div>
@@ -387,7 +377,7 @@ function CheckoutPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="mt-6 w-full bg-primary px-6 py-3 text-xs uppercase tracking-[0.15em] text-primary-foreground disabled:opacity-50"
+                className="mt-6 flex min-h-11 w-full items-center justify-center bg-primary px-6 py-3 text-center text-xs uppercase tracking-[0.15em] text-primary-foreground disabled:opacity-50"
               >
                 {submitting
                   ? "Đang tạo đơn..."
@@ -415,8 +405,8 @@ function Field({
   type?: string;
 }) {
   return (
-    <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-silver">
+    <label className="block min-w-0">
+      <span className="text-xs uppercase leading-5 tracking-[0.2em] text-silver">
         {label}
       </span>
 
@@ -424,7 +414,7 @@ function Field({
         required
         name={name}
         type={type}
-        className="mt-2 w-full border border-border bg-card px-4 py-3 text-sm outline-none focus:border-primary"
+        className="mt-2 min-h-11 w-full min-w-0 border border-border bg-card px-4 py-3 text-sm leading-6 outline-none focus:border-primary"
       />
     </label>
   );
