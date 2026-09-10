@@ -282,11 +282,42 @@ export async function uploadProductImage(productId: string, file: File) {
   return `${supabaseConfig.url}/storage/v1/object/public/product-images/${path}`;
 }
 
+/**
+ * Add a product image.
+ *
+ * When isPrimary = true:
+ * 1. Demote the existing primary image(s).
+ * 2. Insert the new image as the only primary image.
+ *
+ * The database partial unique index
+ * `product_images_one_primary`
+ * remains the final protection against multiple primary images.
+ */
 export async function addProductImage(
   productId: string,
   imageUrl: string,
   isPrimary: boolean
 ) {
+  if (isPrimary) {
+    const demoteResponse = await fetch(
+      `${supabaseConfig.url}/rest/v1/product_images` +
+        `?product_id=eq.${encodeURIComponent(productId)}` +
+        `&is_primary=eq.true`,
+      {
+        method: "PATCH",
+        headers: {
+          ...headers(),
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify({
+          is_primary: false,
+        }),
+      }
+    );
+
+    await parseResponse<unknown>(demoteResponse);
+  }
+
   const response = await fetch(
     `${supabaseConfig.url}/rest/v1/product_images`,
     {
