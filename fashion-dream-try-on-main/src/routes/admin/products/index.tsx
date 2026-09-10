@@ -2,6 +2,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
+  deleteProduct,
   listProducts,
   type Product,
 } from "@/lib/upthink-supabase";
@@ -23,6 +24,8 @@ const categories = [
   "accessories",
 ];
 
+const PRODUCTS_PER_PAGE = 8;
+
 function money(value: number) {
   return new Intl.NumberFormat("vi-VN").format(value) + " ₫";
 }
@@ -34,12 +37,16 @@ function ProductAdminPage() {
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     let cancelled = false;
 
     async function loadProducts() {
       setLoading(true);
+      setMessage("");
 
       try {
         const data = await listProducts();
@@ -90,17 +97,104 @@ function ProductAdminPage() {
     categoryFilter,
   ]);
 
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filtered.length / PRODUCTS_PER_PAGE),
+  );
+
+  const safeCurrentPage = Math.min(
+    currentPage,
+    totalPages,
+  );
+
+  const paginatedProducts = useMemo(() => {
+    const start =
+      (safeCurrentPage - 1) *
+      PRODUCTS_PER_PAGE;
+
+    return filtered.slice(
+      start,
+      start + PRODUCTS_PER_PAGE,
+    );
+  }, [filtered, safeCurrentPage]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  function handleSearchChange(
+    value: string,
+  ) {
+    setQuery(value);
+    setCurrentPage(1);
+  }
+
+  function handleStatusChange(
+    value: string,
+  ) {
+    setStatusFilter(value);
+    setCurrentPage(1);
+  }
+
+  function handleCategoryChange(
+    value: string,
+  ) {
+    setCategoryFilter(value);
+    setCurrentPage(1);
+  }
+
+  async function handleDelete(
+    product: Product,
+  ) {
+    const confirmed = window.confirm(
+      `Bạn có chắc muốn xóa sản phẩm "${product.name}"?\n\nThao tác này có thể ảnh hưởng đến dữ liệu liên quan đến sản phẩm.`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setDeletingId(product.id);
+    setMessage("");
+
+    try {
+      await deleteProduct(product.id);
+
+      const updatedProducts =
+        await listProducts();
+
+      setProducts(updatedProducts);
+
+      setMessage(
+        `Đã xóa sản phẩm "${product.name}".`,
+      );
+    } catch (error) {
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "Không thể xóa sản phẩm.",
+      );
+    } finally {
+      setDeletingId(null);
+    }
+  }
+
   return (
-    <div>
+    <div className="up-products-admin">
+      {/* HEADER */}
       <header className="up-admin-topbar">
         <div>
           <div className="up-admin-kicker">
             CATALOG / CMS
           </div>
 
-          <h1>Products</h1>
+          <h1 className="up-products-page-title">
+            Products
+          </h1>
 
-          <p>
+          <p className="up-products-page-description">
             Quản lý sản phẩm của cửa hàng
           </p>
         </div>
@@ -113,19 +207,22 @@ function ProductAdminPage() {
         </Link>
       </header>
 
+      {/* FILTER */}
       <section className="up-admin-toolbar">
         <input
+          className="up-products-filter-input"
           placeholder="⌕  Tìm kiếm sản phẩm…"
           value={query}
           onChange={(e) =>
-            setQuery(e.target.value)
+            handleSearchChange(e.target.value)
           }
         />
 
         <select
+          className="up-products-filter-select"
           value={statusFilter}
           onChange={(e) =>
-            setStatusFilter(e.target.value)
+            handleStatusChange(e.target.value)
           }
         >
           <option value="all">
@@ -146,9 +243,10 @@ function ProductAdminPage() {
         </select>
 
         <select
+          className="up-products-filter-select"
           value={categoryFilter}
           onChange={(e) =>
-            setCategoryFilter(e.target.value)
+            handleCategoryChange(e.target.value)
           }
         >
           <option value="all">
@@ -166,6 +264,7 @@ function ProductAdminPage() {
         </select>
       </section>
 
+      {/* STATS */}
       <section className="up-admin-stats">
         <div>
           <span>TỔNG SẢN PHẨM</span>
@@ -208,8 +307,9 @@ function ProductAdminPage() {
         </div>
       </section>
 
+      {/* PRODUCT TABLE */}
       <section className="up-admin-table-wrap">
-        <table className="up-admin-table">
+        <table className="up-admin-table up-products-table">
           <thead>
             <tr>
               <th>SẢN PHẨM</th>
@@ -217,7 +317,9 @@ function ProductAdminPage() {
               <th>GIÁ</th>
               <th>TRẠNG THÁI</th>
               <th>NỔI BẬT</th>
-              <th></th>
+              <th className="up-products-actions-heading">
+                THAO TÁC
+              </th>
             </tr>
           </thead>
 
@@ -231,86 +333,119 @@ function ProductAdminPage() {
                   Đang tải sản phẩm…
                 </td>
               </tr>
-            ) : filtered.length ? (
-              filtered.map((product) => (
-                <tr key={product.id}>
-                  <td>
-                    <div className="up-product-cell">
-                      {product.image ? (
-                        <img
-                          src={product.image}
-                          alt=""
-                        />
-                      ) : (
-                        <div className="up-product-placeholder">
-                          U
+            ) : paginatedProducts.length ? (
+              paginatedProducts.map(
+                (product) => (
+                  <tr key={product.id}>
+                    {/* PRODUCT */}
+                    <td>
+                      <div className="up-product-cell">
+                        {product.image ? (
+                          <img
+                            src={product.image}
+                            alt=""
+                          />
+                        ) : (
+                          <div className="up-product-placeholder">
+                            U
+                          </div>
+                        )}
+
+                        <div>
+                          <strong>
+                            {product.name}
+                          </strong>
+
+                          <small>
+                            /{product.slug}
+                          </small>
                         </div>
-                      )}
-
-                      <div>
-                        <strong>
-                          {product.name}
-                        </strong>
-
-                        <small>
-                          /{product.slug}
-                        </small>
                       </div>
-                    </div>
-                  </td>
+                    </td>
 
-                  <td>
-                    {product.category}
-                  </td>
+                    {/* CATEGORY */}
+                    <td>
+                      {product.category}
+                    </td>
 
-                  <td>
-                    <strong>
-                      {money(product.price)}
-                    </strong>
-                  </td>
+                    {/* PRICE */}
+                    <td>
+                      <strong>
+                        {money(product.price)}
+                      </strong>
+                    </td>
 
-                  <td>
-                    <span
-                      className={`up-status ${product.status}`}
-                    >
-                      {product.status ===
-                      "published"
-                        ? "Đang hoạt động"
-                        : product.status ===
-                            "draft"
-                          ? "Bản nháp"
-                          : "Đã ẩn"}
-                    </span>
-                  </td>
-
-                  <td>
-                    {product.featured
-                      ? "●"
-                      : "—"}
-                  </td>
-
-                  <td>
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: 8,
-                        justifyContent:
-                          "flex-end",
-                      }}
-                    >
-                      <Link
-                        className="up-row-action"
-                        to="/admin/products/$id"
-                        params={{
-                          id: product.id,
-                        }}
+                    {/* STATUS */}
+                    <td>
+                      <span
+                        className={`up-status ${product.status}`}
                       >
-                        CHI TIẾT
-                      </Link>
-                    </div>
-                  </td>
-                </tr>
-              ))
+                        {product.status ===
+                        "published"
+                          ? "Đang hoạt động"
+                          : product.status ===
+                              "draft"
+                            ? "Bản nháp"
+                            : "Đã ẩn"}
+                      </span>
+                    </td>
+
+                    {/* FEATURED */}
+                    <td>
+                      {product.featured
+                        ? "●"
+                        : "—"}
+                    </td>
+
+                    {/* ACTIONS */}
+                    <td>
+                      <div className="up-product-actions">
+                        {/* DETAIL */}
+                        <Link
+                          className="up-row-action"
+                          to="/admin/products/$id"
+                          params={{
+                            id: product.id,
+                          }}
+                        >
+                          CHI TIẾT
+                        </Link>
+
+                        {/* EDIT */}
+                        <Link
+                          className="up-row-action"
+                          to="/admin/products/$id"
+                          params={{
+                            id: product.id,
+                          }}
+                        >
+                          CHỈNH SỬA
+                        </Link>
+
+                        {/* DELETE */}
+                        <button
+                          type="button"
+                          className="up-row-action up-row-action-danger"
+                          disabled={
+                            deletingId ===
+                            product.id
+                          }
+                          onClick={() =>
+                            void handleDelete(
+                              product,
+                            )
+                          }
+                        >
+                          {deletingId ===
+                          product.id
+                            ? "ĐANG XÓA…"
+                            : "XÓA"}
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ),
+              )
             ) : null}
           </tbody>
         </table>
@@ -323,6 +458,61 @@ function ProductAdminPage() {
           )}
       </section>
 
+      {/* PAGINATION */}
+      {!loading && filtered.length > 0 && (
+        <nav
+          className="up-products-pagination"
+          aria-label="Phân trang sản phẩm"
+        >
+          <button
+            type="button"
+            className="up-products-pagination-button"
+            disabled={safeCurrentPage <= 1}
+            onClick={() =>
+              setCurrentPage(
+                (page) =>
+                  Math.max(1, page - 1),
+              )
+            }
+          >
+            ← TRANG TRƯỚC
+          </button>
+
+          <div className="up-products-pagination-current">
+            <strong>
+              {safeCurrentPage}
+            </strong>
+
+            <span>/</span>
+
+            <strong>
+              {totalPages}
+            </strong>
+          </div>
+
+          <button
+            type="button"
+            className="up-products-pagination-button"
+            disabled={
+              safeCurrentPage >=
+              totalPages
+            }
+            onClick={() =>
+              setCurrentPage(
+                (page) =>
+                  Math.min(
+                    totalPages,
+                    page + 1,
+                  ),
+              )
+            }
+          >
+            TRANG SAU →
+          </button>
+        </nav>
+      )}
+
+      {/* MESSAGE */}
       {message && (
         <div className="up-admin-toast">
           {message}
