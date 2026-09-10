@@ -188,24 +188,26 @@ function ProductPage() {
       <SiteNav />
 
       <main className="mx-auto max-w-7xl px-6 pb-24 pt-28 sm:px-12 lg:px-20">
-        <div className="grid gap-10 lg:grid-cols-2">
-          <div>
+        <div className="grid min-w-0 gap-10 lg:grid-cols-2">
+          <div className="min-w-0">
             <img
               src={shot}
               alt={product.name}
               className="aspect-[4/5] w-full border border-border object-cover"
             />
 
-            <div className="mt-4 flex gap-3">
+            <div className="mt-4 flex max-w-full flex-wrap gap-3">
               {product.gallery.map((image) => (
                 <button
                   key={image}
+                  type="button"
                   onClick={() => setShot(image)}
-                  className={`size-20 border ${
+                  className={`size-20 shrink-0 border ${
                     image === shot
                       ? "border-primary"
                       : "border-border"
                   }`}
+                  aria-label="Chọn ảnh sản phẩm"
                 >
                   <img
                     src={image}
@@ -217,18 +219,18 @@ function ProductPage() {
             </div>
           </div>
 
-          <div>
+          <div className="min-w-0">
             <p className="eyebrow">{product.category}</p>
 
-            <h1 className="mt-3 text-4xl leading-none">
+            <h1 className="mt-3 max-w-2xl text-4xl leading-tight sm:text-5xl">
               {product.name}
             </h1>
 
-            <p className="mt-4 font-display text-2xl text-primary">
+            <p className="mt-4 font-display text-2xl leading-tight text-primary">
               {formatVnd(product.price)}
             </p>
 
-            <p className="mt-6 text-beige">
+            <p className="mt-6 max-w-2xl text-beige leading-7">
               {product.description}
             </p>
 
@@ -240,8 +242,9 @@ function ProductPage() {
               {product.sizes.map((s) => (
                 <button
                   key={s}
+                  type="button"
                   onClick={() => setSize(s)}
-                  className={`border px-4 py-2 text-sm ${
+                  className={`min-h-10 border px-4 py-2 text-sm ${
                     s === size
                       ? "border-primary bg-primary text-primary-foreground"
                       : "border-border text-beige hover:border-primary"
@@ -260,8 +263,9 @@ function ProductPage() {
               {product.colors.map((c) => (
                 <button
                   key={c}
+                  type="button"
                   onClick={() => setColor(c)}
-                  className={`border px-4 py-2 text-sm ${
+                  className={`min-h-10 border px-4 py-2 text-sm ${
                     c === color
                       ? "border-primary bg-primary text-primary-foreground"
                       : "border-border text-beige hover:border-primary"
@@ -272,7 +276,7 @@ function ProductPage() {
               ))}
             </div>
 
-            <div className="mt-5 text-sm text-silver">
+            <div className="mt-5 text-sm leading-6 text-silver">
               {outOfStock ? (
                 <span>Hết hàng cho biến thể này</span>
               ) : (
@@ -280,8 +284,9 @@ function ProductPage() {
               )}
             </div>
 
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap">
               <button
+                type="button"
                 disabled={outOfStock}
                 onClick={() => {
                   add({
@@ -295,7 +300,7 @@ function ProductPage() {
                     `Đã thêm ${product.name} (${size} / ${color}) vào giỏ`,
                   );
                 }}
-                className="bg-primary px-8 py-3 text-xs uppercase tracking-[0.15em] text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+                className="min-h-12 w-full bg-primary px-6 py-3 text-xs uppercase tracking-[0.15em] text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto sm:px-8"
               >
                 {outOfStock ? "Hết hàng" : "Thêm vào giỏ"}
               </button>
@@ -303,13 +308,13 @@ function ProductPage() {
               <Link
                 to="/ai"
                 search={{ product: product.id }}
-                className="border border-border px-8 py-3 text-xs uppercase tracking-[0.15em] text-beige hover:border-primary"
+                className="flex min-h-12 w-full items-center justify-center border border-border px-6 py-3 text-center text-xs uppercase tracking-[0.15em] text-beige hover:border-primary sm:w-auto sm:px-8"
               >
                 Thử đồ ảo với AI
               </Link>
             </div>
 
-            <div className="mt-8 space-y-2 border-t border-border pt-6 text-sm text-silver">
+            <div className="mt-8 space-y-3 border-t border-border pt-6 text-sm leading-6 text-silver">
               <p>
                 Giao hàng toàn quốc 2–4 ngày · Miễn phí cho đơn từ
                 1.000.000₫
@@ -323,7 +328,7 @@ function ProductPage() {
         </div>
 
         <section className="mt-20">
-          <h2 className="text-2xl">Có thể bạn thích</h2>
+          <h2 className="text-2xl leading-tight">Có thể bạn thích</h2>
 
           <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((item) => (
