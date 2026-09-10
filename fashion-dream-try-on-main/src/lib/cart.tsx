@@ -39,7 +39,7 @@ type DbImage = {
 };
 
 const getCartProducts = createServerFn({ method: "GET" })
-  .inputValidator((productIds: string[]) => productIds)
+  .validator((productIds: string[]) => productIds)
   .handler(async ({ data: productIds }) => {
     if (productIds.length === 0) {
       return [] as CartProduct[];

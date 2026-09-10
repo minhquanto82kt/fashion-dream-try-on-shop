@@ -26,7 +26,9 @@ function createOrderCode() {
   return `FD-${date}-${random}`;
 }
 
-export const createOrder = createServerFn({ method: "POST" }).handler(
+export const createOrder = createServerFn({ method: "POST" })
+  .validator((data: CreateOrderInput) => data)
+  .handler(
   async ({ data }: { data: CreateOrderInput }) => {
     if (!data.items?.length) {
       throw new Error("Giỏ hàng đang trống.");
