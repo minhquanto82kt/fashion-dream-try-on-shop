@@ -1,0 +1,716 @@
+/* =========================================================
+   FASHION DREAM — ADMIN UI SYSTEM
+   Light workspace: white surfaces + dark typography.
+   Visual-only layer; does not change auth, CRUD, data or RLS.
+   ========================================================= */
+
+:root {
+  --fd-admin-paper: #ffffff;
+  --fd-admin-surface: #fafaf8;
+  --fd-admin-soft: #f4f4f1;
+  --fd-admin-line: #e5e5e0;
+  --fd-admin-line-strong: #d5d5cf;
+  --fd-admin-ink: #171717;
+  --fd-admin-muted: #70706b;
+  --fd-admin-faint: #9a9a94;
+  --fd-admin-accent: #7f1d1d;
+}
+
+/* -------------------------
+   Dashboard shell
+   ------------------------- */
+.up-admin-root.up-admin-root {
+  background: var(--fd-admin-surface) !important;
+  color: var(--fd-admin-ink) !important;
+  font-family: var(--ft-body, "Space Grotesk", Inter, ui-sans-serif, system-ui, sans-serif) !important;
+}
+
+.up-admin-root .up-admin-app {
+  background: var(--fd-admin-surface) !important;
+}
+
+.up-admin-root .up-admin-sidebar {
+  width: 248px !important;
+  padding: 28px 16px !important;
+  background: var(--fd-admin-paper) !important;
+  color: var(--fd-admin-ink) !important;
+  border-right: 1px solid var(--fd-admin-line) !important;
+  box-shadow: none !important;
+}
+
+.up-admin-root .up-admin-logo {
+  padding: 2px 10px;
+  color: var(--fd-admin-ink) !important;
+  font-family: var(--ft-display, Anton, sans-serif) !important;
+  font-size: 19px !important;
+  font-weight: 400 !important;
+  letter-spacing: .1em !important;
+  line-height: 1 !important;
+}
+
+.up-admin-root .up-admin-logo span,
+.up-admin-root .up-admin-brand span {
+  color: var(--fd-admin-accent) !important;
+}
+
+.up-admin-root .up-admin-sidebar nav {
+  margin-top: 38px !important;
+  gap: 3px !important;
+}
+
+.up-admin-root .up-admin-nav-section {
+  margin: 20px 12px 7px !important;
+  color: var(--fd-admin-faint) !important;
+  font-size: 9px !important;
+  letter-spacing: .18em !important;
+}
+
+.up-admin-root .up-admin-sidebar nav a {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  padding: 10px 12px !important;
+  border-left: 2px solid transparent;
+  color: #676762 !important;
+  text-decoration: none;
+  font-size: 13px !important;
+  line-height: 1.25 !important;
+  transition: background .18s ease, color .18s ease, border-color .18s ease;
+}
+
+.up-admin-root .up-admin-sidebar nav a:hover {
+  background: var(--fd-admin-soft) !important;
+  color: var(--fd-admin-ink) !important;
+}
+
+.up-admin-root .up-admin-sidebar nav a.active {
+  background: #f2f2ef !important;
+  color: var(--fd-admin-ink) !important;
+  border-left-color: var(--fd-admin-accent) !important;
+}
+
+.up-admin-root .up-admin-nav-disabled {
+  min-height: 42px;
+  color: #aaa9a3 !important;
+  padding: 10px 12px !important;
+  line-height: 1.25 !important;
+}
+
+.up-admin-root .up-admin-nav-disabled span {
+  color: #aaa9a3 !important;
+}
+
+.up-admin-root .up-admin-logout {
+  min-height: 42px;
+  margin: auto 0 0 !important;
+  padding: 10px 12px !important;
+  color: #676762 !important;
+  border-top: 1px solid var(--fd-admin-line);
+  transition: color .18s ease, background .18s ease;
+}
+
+.up-admin-root .up-admin-logout:hover {
+  color: var(--fd-admin-ink) !important;
+  background: var(--fd-admin-soft) !important;
+}
+
+.up-admin-root .up-admin-main {
+  margin-left: 248px !important;
+  width: calc(100% - 248px) !important;
+  max-width: 1500px;
+  padding: 42px clamp(24px, 4vw, 64px) 72px !important;
+}
+
+.up-admin-root .up-admin-topbar {
+  align-items: flex-start !important;
+  gap: 24px;
+  margin-bottom: 30px !important;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--fd-admin-line);
+}
+
+.up-admin-root .up-admin-kicker {
+  color: var(--fd-admin-accent) !important;
+  font-size: 9px !important;
+  line-height: 1.4 !important;
+  letter-spacing: .2em !important;
+}
+
+.up-admin-root .up-admin-topbar h1,
+.up-admin-root .up-admin-editor h2 {
+  margin: 8px 0 7px !important;
+  color: var(--fd-admin-ink) !important;
+  font-family: var(--ft-display, Anton, sans-serif) !important;
+  font-weight: 400 !important;
+  line-height: .95 !important;
+  letter-spacing: -.025em !important;
+  text-transform: uppercase;
+}
+
+.up-admin-root .up-admin-topbar h1 {
+  font-size: clamp(40px, 4vw, 58px) !important;
+}
+
+.up-admin-root .up-admin-topbar p {
+  max-width: 680px;
+  color: var(--fd-admin-muted) !important;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+}
+
+/* -------------------------
+   Buttons / controls
+   ------------------------- */
+.up-admin-root .up-admin-primary {
+  min-height: 44px;
+  padding: 11px 17px !important;
+  background: var(--fd-admin-ink) !important;
+  color: #fff !important;
+  border: 1px solid var(--fd-admin-ink) !important;
+  border-radius: 0 !important;
+  font-size: 10px !important;
+  line-height: 1.2 !important;
+  letter-spacing: .1em !important;
+  transition: transform .18s ease, background .18s ease;
+}
+
+.up-admin-root .up-admin-primary:hover {
+  background: #30302e !important;
+  filter: none !important;
+  transform: translateY(-1px);
+}
+
+.up-admin-root .up-admin-secondary,
+.up-admin-root .up-secondary,
+.up-admin-root .up-danger,
+.up-admin-root .up-row-action,
+.up-admin-root .up-icon-btn {
+  min-height: 40px;
+  background: var(--fd-admin-paper) !important;
+  color: var(--fd-admin-ink) !important;
+  border: 1px solid var(--fd-admin-line-strong) !important;
+  border-radius: 0 !important;
+  line-height: 1.3 !important;
+  transition: background .18s ease, border-color .18s ease, transform .18s ease;
+}
+
+.up-admin-root .up-admin-secondary:hover,
+.up-admin-root .up-secondary:hover,
+.up-admin-root .up-row-action:hover,
+.up-admin-root .up-icon-btn:hover {
+  background: var(--fd-admin-soft) !important;
+  border-color: #bdbdb7 !important;
+}
+
+.up-admin-root .up-danger {
+  color: #991b1b !important;
+}
+
+.up-admin-root input,
+.up-admin-root select,
+.up-admin-root textarea {
+  min-height: 42px;
+  border-radius: 0 !important;
+  border-color: var(--fd-admin-line-strong) !important;
+  color: var(--fd-admin-ink) !important;
+  background: #fff !important;
+  line-height: 1.45 !important;
+}
+
+.up-admin-root input:focus,
+.up-admin-root select:focus,
+.up-admin-root textarea:focus {
+  border-color: #85857f !important;
+  box-shadow: 0 0 0 3px rgba(23,23,23,.06) !important;
+}
+
+/* -------------------------
+   Stats / cards
+   ------------------------- */
+.up-admin-root .up-admin-dashboard-stats {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+  margin-bottom: 20px !important;
+}
+
+.up-admin-root .up-admin-dashboard-card,
+.up-admin-root .up-admin-dashboard-section,
+.up-admin-root .up-admin-editor,
+.up-admin-root .up-admin-table-wrap {
+  background: var(--fd-admin-paper) !important;
+  border: 1px solid var(--fd-admin-line) !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+
+.up-admin-root .up-admin-dashboard-card {
+  min-height: 148px;
+  padding: 20px !important;
+  transition: transform .18s ease, border-color .18s ease;
+}
+
+.up-admin-root .up-admin-dashboard-card:hover {
+  transform: translateY(-2px);
+  border-color: #cfcfc9 !important;
+}
+
+.up-admin-root .up-admin-dashboard-label {
+  color: var(--fd-admin-muted) !important;
+  font-size: 10px !important;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.up-admin-root .up-admin-dashboard-value {
+  margin: 13px 0 5px !important;
+  color: var(--fd-admin-ink) !important;
+  font-family: var(--ft-display, Anton, sans-serif) !important;
+  font-size: clamp(30px, 3vw, 42px) !important;
+  font-weight: 400 !important;
+  line-height: .95 !important;
+  letter-spacing: -.02em !important;
+}
+
+.up-admin-root .up-admin-dashboard-muted {
+  color: var(--fd-admin-faint) !important;
+  font-size: 11px !important;
+  line-height: 1.45 !important;
+}
+
+.up-admin-root .up-admin-dashboard-section {
+  padding: 24px !important;
+}
+
+.up-admin-root .up-admin-dashboard-section h2 {
+  margin: 0 0 6px !important;
+  color: var(--fd-admin-ink) !important;
+  font-family: var(--ft-display, Anton, sans-serif) !important;
+  font-size: 25px !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+  letter-spacing: -.01em !important;
+  text-transform: uppercase;
+}
+
+.up-admin-root .up-admin-dashboard-section > p {
+  margin: 0 0 20px !important;
+  color: var(--fd-admin-muted) !important;
+  font-size: 12px !important;
+  line-height: 1.6 !important;
+}
+
+.up-admin-root .up-admin-dashboard-actions {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.up-admin-root .up-admin-dashboard-action {
+  min-width: 0;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  padding: 17px !important;
+  background: var(--fd-admin-surface) !important;
+  border: 1px solid var(--fd-admin-line) !important;
+  color: var(--fd-admin-ink) !important;
+  text-decoration: none;
+  transition: transform .18s ease, background .18s ease, border-color .18s ease;
+}
+
+.up-admin-root .up-admin-dashboard-action:hover {
+  transform: translateY(-2px);
+  background: #fff !important;
+  border-color: #c9c9c3 !important;
+}
+
+.up-admin-root .up-admin-dashboard-action-title {
+  color: var(--fd-admin-ink) !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+}
+
+.up-admin-root .up-admin-dashboard-action-desc {
+  margin-top: 8px !important;
+  color: var(--fd-admin-muted) !important;
+  font-size: 11px !important;
+  line-height: 1.55 !important;
+}
+
+.up-admin-root .up-admin-dashboard-action > span {
+  margin-top: auto;
+  padding-top: 20px;
+  color: var(--fd-admin-accent) !important;
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+/* -------------------------
+   Tables / editors
+   ------------------------- */
+.up-admin-root .up-admin-toolbar {
+  align-items: stretch;
+  flex-wrap: wrap;
+  gap: 8px !important;
+  margin-bottom: 16px !important;
+}
+
+.up-admin-root .up-admin-table-wrap {
+  overflow-x: auto;
+}
+
+.up-admin-root .up-admin-table {
+  min-width: 760px;
+}
+
+.up-admin-root .up-admin-table th {
+  background: #f7f7f4 !important;
+  color: #777771 !important;
+  font-size: 9px !important;
+  line-height: 1.35 !important;
+  letter-spacing: .12em !important;
+}
+
+.up-admin-root .up-admin-table td {
+  color: var(--fd-admin-ink) !important;
+  line-height: 1.5 !important;
+  vertical-align: middle;
+}
+
+.up-admin-root .up-product-cell {
+  min-width: 0;
+}
+
+.up-admin-root .up-product-cell strong,
+.up-admin-root .up-product-cell small {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.4;
+}
+
+.up-admin-root .up-product-cell small {
+  color: var(--fd-admin-faint) !important;
+}
+
+.up-admin-root .up-admin-editor {
+  padding: 24px !important;
+}
+
+.up-admin-root .up-editor-grid {
+  min-width: 0;
+  gap: 24px !important;
+}
+
+.up-admin-root .up-editor-left,
+.up-admin-root .up-editor-right {
+  min-width: 0;
+}
+
+.up-admin-root .up-editor-left label,
+.up-admin-root .up-editor-right label {
+  line-height: 1.35 !important;
+}
+
+.up-admin-root .up-upload-card {
+  background: var(--fd-admin-surface) !important;
+  border-color: #cfcfc9 !important;
+}
+
+.up-admin-root .up-upload-card b {
+  color: var(--fd-admin-accent) !important;
+}
+
+.up-admin-root .up-status.published {
+  background: #eaf7ef !important;
+  color: #166534 !important;
+}
+
+.up-admin-root .up-status.draft {
+  background: #f5f1e5 !important;
+  color: #7a5b12 !important;
+}
+
+/* -------------------------
+   Login — same visual language as dashboard
+   ------------------------- */
+.fd-admin-login-page.fd-admin-login-page {
+  background: #fff !important;
+  color: var(--fd-admin-ink) !important;
+  font-family: var(--ft-body, "Space Grotesk", Inter, ui-sans-serif, system-ui, sans-serif) !important;
+}
+
+.fd-admin-login-page::before {
+  opacity: .65 !important;
+  background-image:
+    linear-gradient(rgba(23,23,23,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23,23,23,.035) 1px, transparent 1px) !important;
+  background-size: 56px 56px !important;
+  mask-image: linear-gradient(90deg, black 0%, transparent 90%) !important;
+}
+
+.fd-admin-login-page::after {
+  color: rgba(23,23,23,.35) !important;
+}
+
+.fd-admin-login-page .fd-admin-login-visual {
+  background: #fafaf8 !important;
+  color: var(--fd-admin-ink) !important;
+  border-right: 1px solid var(--fd-admin-line) !important;
+}
+
+.fd-admin-login-page .fd-admin-login-visual::before {
+  background: radial-gradient(circle at center, rgba(127,29,29,.06), transparent 65%) !important;
+}
+
+.fd-admin-login-page .fd-admin-login-visual::after {
+  color: transparent !important;
+  -webkit-text-stroke: 1px rgba(23,23,23,.08) !important;
+}
+
+.fd-admin-login-page .fd-admin-brand,
+.fd-admin-login-page .fd-admin-brand__name {
+  color: var(--fd-admin-ink) !important;
+}
+
+.fd-admin-login-page .fd-admin-brand__mark {
+  background: var(--fd-admin-ink) !important;
+  color: #fff !important;
+}
+
+.fd-admin-login-page .fd-admin-brand__meta,
+.fd-admin-login-page .fd-admin-editorial__eyebrow,
+.fd-admin-login-page .fd-admin-editorial h1 em {
+  color: var(--fd-admin-accent) !important;
+}
+
+.fd-admin-login-page .fd-admin-editorial__eyebrow::before {
+  background: var(--fd-admin-accent) !important;
+}
+
+.fd-admin-login-page .fd-admin-editorial h1 {
+  color: var(--fd-admin-ink) !important;
+  font-family: var(--ft-display, Anton, sans-serif) !important;
+  font-size: clamp(62px, 8vw, 120px) !important;
+  line-height: .82 !important;
+  letter-spacing: -.03em !important;
+}
+
+.fd-admin-login-page .fd-admin-editorial p {
+  color: #656560 !important;
+  line-height: 1.75 !important;
+}
+
+.fd-admin-login-page .fd-admin-stat strong {
+  color: var(--fd-admin-ink) !important;
+  font-family: var(--ft-display, Anton, sans-serif) !important;
+}
+
+.fd-admin-login-page .fd-admin-stat span,
+.fd-admin-login-page .fd-admin-footer {
+  color: #898983 !important;
+}
+
+.fd-admin-login-page .fd-admin-footer__line {
+  background: var(--fd-admin-line) !important;
+}
+
+.fd-admin-login-page .fd-admin-login-panel {
+  background: #fff !important;
+  color: var(--fd-admin-ink) !important;
+}
+
+.fd-admin-login-page .fd-admin-login-panel::before {
+  background: linear-gradient(135deg, rgba(0,0,0,.018), transparent 50%) !important;
+}
+
+.fd-admin-login-page .fd-admin-login-card__topline {
+  color: #85857f !important;
+  border-bottom-color: var(--fd-admin-line) !important;
+}
+
+.fd-admin-login-page .fd-admin-login-card__status::before {
+  background: #3f7d3f !important;
+  box-shadow: 0 0 0 4px rgba(63,125,63,.08) !important;
+}
+
+.fd-admin-login-page .fd-admin-login-card h2 {
+  color: var(--fd-admin-ink) !important;
+  font-family: var(--ft-display, Anton, sans-serif) !important;
+  line-height: .88 !important;
+}
+
+.fd-admin-login-page .fd-admin-login-card__intro,
+.fd-admin-login-page .fd-admin-field > span {
+  color: #666660 !important;
+  line-height: 1.7 !important;
+}
+
+.fd-admin-login-page .fd-admin-field input {
+  min-height: 52px !important;
+  background: #fff !important;
+  color: var(--fd-admin-ink) !important;
+  border-color: var(--fd-admin-line-strong) !important;
+  line-height: 1.35 !important;
+}
+
+.fd-admin-login-page .fd-admin-field input:focus {
+  border-color: #70706a !important;
+  background: #fff !important;
+  box-shadow: 0 0 0 3px rgba(23,23,23,.06) !important;
+}
+
+.fd-admin-login-page .fd-admin-password-toggle {
+  color: #777771 !important;
+}
+
+.fd-admin-login-page .fd-admin-password-toggle:hover {
+  color: var(--fd-admin-ink) !important;
+  background: var(--fd-admin-soft) !important;
+}
+
+.fd-admin-login-page .fd-admin-login-submit {
+  min-height: 48px !important;
+  background: var(--fd-admin-ink) !important;
+  color: #fff !important;
+  border: 1px solid var(--fd-admin-ink) !important;
+}
+
+.fd-admin-login-page .fd-admin-login-submit:hover {
+  background: #30302e !important;
+}
+
+.fd-admin-login-page .fd-admin-login-submit:disabled {
+  background: #c8c8c2 !important;
+  border-color: #c8c8c2 !important;
+  color: #fff !important;
+}
+
+.fd-admin-login-page .fd-admin-login-error {
+  background: #fff6f6 !important;
+  color: #991b1b !important;
+  border-color: #edcaca !important;
+  line-height: 1.55 !important;
+}
+
+/* -------------------------
+   Responsive workspace
+   ------------------------- */
+@media (max-width: 1100px) {
+  .up-admin-root .up-admin-sidebar {
+    width: 216px !important;
+  }
+
+  .up-admin-root .up-admin-main {
+    margin-left: 216px !important;
+    width: calc(100% - 216px) !important;
+  }
+
+  .up-admin-root .up-admin-dashboard-actions,
+  .up-admin-root .up-admin-dashboard-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .up-admin-root .up-admin-app {
+    display: block !important;
+  }
+
+  .up-admin-root .up-admin-sidebar {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    min-height: auto !important;
+    padding: 16px !important;
+    border-right: 0 !important;
+    border-bottom: 1px solid var(--fd-admin-line) !important;
+  }
+
+  .up-admin-root .up-admin-sidebar nav {
+    display: flex !important;
+    overflow-x: auto;
+    margin-top: 18px !important;
+    padding-bottom: 2px;
+  }
+
+  .up-admin-root .up-admin-sidebar nav a,
+  .up-admin-root .up-admin-nav-disabled {
+    flex: 0 0 auto;
+    min-height: 40px;
+    white-space: nowrap;
+  }
+
+  .up-admin-root .up-admin-nav-section {
+    display: none;
+  }
+
+  .up-admin-root .up-admin-logout {
+    margin-top: 12px !important;
+    border-top: 0;
+  }
+
+  .up-admin-root .up-admin-main {
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding: 28px 16px 48px !important;
+  }
+
+  .up-admin-root .up-admin-topbar {
+    flex-direction: column;
+    align-items: stretch !important;
+  }
+
+  .up-admin-root .up-admin-dashboard-stats,
+  .up-admin-root .up-admin-dashboard-actions {
+    grid-template-columns: 1fr !important;
+  }
+
+  .up-admin-root .up-admin-dashboard-card {
+    min-height: 125px;
+  }
+
+  .up-admin-root .up-editor-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .fd-admin-login-page.fd-admin-login-page {
+    grid-template-columns: 1fr !important;
+  }
+
+  .fd-admin-login-page .fd-admin-login-visual {
+    min-height: auto !important;
+    padding: 28px 22px !important;
+    border-right: 0 !important;
+    border-bottom: 1px solid var(--fd-admin-line) !important;
+  }
+
+  .fd-admin-login-page .fd-admin-editorial {
+    padding-top: 8vh !important;
+    padding-bottom: 4vh !important;
+  }
+
+  .fd-admin-login-page .fd-admin-editorial h1 {
+    font-size: clamp(58px, 17vw, 92px) !important;
+  }
+
+  .fd-admin-login-page .fd-admin-login-panel {
+    min-height: auto !important;
+    padding: 54px 22px 60px !important;
+  }
+
+  .fd-admin-login-page .fd-admin-stats {
+    gap: 20px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .up-admin-root *,
+  .fd-admin-login-page * {
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+  }
+}
