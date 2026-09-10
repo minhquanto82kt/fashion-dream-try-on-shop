@@ -1,0 +1,79 @@
+/* =========================================================
+   FASHION DREAM — ADMIN COMFORT PALETTE
+   Softer warm-neutral workspace to reduce eye strain.
+   Visual-only overrides; no auth/data/CRUD changes.
+   ========================================================= */
+
+:root {
+  --fd-comfort-bg: #eeeDE8;
+  --fd-comfort-surface: #f7f6f2;
+  --fd-comfort-card: #fbfaf7;
+  --fd-comfort-soft: #e7e5df;
+  --fd-comfort-line: #d8d6cf;
+  --fd-comfort-ink: #20201e;
+  --fd-comfort-muted: #66655f;
+}
+
+.up-admin-root.up-admin-root,
+.up-admin-root .up-admin-app {
+  background: var(--fd-comfort-bg) !important;
+  color: var(--fd-comfort-ink) !important;
+}
+
+.up-admin-root .up-admin-sidebar {
+  background: var(--fd-comfort-surface) !important;
+  border-right-color: var(--fd-comfort-line) !important;
+}
+
+.up-admin-root .up-admin-sidebar nav a:hover,
+.up-admin-root .up-admin-sidebar nav a.active,
+.up-admin-root .up-admin-logout:hover {
+  background: var(--fd-comfort-soft) !important;
+}
+
+.up-admin-root .up-admin-dashboard-card,
+.up-admin-root .up-admin-dashboard-section,
+.up-admin-root .up-admin-editor,
+.up-admin-root .up-admin-table-wrap {
+  background: var(--fd-comfort-card) !important;
+  border-color: var(--fd-comfort-line) !important;
+}
+
+.up-admin-root .up-admin-dashboard-action,
+.up-admin-root .up-upload-card {
+  background: var(--fd-comfort-surface) !important;
+  border-color: var(--fd-comfort-line) !important;
+}
+
+.up-admin-root .up-admin-dashboard-action:hover {
+  background: var(--fd-comfort-card) !important;
+}
+
+.up-admin-root .up-admin-table th {
+  background: var(--fd-comfort-soft) !important;
+}
+
+.up-admin-root input,
+.up-admin-root select,
+.up-admin-root textarea {
+  background: var(--fd-comfort-card) !important;
+  border-color: var(--fd-comfort-line) !important;
+}
+
+/* Login: replace harsh pure white with warm off-white. */
+.fd-admin-login-page.fd-admin-login-page {
+  background: var(--fd-comfort-bg) !important;
+}
+
+.fd-admin-login-page .fd-admin-login-visual {
+  background: var(--fd-comfort-surface) !important;
+}
+
+.fd-admin-login-page .fd-admin-login-card,
+.fd-admin-login-page form {
+  background: var(--fd-comfort-card) !important;
+}
+
+.fd-admin-login-page input {
+  background: var(--fd-comfort-card) !important;
+}
