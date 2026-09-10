@@ -36,14 +36,19 @@ const OCCASIONS = ["Đi học", "Đi làm", "Hẹn hò", "Đi chơi"];
 
 function AiPage() {
   const search = Route.useSearch();
+  const [consentAccepted, setConsentAccepted] = useState(false);
   const [mode, setMode] = useState<"concept" | "tryon">(search.product ? "tryon" : "concept");
+
+  if (!consentAccepted) {
+    return <AiConsentGate onContinue={() => setConsentAccepted(true)} />;
+  }
 
   return (
     <div className="min-h-screen">
       <SiteNav />
       <main className="mx-auto max-w-6xl px-6 pb-24 pt-28 sm:px-12">
         <p className="eyebrow">AI Experience · Beta</p>
-        <h1 className="mt-3 text-4xl leading-none sm:text-5xl">
+        <h1 className="mt-3 text-4xl leading-tight sm:text-5xl">
           Concept + <span className="text-primary">Virtual Try-On</span>
         </h1>
         <h3 className="mt-5 text-xl font-medium uppercase tracking-[0.08em] text-foreground">
@@ -54,11 +59,11 @@ function AiPage() {
           ngay trên ảnh của bạn.
         </p>
 
-        <div className="mt-8 flex gap-2">
-          {(["concept", "tryon"] as const).map((m) => (
+        <div className="mt-8 flex flex-wrap gap-2">
+          {["concept", "tryon"].map((m) => (
             <button
               key={m}
-              onClick={() => setMode(m)}
+              onClick={() => setMode(m as "concept" | "tryon")}
               className={`border px-5 py-2 text-xs uppercase tracking-[0.15em] ${
                 mode === m
                   ? "border-primary bg-primary text-primary-foreground"
@@ -75,6 +80,70 @@ function AiPage() {
         </div>
       </main>
       <SiteFooter />
+    </div>
+  );
+}
+
+function AiConsentGate({ onContinue }: { onContinue: () => void }) {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <div className="min-h-screen bg-background">
+      <SiteNav />
+      <main className="flex min-h-[calc(100vh-5rem)] items-center px-6 py-24 sm:px-12">
+        <section className="mx-auto w-full max-w-3xl border border-border bg-card p-6 sm:p-10">
+          <p className="eyebrow">AI Experience · Notice</p>
+          <h1 className="mt-3 text-4xl leading-tight sm:text-6xl">AI Studio</h1>
+          <p className="mt-4 max-w-2xl text-sm leading-7 text-beige sm:text-base">
+            Trước khi sử dụng AI Studio, vui lòng đọc thông tin dưới đây và xác nhận rằng bạn đồng ý
+            tuân thủ các quy định sử dụng.
+          </p>
+
+          <div className="mt-8 max-h-72 overflow-y-auto border border-border bg-background p-5 text-sm leading-7 text-silver sm:p-6">
+            <h2 className="font-medium text-foreground">Quy định sử dụng AI Studio</h2>
+            <div className="mt-4 space-y-4">
+              <p>
+                1. Bạn chỉ nên tải lên hình ảnh mà bạn có quyền sử dụng hoặc đã được người trong ảnh
+                cho phép sử dụng.
+              </p>
+              <p>
+                2. Không sử dụng AI Studio để tạo nội dung vi phạm pháp luật, xâm phạm quyền riêng tư,
+                danh dự hoặc quyền sở hữu trí tuệ của người khác.
+              </p>
+              <p>
+                3. Kết quả AI chỉ mang tính tham khảo. Hình ảnh thử đồ có thể khác với sản phẩm thực tế
+                và không được xem là cam kết về kích thước, màu sắc hoặc độ vừa vặn.
+              </p>
+              <p>
+                4. Không tải lên hình ảnh chứa thông tin nhạy cảm nếu không cần thiết. Bạn chịu trách nhiệm
+                về nội dung hình ảnh và thông tin bạn cung cấp cho hệ thống.
+              </p>
+              <p>
+                5. Khi tiếp tục, bạn xác nhận đã đọc, hiểu và chấp hành các quy định sử dụng AI Studio.
+              </p>
+            </div>
+          </div>
+
+          <label className="mt-6 flex cursor-pointer items-start gap-3 text-sm leading-6 text-beige">
+            <input
+              type="checkbox"
+              checked={checked}
+              onChange={(event) => setChecked(event.target.checked)}
+              className="mt-1 size-4 shrink-0 accent-primary"
+            />
+            <span>Tôi đã đọc và chấp hành các quy định sử dụng AI Studio.</span>
+          </label>
+
+          <button
+            type="button"
+            disabled={!checked}
+            onClick={onContinue}
+            className="mt-7 flex min-h-12 w-full items-center justify-center bg-primary px-6 py-3 text-xs uppercase tracking-[0.18em] text-primary-foreground transition-opacity disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Tiếp tục
+          </button>
+        </section>
+      </main>
     </div>
   );
 }
@@ -253,7 +322,6 @@ function ConceptPanel() {
     </div>
   );
 }
-
 
 function TryOnPanel({ initialProduct }: { initialProduct?: string | undefined }) {
   const run = useServerFn(generateTryOn);
