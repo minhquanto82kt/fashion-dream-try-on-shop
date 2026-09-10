@@ -49,7 +49,12 @@ export function AdminShell() {
             >
               Products
             </Link>
-            <a href="#" onClick={(e) => e.preventDefault()}>Orders</a>
+            <Link
+              to="/admin/orders"
+              className={location.pathname.startsWith("/admin/orders") ? "active" : ""}
+            >
+              Orders
+            </Link>
             <a href="#" onClick={(e) => e.preventDefault()}>Customers</a>
             <a href="#" onClick={(e) => e.preventDefault()}>Inventory</a>
 
