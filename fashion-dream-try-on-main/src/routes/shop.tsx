@@ -144,13 +144,13 @@ function ShopPage() {
           Tất cả <span className="text-primary">sản phẩm</span>
         </h1>
 
-        <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-y border-border py-4">
-          <div className="flex flex-wrap gap-2">
+        <div className="shop-controls mt-10 border-y border-border py-4">
+          <div className="shop-category-scroll flex gap-2">
             {[{ slug: "all", name: "Tất cả" }, ...CATEGORIES].map((c) => (
               <button
                 key={c.slug}
                 onClick={() => setCat(c.slug)}
-                className={`border px-4 py-2 text-xs uppercase tracking-[0.15em] transition-colors ${
+                className={`shop-category-button shrink-0 border px-4 py-2 text-xs uppercase tracking-[0.15em] transition-colors ${
                   cat === c.slug
                     ? "border-primary bg-primary text-primary-foreground"
                     : "border-border text-beige hover:border-primary"
@@ -161,12 +161,12 @@ function ShopPage() {
             ))}
           </div>
 
-          <div className="flex gap-2">
+          <div className="shop-sort flex gap-2">
             {SORTS.map((s) => (
               <button
                 key={s.id}
                 onClick={() => setSort(s.id)}
-                className={`text-xs uppercase tracking-[0.15em] ${
+                className={`shop-sort-button shrink-0 px-1 py-2 text-xs uppercase tracking-[0.15em] ${
                   sort === s.id
                     ? "text-primary"
                     : "text-silver hover:text-beige"
