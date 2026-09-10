@@ -15,7 +15,15 @@ export const Route = createFileRoute("/admin/products/new/")({
   }),
 });
 
-const categories = ["hoodies", "tees", "outerwear", "pants", "cap", "sunglass", "accessories"];
+const categories = [
+  "hoodies",
+  "tees",
+  "outerwear",
+  "pants",
+  "cap",
+  "sunglass",
+  "accessories",
+];
 
 const emptyForm = {
   name: "",
@@ -48,14 +56,17 @@ function NewProductPage() {
 
   function chooseImage(file?: File) {
     if (!file) return;
+
     if (!file.type.startsWith("image/")) {
       setMessage("File ảnh không hợp lệ.");
       return;
     }
+
     if (file.size > 10 * 1024 * 1024) {
       setMessage("Ảnh phải nhỏ hơn hoặc bằng 10 MB.");
       return;
     }
+
     setImageFile(file);
     setPreview(URL.createObjectURL(file));
     setMessage("");
@@ -63,12 +74,21 @@ function NewProductPage() {
 
   async function handleSave(event: React.FormEvent) {
     event.preventDefault();
-    if (!form.name.trim()) return setMessage("Vui lòng nhập tên sản phẩm.");
+
+    if (!form.name.trim()) {
+      return setMessage("Vui lòng nhập tên sản phẩm.");
+    }
 
     const slug = form.slug.trim() || slugify(form.name);
     const price = Number(form.price);
-    if (!slug) return setMessage("Vui lòng nhập slug.");
-    if (!Number.isFinite(price) || price < 0) return setMessage("Giá không hợp lệ.");
+
+    if (!slug) {
+      return setMessage("Vui lòng nhập slug.");
+    }
+
+    if (!Number.isFinite(price) || price < 0) {
+      return setMessage("Giá không hợp lệ.");
+    }
 
     setSaving(true);
     setMessage("");
@@ -81,21 +101,27 @@ function NewProductPage() {
         price,
         short_description: form.short_description.trim() || null,
         long_description: form.long_description.trim() || null,
-        description: form.long_description.trim() || form.short_description.trim() || null,
+        description:
+          form.long_description.trim() ||
+          form.short_description.trim() ||
+          null,
         image: null,
         status: form.status,
         active: form.status === "published",
         featured: form.featured,
       };
 
-      const id = slugify(form.name) || `product-${Date.now()}`;
-      const product = await createProduct({ id, ...payload });
+      const product = await createProduct(payload);
 
       if (imageFile) {
         try {
           const url = await uploadProductImage(product.id, imageFile);
+
           await addProductImage(product.id, url, true);
-          await updateProduct(product.id, { image: url });
+
+          await updateProduct(product.id, {
+            image: url,
+          });
         } catch (imageError) {
           setMessage(
             imageError instanceof Error
@@ -106,9 +132,15 @@ function NewProductPage() {
         }
       }
 
-      await navigate({ to: "/admin/products" });
+      await navigate({
+        to: "/admin/products",
+      });
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Không thể tạo sản phẩm.");
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "Không thể tạo sản phẩm.",
+      );
     } finally {
       setSaving(false);
     }
@@ -122,10 +154,20 @@ function NewProductPage() {
           <h1>Thêm sản phẩm</h1>
           <p>Tạo sản phẩm mới cho cửa hàng</p>
         </div>
-        <Link className="up-admin-secondary" to="/admin/products">QUAY LẠI</Link>
+
+        <Link
+          className="up-admin-secondary"
+          to="/admin/products"
+        >
+          QUAY LẠI
+        </Link>
       </header>
 
-      {message && <div className="up-admin-toast">{message}</div>}
+      {message && (
+        <div className="up-admin-toast">
+          {message}
+        </div>
+      )}
 
       <section className="up-admin-editor">
         <div className="up-editor-head">
@@ -135,67 +177,204 @@ function NewProductPage() {
           </div>
         </div>
 
-        <form onSubmit={handleSave} className="up-editor-grid">
+        <form
+          onSubmit={handleSave}
+          className="up-editor-grid"
+        >
           <div className="up-editor-left">
             <label>
               Tên sản phẩm
+
               <input
                 value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                onBlur={() => !form.slug && setForm((current) => ({ ...current, slug: slugify(current.name) }))}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    name: e.target.value,
+                  })
+                }
+                onBlur={() =>
+                  !form.slug &&
+                  setForm((current) => ({
+                    ...current,
+                    slug: slugify(current.name),
+                  }))
+                }
               />
             </label>
+
             <label>
               Slug
-              <input value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} />
+
+              <input
+                value={form.slug}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    slug: e.target.value,
+                  })
+                }
+              />
             </label>
+
             <div className="up-two-col">
               <label>
                 Danh mục
-                <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
-                  {categories.map((category) => <option key={category}>{category}</option>)}
+
+                <select
+                  value={form.category}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      category: e.target.value,
+                    })
+                  }
+                >
+                  {categories.map((category) => (
+                    <option key={category}>
+                      {category}
+                    </option>
+                  ))}
                 </select>
               </label>
+
               <label>
                 Giá (VND)
-                <input type="number" min="0" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} />
+
+                <input
+                  type="number"
+                  min="0"
+                  value={form.price}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      price: e.target.value,
+                    })
+                  }
+                />
               </label>
             </div>
+
             <label>
               Mô tả ngắn
-              <textarea rows={3} value={form.short_description} onChange={(e) => setForm({ ...form, short_description: e.target.value })} />
+
+              <textarea
+                rows={3}
+                value={form.short_description}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    short_description: e.target.value,
+                  })
+                }
+              />
             </label>
+
             <label>
               Mô tả chi tiết
-              <textarea rows={7} value={form.long_description} onChange={(e) => setForm({ ...form, long_description: e.target.value })} />
+
+              <textarea
+                rows={7}
+                value={form.long_description}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    long_description: e.target.value,
+                  })
+                }
+              />
             </label>
           </div>
 
           <div className="up-editor-right">
-            <div className="up-upload-card" onClick={() => fileRef.current?.click()}>
+            <div
+              className="up-upload-card"
+              onClick={() => fileRef.current?.click()}
+            >
               {preview ? (
-                <img src={preview} alt="Product preview" />
+                <img
+                  src={preview}
+                  alt="Product preview"
+                />
               ) : (
-                <div><b>＋</b><span>TẢI ẢNH SẢN PHẨM</span><small>PNG, JPG, WEBP · tối đa 10 MB</small></div>
+                <div>
+                  <b>＋</b>
+                  <span>TẢI ẢNH SẢN PHẨM</span>
+                  <small>
+                    PNG, JPG, WEBP · tối đa 10 MB
+                  </small>
+                </div>
               )}
-              <input ref={fileRef} type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden onChange={(e) => chooseImage(e.target.files?.[0])} />
+
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/png,image/jpeg,image/webp,image/gif"
+                hidden
+                onChange={(e) =>
+                  chooseImage(e.target.files?.[0])
+                }
+              />
             </div>
+
             <label>
               Trạng thái
-              <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as Product["status"] })}>
-                <option value="draft">Bản nháp</option>
-                <option value="published">Đang hoạt động</option>
-                <option value="archived">Đã ẩn</option>
+
+              <select
+                value={form.status}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    status:
+                      e.target.value as Product["status"],
+                  })
+                }
+              >
+                <option value="draft">
+                  Bản nháp
+                </option>
+
+                <option value="published">
+                  Đang hoạt động
+                </option>
+
+                <option value="archived">
+                  Đã ẩn
+                </option>
               </select>
             </label>
+
             <label className="up-check">
-              <input type="checkbox" checked={form.featured} onChange={(e) => setForm({ ...form, featured: e.target.checked })} />
+              <input
+                type="checkbox"
+                checked={form.featured}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    featured: e.target.checked,
+                  })
+                }
+              />
+
               Sản phẩm nổi bật
             </label>
+
             <div className="up-editor-actions">
-              <Link className="up-secondary" to="/admin/products">HỦY</Link>
-              <button type="submit" className="up-admin-primary" disabled={saving}>
-                {saving ? "ĐANG TẠO…" : "TẠO SẢN PHẨM"}
+              <Link
+                className="up-secondary"
+                to="/admin/products"
+              >
+                HỦY
+              </Link>
+
+              <button
+                type="submit"
+                className="up-admin-primary"
+                disabled={saving}
+              >
+                {saving
+                  ? "ĐANG TẠO…"
+                  : "TẠO SẢN PHẨM"}
               </button>
             </div>
           </div>
