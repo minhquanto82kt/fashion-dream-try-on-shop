@@ -129,8 +129,8 @@ function CheckoutPage() {
             Cảm ơn bạn <span className="text-primary">!</span>
           </h1>
           <p className="mt-4 text-beige">
-            Mã đơn hàng của bạn là <span className="text-primary">{done}</span>. UpThink sẽ liên hệ
-            xác nhận trong vòng 24 giờ.
+            Mã đơn hàng của bạn là <span className="text-primary">{done}</span>. 
+            UpThink sẽ liên hệ xác nhận trong vòng 24 giờ.
           </p>
           <Link
             to="/shop"
