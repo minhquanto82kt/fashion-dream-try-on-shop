@@ -1,9 +1,5 @@
-import {
-  createFileRoute,
-  Link,
-  useNavigate,
-} from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useRef, useState } from "react";
 import {
   addProductImage,
   createProduct,
@@ -12,24 +8,14 @@ import {
   type Product,
 } from "@/lib/upthink-supabase";
 
-export const Route = createFileRoute(
-  "/admin/products/new/",
-)({
+export const Route = createFileRoute("/admin/products/new/")({
   component: NewProductPage,
   head: () => ({
-    meta: [{ title: "Thêm sản phẩm — Admin" }],
+    meta: [{ title: "Add Product — UpThink" }],
   }),
 });
 
-const categories = [
-  "hoodies",
-  "tees",
-  "outerwear",
-  "pants",
-  "cap",
-  "sunglass",
-  "accessories",
-];
+const categories = ["hoodies", "tees", "outerwear", "pants", "cap", "sunglass", "accessories"];
 
 const emptyForm = {
   name: "",
@@ -53,102 +39,36 @@ function slugify(value: string) {
 
 function NewProductPage() {
   const navigate = useNavigate();
-
   const [form, setForm] = useState(emptyForm);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState("");
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
-
-  const [imageFile, setImageFile] =
-    useState<File | null>(null);
-
-  const [imagePreview, setImagePreview] =
-    useState("");
-
   const fileRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (!imageFile) {
-      setImagePreview("");
+  function chooseImage(file?: File) {
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      setMessage("File ảnh không hợp lệ.");
       return;
     }
-
-    const url = URL.createObjectURL(imageFile);
-    setImagePreview(url);
-
-    return () => {
-      URL.revokeObjectURL(url);
-    };
-  }, [imageFile]);
-
-  function updateField(
-    field: keyof typeof emptyForm,
-    value: string | boolean,
-  ) {
-    setForm((current) => ({
-      ...current,
-      [field]: value,
-    }));
-  }
-
-  function handleImageChange(file?: File) {
-    if (!file) {
-      return;
-    }
-
-    const allowedTypes = [
-      "image/jpeg",
-      "image/png",
-      "image/webp",
-      "image/gif",
-    ];
-
-    if (!allowedTypes.includes(file.type)) {
-      setMessage(
-        "Ảnh không hợp lệ. Vui lòng chọn JPG, PNG, WEBP hoặc GIF.",
-      );
-      return;
-    }
-
     if (file.size > 10 * 1024 * 1024) {
-      setMessage(
-        "Ảnh vượt quá giới hạn 10 MB.",
-      );
+      setMessage("Ảnh phải nhỏ hơn hoặc bằng 10 MB.");
       return;
     }
-
-    setMessage("");
     setImageFile(file);
+    setPreview(URL.createObjectURL(file));
+    setMessage("");
   }
 
-  async function handleSave(
-    event: React.FormEvent,
-  ) {
+  async function handleSave(event: React.FormEvent) {
     event.preventDefault();
+    if (!form.name.trim()) return setMessage("Vui lòng nhập tên sản phẩm.");
 
-    if (!form.name.trim()) {
-      setMessage("Vui lòng nhập tên sản phẩm.");
-      return;
-    }
-
-    const slug =
-      form.slug.trim() || slugify(form.name);
-
-    if (!slug) {
-      setMessage(
-        "Không thể tạo slug từ tên sản phẩm.",
-      );
-      return;
-    }
-
+    const slug = form.slug.trim() || slugify(form.name);
     const price = Number(form.price);
-
-    if (
-      !Number.isFinite(price) ||
-      price < 0
-    ) {
-      setMessage("Giá sản phẩm không hợp lệ.");
-      return;
-    }
+    if (!slug) return setMessage("Vui lòng nhập slug.");
+    if (!Number.isFinite(price) || price < 0) return setMessage("Giá không hợp lệ.");
 
     setSaving(true);
     setMessage("");
@@ -159,66 +79,36 @@ function NewProductPage() {
         slug,
         category: form.category,
         price,
-        short_description:
-          form.short_description.trim() || null,
-        long_description:
-          form.long_description.trim() || null,
-        description:
-          form.long_description.trim() ||
-          form.short_description.trim() ||
-          null,
+        short_description: form.short_description.trim() || null,
+        long_description: form.long_description.trim() || null,
+        description: form.long_description.trim() || form.short_description.trim() || null,
         image: null,
         status: form.status,
         active: form.status === "published",
         featured: form.featured,
       };
 
-      const id =
-        slugify(form.name) ||
-        `product-${Date.now()}`;
-
-      const product = await createProduct({
-        id,
-        ...payload,
-      });
+      const id = slugify(form.name) || `product-${Date.now()}`;
+      const product = await createProduct({ id, ...payload });
 
       if (imageFile) {
         try {
-          const url = await uploadProductImage(
-            product.id,
-            imageFile,
-          );
-
-          await addProductImage(
-            product.id,
-            url,
-            true,
-          );
-
-          await updateProduct(product.id, {
-            image: url,
-          });
+          const url = await uploadProductImage(product.id, imageFile);
+          await addProductImage(product.id, url, true);
+          await updateProduct(product.id, { image: url });
         } catch (imageError) {
           setMessage(
             imageError instanceof Error
-              ? `Đã tạo sản phẩm nhưng tải ảnh thất bại: ${imageError.message}`
-              : "Đã tạo sản phẩm nhưng tải ảnh thất bại.",
+              ? `Đã tạo sản phẩm nhưng upload ảnh thất bại: ${imageError.message}`
+              : "Đã tạo sản phẩm nhưng upload ảnh thất bại.",
           );
-
-          setSaving(false);
           return;
         }
       }
 
-      await navigate({
-        to: "/admin/products",
-      });
+      await navigate({ to: "/admin/products" });
     } catch (error) {
-      setMessage(
-        error instanceof Error
-          ? error.message
-          : "Không thể tạo sản phẩm.",
-      );
+      setMessage(error instanceof Error ? error.message : "Không thể tạo sản phẩm.");
     } finally {
       setSaving(false);
     }
@@ -226,290 +116,91 @@ function NewProductPage() {
 
   return (
     <div>
-      <div className="up-admin-breadcrumb">
-        <Link to="/admin/products">
-          SẢN PHẨM
-        </Link>
-
-        <span>›</span>
-
-        <strong>THÊM SẢN PHẨM</strong>
-      </div>
-
       <header className="up-admin-topbar">
         <div>
-          <div className="up-admin-kicker">
-            DANH MỤC / SẢN PHẨM
-          </div>
-
+          <div className="up-admin-kicker">CATALOG / CMS</div>
           <h1>Thêm sản phẩm</h1>
-
-          <p>
-            Tạo một sản phẩm mới cho cửa hàng.
-          </p>
+          <p>Tạo sản phẩm mới cho cửa hàng</p>
         </div>
+        <Link className="up-admin-secondary" to="/admin/products">QUAY LẠI</Link>
       </header>
 
-      {message && (
-        <div className="up-admin-toast">
-          {message}
-        </div>
-      )}
+      {message && <div className="up-admin-toast">{message}</div>}
 
-      <form
-        onSubmit={handleSave}
-        className="up-admin-editor"
-      >
+      <section className="up-admin-editor">
         <div className="up-editor-head">
           <div>
-            <div className="up-admin-kicker">
-              NEW PRODUCT
-            </div>
-
+            <div className="up-admin-kicker">NEW PRODUCT</div>
             <h2>Thông tin sản phẩm</h2>
           </div>
         </div>
 
-        <div className="up-editor-grid">
+        <form onSubmit={handleSave} className="up-editor-grid">
           <div className="up-editor-left">
             <label>
               Tên sản phẩm
-
               <input
                 value={form.name}
-                placeholder="Ví dụ: Essential Oversized Tee"
-                onChange={(event) =>
-                  updateField(
-                    "name",
-                    event.target.value,
-                  )
-                }
-                onBlur={() => {
-                  if (!form.slug.trim()) {
-                    updateField(
-                      "slug",
-                      slugify(form.name),
-                    );
-                  }
-                }}
-                required
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                onBlur={() => !form.slug && setForm((current) => ({ ...current, slug: slugify(current.name) }))}
               />
             </label>
-
             <label>
               Slug
-
-              <input
-                value={form.slug}
-                placeholder="essential-oversized-tee"
-                onChange={(event) =>
-                  updateField(
-                    "slug",
-                    event.target.value,
-                  )
-                }
-                required
-              />
-
-              <small>
-                Slug dùng để định danh sản phẩm trong
-                hệ thống.
-              </small>
+              <input value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} />
             </label>
-
             <div className="up-two-col">
               <label>
                 Danh mục
-
-                <select
-                  value={form.category}
-                  onChange={(event) =>
-                    updateField(
-                      "category",
-                      event.target.value,
-                    )
-                  }
-                >
-                  {categories.map(
-                    (category) => (
-                      <option
-                        key={category}
-                        value={category}
-                      >
-                        {category}
-                      </option>
-                    ),
-                  )}
+                <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
+                  {categories.map((category) => <option key={category}>{category}</option>)}
                 </select>
               </label>
-
               <label>
-                Giá bán (VND)
-
-                <input
-                  type="number"
-                  min="0"
-                  step="1000"
-                  value={form.price}
-                  onChange={(event) =>
-                    updateField(
-                      "price",
-                      event.target.value,
-                    )
-                  }
-                  required
-                />
+                Giá (VND)
+                <input type="number" min="0" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} />
               </label>
             </div>
-
             <label>
               Mô tả ngắn
-
-              <textarea
-                rows={4}
-                placeholder="Mô tả ngắn giúp khách hàng hiểu nhanh về sản phẩm."
-                value={form.short_description}
-                onChange={(event) =>
-                  updateField(
-                    "short_description",
-                    event.target.value,
-                  )
-                }
-              />
+              <textarea rows={3} value={form.short_description} onChange={(e) => setForm({ ...form, short_description: e.target.value })} />
             </label>
-
             <label>
               Mô tả chi tiết
-
-              <textarea
-                rows={8}
-                placeholder="Thông tin chi tiết về chất liệu, kiểu dáng, đặc điểm sản phẩm..."
-                value={form.long_description}
-                onChange={(event) =>
-                  updateField(
-                    "long_description",
-                    event.target.value,
-                  )
-                }
-              />
+              <textarea rows={7} value={form.long_description} onChange={(e) => setForm({ ...form, long_description: e.target.value })} />
             </label>
           </div>
 
           <div className="up-editor-right">
-            <div
-              className="up-upload-card"
-              onClick={() =>
-                fileRef.current?.click()
-              }
-              role="button"
-              tabIndex={0}
-              onKeyDown={(event) => {
-                if (
-                  event.key === "Enter" ||
-                  event.key === " "
-                ) {
-                  fileRef.current?.click();
-                }
-              }}
-            >
-              {imagePreview ? (
-                <img
-                  src={imagePreview}
-                  alt="Xem trước sản phẩm"
-                />
+            <div className="up-upload-card" onClick={() => fileRef.current?.click()}>
+              {preview ? (
+                <img src={preview} alt="Product preview" />
               ) : (
-                <div>
-                  <b>＋</b>
-
-                  <span>
-                    TẢI ẢNH SẢN PHẨM
-                  </span>
-
-                  <small>
-                    JPG, PNG, WEBP hoặc GIF
-                  </small>
-
-                  <small>
-                    Tối đa 10 MB
-                  </small>
-                </div>
+                <div><b>＋</b><span>TẢI ẢNH SẢN PHẨM</span><small>PNG, JPG, WEBP · tối đa 10 MB</small></div>
               )}
-
-              <input
-                ref={fileRef}
-                type="file"
-                accept="image/jpeg,image/png,image/webp,image/gif"
-                hidden
-                onChange={(event) =>
-                  handleImageChange(
-                    event.target.files?.[0],
-                  )
-                }
-              />
+              <input ref={fileRef} type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden onChange={(e) => chooseImage(e.target.files?.[0])} />
             </div>
-
             <label>
               Trạng thái
-
-              <select
-                value={form.status}
-                onChange={(event) =>
-                  updateField(
-                    "status",
-                    event.target.value as Product["status"],
-                  )
-                }
-              >
-                <option value="draft">
-                  Bản nháp
-                </option>
-
-                <option value="published">
-                  Đang hoạt động
-                </option>
-
-                <option value="archived">
-                  Đã ẩn
-                </option>
+              <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as Product["status"] })}>
+                <option value="draft">Bản nháp</option>
+                <option value="published">Đang hoạt động</option>
+                <option value="archived">Đã ẩn</option>
               </select>
             </label>
-
             <label className="up-check">
-              <input
-                type="checkbox"
-                checked={form.featured}
-                onChange={(event) =>
-                  updateField(
-                    "featured",
-                    event.target.checked,
-                  )
-                }
-              />
-
+              <input type="checkbox" checked={form.featured} onChange={(e) => setForm({ ...form, featured: e.target.checked })} />
               Sản phẩm nổi bật
             </label>
-
             <div className="up-editor-actions">
-              <Link
-                to="/admin/products"
-                className="up-secondary"
-              >
-                HỦY
-              </Link>
-
-              <button
-                type="submit"
-                className="up-admin-primary"
-                disabled={saving}
-              >
-                {saving
-                  ? "ĐANG TẠO…"
-                  : "LƯU SẢN PHẨM"}
+              <Link className="up-secondary" to="/admin/products">HỦY</Link>
+              <button type="submit" className="up-admin-primary" disabled={saving}>
+                {saving ? "ĐANG TẠO…" : "TẠO SẢN PHẨM"}
               </button>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </section>
     </div>
   );
 }

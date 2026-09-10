@@ -1,5 +1,5 @@
 // Admin products route
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   addProductImage,
@@ -206,7 +206,7 @@ function ProductAdminPage() {
               <h1>Products</h1>
               <p>Quản lý sản phẩm của cửa hàng</p>
             </div>
-            <button className="up-admin-primary" onClick={openNew}>＋ THÊM SẢN PHẨM</button>
+            <Link className="up-admin-primary" to="/admin/products/new">＋ THÊM SẢN PHẨM</Link>
           </header>
 
           <section className="up-admin-toolbar">
@@ -249,7 +249,12 @@ function ProductAdminPage() {
                     <td><strong>{money(product.price)}</strong></td>
                     <td><span className={`up-status ${product.status}`}>{product.status === "published" ? "Đang hoạt động" : product.status === "draft" ? "Bản nháp" : "Đã ẩn"}</span></td>
                     <td>{product.featured ? "●" : "—"}</td>
-                    <td><button className="up-row-action" onClick={() => openEdit(product)}>SỬA</button></td>
+                    <td>
+                      <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+                        <Link className="up-row-action" to="/admin/products/$id" params={{ id: product.id }}>CHI TIẾT</Link>
+                        <button className="up-row-action" onClick={() => openEdit(product)}>SỬA</button>
+                      </div>
+                    </td>
                   </tr>
                   ))
                 ) : null}
