@@ -289,6 +289,21 @@ export async function deleteProductVariant(id: string) {
   await parseResponse<unknown>(response);
 }
 
+export async function getProduct(id: string) {
+  const url =
+    `${supabaseConfig.url}/rest/v1/products` +
+    `?select=*` +
+    `&id=eq.${encodeURIComponent(id)}` +
+    `&limit=1`;
+
+  const response = await fetch(url, {
+    headers: headers(),
+  });
+
+  const data = await parseResponse<Product[]>(response);
+  return data[0] ?? null;
+}
+
 export async function listProducts() {
   const url =
     `${supabaseConfig.url}/rest/v1/products` +
