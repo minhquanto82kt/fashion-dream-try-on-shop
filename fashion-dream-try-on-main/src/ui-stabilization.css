@@ -1,0 +1,523 @@
+/* Fashion Dream — UI/UX stabilization layer
+   Scope: typography, wrapping, spacing, navigation, cards and responsive safety.
+   This file intentionally sits on top of styles.css so the existing visual direction stays intact.
+*/
+
+html {
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  overflow-x: hidden;
+  min-width: 320px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+img, svg {
+  max-width: 100%;
+}
+
+button, a, input, textarea, select {
+  font: inherit;
+}
+
+p, li, a, button, label, span, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: anywhere;
+}
+
+/* Typography: preserve the editorial look, remove compressed/overlapping text. */
+.fashion-site {
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+.fashion-site h1,
+.fashion-site h2,
+.fashion-site h3,
+.fashion-site h4 {
+  margin-top: 0;
+  text-wrap: balance;
+}
+
+.fashion-display {
+  line-height: .88;
+  letter-spacing: -.055em;
+  max-width: 8.5ch;
+  text-wrap: balance;
+}
+
+.fashion-section-title {
+  line-height: .94;
+  letter-spacing: -.045em;
+  text-wrap: balance;
+}
+
+.fashion-hero__lede,
+.fashion-intro-copy,
+.fashion-ai-feature__copy > p:not(.fashion-eyebrow) {
+  line-height: 1.75;
+  text-wrap: pretty;
+}
+
+.fashion-eyebrow,
+.fashion-section-number,
+.fashion-product-category,
+.fashion-product-spec,
+.fashion-hero__meta,
+.fashion-hero__vertical,
+.fashion-text-link {
+  line-height: 1.35;
+}
+
+.fashion-btn,
+.fashion-ai-btn,
+.fashion-cart-btn,
+.fashion-nav__links a {
+  line-height: 1.25;
+  white-space: normal;
+  text-wrap: balance;
+}
+
+/* Header: prevent links/actions from squeezing into each other. */
+.fashion-nav__inner {
+  min-width: 0;
+}
+
+.fashion-brand,
+.fashion-nav__links,
+.fashion-nav__actions {
+  min-width: 0;
+}
+
+.fashion-brand__copy {
+  min-width: 0;
+}
+
+.fashion-brand__name {
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.fashion-nav__links {
+  flex: 1 1 auto;
+  justify-content: center;
+  min-width: 0;
+}
+
+.fashion-nav__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+}
+
+.fashion-nav__actions {
+  flex: 0 0 auto;
+}
+
+.fashion-ai-btn {
+  max-width: 150px;
+  text-align: center;
+}
+
+/* Hero: predictable copy width prevents headline/CTA collisions. */
+.fashion-hero__copy,
+.fashion-hero__art {
+  min-width: 0;
+}
+
+.fashion-hero__copy {
+  overflow: hidden;
+}
+
+.fashion-hero__actions {
+  align-items: stretch;
+}
+
+.fashion-btn {
+  min-height: 44px;
+  max-width: 100%;
+  text-align: center;
+}
+
+.fashion-hero__meta {
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.fashion-hero__meta > * {
+  min-width: 0;
+}
+
+/* Sections: shared content containers should never create accidental overflow. */
+.fashion-intro-section,
+.fashion-ai-feature,
+.fashion-section-head,
+.fashion-products-section {
+  min-width: 0;
+}
+
+.fashion-section-head > * {
+  min-width: 0;
+}
+
+.fashion-section-head .fashion-text-link {
+  flex: 0 0 auto;
+}
+
+.fashion-feature-list div {
+  min-width: 0;
+  align-items: baseline;
+}
+
+.fashion-feature-list div > * {
+  min-width: 0;
+}
+
+/* Product cards: normalize metadata height and stop long product names from breaking layout. */
+.fashion-product-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.fashion-product-image {
+  flex: 0 0 auto;
+}
+
+.fashion-product-meta {
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.fashion-product-meta > div:first-child {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.fashion-product-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+.fashion-product-spec {
+  min-height: 1.35em;
+  margin-top: 7px;
+}
+
+.fashion-product-price-wrap {
+  flex: 0 0 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fashion-product-price {
+  white-space: nowrap;
+}
+
+.fashion-heart {
+  flex: 0 0 auto;
+}
+
+.fashion-product-badge,
+.fashion-product-index,
+.fashion-product-arrow {
+  line-height: 1.2;
+}
+
+/* Footer: long email/address strings must wrap instead of forcing horizontal overflow. */
+footer a,
+footer p,
+footer span {
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+/* Public page Tailwind headings: soften the overly compressed leading used by some routes. */
+.fashion-site .leading-none {
+  line-height: 1.05;
+}
+
+.fashion-site .leading-tight {
+  line-height: 1.15;
+}
+
+/* Form controls: readable Vietnamese labels and stable button widths. */
+.fashion-site input,
+.fashion-site textarea,
+.fashion-site select {
+  min-width: 0;
+  line-height: 1.45;
+}
+
+.fashion-site button {
+  min-width: 0;
+}
+
+/* Tablet */
+@media (max-width: 1000px) {
+  .fashion-nav__inner {
+    width: min(1240px, calc(100% - 32px));
+    gap: 14px;
+  }
+
+  .fashion-nav__links {
+    gap: 18px;
+  }
+
+  .fashion-nav__links a {
+    font-size: 10px;
+    letter-spacing: .11em;
+  }
+
+  .fashion-ai-btn {
+    padding-inline: 10px;
+  }
+
+  .fashion-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .fashion-hero__copy {
+    padding-right: 0;
+  }
+
+  .fashion-hero__art {
+    min-height: 58vw;
+    max-height: 720px;
+    border-left: 0;
+    border-top: 1px solid var(--primary);
+  }
+
+  .fashion-intro-section {
+    grid-template-columns: 64px 1fr;
+  }
+
+  .fashion-intro-copy {
+    grid-column: 2;
+    max-width: 600px;
+  }
+
+  .fashion-ai-feature {
+    grid-template-columns: 1fr;
+    gap: 44px;
+  }
+
+  .fashion-ai-feature__visual {
+    min-height: 62vw;
+    max-height: 720px;
+  }
+
+  .fashion-product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Mobile */
+@media (max-width: 720px) {
+  .fashion-nav__inner {
+    width: calc(100% - 28px);
+    height: 64px;
+  }
+
+  .fashion-nav__links,
+  .fashion-ai-btn {
+    display: none;
+  }
+
+  .fashion-nav__actions {
+    gap: 8px;
+  }
+
+  .fashion-mobile-btn {
+    display: grid;
+    place-items: center;
+    padding: 7px;
+  }
+
+  .fashion-mobile-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 8px 14px 16px;
+    border-top: 1px solid var(--border);
+    background: var(--background);
+  }
+
+  .fashion-mobile-menu a {
+    display: block;
+    padding: 13px 4px;
+    border-bottom: 1px solid var(--border);
+    color: inherit;
+    text-decoration: none;
+    font-size: 12px;
+    line-height: 1.3;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  .fashion-hero {
+    padding-top: 64px;
+  }
+
+  .fashion-hero__copy {
+    padding: 48px 0 32px;
+  }
+
+  .fashion-display {
+    font-size: clamp(58px, 17vw, 92px);
+    line-height: .9;
+    max-width: 100%;
+    letter-spacing: -.045em;
+    margin-top: 20px;
+  }
+
+  .fashion-hero__lede {
+    font-size: 14px;
+    margin-top: 24px;
+  }
+
+  .fashion-hero__actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 26px;
+  }
+
+  .fashion-btn {
+    width: 100%;
+    padding-inline: 14px;
+  }
+
+  .fashion-hero__meta {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding-top: 28px;
+  }
+
+  .fashion-hero__art {
+    min-height: 120vw;
+  }
+
+  .fashion-intro-section,
+  .fashion-ai-feature {
+    width: calc(100% - 28px);
+  }
+
+  .fashion-intro-section {
+    padding: 68px 0;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .fashion-intro-copy {
+    grid-column: auto;
+  }
+
+  .fashion-section-title {
+    font-size: clamp(40px, 13vw, 62px);
+    line-height: .98;
+  }
+
+  .fashion-ai-feature {
+    padding: 68px 0;
+    gap: 34px;
+  }
+
+  .fashion-ai-feature__visual {
+    min-height: 105vw;
+  }
+
+  .fashion-feature-list div {
+    gap: 14px;
+    flex-wrap: wrap;
+    font-size: 11px;
+  }
+
+  .fashion-products-section {
+    padding-top: 68px;
+    padding-bottom: 68px;
+  }
+
+  .fashion-section-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .fashion-product-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .fashion-product-meta {
+    gap: 12px;
+  }
+
+  .fashion-product-title {
+    -webkit-line-clamp: 3;
+  }
+
+  .fashion-product-price-wrap {
+    gap: 7px;
+  }
+}
+
+@media (max-width: 420px) {
+  .fashion-brand__name {
+    font-size: 16px;
+    letter-spacing: .07em;
+  }
+
+  .fashion-brand__meta {
+    font-size: 8px;
+    letter-spacing: .13em;
+  }
+
+  .fashion-brand__mark {
+    width: 25px;
+    height: 25px;
+    font-size: 13px;
+  }
+
+  .fashion-cart-btn span {
+    right: -5px;
+  }
+
+  .fashion-display {
+    font-size: clamp(52px, 16vw, 72px);
+  }
+
+  .fashion-product-meta {
+    display: block;
+  }
+
+  .fashion-product-price-wrap {
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+}
+
+/* Accessibility: respect reduced-motion preferences without removing the visual language. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
