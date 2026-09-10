@@ -184,6 +184,111 @@ export type ProductImage = {
   is_primary: boolean;
 };
 
+export type ProductVariant = {
+  id: string;
+  product_id: string;
+  size: string;
+  color: string;
+  sku: string | null;
+  stock: number;
+  created_at: string;
+};
+
+export async function listProductVariants(productId: string) {
+  const url =
+    `${supabaseConfig.url}/rest/v1/product_variants` +
+    `?select=*` +
+    `&product_id=eq.${encodeURIComponent(productId)}` +
+    `&order=size.asc,color.asc`;
+
+  const response = await fetch(url, {
+    headers: headers(),
+  });
+
+  return parseResponse<ProductVariant[]>(response);
+}
+
+export async function createProductVariant(
+  payload: {
+    product_id: string;
+    size: string;
+    color: string;
+    sku?: string | null;
+    stock?: number;
+  }
+) {
+  const response = await fetch(
+    `${supabaseConfig.url}/rest/v1/product_variants`,
+    {
+      method: "POST",
+      headers: {
+        ...headers(),
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify({
+        product_id: payload.product_id,
+        size: payload.size.trim(),
+        color: payload.color.trim(),
+        sku: payload.sku?.trim() || null,
+        stock: payload.stock ?? 0,
+      }),
+    }
+  );
+
+  const data = await parseResponse<ProductVariant[]>(response);
+  return data[0];
+}
+
+export async function updateProductVariant(
+  id: string,
+  payload: {
+    size?: string;
+    color?: string;
+    sku?: string | null;
+    stock?: number;
+  }
+) {
+  const response = await fetch(
+    `${supabaseConfig.url}/rest/v1/product_variants?id=eq.${encodeURIComponent(id)}`,
+    {
+      method: "PATCH",
+      headers: {
+        ...headers(),
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify({
+        ...(payload.size !== undefined
+          ? { size: payload.size.trim() }
+          : {}),
+        ...(payload.color !== undefined
+          ? { color: payload.color.trim() }
+          : {}),
+        ...(payload.sku !== undefined
+          ? { sku: payload.sku?.trim() || null }
+          : {}),
+        ...(payload.stock !== undefined
+          ? { stock: payload.stock }
+          : {}),
+      }),
+    }
+  );
+
+  const data = await parseResponse<ProductVariant[]>(response);
+  return data[0];
+}
+
+export async function deleteProductVariant(id: string) {
+  const response = await fetch(
+    `${supabaseConfig.url}/rest/v1/product_variants?id=eq.${encodeURIComponent(id)}`,
+    {
+      method: "DELETE",
+      headers: headers(),
+    }
+  );
+
+  await parseResponse<unknown>(response);
+}
+
 export async function listProducts() {
   const url =
     `${supabaseConfig.url}/rest/v1/products` +
@@ -282,42 +387,11 @@ export async function uploadProductImage(productId: string, file: File) {
   return `${supabaseConfig.url}/storage/v1/object/public/product-images/${path}`;
 }
 
-/**
- * Add a product image.
- *
- * When isPrimary = true:
- * 1. Demote the existing primary image(s).
- * 2. Insert the new image as the only primary image.
- *
- * The database partial unique index
- * `product_images_one_primary`
- * remains the final protection against multiple primary images.
- */
 export async function addProductImage(
   productId: string,
   imageUrl: string,
   isPrimary: boolean
 ) {
-  if (isPrimary) {
-    const demoteResponse = await fetch(
-      `${supabaseConfig.url}/rest/v1/product_images` +
-        `?product_id=eq.${encodeURIComponent(productId)}` +
-        `&is_primary=eq.true`,
-      {
-        method: "PATCH",
-        headers: {
-          ...headers(),
-          Prefer: "return=minimal",
-        },
-        body: JSON.stringify({
-          is_primary: false,
-        }),
-      }
-    );
-
-    await parseResponse<unknown>(demoteResponse);
-  }
-
   const response = await fetch(
     `${supabaseConfig.url}/rest/v1/product_images`,
     {
