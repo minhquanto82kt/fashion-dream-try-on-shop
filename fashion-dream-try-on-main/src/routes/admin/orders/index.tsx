@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { supabaseConfig } from "@/lib/upthink-supabase";
+import { getSession, supabaseConfig } from "@/lib/upthink-supabase";
 
 export const Route = createFileRoute("/admin/orders/")({
   component: OrdersAdminPage,
@@ -93,6 +93,16 @@ function OrdersAdminPage() {
     if (!supabaseConfig.url || !supabaseConfig.key) {
       setMessage("Supabase chưa được cấu hình.");
       setLoading(false);
+      setRefreshing(false);
+      return;
+    }
+
+    const session = getSession();
+
+    if (!session?.access_token) {
+      setMessage("Phiên đăng nhập quản trị đã hết hạn. Vui lòng đăng nhập lại.");
+      setLoading(false);
+      setRefreshing(false);
       return;
     }
 
@@ -104,13 +114,31 @@ function OrdersAdminPage() {
         {
           headers: {
             apikey: supabaseConfig.key,
-            Authorization: `Bearer ${supabaseConfig.key}`,
+            Authorization: `Bearer ${session.access_token}`,
           },
         },
       );
 
       if (!response.ok) {
-        throw new Error("Không thể tải danh sách đơn hàng.");
+        const text = await response.text();
+
+        let errorMessage = "Không thể tải danh sách đơn hàng.";
+
+        try {
+          const errorData = JSON.parse(text);
+          errorMessage =
+            errorData.message ||
+            errorData.error_description ||
+            errorData.error ||
+            errorData.hint ||
+            errorMessage;
+        } catch {
+          if (text) {
+            errorMessage = text;
+          }
+        }
+
+        throw new Error(errorMessage);
       }
 
       const data = (await response.json()) as Order[];
