@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import uiStabilizationCss from "../ui-stabilization.css?url";
 import adminUiCss from "../admin-ui.css?url";
+import adminComfortCss from "../admin-comfort.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { CartProvider } from "@/lib/cart";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -109,6 +110,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "stylesheet",
         href: adminUiCss,
+      },
+      {
+        rel: "stylesheet",
+        href: adminComfortCss,
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
