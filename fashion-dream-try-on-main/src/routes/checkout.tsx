@@ -86,9 +86,10 @@ function CheckoutPage() {
           </div>
 
           <p className="mt-6 text-xs text-silver">
-            Sau khi chuyển khoản, nhấn nút bên dưới để hoàn tất đơn hàng.
+            Sau khi chuyển khoản, nhấn nút bên dưới để gửi xác nhận.
+            Đơn hàng sẽ được UpThink kiểm tra và xác nhận thanh toán.
           </p>
-
+      
           <button
             type="button"
             onClick={() => {
@@ -98,7 +99,7 @@ function CheckoutPage() {
             }}
             className="mt-6 bg-primary px-7 py-3 text-xs uppercase tracking-[0.15em] text-primary-foreground"
           >
-            Tôi đã thanh toán
+            Tôi đã chuyển khoản
           </button>
 
           <div>
