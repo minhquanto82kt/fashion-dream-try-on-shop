@@ -318,20 +318,29 @@ export async function listProducts() {
 
 export async function createProduct(
   payload: Partial<Product> & {
-    id: string;
     name: string;
     slug: string;
     price: number;
     category: string;
   }
 ) {
+  const randomId =
+    typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+
+  const id = `product-${randomId}`;
+
   const response = await fetch(`${supabaseConfig.url}/rest/v1/products`, {
     method: "POST",
     headers: {
       ...headers(),
       Prefer: "return=representation",
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({
+      ...payload,
+      id,
+    }),
   });
 
   const data = await parseResponse<Product[]>(response);
