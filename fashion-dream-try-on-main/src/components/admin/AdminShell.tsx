@@ -767,102 +767,95 @@ export function AdminShell() {
   }
 `}</style>
       <div className="up-admin-app">
-        <aside className="up-admin-sidebar">
-          <div className="up-admin-logo">UPTHINK<span>COMMERCE ADMIN</span></div>
-          <nav>
-            <div className="up-admin-nav-section">OVERVIEW</div>
-            <Link
-              to="/admin"
-              className={location.pathname === "/admin" ? "active" : ""}
-            >
-              Dashboard
-            </Link>
+<aside className="up-admin-sidebar">
+  <div className="up-admin-logo">
+    UPTHINK
+    <span>COMMERCE ADMIN</span>
+  </div>
 
-            <div className="up-admin-nav-section">MANAGE</div>
-            <Link
-              to="/admin/products"
-              className={location.pathname.startsWith("/admin/products") ? "active" : ""}
-            >
-              Products
-            </Link>
-            <Link
-              to="/admin/orders"
-              className={location.pathname.startsWith("/admin/orders") ? "active" : ""}
-            >
-              Orders
-            </Link>
-<div className="up-admin-nav-section">MANAGE</div>
+  <nav>
+    <div className="up-admin-nav-section">OVERVIEW</div>
 
-<Link
-  to="/admin/products"
-  className={
-    location.pathname.startsWith("/admin/products") ? "active" : ""
-  }
->
-  Products
-</Link>
+    <Link
+      to="/admin"
+      className={location.pathname === "/admin" ? "active" : ""}
+    >
+      Dashboard
+    </Link>
 
-<Link
-  to="/admin/orders"
-  className={
-    location.pathname.startsWith("/admin/orders") ? "active" : ""
-  }
->
-  Orders
-</Link>
+    <div className="up-admin-nav-section">MANAGE</div>
 
-{/* CUSTOMERS */}
-<button
-  type="button"
-  className="up-admin-nav-disabled"
-  disabled
->
-  Customers
-  <span>SOON</span>
-</button>
+    <Link
+      to="/admin/products"
+      className={
+        location.pathname.startsWith("/admin/products")
+          ? "active"
+          : ""
+      }
+    >
+      Products
+    </Link>
 
-{/* INVENTORY */}
-<button
-  type="button"
-  className="up-admin-nav-disabled"
-  disabled
->
-  Inventory
-  <span>SOON</span>
-</button>
+    <Link
+      to="/admin/orders"
+      className={
+        location.pathname.startsWith("/admin/orders")
+          ? "active"
+          : ""
+      }
+    >
+      Orders
+    </Link>
 
-<div className="up-admin-nav-section">SYSTEM</div>
+    <button
+      type="button"
+      className="up-admin-nav-disabled"
+      disabled
+    >
+      Customers
+      <span>SOON</span>
+    </button>
 
-{/* AI Studio */}
-<button
-  type="button"
-  className="up-admin-nav-disabled"
-  disabled
->
-  AI Studio
-  <span>SOON</span>
-</button>
+    <button
+      type="button"
+      className="up-admin-nav-disabled"
+      disabled
+    >
+      Inventory
+      <span>SOON</span>
+    </button>
 
-{/* Settings */}
-<button
-  type="button"
-  className="up-admin-nav-disabled"
-  disabled
->
-  Settings
-  <span>SOON</span>
-</button>
-          <button
-            className="up-admin-logout"
-            onClick={() => {
-              signOut();
-              window.location.href = "/admin";
-            }}
-          >
-            ↪ Đăng xuất
-          </button>
-        </aside>
+    <div className="up-admin-nav-section">SYSTEM</div>
 
+    <button
+      type="button"
+      className="up-admin-nav-disabled"
+      disabled
+    >
+      AI Studio
+      <span>SOON</span>
+    </button>
+
+    <button
+      type="button"
+      className="up-admin-nav-disabled"
+      disabled
+    >
+      Settings
+      <span>SOON</span>
+    </button>
+  </nav>
+
+  <button
+    className="up-admin-logout"
+    onClick={() => {
+      signOut();
+      window.location.href = "/admin";
+    }}
+  >
+        Đăng xuất
+  </button>
+</aside>
         <main className="up-admin-main">
           <Outlet />
         </main>
