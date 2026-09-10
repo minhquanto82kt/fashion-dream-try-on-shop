@@ -1,3 +1,5 @@
+@import "./admin-heading-fix.css";
+
 /* =========================================================
    FASHION DREAM — ADMIN COMFORT PALETTE
    Mustard workspace + black sidebar for stronger contrast.
@@ -19,14 +21,12 @@
   --fd-comfort-sidebar-active: #34302a;
 }
 
-/* Main dashboard workspace */
 .up-admin-root.up-admin-root,
 .up-admin-root .up-admin-app {
   background: var(--fd-comfort-bg) !important;
   color: var(--fd-comfort-ink) !important;
 }
 
-/* Black navigation rail */
 .up-admin-root .up-admin-sidebar {
   background: var(--fd-comfort-sidebar) !important;
   color: var(--fd-comfort-sidebar-text) !important;
@@ -79,7 +79,6 @@
   background: var(--fd-comfort-sidebar-hover) !important;
 }
 
-/* Cards, editors and tables */
 .up-admin-root .up-admin-dashboard-card,
 .up-admin-root .up-admin-dashboard-section,
 .up-admin-root .up-admin-editor,
@@ -120,7 +119,6 @@
   color: #77705f !important;
 }
 
-/* Keep primary actions readable against the mustard workspace. */
 .up-admin-root .up-admin-primary {
   background: #151515 !important;
   color: #ffffff !important;
@@ -131,7 +129,6 @@
   background: #2b2b2b !important;
 }
 
-/* Secondary controls remain light but warm. */
 .up-admin-root .up-admin-secondary,
 .up-admin-root .up-secondary,
 .up-admin-root .up-danger,
@@ -150,7 +147,6 @@
   border-color: #ad8219 !important;
 }
 
-/* Top-level headings and descriptions */
 .up-admin-root .up-admin-topbar,
 .up-admin-root .up-admin-toolbar {
   border-color: var(--fd-comfort-line) !important;
@@ -180,7 +176,6 @@
   color: #6f4f00 !important;
 }
 
-/* Login page: mustard field + warm card, matching dashboard */
 .fd-admin-login-page.fd-admin-login-page {
   background: var(--fd-comfort-bg) !important;
   color: var(--fd-comfort-ink) !important;
