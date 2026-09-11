@@ -3,9 +3,45 @@ import { supabaseConfig, type Session } from "@/lib/upthink-supabase";
 const CUSTOMER_SESSION_KEY = "upthink_customer_session";
 const GUEST_CART_KEY = "upthink-cart";
 const CUSTOMER_CART_PREFIX = "upthink-cart:user:";
+const SIGNUP_COOLDOWN_PREFIX = "upthink_signup_cooldown:";
 type AuthUser = { id: string; email?: string };
-type AuthResponse = Session & { user?: AuthUser; msg?: string; message?: string; error_description?: string };
+type AuthResponse = Session & { user?: AuthUser; msg?: string; message?: string; error_description?: string; error?: string; error_code?: string; code?: string };
 type CartLine = { productId: string; size: string; color: string; qty: number };
+
+function getAuthErrorMessage(data: AuthResponse) {
+  return data.msg || data.message || data.error_description || data.error || "Yêu cầu xác thực thất bại.";
+}
+
+function getSignupRateLimitMessage(data: AuthResponse, response: Response) {
+  const raw = getAuthErrorMessage(data);
+  const match = raw.match(/after\s+(\d+)\s+seconds?/i);
+  if (response.status === 429 || data.error_code === "over_email_send_rate_limit" || /for security purposes/i.test(raw)) {
+    const seconds = match?.[1];
+    return seconds
+      ? `Vì lý do bảo mật, bạn cần chờ khoảng ${seconds} giây trước khi gửi lại yêu cầu đăng ký.`
+      : "Bạn đã gửi yêu cầu đăng ký quá nhanh. Vui lòng chờ một chút rồi thử lại.";
+  }
+  return raw;
+}
+
+function normalizeEmail(email: string) {
+  return email.trim().toLowerCase();
+}
+
+function getSignupCooldownKey(email: string) {
+  return `${SIGNUP_COOLDOWN_PREFIX}${normalizeEmail(email)}`;
+}
+
+function getSignupCooldownRemaining(email: string) {
+  if (typeof window === "undefined") return 0;
+  const value = Number(window.sessionStorage.getItem(getSignupCooldownKey(email)) || 0);
+  return Math.max(0, Math.ceil((value - Date.now()) / 1000));
+}
+
+function setSignupCooldown(email: string, seconds: number) {
+  if (typeof window === "undefined") return;
+  window.sessionStorage.setItem(getSignupCooldownKey(email), String(Date.now() + seconds * 1000));
+}
 
 export function getCustomerSession(): Session | null {
   if (typeof window === "undefined") return null;
@@ -38,11 +74,11 @@ function syncCartForCustomer(userId: string) {
   window.localStorage.setItem(GUEST_CART_KEY, JSON.stringify(merged));
   dispatchCartChanged();
 }
-async function parseAuthResponse(response: Response): Promise<AuthResponse> {
+async function parseAuthResponse(response: Response, context: "auth" | "signup" = "auth"): Promise<AuthResponse> {
   const text = await response.text();
   let data: AuthResponse;
   try { data = JSON.parse(text) as AuthResponse; } catch { throw new Error(text || `Yêu cầu xác thực thất bại (${response.status})`); }
-  if (!response.ok) throw new Error(data.msg || data.message || data.error_description || "Yêu cầu xác thực thất bại.");
+  if (!response.ok) throw new Error(context === "signup" ? getSignupRateLimitMessage(data, response) : getAuthErrorMessage(data));
   return data;
 }
 async function checkAdminWithCustomerToken(accessToken: string) {
@@ -55,7 +91,7 @@ async function rejectAdminCustomerSession(accessToken: string, message: string):
   throw new Error(message);
 }
 export async function signInCustomer(email: string, password: string) {
-  const response = await fetch(`${supabaseConfig.url}/auth/v1/token?grant_type=password`, { method: "POST", headers: { apikey: supabaseConfig.key, "Content-Type": "application/json" }, body: JSON.stringify({ email, password }) });
+  const response = await fetch(`${supabaseConfig.url}/auth/v1/token?grant_type=password`, { method: "POST", headers: { apikey: supabaseConfig.key, "Content-Type": "application/json" }, body: JSON.stringify({ email: normalizeEmail(email), password }) });
   const data = await parseAuthResponse(response);
   if (data.access_token && (await checkAdminWithCustomerToken(data.access_token))) return rejectAdminCustomerSession(data.access_token, "Tài khoản này dành cho quản trị viên. Hãy đăng nhập bằng tài khoản mua hàng riêng.");
   setCustomerSession(data);
@@ -64,13 +100,19 @@ export async function signInCustomer(email: string, password: string) {
   return data;
 }
 export async function signUpCustomer(email: string, password: string) {
-  const response = await fetch(`${supabaseConfig.url}/auth/v1/signup`, { method: "POST", headers: { apikey: supabaseConfig.key, "Content-Type": "application/json" }, body: JSON.stringify({ email, password }) });
-  const data = await parseAuthResponse(response);
+  const normalizedEmail = normalizeEmail(email);
+  const remaining = getSignupCooldownRemaining(normalizedEmail);
+  if (remaining > 0) throw new Error(`Vui lòng chờ ${remaining} giây trước khi gửi lại yêu cầu đăng ký.`);
+
+  const response = await fetch(`${supabaseConfig.url}/auth/v1/signup`, { method: "POST", headers: { apikey: supabaseConfig.key, "Content-Type": "application/json" }, body: JSON.stringify({ email: normalizedEmail, password }) });
+  const data = await parseAuthResponse(response, "signup");
   if (data.access_token) {
     if (await checkAdminWithCustomerToken(data.access_token)) return rejectAdminCustomerSession(data.access_token, "Email này thuộc tài khoản quản trị viên và không thể đăng ký tài khoản mua hàng.");
     setCustomerSession(data);
     if (data.user?.id) syncCartForCustomer(data.user.id);
     dispatchAuthEvent("login");
+  } else {
+    setSignupCooldown(normalizedEmail, 60);
   }
   return data;
 }
