@@ -37,8 +37,12 @@ function AccountPage() {
         if (password !== confirmPassword) {
           throw new Error("Mật khẩu xác nhận không khớp.");
         }
-        await signUpCustomer(email, password);
-        setMessage("Đăng ký thành công. Kiểm tra email nếu cần xác nhận tài khoản.");
+        const signupResult = await signUpCustomer(email, password);
+        setMessage(
+          signupResult.access_token
+            ? "Đăng ký thành công."
+            : "Đăng ký thành công. Kiểm tra email để xác nhận tài khoản trước khi đăng nhập.",
+        );
       } else {
         await signInCustomer(email, password);
         setMessage("Đăng nhập thành công.");
@@ -83,7 +87,6 @@ function AccountPage() {
           box-sizing: border-box;
         }
 
-        /* One clean background layer. cover preserves the models' proportions. */
         .account-background {
           position: absolute;
           inset: 0;
@@ -495,30 +498,32 @@ function AccountPage() {
         }
 
         .account-description strong {
-          display: block;
-          margin-bottom: 5px;
-          color: var(--yellow);
-          font-size: 9px;
-          font-weight: 900;
-          letter-spacing: .18em;
-          text-transform: uppercase;
+          color: var(--cream);
+          font-weight: 800;
         }
 
-        .account-copyright {
-          white-space: nowrap;
+        .account-meta {
+          display: flex;
+          gap: 22px;
           font-size: 8px;
-          letter-spacing: .08em;
+          font-weight: 800;
+          letter-spacing: .12em;
           text-transform: uppercase;
+          white-space: nowrap;
+        }
+
+        .account-meta span:last-child {
+          color: var(--yellow);
         }
 
         @keyframes accountIntroIn {
-          from { opacity: 0; transform: translateX(-28px); }
-          to { opacity: 1; transform: translateX(0); }
+          from { opacity: 0; transform: translateY(22px); }
+          to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes accountFormIn {
-          from { opacity: 0; transform: translateX(30px); }
-          to { opacity: 1; transform: translateX(0); }
+          from { opacity: 0; transform: translateY(26px) scale(.985); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         @keyframes formSwap {
@@ -527,14 +532,28 @@ function AccountPage() {
         }
 
         @media (max-width: 900px) {
+          :root:has(.account-page),
+          body:has(.account-page) {
+            overflow: auto;
+          }
+
+          .account-page {
+            position: relative;
+            min-height: 100dvh;
+            height: auto;
+            overflow: hidden;
+          }
+
           .account-content {
-            width: min(720px, calc(100vw - 44px));
+            width: min(720px, calc(100vw - 36px));
+            min-height: 100dvh;
+            height: auto;
             padding: 24px 0;
+            grid-template-rows: auto auto auto;
           }
 
           .account-main {
-            overflow-y: auto;
-            padding: 30px 0;
+            padding: 58px 0;
           }
 
           .account-composition {
@@ -542,46 +561,24 @@ function AccountPage() {
             gap: 34px;
           }
 
-          .account-intro {
-            padding-bottom: 0;
-          }
-
-          .account-title {
-            font-size: clamp(48px, 11vw, 78px);
-          }
-
-          .account-copy,
-          .account-index {
-            display: none;
-          }
-
           .account-form-wrap {
             justify-self: stretch;
             max-width: none;
           }
-        }
-
-        @media (max-width: 560px) {
-          .account-content {
-            width: calc(100vw - 32px);
-            padding: 18px 0;
-          }
-
-          .account-logo {
-            font-size: 9px;
-            letter-spacing: .2em;
-          }
-
-          .account-composition {
-            gap: 24px;
-          }
 
           .account-title {
-            font-size: clamp(42px, 15vw, 64px);
+            font-size: clamp(52px, 13vw, 86px);
           }
 
-          .account-eyebrow {
-            margin-bottom: 14px;
+          .account-bottom {
+            align-items: flex-start;
+            flex-direction: column;
+          }
+        }
+
+        @media (max-width: 520px) {
+          .account-content {
+            width: calc(100vw - 28px);
           }
 
           .account-form-wrap {
@@ -592,23 +589,40 @@ function AccountPage() {
             margin-bottom: 20px;
           }
 
-          .account-bottom {
-            display: none;
+          .account-copy {
+            margin-top: 20px;
+          }
+
+          .account-main {
+            padding: 42px 0;
+          }
+
+          .account-meta {
+            flex-wrap: wrap;
+            white-space: normal;
           }
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .account-page * {
-            animation-duration: .01ms !important;
-            animation-delay: 0ms !important;
-            transition-duration: .01ms !important;
+          .account-intro,
+          .account-form-wrap,
+          .account-form {
+            animation: none;
+          }
+
+          .account-back,
+          .account-submit,
+          .account-password-toggle,
+          .account-switch button,
+          .account-field input {
+            transition: none;
           }
         }
       `}</style>
 
       <img
         className="account-background"
-        src="/account/account-background.png"
+        src="/account-background.jpg"
         alt=""
         aria-hidden="true"
       />
@@ -617,62 +631,66 @@ function AccountPage() {
 
       <div className="account-content">
         <header className="account-top">
-          <Link to="/" className="account-back">
+          <Link className="account-back" to="/">
             <span aria-hidden="true">←</span>
-            Quay về trang chủ
+            Back to shop
           </Link>
-          <div className="account-logo">UpThink / Customer</div>
+          <div className="account-logo">UPTHINK / ACCOUNT</div>
         </header>
 
-        <div className="account-main">
+        <section className="account-main">
           <div className="account-composition">
-            <section className="account-intro" aria-labelledby="account-title">
-              <div className="account-eyebrow">Customer Account / 2026</div>
-              <h1 id="account-title" className="account-title">
-                <span>Không gian</span>
-                <span className="account-title-accent">của bạn.</span>
+            <div className="account-intro">
+              <div className="account-eyebrow">Fashion Dream / Member Access</div>
+              <h1 className="account-title">
+                <span>YOUR</span>
+                <span className="account-title-accent">STYLE.</span>
+                <span>YOUR</span>
+                <span>SPACE.</span>
               </h1>
               <p className="account-copy">
-                Lưu lại hành trình mua sắm, quản lý đơn hàng và tiếp tục khám phá
-                trải nghiệm thời trang cá nhân hóa của UpThink.
+                Sign in to manage your profile, orders, wishlist and AI Try-On experience. New here? Create your account in a few seconds.
               </p>
               <div className="account-index">
-                <strong>01</strong>
-                <span>Private customer area</span>
+                <strong>SYS 01</strong>
+                <span>MEMBER ACCESS</span>
+                <span>ONLINE</span>
               </div>
-            </section>
+            </div>
 
-            <section className="account-form-wrap" aria-label="Customer account access">
+            <div className="account-form-wrap">
               <div className="account-form-head">
                 <div>
-                  <div className="account-form-kicker">Customer Access</div>
+                  <div className="account-form-kicker">Fashion Dream</div>
                   <h2 className="account-form-title">
-                    {mode === "login" ? "Đăng nhập" : "Đăng ký"}
+                    {mode === "login" ? "Welcome back." : "Create account."}
                   </h2>
                 </div>
-                <div className="account-form-number">{mode === "login" ? "01" : "02"}</div>
+                <div className="account-form-number">01</div>
               </div>
 
-              <div className="account-switch" role="tablist" aria-label="Chọn trạng thái tài khoản">
+              <div className="account-switch" role="tablist" aria-label="Account access mode">
                 <button
                   type="button"
                   role="tab"
                   aria-selected={mode === "login"}
                   onClick={() => switchMode("login")}
+                  disabled={loading}
                 >
-                  01 / Đăng nhập
+                  Sign in
                 </button>
                 <button
                   type="button"
                   role="tab"
                   aria-selected={mode === "register"}
                   onClick={() => switchMode("register")}
+                  disabled={loading}
                 >
-                  02 / Đăng ký
+                  Register
                 </button>
               </div>
 
-              <form className="account-form" key={mode} onSubmit={handleSubmit}>
+              <form className="account-form" onSubmit={handleSubmit} key={mode}>
                 <div className="account-field">
                   <label htmlFor="account-email">Email</label>
                   <input
@@ -688,7 +706,7 @@ function AccountPage() {
                 </div>
 
                 <div className="account-field">
-                  <label htmlFor="account-password">Mật khẩu</label>
+                  <label htmlFor="account-password">Password</label>
                   <div className="account-password-wrap">
                     <input
                       id="account-password"
@@ -713,12 +731,12 @@ function AccountPage() {
                         <svg viewBox="0 0 24 24" aria-hidden="true">
                           <path d="M3 3l18 18" />
                           <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
-                          <path d="M9.9 5.1A11.2 11.2 0 0 1 12 4.9c6.2 0 10 7.1 10 7.1a19.2 19.2 0 0 1-3.2 3.8" />
-                          <path d="M6.1 6.1C3.5 8 2 12 2 12s3.8 7.1 10 7.1c1.5 0 2.8-.3 4-.8" />
+                          <path d="M9.9 5.1A10.6 10.6 0 0 1 12 4.8c5.2 0 9 4.8 9 7.2a8.8 8.8 0 0 1-2.2 3.4" />
+                          <path d="M6.2 6.3C4.1 7.6 3 9.8 3 12c0 2.4 3.8 7.2 9 7.2a10.4 10.4 0 0 0 4.1-.8" />
                         </svg>
                       ) : (
                         <svg viewBox="0 0 24 24" aria-hidden="true">
-                          <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" />
+                          <path d="M3 12s3.2-6 9-6 9 6 9 6-3.2 6-9 6-9-6-9-6Z" />
                           <circle cx="12" cy="12" r="2.5" />
                         </svg>
                       )}
@@ -728,7 +746,7 @@ function AccountPage() {
 
                 {mode === "register" && (
                   <div className="account-field">
-                    <label htmlFor="account-confirm-password">Xác nhận mật khẩu</label>
+                    <label htmlFor="account-confirm-password">Confirm password</label>
                     <div className="account-password-wrap">
                       <input
                         id="account-confirm-password"
@@ -753,12 +771,12 @@ function AccountPage() {
                           <svg viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M3 3l18 18" />
                             <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
-                            <path d="M9.9 5.1A11.2 11.2 0 0 1 12 4.9c6.2 0 10 7.1 10 7.1a19.2 19.2 0 0 1-3.2 3.8" />
-                            <path d="M6.1 6.1C3.5 8 2 12 2 12s3.8 7.1 10 7.1c1.5 0 2.8-.3 4-.8" />
+                            <path d="M9.9 5.1A10.6 10.6 0 0 1 12 4.8c5.2 0 9 4.8 9 7.2a8.8 8.8 0 0 1-2.2 3.4" />
+                            <path d="M6.2 6.3C4.1 7.6 3 9.8 3 12c0 2.4 3.8 7.2 9 7.2a10.4 10.4 0 0 0 4.1-.8" />
                           </svg>
                         ) : (
                           <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" />
+                            <path d="M3 12s3.2-6 9-6 9 6 9 6-3.2 6-9 6-9-6-9-6Z" />
                             <circle cx="12" cy="12" r="2.5" />
                           </svg>
                         )}
@@ -767,32 +785,38 @@ function AccountPage() {
                   </div>
                 )}
 
+                {error && (
+                  <p className="account-feedback account-feedback--error" role="alert">
+                    {error}
+                  </p>
+                )}
+                {message && (
+                  <p className="account-feedback account-feedback--success" role="status">
+                    {message}
+                  </p>
+                )}
+
                 <button className="account-submit" type="submit" disabled={loading}>
                   {loading
-                    ? "Đang xử lý..."
+                    ? "Processing..."
                     : mode === "login"
-                      ? "Đăng nhập  →"
-                      : "Tạo tài khoản  →"}
+                      ? "Sign in"
+                      : "Create account"}
                 </button>
-
-                <div
-                  className={`account-feedback ${error ? "account-feedback--error" : "account-feedback--success"}`}
-                  role="status"
-                  aria-live="polite"
-                >
-                  {error || message}
-                </div>
               </form>
-            </section>
+            </div>
           </div>
-        </div>
+        </section>
 
         <footer className="account-bottom">
-          <div className="account-description">
-            <strong>UpThink</strong>
-            Một ý tưởng khởi nghiệp của sinh viên IUH: thời trang cá nhân hóa với AI concept và virtual try-on.
+          <p className="account-description">
+            <strong>Progressive access.</strong> Browse freely as a guest. Your account becomes useful when you want to save products, complete checkout, track orders or use AI Try-On.
+          </p>
+          <div className="account-meta">
+            <span>UPTHINK / IUH</span>
+            <span>SAIGON — 2026</span>
+            <span>SYS 01 // ONLINE</span>
           </div>
-          <div className="account-copyright">© 2026 UpThink — Đại học Công nghiệp TP.HCM / IUH</div>
         </footer>
       </div>
     </main>
