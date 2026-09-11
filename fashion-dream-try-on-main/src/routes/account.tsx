@@ -75,6 +75,16 @@ function AccountPage() {
           font-family: inherit;
         }
 
+        .account-page::before {
+          content: "";
+          position: absolute;
+          inset: -28px;
+          z-index: -3;
+          background: url("/account/account-background.png") center / cover no-repeat;
+          filter: blur(26px) brightness(.3) saturate(.8);
+          transform: scale(1.06);
+        }
+
         .account-page * { box-sizing: border-box; }
 
         .account-stage {
@@ -88,6 +98,7 @@ function AccountPage() {
           overflow: hidden;
           isolation: isolate;
           background: var(--ink);
+          box-shadow: 0 0 90px rgba(0,0,0,.22);
         }
 
         .account-stage::before {
