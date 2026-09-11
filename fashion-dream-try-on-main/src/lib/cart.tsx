@@ -276,9 +276,9 @@ export function CartProvider({
       (item) =>
         item.size === line.size && item.color === line.color,
     );
-    const stock = variant?.stock ?? 0;
+    const stock = variant?.stock;
 
-    if (stock <= 0) return;
+    if (stock !== undefined && stock <= 0) return;
 
     setLines((current) => {
       const index = current.findIndex(
@@ -293,7 +293,10 @@ export function CartProvider({
           ...current,
           {
             ...line,
-            qty: Math.max(1, Math.min(99, stock, line.qty)),
+            qty:
+              stock !== undefined
+                ? Math.max(1, Math.min(99, stock, line.qty))
+                : Math.max(1, Math.min(99, line.qty)),
           },
         ];
       }
@@ -302,7 +305,10 @@ export function CartProvider({
         itemIndex === index
           ? {
               ...item,
-              qty: Math.min(99, stock, item.qty + line.qty),
+              qty:
+                stock !== undefined
+                  ? Math.min(99, stock, item.qty + line.qty)
+                  : Math.min(99, item.qty + line.qty),
             }
           : item,
       );
@@ -310,7 +316,7 @@ export function CartProvider({
   }
 
   function setQty(index: number, qty: number) {
-    const stock = items[index]?.stock ?? 0;
+    const stock = items[index]?.variant?.stock;
 
     setLines((current) =>
       current.map((item, itemIndex) =>
@@ -318,9 +324,9 @@ export function CartProvider({
           ? {
               ...item,
               qty:
-                stock > 0
+                stock !== undefined && stock > 0
                   ? Math.max(1, Math.min(99, stock, qty))
-                  : 0,
+                  : Math.max(1, Math.min(99, qty)),
             }
           : item,
       ),
