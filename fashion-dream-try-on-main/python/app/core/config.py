@@ -14,6 +14,8 @@ class Settings(BaseSettings):
     supabase_service_role_key: str = ""
     storage_bucket: str = ""
     fashn_api_key: str = ""
+    gemini_api_key: str = ""
+    gemini_product_vision_model: str = "gemini-3.8-flash"
 
     model_config = SettingsConfigDict(
         env_file=".env",
