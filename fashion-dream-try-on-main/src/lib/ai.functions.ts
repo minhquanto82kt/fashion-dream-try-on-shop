@@ -10,7 +10,13 @@ const ALLOWED_IMAGE_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"] as co
 type GeneratedImage = { image: string; text: string };
 
 type DbProduct = {
-  id: string; name: string; category: string; image: string | null; active: boolean; status: string;
+  id: string;
+  name: string;
+  category: string;
+  price: number;
+  image: string | null;
+  active: boolean;
+  status: string;
 };
 
 type DbProductImage = { image_url: string; sort_order: number; is_primary: boolean };
@@ -41,7 +47,7 @@ function validatePersonImage(dataUrl: string) {
 async function getPublishedProduct(productId?: string, fallbackName?: string) {
   const { supabaseRequest } = await import("@/lib/supabase.server");
   const filter = productId ? `id=eq.${encodeURIComponent(productId)}` : `name=eq.${encodeURIComponent(fallbackName ?? "")}`;
-  const products = await supabaseRequest<DbProduct[]>(`products?${filter}&active=eq.true&status=eq.published&select=id,name,category,image,active,status&limit=1`);
+  const products = await supabaseRequest<DbProduct[]>(`products?${filter}&active=eq.true&status=eq.published&select=id,name,category,price,image,active,status&limit=1`);
   const product = products[0];
   if (!product) throw new Error("Sản phẩm không tồn tại hoặc chưa được xuất bản.");
   const images = await supabaseRequest<DbProductImage[]>(`product_images?product_id=eq.${encodeURIComponent(product.id)}&select=image_url,sort_order,is_primary&order=sort_order.asc`);
@@ -49,6 +55,26 @@ async function getPublishedProduct(productId?: string, fallbackName?: string) {
   if (!garmentImage) throw new Error("Sản phẩm chưa có hình ảnh để thử đồ.");
   return { product, garmentImage };
 }
+
+export const listAiProducts = createServerFn({ method: "GET" })
+  .handler(async () => {
+    const { supabaseRequest } = await import("@/lib/supabase.server");
+    const products = await supabaseRequest<DbProduct[]>(
+      "products?active=eq.true&status=eq.published&select=id,name,category,price,image&order=created_at.desc"
+    );
+
+    const result = await Promise.all(
+      products.map(async (product) => {
+        const images = await supabaseRequest<DbProductImage[]>(
+          `product_images?product_id=eq.${encodeURIComponent(product.id)}&select=image_url,sort_order,is_primary&order=sort_order.asc&limit=20`
+        );
+        const image = images.find((item) => item.is_primary)?.image_url ?? images[0]?.image_url ?? product.image;
+        return image ? { id: product.id, name: product.name, category: product.category, price: product.price, image } : null;
+      })
+    );
+
+    return result.filter((product): product is NonNullable<typeof product> => Boolean(product));
+  });
 
 const ConceptInput = z.object({
   style: z.string().trim().min(1).max(40),
