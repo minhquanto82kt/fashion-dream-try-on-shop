@@ -7,14 +7,14 @@ import {
   getCustomerUser,
   signInCustomer,
   signOutCustomer,
-  signUp,
+  signUpCustomer,
 } from "@/lib/auth";
 
 export const Route = createFileRoute("/account")({
   head: () => ({
     meta: [
       { title: "Tài khoản | UpThink" },
-      { name: "description", content: "Đăng nhập hoặc tạo tài khoản UpThink." },
+      { name: "description", content: "Đăng nhập hoặc tạo tài khoản mua hàng UpThink." },
     ],
   }),
   component: AccountPage,
@@ -59,18 +59,20 @@ function AccountPage() {
           throw new Error("Mật khẩu xác nhận không khớp.");
         }
 
-        const result = await signUp(email, password);
+        const result = await signUpCustomer(email, password);
         if (result.access_token) {
           setUser(result.user ?? null);
-          setMessage("Tạo tài khoản thành công.");
+          setMessage("Tạo tài khoản mua hàng thành công.");
         } else {
           setMode("signin");
-          setMessage("Tài khoản đã được tạo. Hãy kiểm tra email để xác nhận trước khi đăng nhập.");
+          setMessage(
+            "Tài khoản mua hàng đã được tạo. Hãy kiểm tra email để xác nhận trước khi đăng nhập."
+          );
         }
       } else {
         const result = await signInCustomer(email, password);
         setUser(result.user ?? null);
-        setMessage("Đăng nhập thành công.");
+        setMessage("Đăng nhập tài khoản mua hàng thành công.");
       }
 
       event.currentTarget.reset();
@@ -78,7 +80,7 @@ function AccountPage() {
       setError(
         submitError instanceof Error
           ? submitError.message
-          : "Không thể xử lý tài khoản."
+          : "Không thể xử lý tài khoản mua hàng."
       );
     } finally {
       setSubmitting(false);
@@ -89,7 +91,7 @@ function AccountPage() {
     setSubmitting(true);
     await signOutCustomer();
     setUser(null);
-    setMessage("Bạn đã đăng xuất.");
+    setMessage("Bạn đã đăng xuất tài khoản mua hàng.");
     setSubmitting(false);
   };
 
@@ -103,39 +105,119 @@ function AccountPage() {
               <UserRound size={18} />
             </div>
             <div>
-              <p className="eyebrow">UpThink Account</p>
-              <h1 className="mt-1 text-3xl leading-none sm:text-4xl">Tài khoản<span className="text-primary">.</span></h1>
+              <p className="eyebrow">UpThink Customer Account</p>
+              <h1 className="mt-1 text-3xl leading-none sm:text-4xl">
+                Tài khoản<span className="text-primary">.</span>
+              </h1>
             </div>
           </div>
 
           {loading ? (
-            <div className="border border-border bg-card p-6 text-sm text-silver">Đang kiểm tra phiên đăng nhập...</div>
+            <div className="border border-border bg-card p-6 text-sm text-silver">
+              Đang kiểm tra phiên tài khoản mua hàng...
+            </div>
           ) : user ? (
             <div className="border border-border bg-card p-6">
-              <p className="text-xs uppercase tracking-[0.2em] text-silver">Đang đăng nhập</p>
-              <p className="mt-3 break-words text-lg text-beige">{user.email || "Tài khoản UpThink"}</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-silver">
+                Tài khoản mua hàng đang đăng nhập
+              </p>
+              <p className="mt-3 break-words text-lg text-beige">
+                {user.email || "Tài khoản UpThink"}
+              </p>
               <div className="mt-8 grid gap-3 sm:grid-cols-2">
-                <Link to="/shop" className="inline-flex min-h-11 items-center justify-center border border-border px-5 py-3 text-xs uppercase tracking-[0.15em] text-beige hover:border-primary">Tiếp tục mua sắm</Link>
-                <button type="button" disabled={submitting} onClick={() => void handleSignOut()} className="inline-flex min-h-11 items-center justify-center gap-2 bg-primary px-5 py-3 text-xs uppercase tracking-[0.15em] text-primary-foreground disabled:opacity-50"><LogOut size={14} />{submitting ? "Đang xử lý..." : "Đăng xuất"}</button>
+                <Link
+                  to="/shop"
+                  className="inline-flex min-h-11 items-center justify-center border border-border px-5 py-3 text-xs uppercase tracking-[0.15em] text-beige hover:border-primary"
+                >
+                  Tiếp tục mua sắm
+                </Link>
+                <button
+                  type="button"
+                  disabled={submitting}
+                  onClick={() => void handleSignOut()}
+                  className="inline-flex min-h-11 items-center justify-center gap-2 bg-primary px-5 py-3 text-xs uppercase tracking-[0.15em] text-primary-foreground disabled:opacity-50"
+                >
+                  <LogOut size={14} />
+                  {submitting ? "Đang xử lý..." : "Đăng xuất"}
+                </button>
               </div>
             </div>
           ) : (
             <div className="border border-border bg-card p-6 sm:p-8">
               <div className="grid grid-cols-2 border-b border-border">
                 {(["signin", "signup"] as const).map((value) => (
-                  <button key={value} type="button" onClick={() => { setMode(value); setError(""); setMessage(""); }} className={`border-b-2 px-3 py-3 text-xs uppercase tracking-[0.15em] ${mode === value ? "border-primary text-primary" : "border-transparent text-silver"}`}>
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => {
+                      setMode(value);
+                      setError("");
+                      setMessage("");
+                    }}
+                    className={`border-b-2 px-3 py-3 text-xs uppercase tracking-[0.15em] ${mode === value ? "border-primary text-primary" : "border-transparent text-silver"}`}
+                  >
                     {value === "signin" ? "Đăng nhập" : "Đăng ký"}
                   </button>
                 ))}
               </div>
 
-              <form onSubmit={submit} className="mt-7 space-y-5">
-                <label className="block"><span className="text-xs uppercase tracking-[0.2em] text-silver">Email</span><input required name="email" type="email" autoComplete="email" className="mt-2 min-h-11 w-full border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary" placeholder="you@example.com" /></label>
-                <label className="block"><span className="text-xs uppercase tracking-[0.2em] text-silver">Mật khẩu</span><input required name="password" type="password" minLength={6} autoComplete={mode === "signin" ? "current-password" : "new-password"} className="mt-2 min-h-11 w-full border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary" placeholder="••••••••" /></label>
-                {mode === "signup" && <label className="block"><span className="text-xs uppercase tracking-[0.2em] text-silver">Xác nhận mật khẩu</span><input required name="confirmPassword" type="password" minLength={6} autoComplete="new-password" className="mt-2 min-h-11 w-full border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary" placeholder="••••••••" /></label>}
-                {error && <p className="border border-red-500/40 bg-red-500/5 p-3 text-sm leading-6 text-red-300">{error}</p>}
-                {message && <p className="border border-primary/40 bg-primary/5 p-3 text-sm leading-6 text-primary">{message}</p>}
-                <button type="submit" disabled={submitting} className="flex min-h-11 w-full items-center justify-center gap-2 bg-primary px-6 py-3 text-xs uppercase tracking-[0.15em] text-primary-foreground disabled:opacity-50">
+              <p className="mt-6 text-xs leading-5 text-silver">
+                Đây là tài khoản dành cho khách hàng mua sắm. Tài khoản quản trị viên sử dụng cổng Admin riêng.
+              </p>
+
+              <form onSubmit={submit} className="mt-5 space-y-5">
+                <label className="block">
+                  <span className="text-xs uppercase tracking-[0.2em] text-silver">Email</span>
+                  <input
+                    required
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    className="mt-2 min-h-11 w-full border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary"
+                    placeholder="you@example.com"
+                  />
+                </label>
+                <label className="block">
+                  <span className="text-xs uppercase tracking-[0.2em] text-silver">Mật khẩu</span>
+                  <input
+                    required
+                    name="password"
+                    type="password"
+                    minLength={6}
+                    autoComplete={mode === "signin" ? "current-password" : "new-password"}
+                    className="mt-2 min-h-11 w-full border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary"
+                    placeholder="••••••••"
+                  />
+                </label>
+                {mode === "signup" && (
+                  <label className="block">
+                    <span className="text-xs uppercase tracking-[0.2em] text-silver">Xác nhận mật khẩu</span>
+                    <input
+                      required
+                      name="confirmPassword"
+                      type="password"
+                      minLength={6}
+                      autoComplete="new-password"
+                      className="mt-2 min-h-11 w-full border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary"
+                      placeholder="••••••••"
+                    />
+                  </label>
+                )}
+                {error && (
+                  <p className="border border-red-500/40 bg-red-500/5 p-3 text-sm leading-6 text-red-300">
+                    {error}
+                  </p>
+                )}
+                {message && (
+                  <p className="border border-primary/40 bg-primary/5 p-3 text-sm leading-6 text-primary">
+                    {message}
+                  </p>
+                )}
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="flex min-h-11 w-full items-center justify-center gap-2 bg-primary px-6 py-3 text-xs uppercase tracking-[0.15em] text-primary-foreground disabled:opacity-50"
+                >
                   {mode === "signin" ? <LogIn size={14} /> : <UserPlus size={14} />}
                   {submitting ? "Đang xử lý..." : mode === "signin" ? "Đăng nhập" : "Tạo tài khoản"}
                 </button>
