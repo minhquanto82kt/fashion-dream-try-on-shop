@@ -78,11 +78,31 @@ function AccountPage() {
         .account-page::before {
           content: "";
           position: absolute;
-          inset: -28px;
-          z-index: -3;
+          inset: -34px;
+          z-index: 0;
           background: url("/account/account-background.png") center / cover no-repeat;
-          filter: blur(26px) brightness(.3) saturate(.8);
+          filter: blur(30px) brightness(.28) saturate(.78);
           transform: scale(1.06);
+          pointer-events: none;
+        }
+
+        .account-page::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          pointer-events: none;
+          background:
+            linear-gradient(90deg,
+              rgba(27,26,23,.96) 0%,
+              rgba(27,26,23,.72) 5%,
+              rgba(27,26,23,.28) 12%,
+              rgba(27,26,23,0) 19%,
+              rgba(27,26,23,0) 81%,
+              rgba(27,26,23,.28) 88%,
+              rgba(27,26,23,.72) 95%,
+              rgba(27,26,23,.96) 100%),
+            linear-gradient(180deg, rgba(0,0,0,.16) 0%, rgba(0,0,0,0) 55%, rgba(10,8,6,.5) 100%);
         }
 
         .account-page * { box-sizing: border-box; }
@@ -91,6 +111,7 @@ function AccountPage() {
           position: absolute;
           left: 50%;
           top: 50%;
+          z-index: 2;
           width: min(100vw, calc(100dvh * 16 / 9));
           height: min(100dvh, calc(100vw * 9 / 16));
           transform: translate(-50%, -50%);
