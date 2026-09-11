@@ -122,9 +122,21 @@ function ShopPage() {
 
   const [cat, setCat] = useState<string>("all");
   const [sort, setSort] = useState<string>("featured");
+  const [search, setSearch] = useState(() => {
+    if (typeof window === "undefined") return "";
+    return new URLSearchParams(window.location.search).get("search") ?? "";
+  });
+
+  const normalizedSearch = search.trim().toLowerCase();
 
   const list = [...products]
     .filter((p) => cat === "all" || p.category === cat)
+    .filter((p) => {
+      if (!normalizedSearch) return true;
+      return [p.name, p.description, p.category].some((value) =>
+        value.toLowerCase().includes(normalizedSearch),
+      );
+    })
     .sort((a, b) =>
       sort === "price-asc"
         ? a.price - b.price
@@ -132,6 +144,11 @@ function ShopPage() {
           ? b.price - a.price
           : 0,
     );
+
+  const clearSearch = () => {
+    setSearch("");
+    window.history.replaceState({}, "", "/shop");
+  };
 
   return (
     <div className="min-h-screen">
@@ -141,8 +158,26 @@ function ShopPage() {
         <p className="eyebrow">Collection 2026</p>
 
         <h1 className="mt-3 text-4xl leading-none sm:text-5xl">
-          Tất cả <span className="text-primary">sản phẩm</span>
+          {normalizedSearch ? (
+            <>
+              Kết quả cho <span className="text-primary">“{search}”</span>
+            </>
+          ) : (
+            <>
+              Tất cả <span className="text-primary">sản phẩm</span>
+            </>
+          )}
         </h1>
+
+        {normalizedSearch && (
+          <button
+            type="button"
+            onClick={clearSearch}
+            className="mt-4 text-xs uppercase tracking-[0.15em] text-silver transition-colors hover:text-primary"
+          >
+            Xóa tìm kiếm
+          </button>
+        )}
 
         <div className="shop-controls mt-10 border-y border-border py-4">
           <div className="shop-category-scroll flex flex-nowrap gap-2 overflow-x-auto overscroll-x-contain pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -178,11 +213,30 @@ function ShopPage() {
           </div>
         </div>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {list.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
+        {list.length > 0 ? (
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {list.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-10 border-y border-border py-16 text-center">
+            <p className="eyebrow">No match</p>
+            <h2 className="mt-3 text-3xl leading-tight sm:text-4xl">
+              Không tìm thấy sản phẩm phù hợp.
+            </h2>
+            <p className="mx-auto mt-4 max-w-md text-sm leading-6 text-silver">
+              Thử một từ khóa khác hoặc quay lại toàn bộ sản phẩm.
+            </p>
+            <button
+              type="button"
+              onClick={clearSearch}
+              className="mt-6 border border-primary px-4 py-3 text-xs uppercase tracking-[0.15em] text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+            >
+              Xem tất cả sản phẩm
+            </button>
+          </div>
+        )}
       </main>
 
       <SiteFooter />
