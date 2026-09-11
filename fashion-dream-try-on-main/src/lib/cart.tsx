@@ -119,6 +119,7 @@ type CartContextValue = {
   count: number;
   subtotal: number;
   loading: boolean;
+  hasStockIssues: boolean;
   add: (line: CartLine) => void;
   setQty: (index: number, qty: number) => void;
   remove: (index: number) => void;
@@ -242,6 +243,17 @@ export function CartProvider({
       .filter((item): item is CartItem => item !== null);
   }, [lines, products]);
 
+  const hasStockIssues = useMemo(
+    () =>
+      items.some(
+        (item) =>
+          !item.variant ||
+          item.stock <= 0 ||
+          item.qty > item.stock,
+      ),
+    [items],
+  );
+
   const count = useMemo(
     () => lines.reduce((sum, line) => sum + line.qty, 0),
     [lines],
@@ -257,6 +269,17 @@ export function CartProvider({
   );
 
   function add(line: CartLine) {
+    const product = products.find(
+      (item) => item.id === line.productId,
+    );
+    const variant = product?.variants.find(
+      (item) =>
+        item.size === line.size && item.color === line.color,
+    );
+    const stock = variant?.stock ?? 0;
+
+    if (stock <= 0) return;
+
     setLines((current) => {
       const index = current.findIndex(
         (item) =>
@@ -270,7 +293,7 @@ export function CartProvider({
           ...current,
           {
             ...line,
-            qty: Math.max(1, Math.min(99, line.qty)),
+            qty: Math.max(1, Math.min(99, stock, line.qty)),
           },
         ];
       }
@@ -279,7 +302,7 @@ export function CartProvider({
         itemIndex === index
           ? {
               ...item,
-              qty: Math.min(99, item.qty + line.qty),
+              qty: Math.min(99, stock, item.qty + line.qty),
             }
           : item,
       );
@@ -294,7 +317,10 @@ export function CartProvider({
         itemIndex === index
           ? {
               ...item,
-              qty: Math.max(1, Math.min(99, stock, qty)),
+              qty:
+                stock > 0
+                  ? Math.max(1, Math.min(99, stock, qty))
+                  : 0,
             }
           : item,
       ),
@@ -319,6 +345,7 @@ export function CartProvider({
       count,
       subtotal,
       loading,
+      hasStockIssues,
       add,
       setQty,
       remove,
@@ -330,6 +357,7 @@ export function CartProvider({
       count,
       subtotal,
       loading,
+      hasStockIssues,
     ],
   );
 
