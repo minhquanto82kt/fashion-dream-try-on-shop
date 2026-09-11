@@ -7,7 +7,7 @@ export const Route = createFileRoute("/account")({
 });
 
 const BACKGROUND_IMAGE = "/account/account-background.png";
-const FOREGROUND_IMAGE = "/account/account-people-cutout.png";
+const FOREGROUND_IMAGE = "/account/account-2-people-sitting-cutout.png";
 
 type Mode = "login" | "register";
 
@@ -135,15 +135,17 @@ function AccountPage() {
         .account-background,
         .account-cutout {
           position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: fill;
           pointer-events: none;
           user-select: none;
         }
 
-        .account-background { z-index: 0; }
+        .account-background {
+          inset: 0;
+          z-index: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: fill;
+        }
 
         .account-stage::after {
           content: "";
@@ -155,7 +157,13 @@ function AccountPage() {
         }
 
         .account-cutout {
+          left: 0;
+          bottom: 0;
           z-index: 3;
+          width: 67%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center bottom;
           opacity: 0;
           animation: accountCutoutIn .9s cubic-bezier(.2,.75,.25,1) .12s forwards;
         }
@@ -266,10 +274,38 @@ function AccountPage() {
         .account-feedback--error { color: #ff9a76; }
         .account-feedback--success { color: var(--yellow); }
 
-        .account-info { left: 3.8%; bottom: 5.3%; z-index: 6; max-width: 31%; opacity: 0; animation: accountFadeUp .7s ease .48s forwards; }
-        .account-info strong { display: block; margin-bottom: 8px; color: var(--yellow); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; }
-        .account-info p { margin: 0; color: rgba(230,213,184,.82); font-size: 9px; line-height: 1.65; letter-spacing: .025em; }
-        .account-copyright { right: 3.8%; bottom: 5.3%; z-index: 7; color: rgba(230,213,184,.7); font-size: 7px; letter-spacing: .04em; }
+        .account-info {
+          left: 3.8%;
+          bottom: 5.3%;
+          z-index: 6;
+          max-width: 38%;
+          opacity: 0;
+          animation: accountFadeUp .7s ease .48s forwards;
+        }
+        .account-info strong {
+          display: block;
+          margin-bottom: 10px;
+          color: var(--yellow);
+          font-size: 17px;
+          font-weight: 900;
+          letter-spacing: .18em;
+          text-transform: uppercase;
+        }
+        .account-info p {
+          margin: 0;
+          color: rgba(230,213,184,.86);
+          font-size: 15px;
+          line-height: 1.58;
+          letter-spacing: .025em;
+        }
+        .account-copyright {
+          right: 3.8%;
+          bottom: 5.3%;
+          z-index: 7;
+          color: rgba(230,213,184,.76);
+          font-size: 12px;
+          letter-spacing: .04em;
+        }
 
         @keyframes accountCutoutIn { from { opacity: 0; transform: scale(1.012); } to { opacity: 1; transform: scale(1); } }
         @keyframes titleFirstIn { from { opacity: 0; transform: translateX(26px); filter: blur(5px); } to { opacity: 1; transform: translateX(0); filter: blur(0); } }
@@ -284,6 +320,10 @@ function AccountPage() {
           .account-title { font-size: clamp(48px, 7.8vw, 78px); }
           .account-panel { right: 4.5%; width: 34%; }
           .account-brand { font-size: clamp(10px, 1.05vw, 14px); }
+          .account-info { max-width: 36%; }
+          .account-info strong { font-size: 15px; }
+          .account-info p { font-size: 13px; }
+          .account-copyright { font-size: 10px; }
         }
 
         @media (max-width: 700px) {
@@ -292,7 +332,8 @@ function AccountPage() {
             height: 100dvh;
             aspect-ratio: auto;
           }
-          .account-background, .account-cutout { object-fit: cover; object-position: 58% center; }
+          .account-background { object-fit: cover; object-position: 58% center; }
+          .account-cutout { width: 100%; height: 58%; object-fit: cover; object-position: center bottom; }
           .account-stage::after { background: linear-gradient(180deg, rgba(0,0,0,.14), rgba(10,8,6,.48) 42%, rgba(10,8,6,.98) 100%); }
           .account-back-link { top: 20px; left: 22px; font-size: 9px; }
           .account-brand { top: 72px; left: 22px; font-size: 11px; letter-spacing: .18em; }
