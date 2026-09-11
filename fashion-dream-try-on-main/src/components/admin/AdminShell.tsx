@@ -6,7 +6,7 @@ export function AdminShell() {
 
   return (
     <div className="up-admin-root">
-<style>{`
+      <style>{`
   /* =========================================================
      ADMIN ROOT
      ========================================================= */
@@ -766,96 +766,101 @@ export function AdminShell() {
     }
   }
 `}</style>
+
       <div className="up-admin-app">
-<aside className="up-admin-sidebar">
-  <div className="up-admin-logo">
-    UPTHINK
-    <span>COMMERCE ADMIN</span>
-  </div>
+        <aside className="up-admin-sidebar">
+          <div className="up-admin-logo">
+            UPTHINK
+            <span>COMMERCE ADMIN</span>
+          </div>
 
-  <nav>
-    <div className="up-admin-nav-section">OVERVIEW</div>
+          <nav>
+            <div className="up-admin-nav-section">OVERVIEW</div>
 
-    <Link
-      to="/admin"
-      className={location.pathname === "/admin" ? "active" : ""}
-    >
-      Dashboard
-    </Link>
+            <Link
+              to="/admin"
+              className={location.pathname === "/admin" ? "active" : ""}
+            >
+              Dashboard
+            </Link>
 
-    <div className="up-admin-nav-section">MANAGE</div>
+            <div className="up-admin-nav-section">MANAGE</div>
 
-    <Link
-      to="/admin/products"
-      className={
-        location.pathname.startsWith("/admin/products")
-          ? "active"
-          : ""
-      }
-    >
-      Products
-    </Link>
+            <Link
+              to="/admin/products"
+              className={
+                location.pathname.startsWith("/admin/products")
+                  ? "active"
+                  : ""
+              }
+            >
+              Products
+            </Link>
 
-    <Link
-      to="/admin/orders"
-      className={
-        location.pathname.startsWith("/admin/orders")
-          ? "active"
-          : ""
-      }
-    >
-      Orders
-    </Link>
+            <Link
+              to="/admin/orders"
+              className={
+                location.pathname.startsWith("/admin/orders")
+                  ? "active"
+                  : ""
+              }
+            >
+              Orders
+            </Link>
 
-    <button
-      type="button"
-      className="up-admin-nav-disabled"
-      disabled
-    >
-      Customers
-      <span>SOON</span>
-    </button>
+            <button
+              type="button"
+              className="up-admin-nav-disabled"
+              disabled
+            >
+              Customers
+              <span>SOON</span>
+            </button>
 
-    <button
-      type="button"
-      className="up-admin-nav-disabled"
-      disabled
-    >
-      Inventory
-      <span>SOON</span>
-    </button>
+            {/* INVENTORY — ACTIVE */}
+            <Link
+              to="/admin/inventory"
+              className={
+                location.pathname.startsWith("/admin/inventory")
+                  ? "active"
+                  : ""
+              }
+            >
+              Inventory
+            </Link>
 
-    <div className="up-admin-nav-section">SYSTEM</div>
+            <div className="up-admin-nav-section">SYSTEM</div>
 
-    <button
-      type="button"
-      className="up-admin-nav-disabled"
-      disabled
-    >
-      AI Studio
-      <span>SOON</span>
-    </button>
+            <button
+              type="button"
+              className="up-admin-nav-disabled"
+              disabled
+            >
+              AI Studio
+              <span>SOON</span>
+            </button>
 
-    <button
-      type="button"
-      className="up-admin-nav-disabled"
-      disabled
-    >
-      Settings
-      <span>SOON</span>
-    </button>
-  </nav>
+            <button
+              type="button"
+              className="up-admin-nav-disabled"
+              disabled
+            >
+              Settings
+              <span>SOON</span>
+            </button>
+          </nav>
 
-  <button
-    className="up-admin-logout"
-    onClick={() => {
-      signOut();
-      window.location.href = "/admin";
-    }}
-  >
-        Đăng xuất
-  </button>
-</aside>
+          <button
+            className="up-admin-logout"
+            onClick={() => {
+              signOut();
+              window.location.href = "/admin";
+            }}
+          >
+            Đăng xuất
+          </button>
+        </aside>
+
         <main className="up-admin-main">
           <Outlet />
         </main>
