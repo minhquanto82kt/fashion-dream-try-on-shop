@@ -13,6 +13,8 @@ function AccountPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -394,6 +396,52 @@ function AccountPage() {
           opacity: .55;
         }
 
+        .account-password-wrap {
+          position: relative;
+        }
+
+        .account-password-wrap input {
+          padding-right: 48px;
+        }
+
+        .account-password-toggle {
+          position: absolute;
+          top: 50%;
+          right: 4px;
+          width: 40px;
+          height: 40px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          transform: translateY(-50%);
+          padding: 0;
+          border: 0;
+          background: transparent;
+          color: rgba(230,213,184,.52);
+          cursor: pointer;
+          transition: color .2s ease, transform .2s ease;
+        }
+
+        .account-password-toggle:hover,
+        .account-password-toggle:focus-visible {
+          color: var(--yellow);
+        }
+
+        .account-password-toggle:focus-visible {
+          outline: 1px solid rgba(240,165,0,.72);
+          outline-offset: -1px;
+        }
+
+        .account-password-toggle svg {
+          width: 17px;
+          height: 17px;
+          stroke: currentColor;
+          stroke-width: 1.7;
+          fill: none;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+        }
+
         .account-submit {
           width: 100%;
           min-height: 48px;
@@ -641,33 +689,81 @@ function AccountPage() {
 
                 <div className="account-field">
                   <label htmlFor="account-password">Mật khẩu</label>
-                  <input
-                    id="account-password"
-                    type="password"
-                    autoComplete={mode === "login" ? "current-password" : "new-password"}
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
-                    required
-                    minLength={6}
-                    disabled={loading}
-                  />
+                  <div className="account-password-wrap">
+                    <input
+                      id="account-password"
+                      type={showPassword ? "text" : "password"}
+                      autoComplete={mode === "login" ? "current-password" : "new-password"}
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(event) => setPassword(event.target.value)}
+                      required
+                      minLength={6}
+                      disabled={loading}
+                    />
+                    <button
+                      className="account-password-toggle"
+                      type="button"
+                      aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                      title={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                      onClick={() => setShowPassword((visible) => !visible)}
+                      disabled={loading}
+                    >
+                      {showPassword ? (
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M3 3l18 18" />
+                          <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
+                          <path d="M9.9 5.1A11.2 11.2 0 0 1 12 4.9c6.2 0 10 7.1 10 7.1a19.2 19.2 0 0 1-3.2 3.8" />
+                          <path d="M6.1 6.1C3.5 8 2 12 2 12s3.8 7.1 10 7.1c1.5 0 2.8-.3 4-.8" />
+                        </svg>
+                      ) : (
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" />
+                          <circle cx="12" cy="12" r="2.5" />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
                 </div>
 
                 {mode === "register" && (
                   <div className="account-field">
                     <label htmlFor="account-confirm-password">Xác nhận mật khẩu</label>
-                    <input
-                      id="account-confirm-password"
-                      type="password"
-                      autoComplete="new-password"
-                      placeholder="••••••••"
-                      value={confirmPassword}
-                      onChange={(event) => setConfirmPassword(event.target.value)}
-                      required
-                      minLength={6}
-                      disabled={loading}
-                    />
+                    <div className="account-password-wrap">
+                      <input
+                        id="account-confirm-password"
+                        type={showConfirmPassword ? "text" : "password"}
+                        autoComplete="new-password"
+                        placeholder="••••••••"
+                        value={confirmPassword}
+                        onChange={(event) => setConfirmPassword(event.target.value)}
+                        required
+                        minLength={6}
+                        disabled={loading}
+                      />
+                      <button
+                        className="account-password-toggle"
+                        type="button"
+                        aria-label={showConfirmPassword ? "Ẩn mật khẩu xác nhận" : "Hiện mật khẩu xác nhận"}
+                        title={showConfirmPassword ? "Ẩn mật khẩu xác nhận" : "Hiện mật khẩu xác nhận"}
+                        onClick={() => setShowConfirmPassword((visible) => !visible)}
+                        disabled={loading}
+                      >
+                        {showConfirmPassword ? (
+                          <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M3 3l18 18" />
+                            <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
+                            <path d="M9.9 5.1A11.2 11.2 0 0 1 12 4.9c6.2 0 10 7.1 10 7.1a19.2 19.2 0 0 1-3.2 3.8" />
+                            <path d="M6.1 6.1C3.5 8 2 12 2 12s3.8 7.1 10 7.1c1.5 0 2.8-.3 4-.8" />
+                          </svg>
+                        ) : (
+                          <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" />
+                            <circle cx="12" cy="12" r="2.5" />
+                          </svg>
+                        )}
+                      </button>
+                    </div>
                   </div>
                 )}
 
