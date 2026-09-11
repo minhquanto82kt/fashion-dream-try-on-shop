@@ -1,0 +1,263 @@
+/* UPTHINK — Global Color System v5
+   Palette requested by product design:
+   #2E2910 — Dark Olive / base
+   #2C5745 — Deep Green / secondary surfaces
+   #EBE3A7 — Warm Cream / primary text & light surfaces
+   #EB7D00 — Burnt Orange / CTA & interaction accent
+   #0B0909 — Near Black / deepest contrast
+
+   Usage target: 50 / 20 / 20 / 10 + 10 contrast reserve.
+   Keep typography and layout unchanged; this file centralizes color treatment.
+*/
+
+:root {
+  --up-olive: #2E2910;
+  --up-green: #2C5745;
+  --up-cream: #EBE3A7;
+  --up-orange: #EB7D00;
+  --up-black: #0B0909;
+
+  --ink: var(--up-olive);
+  --background: var(--up-olive);
+  --foreground: var(--up-cream);
+  --card: var(--up-black);
+  --card-foreground: var(--up-cream);
+  --popover: var(--up-black);
+  --popover-foreground: var(--up-cream);
+  --primary: var(--up-orange);
+  --primary-foreground: var(--up-black);
+  --secondary: var(--up-green);
+  --secondary-foreground: var(--up-cream);
+  --muted: var(--up-green);
+  --muted-foreground: var(--up-cream);
+  --accent: var(--up-cream);
+  --accent-foreground: var(--up-olive);
+  --destructive: var(--up-orange);
+  --destructive-foreground: var(--up-black);
+  --border: color-mix(in oklab, var(--up-green) 72%, var(--up-olive));
+  --input: var(--up-black);
+  --ring: var(--up-orange);
+  --electric: var(--up-orange);
+  --beige: var(--up-cream);
+  --silver: var(--up-cream);
+  --y2k-cyan: var(--up-cream);
+
+  --ft-paper: var(--up-cream);
+  --ft-ink: var(--up-olive);
+  --ft-acid: var(--up-orange);
+  --ft-muted: var(--up-green);
+}
+
+:root[data-theme="cream"] {
+  --background: var(--up-olive);
+  --foreground: var(--up-cream);
+  --card: var(--up-black);
+  --card-foreground: var(--up-cream);
+  --popover: var(--up-black);
+  --popover-foreground: var(--up-cream);
+  --muted: var(--up-green);
+  --muted-foreground: var(--up-cream);
+  --border: color-mix(in oklab, var(--up-green) 72%, var(--up-olive));
+  --primary: var(--up-orange);
+  --primary-foreground: var(--up-black);
+  --accent: var(--up-cream);
+  --accent-foreground: var(--up-olive);
+  --input: var(--up-black);
+  --ring: var(--up-orange);
+  --electric: var(--up-orange);
+  --beige: var(--up-cream);
+  --silver: var(--up-cream);
+}
+
+/* Replace legacy hard-coded FashionTry color treatment. */
+.fashion-site {
+  background: var(--up-olive);
+  color: var(--up-cream);
+}
+
+.fashion-nav {
+  background: color-mix(in oklab, var(--up-olive) 92%, transparent);
+  border-color: color-mix(in oklab, var(--up-green) 72%, var(--up-olive));
+}
+
+.fashion-brand__mark,
+.fashion-cart-btn span,
+.fashion-product-badge,
+.fashion-hero__label {
+  background: var(--up-orange);
+  color: var(--up-black);
+}
+
+.fashion-nav__links a:hover,
+.fashion-nav__links a.is-active,
+.fashion-brand__name span,
+.fashion-brand__meta,
+.fashion-eyebrow,
+.fashion-section-number,
+.fashion-feature-list b,
+.fashion-text-link,
+.fashion-section-number--mustard,
+.fashion-accent,
+.statement-line--accent-small,
+.statement-line--accent-display,
+.fashion-product-price {
+  color: var(--up-orange);
+}
+
+.fashion-ai-btn,
+.fashion-btn,
+.fashion-hero__art,
+.fashion-ai-feature__visual {
+  border-color: var(--up-orange);
+}
+
+.fashion-ai-btn:hover,
+.fashion-btn:not(.fashion-btn--ghost):hover,
+.fashion-category-filter:hover,
+.fashion-category-filter.is-active {
+  background: var(--up-orange);
+  color: var(--up-black);
+}
+
+.fashion-btn {
+  background: var(--up-orange);
+  color: var(--up-black);
+}
+
+.fashion-btn--ghost {
+  background: transparent;
+  color: var(--up-cream);
+}
+
+.fashion-btn--light {
+  background: var(--up-cream);
+  color: var(--up-olive);
+  border-color: var(--up-cream);
+}
+
+.fashion-product-image {
+  background: var(--up-green);
+  color: var(--up-olive);
+}
+
+.fashion-products-section {
+  background: var(--up-cream);
+  color: var(--up-olive);
+  border-color: var(--up-green);
+}
+
+.fashion-product-image,
+.fashion-product-meta,
+.fashion-feature-list,
+.fashion-feature-list div {
+  border-color: color-mix(in oklab, var(--up-green) 72%, var(--up-olive));
+}
+
+.fashion-product-badge--olive,
+.fashion-category-filter--olive {
+  background: var(--up-green);
+  border-color: var(--up-orange);
+  color: var(--up-cream);
+}
+
+.fashion-category-filter--olive:hover,
+.fashion-category-filter--olive.is-active {
+  background: var(--up-green);
+  border-color: var(--up-orange);
+  color: var(--up-cream);
+}
+
+.fashion-hero__art {
+  box-shadow: 12px 12px 0 color-mix(in oklab, var(--up-orange) 58%, transparent);
+}
+
+.fashion-ai-feature__visual {
+  box-shadow: 9px 9px 0 color-mix(in oklab, var(--up-orange) 58%, transparent);
+}
+
+.fashion-hero__overlay {
+  background:
+    linear-gradient(145deg, rgba(46, 41, 16, .72), transparent 46%),
+    linear-gradient(180deg, rgba(46, 41, 16, .18), rgba(11, 9, 9, .68)),
+    repeating-linear-gradient(0deg, transparent 0 5px, rgba(235, 125, 0, .08) 6px 7px);
+}
+
+.fashion-hero__hud,
+.fashion-hero__vertical {
+  color: rgba(235, 227, 167, .92);
+}
+
+.fashion-hero__status b {
+  background: var(--up-orange);
+  box-shadow: 0 0 12px var(--up-orange);
+}
+
+.fashion-hero__dots button {
+  background: rgba(235, 227, 167, .35);
+}
+
+.fashion-hero__dots button.is-active {
+  background: var(--up-orange);
+}
+
+.fashion-hero__scan {
+  background: linear-gradient(90deg, transparent, var(--up-orange) 35%, var(--up-cream) 50%, var(--up-orange) 65%, transparent);
+  box-shadow: 0 0 18px color-mix(in oklab, var(--up-orange) 80%, transparent);
+}
+
+.fashion-intro-section {
+  background-color: var(--up-olive);
+  background-image:
+    linear-gradient(to top, rgba(11, 9, 9, .86) 0%, rgba(46, 41, 16, .55) 42%, rgba(46, 41, 16, .06) 78%),
+    url("https://cdn.builder.io/api/v1/image/assets%2Fa8cc818942044ac39bb81f5eaf3b051c%2Ffb7f96c4487844e9af8fec2c7e54bd4c");
+  color: var(--up-cream);
+}
+
+.fashion-editorial {
+  background: var(--up-black);
+  color: var(--up-cream);
+}
+
+.fashion-editorial .fashion-eyebrow,
+.fashion-editorial .fashion-accent {
+  color: var(--up-orange);
+}
+
+.fashion-flow__steps span {
+  color: var(--up-orange);
+}
+
+.fashion-category-filter {
+  border-color: color-mix(in oklab, currentColor 38%, transparent);
+}
+
+.fashion-category-filter:hover,
+.fashion-category-filter.is-active {
+  border-color: var(--up-orange);
+}
+
+/* Generic Tailwind/shadcn surfaces used outside the FashionTry layer. */
+.bg-background { background-color: var(--background) !important; }
+.text-foreground { color: var(--foreground) !important; }
+.bg-card { background-color: var(--card) !important; }
+.text-card-foreground { color: var(--card-foreground) !important; }
+.bg-popover { background-color: var(--popover) !important; }
+.text-popover-foreground { color: var(--popover-foreground) !important; }
+.bg-primary { background-color: var(--primary) !important; }
+.text-primary-foreground { color: var(--primary-foreground) !important; }
+.bg-secondary { background-color: var(--secondary) !important; }
+.text-secondary-foreground { color: var(--secondary-foreground) !important; }
+.bg-muted { background-color: var(--muted) !important; }
+.text-muted-foreground { color: var(--muted-foreground) !important; }
+.bg-accent { background-color: var(--accent) !important; }
+.text-accent-foreground { color: var(--accent-foreground) !important; }
+.border-border,
+.border-input { border-color: var(--border) !important; }
+.ring-ring { --tw-ring-color: var(--ring) !important; }
+.focus\:border-primary:focus { border-color: var(--primary) !important; }
+.hover\:bg-primary\/90:hover { background-color: color-mix(in oklab, var(--primary) 90%, var(--up-black)) !important; }
+.hover\:bg-accent:hover { background-color: var(--accent) !important; color: var(--accent-foreground) !important; }
+
+/* Keep destructive states orange rather than introducing another color. */
+.bg-destructive { background-color: var(--destructive) !important; }
+.text-destructive-foreground { color: var(--destructive-foreground) !important; }
