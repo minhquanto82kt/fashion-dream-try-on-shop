@@ -76,7 +76,11 @@ export function SiteNav() {
             <span className="fashion-beta-label">BETA</span>
           </Link>
 
-          <Link to="/account" className="fashion-account-btn" aria-label="Tài khoản">
+          <Link
+            to="/account"
+            className="fashion-cart-btn fashion-account-btn"
+            aria-label="Tài khoản"
+          >
             <UserRound size={17} />
           </Link>
 
