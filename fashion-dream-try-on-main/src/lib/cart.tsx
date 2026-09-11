@@ -16,7 +16,17 @@ export type CartLine = {
   qty: number;
 };
 
-type CartProduct = Product;
+type CartVariant = {
+  id: string;
+  product_id: string;
+  size: string;
+  color: string;
+  stock: number;
+};
+
+type CartProduct = Product & {
+  variants: CartVariant[];
+};
 
 type DbProduct = {
   id: string;
@@ -51,12 +61,15 @@ const getCartProducts = createServerFn({ method: "GET" })
       .map((id) => `"${id.replace(/"/g, '\\"')}"`)
       .join(",");
 
-    const [products, images] = await Promise.all([
+    const [products, images, variants] = await Promise.all([
       supabaseRequest<DbProduct[]>(
         `products?id=in.(${encodedIds})&active=eq.true&status=eq.published&select=id,name,description,price,category,image,active,status,featured`,
       ),
       supabaseRequest<DbImage[]>(
         `product_images?product_id=in.(${encodedIds})&select=id,product_id,image_url,sort_order,is_primary&order=sort_order.asc`,
+      ),
+      supabaseRequest<CartVariant[]>(
+        `product_variants?product_id=in.(${encodedIds})&select=id,product_id,size,color,stock`,
       ),
     ]);
 
@@ -87,12 +100,17 @@ const getCartProducts = createServerFn({ method: "GET" })
         colors: [],
         badge: product.featured ? "Featured" : undefined,
         description: product.description,
+        variants: variants.filter(
+          (variant) => variant.product_id === product.id,
+        ),
       };
     });
   });
 
 type CartItem = CartLine & {
   product: CartProduct;
+  variant: CartVariant | null;
+  stock: number;
 };
 
 type CartContextValue = {
@@ -123,7 +141,6 @@ export function CartProvider({
   const [hydrated, setHydrated] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Hydrate cart from localStorage
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -142,7 +159,6 @@ export function CartProvider({
     }
   }, []);
 
-  // Persist cart lines
   useEffect(() => {
     if (!hydrated) return;
 
@@ -152,7 +168,6 @@ export function CartProvider({
     );
   }, [lines, hydrated]);
 
-  // Load current product information from Supabase
   useEffect(() => {
     let cancelled = false;
 
@@ -210,9 +225,18 @@ export function CartProvider({
           return null;
         }
 
+        const variant =
+          product.variants.find(
+            (item) =>
+              item.size === line.size &&
+              item.color === line.color,
+          ) ?? null;
+
         return {
           ...line,
           product,
+          variant,
+          stock: variant?.stock ?? 0,
         };
       })
       .filter((item): item is CartItem => item !== null);
@@ -263,12 +287,14 @@ export function CartProvider({
   }
 
   function setQty(index: number, qty: number) {
+    const stock = items[index]?.stock ?? 0;
+
     setLines((current) =>
       current.map((item, itemIndex) =>
         itemIndex === index
           ? {
               ...item,
-              qty: Math.max(1, Math.min(99, qty)),
+              qty: Math.max(1, Math.min(99, stock, qty)),
             }
           : item,
       ),
