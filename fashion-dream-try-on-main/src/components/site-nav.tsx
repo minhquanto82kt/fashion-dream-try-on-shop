@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Menu, Search, ShoppingBag, Sparkles, X } from "lucide-react";
+import { Menu, Search, ShoppingBag, Sparkles, UserRound, X } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { useCart } from "@/lib/cart";
 
@@ -76,6 +76,10 @@ export function SiteNav() {
             <span className="fashion-beta-label">BETA</span>
           </Link>
 
+          <Link to="/account" className="fashion-account-btn" aria-label="Tài khoản">
+            <UserRound size={17} />
+          </Link>
+
           <Link to="/cart" className="fashion-cart-btn" aria-label="Giỏ hàng">
             <ShoppingBag size={17} />
             {count > 0 && <span>{count}</span>}
@@ -134,6 +138,9 @@ export function SiteNav() {
           </button>
           <Link to="/ai" onClick={closeMenus}>
             AI Try-On <span className="fashion-beta-label">BETA</span> ↗
+          </Link>
+          <Link to="/account" onClick={closeMenus}>
+            Account ↗
           </Link>
           <Link to="/cart" onClick={closeMenus}>
             Cart / {String(count).padStart(2, "0")}
