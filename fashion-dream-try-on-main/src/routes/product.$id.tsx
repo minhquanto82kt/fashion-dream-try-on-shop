@@ -170,8 +170,11 @@ function ProductPage() {
   const { product, variants, related } = data;
   const { add } = useCart();
 
-  const [size, setSize] = useState(product.sizes[0] ?? "");
-  const [color, setColor] = useState(product.colors[0] ?? "");
+  const initialVariant =
+    variants.find((variant) => variant.stock > 0) ?? variants[0];
+
+  const [size, setSize] = useState(initialVariant?.size ?? "");
+  const [color, setColor] = useState(initialVariant?.color ?? "");
   const [shot, setShot] = useState(product.gallery[0] ?? product.image);
 
   const selectedVariant = variants.find(
@@ -182,6 +185,55 @@ function ProductPage() {
 
   const stock = selectedVariant?.stock ?? 0;
   const outOfStock = !selectedVariant || stock <= 0;
+  const hasVariants = variants.length > 0;
+
+  const isSizeAvailable = (candidateSize: string) =>
+    variants.some(
+      (variant) =>
+        variant.size === candidateSize &&
+        variant.color === color,
+    );
+
+  const isColorAvailable = (candidateColor: string) =>
+    variants.some(
+      (variant) =>
+        variant.color === candidateColor &&
+        variant.size === size,
+    );
+
+  function selectSize(nextSize: string) {
+    setSize(nextSize);
+
+    const matchingVariant = variants.find(
+      (variant) =>
+        variant.size === nextSize &&
+        variant.color === color,
+    );
+
+    if (!matchingVariant) {
+      const fallback = variants.find(
+        (variant) => variant.size === nextSize,
+      );
+      setColor(fallback?.color ?? "");
+    }
+  }
+
+  function selectColor(nextColor: string) {
+    setColor(nextColor);
+
+    const matchingVariant = variants.find(
+      (variant) =>
+        variant.color === nextColor &&
+        variant.size === size,
+    );
+
+    if (!matchingVariant) {
+      const fallback = variants.find(
+        (variant) => variant.color === nextColor,
+      );
+      setSize(fallback?.size ?? "");
+    }
+  }
 
   return (
     <div className="min-h-screen">
@@ -239,20 +291,29 @@ function ProductPage() {
             </p>
 
             <div className="mt-3 flex flex-wrap gap-2">
-              {product.sizes.map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  onClick={() => setSize(s)}
-                  className={`min-h-10 border px-4 py-2 text-sm ${
-                    s === size
-                      ? "border-primary bg-primary text-primary-foreground"
-                      : "border-border text-beige hover:border-primary"
-                  }`}
-                >
-                  {s}
-                </button>
-              ))}
+              {product.sizes.map((s) => {
+                const available = isSizeAvailable(s);
+
+                return (
+                  <button
+                    key={s}
+                    type="button"
+                    disabled={!available}
+                    onClick={() => selectSize(s)}
+                    className={`min-h-10 border px-4 py-2 text-sm ${
+                      s === size
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-border text-beige hover:border-primary"
+                    } ${
+                      !available
+                        ? "cursor-not-allowed opacity-30"
+                        : ""
+                    }`}
+                  >
+                    {s}
+                  </button>
+                );
+              })}
             </div>
 
             <p className="mt-6 text-xs uppercase tracking-[0.2em] text-silver">
@@ -260,24 +321,35 @@ function ProductPage() {
             </p>
 
             <div className="mt-3 flex flex-wrap gap-2">
-              {product.colors.map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  onClick={() => setColor(c)}
-                  className={`min-h-10 border px-4 py-2 text-sm ${
-                    c === color
-                      ? "border-primary bg-primary text-primary-foreground"
-                      : "border-border text-beige hover:border-primary"
-                  }`}
-                >
-                  {c}
-                </button>
-              ))}
+              {product.colors.map((c) => {
+                const available = isColorAvailable(c);
+
+                return (
+                  <button
+                    key={c}
+                    type="button"
+                    disabled={!available}
+                    onClick={() => selectColor(c)}
+                    className={`min-h-10 border px-4 py-2 text-sm ${
+                      c === color
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-border text-beige hover:border-primary"
+                    } ${
+                      !available
+                        ? "cursor-not-allowed opacity-30"
+                        : ""
+                    }`}
+                  >
+                    {c}
+                  </button>
+                );
+              })}
             </div>
 
             <div className="mt-5 text-sm leading-6 text-silver">
-              {outOfStock ? (
+              {!hasVariants ? (
+                <span>Biến thể sản phẩm chưa được cấu hình</span>
+              ) : outOfStock ? (
                 <span>Hết hàng cho biến thể này</span>
               ) : (
                 <span>Còn {stock} sản phẩm</span>
@@ -289,15 +361,17 @@ function ProductPage() {
                 type="button"
                 disabled={outOfStock}
                 onClick={() => {
+                  if (!selectedVariant) return;
+
                   add({
                     productId: product.id,
-                    size,
-                    color,
+                    size: selectedVariant.size,
+                    color: selectedVariant.color,
                     qty: 1,
                   });
 
                   toast.success(
-                    `Đã thêm ${product.name} (${size} / ${color}) vào giỏ`,
+                    `Đã thêm ${product.name} (${selectedVariant.size} / ${selectedVariant.color}) vào giỏ`,
                   );
                 }}
                 className="min-h-12 w-full bg-primary px-6 py-3 text-xs uppercase tracking-[0.15em] text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto sm:px-8"
