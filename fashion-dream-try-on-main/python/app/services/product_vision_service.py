@@ -7,6 +7,7 @@ from app.models.product_vision import (
     ProductVisionRequest,
     ProductVisionResult,
 )
+from app.services.product_attribute_service import normalize_product_attributes
 
 
 @dataclass(frozen=True)
@@ -46,4 +47,4 @@ class ProductVisionService:
     def analyze(self, request: ProductVisionRequest) -> ProductVisionResult:
         """Analyze a product using the configured vision provider."""
 
-        return self.provider.analyze(request)
+        return normalize_product_attributes(self.provider.analyze(request))
