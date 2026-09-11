@@ -21,8 +21,8 @@ export const Route = createFileRoute("/account")({
 type Mode = "signin" | "signup";
 type User = { id: string; email?: string };
 
-const BACKGROUND_IMAGE = "/account/account-background.png";
-const FOREGROUND_IMAGE = "/account/account-people-cutout.png";
+const BACKGROUND_IMAGE = "fashion-dream-try-on-main/public/account/ảnh sign-in gốc.png";
+const FOREGROUND_IMAGE = "fashion-dream-try-on-main/public/account/ảnh sign-in tách nền.png";
 
 function AccountPage() {
   const [mode, setMode] = useState<Mode>("signin");
