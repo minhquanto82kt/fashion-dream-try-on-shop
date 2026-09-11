@@ -1,157 +1,518 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState, type FormEvent } from "react";
-import { ArrowLeft, ArrowUpRight, LogIn, LogOut, UserPlus, UserRound } from "lucide-react";
-import { getCustomerUser, signInCustomer, signOutCustomer, signUpCustomer } from "@/lib/auth";
+import { FormEvent, useState } from "react";
+import { signInCustomer, signUpCustomer } from "@/lib/auth";
 
 export const Route = createFileRoute("/account")({
-  head: () => ({
-    meta: [
-      { title: "Không gian của bạn | UpThink" },
-      { name: "description", content: "Đăng nhập hoặc tạo tài khoản mua hàng UpThink." },
-    ],
-  }),
   component: AccountPage,
 });
-
-type Mode = "signin" | "signup";
-type User = { id: string; email?: string };
 
 const BACKGROUND_IMAGE = "/account/account-background.png";
 const FOREGROUND_IMAGE = "/account/account-people-cutout.png";
 
+type Mode = "login" | "register";
+
 function AccountPage() {
-  const [mode, setMode] = useState<Mode>("signin");
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
+  const [mode, setMode] = useState<Mode>("login");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    void getCustomerUser().then(setUser).finally(() => setLoading(false));
-  }, []);
-
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (submitting) return;
-    setSubmitting(true);
-    setError("");
+  const switchMode = (nextMode: Mode) => {
+    if (nextMode === mode) return;
     setMessage("");
+    setError("");
+    setMode(nextMode);
+  };
 
-    const form = new FormData(event.currentTarget);
-    const email = String(form.get("email") || "").trim();
-    const password = String(form.get("password") || "");
-    const confirmPassword = String(form.get("confirmPassword") || "");
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setLoading(true);
+    setMessage("");
+    setError("");
 
     try {
-      if (!email || !password) throw new Error("Vui lòng nhập email và mật khẩu.");
-      if (password.length < 6) throw new Error("Mật khẩu cần ít nhất 6 ký tự.");
-
-      if (mode === "signup") {
-        if (password !== confirmPassword) throw new Error("Mật khẩu xác nhận không khớp.");
-        const result = await signUpCustomer(email, password);
-        if (result.access_token) {
-          setUser(result.user ?? null);
-          setMessage("Tạo tài khoản mua hàng thành công.");
-        } else {
-          setMode("signin");
-          setMessage("Tài khoản mua hàng đã được tạo. Hãy kiểm tra email để xác nhận trước khi đăng nhập.");
+      if (mode === "register") {
+        if (password !== confirmPassword) {
+          throw new Error("Mật khẩu xác nhận không khớp.");
         }
+        await signUpCustomer(email, password);
+        setMessage("Đăng ký thành công. Kiểm tra email nếu cần xác nhận tài khoản.");
       } else {
-        const result = await signInCustomer(email, password);
-        setUser(result.user ?? null);
-        setMessage("Đăng nhập tài khoản mua hàng thành công.");
+        await signInCustomer(email, password);
+        setMessage("Đăng nhập thành công.");
       }
-      event.currentTarget.reset();
     } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : "Không thể xử lý tài khoản mua hàng.");
+      setError(submitError instanceof Error ? submitError.message : "Đã xảy ra lỗi. Vui lòng thử lại.");
     } finally {
-      setSubmitting(false);
+      setLoading(false);
     }
-  };
-
-  const handleSignOut = async () => {
-    setSubmitting(true);
-    await signOutCustomer();
-    setUser(null);
-    setMessage("Bạn đã đăng xuất tài khoản mua hàng.");
-    setSubmitting(false);
-  };
-
-  const switchMode = (value: Mode) => {
-    if (value === mode || submitting) return;
-    setMode(value);
-    setError("");
-    setMessage("");
   };
 
   return (
     <main className="account-page">
-      <div className="account-canvas" aria-label="UpThink Customer Account">
-        <div className="account-layer account-layer-background" aria-hidden="true" style={{ backgroundImage: `url(${BACKGROUND_IMAGE})` }} />
-        <div className="account-layer account-layer-content">
-          <Link to="/" className="account-home-link"><ArrowLeft size={15} strokeWidth={1.8} /><span>Quay về trang chủ</span></Link>
-          <div className="account-branding">
-            <p className="account-eyebrow">UpThink Customer Account</p>
-            <h1>
-              <span className="account-title-line account-title-line-primary">Không gian</span>
-              <span className="account-title-line account-title-line-secondary">của bạn<span className="account-title-dot">.</span></span>
-            </h1>
+      <style>{`
+        .account-page {
+          --cream: #e6d5b8;
+          --yellow: #f0a500;
+          --ink: #1b1a17;
+          min-height: 100svh;
+          height: 100svh;
+          overflow: hidden;
+          position: relative;
+          isolation: isolate;
+          background: var(--ink);
+          color: var(--cream);
+          font-family: inherit;
+        }
+
+        .account-page * { box-sizing: border-box; }
+
+        .account-background,
+        .account-cutout {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          user-select: none;
+        }
+
+        .account-background {
+          z-index: 0;
+          object-fit: cover;
+          object-position: center center;
+        }
+
+        .account-page::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          pointer-events: none;
+          background: linear-gradient(180deg, rgba(0,0,0,.08) 0%, rgba(0,0,0,.06) 45%, rgba(10,8,6,.88) 100%);
+        }
+
+        .account-cutout {
+          z-index: 3;
+          object-fit: cover;
+          object-position: center center;
+          opacity: 0;
+          animation: accountCutoutIn .9s cubic-bezier(.2,.75,.25,1) .12s forwards;
+        }
+
+        .account-back-link,
+        .account-brand,
+        .account-title,
+        .account-panel,
+        .account-info {
+          position: absolute;
+        }
+
+        .account-back-link {
+          top: clamp(22px, 4.4vh, 46px);
+          left: clamp(28px, 4vw, 58px);
+          z-index: 7;
+          color: var(--cream);
+          text-decoration: none;
+          text-transform: uppercase;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: .12em;
+          transition: color .2s ease, transform .2s ease;
+        }
+
+        .account-back-link:hover {
+          color: var(--yellow);
+          transform: translateX(-3px);
+        }
+
+        .account-brand {
+          top: clamp(74px, 14vh, 132px);
+          left: clamp(72px, 9vw, 145px);
+          z-index: 5;
+          color: var(--yellow);
+          font-size: clamp(9px, .7vw, 12px);
+          font-weight: 800;
+          letter-spacing: .2em;
+          text-transform: uppercase;
+          opacity: 0;
+          animation: accountFadeUp .65s ease .2s forwards;
+        }
+
+        .account-title {
+          top: clamp(92px, 17vh, 160px);
+          left: clamp(72px, 9vw, 145px);
+          z-index: 4;
+          margin: 0;
+          color: var(--cream);
+          font-size: clamp(56px, 7.4vw, 112px);
+          line-height: .82;
+          font-weight: 900;
+          letter-spacing: .026em;
+          text-transform: uppercase;
+          pointer-events: none;
+          white-space: nowrap;
+        }
+
+        .account-title-line {
+          display: block;
+          opacity: 0;
+          will-change: transform, opacity, filter;
+        }
+
+        .account-title-line--first {
+          animation: titleFirstIn .75s cubic-bezier(.2,.75,.25,1) .08s forwards;
+        }
+
+        .account-title-line--second {
+          margin-left: clamp(18px, 2.3vw, 38px);
+          animation: titleSecondIn .75s cubic-bezier(.2,.75,.25,1) .02s forwards;
+        }
+
+        .account-panel {
+          top: 50%;
+          right: clamp(48px, 8.5vw, 130px);
+          z-index: 8;
+          width: min(360px, 29vw);
+          min-height: 454px;
+          transform: translateY(-50%);
+          padding: 26px 0 0;
+          background: linear-gradient(180deg, rgba(18,15,12,.74), rgba(18,15,12,.52));
+          backdrop-filter: blur(9px);
+          -webkit-backdrop-filter: blur(9px);
+          opacity: 0;
+          animation: panelIn .75s cubic-bezier(.2,.75,.25,1) .3s forwards;
+        }
+
+        .account-panel-inner {
+          height: 100%;
+          min-height: 428px;
+          padding: 0 clamp(22px, 2vw, 34px) 28px;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .account-kicker {
+          color: var(--yellow);
+          font-size: 9px;
+          font-weight: 800;
+          letter-spacing: .2em;
+          text-transform: uppercase;
+          margin-bottom: 7px;
+        }
+
+        .account-heading {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin: 0 0 22px;
+          font-size: 17px;
+          letter-spacing: .04em;
+          font-weight: 500;
+        }
+
+        .account-heading::before {
+          content: "01";
+          display: grid;
+          place-items: center;
+          width: 27px;
+          height: 27px;
+          border: 1px solid var(--yellow);
+          color: var(--yellow);
+          font-size: 8px;
+          letter-spacing: .08em;
+        }
+
+        .account-tabs {
+          display: flex;
+          gap: 24px;
+          margin-bottom: 24px;
+          border-bottom: 1px solid rgba(230,213,184,.26);
+        }
+
+        .account-tab {
+          position: relative;
+          padding: 0 0 11px;
+          border: 0;
+          background: transparent;
+          color: rgba(230,213,184,.45);
+          cursor: pointer;
+          font: inherit;
+          font-size: 9px;
+          font-weight: 800;
+          letter-spacing: .14em;
+          text-transform: uppercase;
+          transition: color .2s ease;
+        }
+
+        .account-tab::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          bottom: -1px;
+          width: 0;
+          height: 2px;
+          background: var(--yellow);
+          transition: width .32s cubic-bezier(.2,.75,.25,1);
+        }
+
+        .account-tab:hover,
+        .account-tab--active { color: var(--yellow); }
+        .account-tab--active::after { width: 100%; }
+
+        .account-form-stage {
+          position: relative;
+          min-height: 264px;
+          flex: 1;
+          overflow: hidden;
+        }
+
+        .account-form {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          flex-direction: column;
+          min-height: 264px;
+          animation: formIn .45s cubic-bezier(.2,.75,.25,1);
+        }
+
+        .account-field { margin-bottom: 18px; }
+
+        .account-field label {
+          display: block;
+          margin-bottom: 7px;
+          color: rgba(230,213,184,.7);
+          font-size: 8px;
+          font-weight: 800;
+          letter-spacing: .16em;
+          text-transform: uppercase;
+        }
+
+        .account-field input {
+          width: 100%;
+          height: 39px;
+          padding: 0;
+          border: 0;
+          border-bottom: 1px solid rgba(230,213,184,.36);
+          outline: 0;
+          border-radius: 0;
+          background: transparent;
+          color: var(--cream);
+          font: inherit;
+          font-size: 13px;
+          letter-spacing: .02em;
+          transition: border-color .2s ease, padding-left .2s ease;
+        }
+
+        .account-field input:focus {
+          border-bottom-color: var(--yellow);
+          padding-left: 5px;
+        }
+
+        .account-field input:-webkit-autofill,
+        .account-field input:-webkit-autofill:hover,
+        .account-field input:-webkit-autofill:focus {
+          -webkit-text-fill-color: var(--cream);
+          -webkit-box-shadow: 0 0 0 1000px rgba(27,26,23,.98) inset;
+          box-shadow: 0 0 0 1000px rgba(27,26,23,.98) inset;
+          transition: background-color 9999s ease-in-out 0s;
+        }
+
+        .account-submit {
+          margin-top: auto;
+          width: 100%;
+          min-height: 42px;
+          border: 0;
+          background: var(--yellow);
+          color: var(--ink);
+          cursor: pointer;
+          font: inherit;
+          font-size: 9px;
+          font-weight: 900;
+          letter-spacing: .17em;
+          text-transform: uppercase;
+          transition: transform .2s ease, filter .2s ease;
+        }
+
+        .account-submit:hover:not(:disabled) {
+          transform: translateY(-2px);
+          filter: brightness(1.08);
+        }
+
+        .account-submit:disabled { opacity: .55; cursor: wait; }
+
+        .account-feedback {
+          min-height: 38px;
+          margin-top: 11px;
+          font-size: 9px;
+          line-height: 1.5;
+          letter-spacing: .03em;
+        }
+
+        .account-feedback--error { color: #ff9a76; }
+        .account-feedback--success { color: var(--yellow); }
+
+        .account-info {
+          left: clamp(28px, 3.8vw, 58px);
+          bottom: clamp(20px, 4vh, 42px);
+          z-index: 6;
+          max-width: min(390px, 31vw);
+          opacity: 0;
+          animation: accountFadeUp .7s ease .48s forwards;
+        }
+
+        .account-info strong {
+          display: block;
+          margin-bottom: 8px;
+          color: var(--yellow);
+          font-size: 10px;
+          letter-spacing: .18em;
+          text-transform: uppercase;
+        }
+
+        .account-info p {
+          margin: 0;
+          color: rgba(230,213,184,.82);
+          font-size: 9px;
+          line-height: 1.65;
+          letter-spacing: .025em;
+        }
+
+        .account-copyright {
+          position: fixed;
+          right: clamp(24px, 3.8vw, 58px);
+          bottom: clamp(20px, 4vh, 42px);
+          z-index: 7;
+          color: rgba(230,213,184,.7);
+          font-size: 7px;
+          letter-spacing: .04em;
+        }
+
+        @keyframes accountCutoutIn {
+          from { opacity: 0; transform: scale(1.012); }
+          to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes titleFirstIn {
+          from { opacity: 0; transform: translateX(26px); filter: blur(5px); }
+          to { opacity: 1; transform: translateX(0); filter: blur(0); }
+        }
+
+        @keyframes titleSecondIn {
+          from { opacity: 0; transform: translateX(-22px); filter: blur(5px); }
+          to { opacity: 1; transform: translateX(0); filter: blur(0); }
+        }
+
+        @keyframes panelIn {
+          from { opacity: 0; transform: translate(24px, -50%); }
+          to { opacity: 1; transform: translate(0, -50%); }
+        }
+
+        @keyframes formIn {
+          from { opacity: 0; transform: translateX(18px); filter: blur(3px); }
+          to { opacity: 1; transform: translateX(0); filter: blur(0); }
+        }
+
+        @keyframes accountFadeUp {
+          from { opacity: 0; transform: translateY(12px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 900px) {
+          .account-page { overflow: hidden; }
+          .account-title { font-size: clamp(50px, 9vw, 78px); left: 7vw; }
+          .account-brand { left: 7vw; }
+          .account-panel { right: 5vw; width: min(350px, 38vw); }
+        }
+
+        @media (max-width: 700px) {
+          .account-page { overflow: hidden; }
+          .account-background,
+          .account-cutout { object-position: 58% center; }
+          .account-page::after { background: linear-gradient(180deg, rgba(0,0,0,.14), rgba(10,8,6,.48) 42%, rgba(10,8,6,.98) 100%); }
+          .account-back-link { top: 20px; left: 22px; font-size: 9px; }
+          .account-brand { top: 72px; left: 22px; }
+          .account-title { top: 91px; left: 22px; font-size: clamp(45px, 15vw, 68px); letter-spacing: .02em; }
+          .account-title-line--second { margin-left: 14px; }
+          .account-panel { top: auto; right: 18px; bottom: 18px; width: calc(100% - 36px); min-height: 370px; transform: none; padding-top: 22px; animation-name: panelMobileIn; }
+          .account-panel-inner { min-height: 344px; padding: 0 20px 20px; }
+          .account-form-stage, .account-form { min-height: 208px; }
+          .account-info, .account-copyright { display: none; }
+        }
+
+        @keyframes panelMobileIn {
+          from { opacity: 0; transform: translateY(18px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .account-page *, .account-page::after { animation-duration: .01ms !important; animation-delay: 0ms !important; transition-duration: .01ms !important; }
+        }
+      `}</style>
+
+      <img className="account-background" src={BACKGROUND_IMAGE} alt="" aria-hidden="true" />
+
+      <Link to="/" className="account-back-link">← Quay về trang chủ</Link>
+
+      <div className="account-brand">UpThink Customer Account</div>
+
+      <h1 className="account-title" aria-label="Không gian của bạn.">
+        <span className="account-title-line account-title-line--second">Không gian</span>
+        <span className="account-title-line account-title-line--first">Của bạn.</span>
+      </h1>
+
+      <section className="account-panel" aria-label="Customer account access">
+        <div className="account-panel-inner">
+          <div className="account-kicker">Customer Access</div>
+          <h2 className="account-heading">{mode === "login" ? "Đăng nhập" : "Đăng ký"}</h2>
+
+          <div className="account-tabs" role="tablist" aria-label="Chọn trạng thái tài khoản">
+            <button type="button" role="tab" aria-selected={mode === "login"} className={`account-tab ${mode === "login" ? "account-tab--active" : ""}`} onClick={() => switchMode("login")}>01 / Đăng nhập</button>
+            <button type="button" role="tab" aria-selected={mode === "register"} className={`account-tab ${mode === "register" ? "account-tab--active" : ""}`} onClick={() => switchMode("register")}>02 / Đăng ký</button>
+          </div>
+
+          <div className="account-form-stage" key={mode}>
+            <form className="account-form" onSubmit={handleSubmit}>
+              <div className="account-field">
+                <label htmlFor="account-email">Email</label>
+                <input id="account-email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} required disabled={loading} />
+              </div>
+
+              <div className="account-field">
+                <label htmlFor="account-password">Mật khẩu</label>
+                <input id="account-password" type="password" autoComplete={mode === "login" ? "current-password" : "new-password"} value={password} onChange={(event) => setPassword(event.target.value)} required minLength={6} disabled={loading} />
+              </div>
+
+              {mode === "register" && (
+                <div className="account-field">
+                  <label htmlFor="account-confirm-password">Xác nhận mật khẩu</label>
+                  <input id="account-confirm-password" type="password" autoComplete="new-password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} required minLength={6} disabled={loading} />
+                </div>
+              )}
+
+              <button className="account-submit" type="submit" disabled={loading}>
+                {loading ? "Đang xử lý..." : mode === "login" ? "Đăng nhập  →" : "Tạo tài khoản  →"}
+              </button>
+
+              <div className={`account-feedback ${error ? "account-feedback--error" : "account-feedback--success"}`} role="status" aria-live="polite">
+                {error || message}
+              </div>
+            </form>
           </div>
         </div>
-        <div className="account-layer account-layer-foreground" aria-hidden="true" style={{ backgroundImage: `url(${FOREGROUND_IMAGE})` }} />
+      </section>
 
-        <div className="account-interaction">
-          {loading ? (
-            <div className="account-status">Đang kiểm tra phiên tài khoản mua hàng...</div>
-          ) : user ? (
-            <div className="account-authenticated">
-              <p className="account-form-kicker">Customer session / active</p>
-              <p className="account-user-email">{user.email || "Tài khoản UpThink"}</p>
-              <p className="account-helper">Bạn đang đăng nhập bằng tài khoản mua hàng. Khu vực quản trị sử dụng cổng Admin riêng.</p>
-              <div className="account-actions">
-                <Link to="/shop" className="account-secondary-action">Tiếp tục mua sắm <ArrowUpRight size={15} /></Link>
-                <button type="button" disabled={submitting} onClick={() => void handleSignOut()} className="account-primary-action"><LogOut size={14} /> {submitting ? "Đang xử lý..." : "Đăng xuất"}</button>
-              </div>
-            </div>
-          ) : (
-            <section className="account-form-panel" aria-label="Customer account form">
-              <div className="account-form-heading">
-                <div className="account-form-icon" aria-hidden="true"><UserRound size={16} strokeWidth={1.6} /></div>
-                <div><p className="account-form-kicker">Customer access</p><p className="account-form-title">{mode === "signin" ? "Đăng nhập" : "Tạo tài khoản"}</p></div>
-              </div>
-              <div className="account-tabs" role="tablist" aria-label="Account mode">
-                {(["signin", "signup"] as const).map((value, index) => (
-                  <button key={value} type="button" role="tab" aria-selected={mode === value} onClick={() => switchMode(value)} className={mode === value ? "active" : ""}>
-                    <span className="account-tab-index">0{index + 1}</span>{value === "signin" ? "Đăng nhập" : "Đăng ký"}
-                  </button>
-                ))}
-              </div>
-              <div className={`account-form-transition account-mode-${mode}`} key={mode}>
-                <form onSubmit={submit} className="account-form">
-                  <label><span>Email</span><input required name="email" type="email" autoComplete="email" placeholder="you@example.com" /></label>
-                  <label><span>Mật khẩu</span><input required name="password" type="password" minLength={6} autoComplete={mode === "signin" ? "current-password" : "new-password"} placeholder="••••••••" /></label>
-                  {mode === "signup" && <label className="account-confirm-field"><span>Xác nhận mật khẩu</span><input required name="confirmPassword" type="password" minLength={6} autoComplete="new-password" placeholder="••••••••" /></label>}
-                  {error && <p className="account-feedback error">{error}</p>}
-                  {message && <p className="account-feedback success">{message}</p>}
-                  <button type="submit" disabled={submitting} className="account-submit"><span>{submitting ? "Đang xử lý..." : mode === "signin" ? "Đăng nhập" : "Tạo tài khoản"}</span>{mode === "signin" ? <LogIn size={14} /> : <UserPlus size={14} />}<ArrowUpRight className="account-submit-arrow" size={14} /></button>
-                </form>
-              </div>
-            </section>
-          )}
-        </div>
-
-        <div className="account-info-gradient">
-          <div><strong>UPTHINK</strong><p>Một ý tưởng khởi nghiệp của sinh viên IUH: thời trang cá nhân hóa với AI concept và virtual try-on.</p></div>
-          <small>© 2026 UpThink — Đại học Công nghiệp TP.HCM / IUH</small>
-        </div>
+      <div className="account-info">
+        <strong>UpThink</strong>
+        <p>Một ý tưởng khởi nghiệp của sinh viên IUH: thời trang cá nhân hóa với AI concept và virtual try-on.</p>
       </div>
 
-      <style>{`
-.account-page{min-height:100svh;width:100%;overflow-x:hidden;background:#1b1a17;color:#f4ead8}.account-canvas{position:relative;min-height:100svh;isolation:isolate;overflow:hidden;background:#1b1a17}.account-layer{position:absolute;inset:0;pointer-events:none}.account-layer-background,.account-layer-foreground{background-position:center top;background-repeat:no-repeat;background-size:cover}.account-layer-background{z-index:0}.account-layer-content{z-index:10}.account-layer-foreground{z-index:20;opacity:0;animation:accountForegroundReveal 1.15s cubic-bezier(.22,1,.36,1) .15s forwards}.account-home-link{position:absolute;left:clamp(24px,4vw,64px);top:clamp(22px,4vw,48px);display:inline-flex;align-items:center;gap:9px;color:#f4ead8;font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;transition:opacity .2s ease,transform .2s ease;animation:accountFadeUp .7s ease-out .2s both}.account-home-link:hover{opacity:.72;transform:translateX(-3px)}.account-branding{position:absolute;left:clamp(30px,9vw,142px);top:clamp(92px,16vh,168px);max-width:560px;animation:accountBrandReveal .9s cubic-bezier(.22,1,.36,1) .35s both}.account-eyebrow,.account-form-kicker{margin:0;color:#f0a500;font-size:9px;font-weight:700;letter-spacing:.22em;text-transform:uppercase}.account-branding h1{display:grid;margin:12px 0 0;font-size:clamp(54px,7vw,104px);font-weight:500;letter-spacing:.018em;line-height:.84;text-transform:uppercase}.account-title-line{display:block;white-space:nowrap;opacity:0}.account-title-line-primary{animation:accountTitlePrimaryReveal .72s cubic-bezier(.22,1,.36,1) 1.02s forwards}.account-title-line-secondary{margin-top:.08em;margin-left:clamp(18px,2.2vw,34px);animation:accountTitleSecondaryReveal .72s cubic-bezier(.22,1,.36,1) .48s forwards}.account-title-dot{color:#f0a500;margin-left:.02em}.account-interaction{position:relative;z-index:30;display:flex;min-height:100svh;align-items:center;justify-content:flex-end;padding:120px clamp(24px,8vw,128px) 180px;pointer-events:none}.account-form-panel,.account-authenticated,.account-status{width:min(100%,390px);pointer-events:auto}.account-form-panel,.account-authenticated{box-sizing:border-box;min-height:454px;padding:24px 0;background:linear-gradient(90deg,rgba(27,26,23,.08),rgba(27,26,23,.48) 38%,rgba(27,26,23,.7));animation:accountFormReveal .85s cubic-bezier(.22,1,.36,1) .5s both}.account-form-heading{display:flex;align-items:center;gap:12px;margin-bottom:20px}.account-form-icon{display:grid;width:32px;height:32px;place-items:center;border:1px solid rgba(240,165,0,.65);color:#f0a500;transition:transform .25s ease,background-color .25s ease}.account-form-heading:hover .account-form-icon{transform:rotate(-4deg);background:rgba(240,165,0,.08)}.account-form-title{margin:3px 0 0;color:#f4ead8;font-size:19px;letter-spacing:-.025em}.account-tabs{display:flex;gap:22px;margin-bottom:22px;border-bottom:1px solid rgba(240,213,184,.22)}.account-tabs button{position:relative;display:inline-flex;min-height:28px;align-items:center;gap:7px;padding:0 0 11px;border:0;background:transparent;color:rgba(244,234,216,.45);cursor:pointer;font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;transition:color .2s ease,transform .2s ease}.account-tabs button:hover{color:rgba(244,234,216,.78);transform:translateY(-1px)}.account-tabs button.active{color:#f0a500}.account-tabs button.active:after{position:absolute;right:0;bottom:-1px;left:0;height:2px;background:#f0a500;content:"";animation:accountTabLine .25s ease-out both}.account-tab-index{font-size:7px;letter-spacing:.08em;opacity:.65}.account-form-transition{animation-duration:.38s;animation-timing-function:cubic-bezier(.22,1,.36,1);animation-fill-mode:both;transform-origin:center top}.account-mode-signin{animation-name:accountSignInTransition}.account-mode-signup{animation-name:accountSignUpTransition}.account-form{display:grid;gap:18px}.account-form label{display:grid;gap:7px}.account-form label span{color:rgba(244,234,216,.72);font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}.account-form input{width:100%;min-height:42px;box-sizing:border-box;padding:7px 0 10px;border:0;border-bottom:1px solid rgba(244,234,216,.35);outline:none;background:transparent;color:#f4ead8;font:inherit;font-size:14px;transition:border-color .2s ease,padding-left .2s ease}.account-form input::placeholder{color:rgba(244,234,216,.3)}.account-form input:focus{border-bottom-color:#f0a500;padding-left:5px}.account-form input:-webkit-autofill,.account-form input:-webkit-autofill:hover,.account-form input:-webkit-autofill:focus{-webkit-text-fill-color:#f4ead8;-webkit-box-shadow:0 0 0 1000px rgba(27,26,23,.96) inset;box-shadow:0 0 0 1000px rgba(27,26,23,.96) inset;caret-color:#f4ead8;transition:background-color 9999s ease-out}.account-feedback{margin:0;padding:2px 0;font-size:11px;line-height:1.55;animation:accountFeedbackReveal .28s ease-out both}.account-feedback.error{color:#ff9d86}.account-feedback.success{color:#f0a500}.account-submit,.account-primary-action{display:inline-flex;min-height:44px;align-items:center;justify-content:center;gap:9px;border:0;background:#f0a500;color:#1b1a17;cursor:pointer;font-size:9px;font-weight:800;letter-spacing:.17em;text-transform:uppercase;transition:transform .2s ease,opacity .2s ease,letter-spacing .2s ease}.account-submit{width:100%;margin-top:4px}.account-submit-arrow{transition:transform .2s ease}.account-submit:hover:not(:disabled),.account-primary-action:hover:not(:disabled){transform:translateY(-2px);letter-spacing:.2em}.account-submit:hover:not(:disabled) .account-submit-arrow{transform:translate(2px,-2px)}.account-submit:disabled,.account-primary-action:disabled{cursor:not-allowed;opacity:.5}.account-status{padding:14px 0;color:#f4ead8;font-size:11px}.account-authenticated{padding-top:32px;padding-bottom:32px}.account-user-email{margin:8px 0 10px;color:#f4ead8;font-size:22px;letter-spacing:-.025em;overflow-wrap:anywhere}.account-helper{margin:0;color:rgba(244,234,216,.62);font-size:11px;line-height:1.65}.account-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}.account-secondary-action{display:inline-flex;min-height:44px;align-items:center;justify-content:center;gap:7px;color:#f4ead8;font-size:9px;font-weight:700;letter-spacing:.14em;text-decoration:none;text-transform:uppercase;transition:opacity .2s ease,transform .2s ease}.account-secondary-action:hover{opacity:.72;transform:translateX(2px)}.account-info-gradient{position:absolute;right:0;bottom:0;left:0;z-index:40;display:flex;min-height:132px;align-items:flex-end;justify-content:space-between;gap:30px;padding:42px clamp(24px,4vw,64px) 24px;background:linear-gradient(to top,rgba(5,7,19,.96),rgba(5,7,19,.7) 55%,transparent);pointer-events:none;animation:accountInfoReveal .9s ease-out .75s both}.account-info-gradient strong{display:block;color:#f0a500;font-size:12px;letter-spacing:.18em}.account-info-gradient p{max-width:440px;margin:7px 0 0;color:rgba(244,234,216,.78);font-size:10px;line-height:1.6}.account-info-gradient small{color:rgba(244,234,216,.62);font-size:9px;white-space:nowrap}
-@keyframes accountForegroundReveal{from{opacity:0;clip-path:inset(0 0 0 2%)}to{opacity:1;clip-path:inset(0)}}@keyframes accountFadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}@keyframes accountBrandReveal{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@keyframes accountTitleSecondaryReveal{from{opacity:0;transform:translateX(-14px);filter:blur(3px)}to{opacity:1;transform:translateX(0);filter:blur(0)}}@keyframes accountTitlePrimaryReveal{from{opacity:0;transform:translateX(14px);filter:blur(3px)}to{opacity:1;transform:translateX(0);filter:blur(0)}}@keyframes accountFormReveal{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:translateX(0)}}@keyframes accountInfoReveal{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}@keyframes accountTabLine{from{transform:scaleX(.35);transform-origin:left}to{transform:scaleX(1);transform-origin:left}}@keyframes accountFeedbackReveal{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}@keyframes accountSignInTransition{from{opacity:0;transform:translateX(-12px);filter:blur(2px)}to{opacity:1;transform:translateX(0);filter:blur(0)}}@keyframes accountSignUpTransition{from{opacity:0;transform:translateX(12px);filter:blur(2px)}to{opacity:1;transform:translateX(0);filter:blur(0)}}
-@media(max-width:900px){.account-layer-background,.account-layer-foreground{background-position:56% top}.account-branding{left:28px;top:100px}.account-interaction{align-items:flex-end;justify-content:center;padding:180px 28px 150px}.account-form-panel,.account-authenticated{width:min(100%,470px)}}@media(max-width:640px){.account-layer-background,.account-layer-foreground{background-size:auto 72svh;background-position:57% 0}.account-branding{top:86px}.account-branding h1{font-size:48px;letter-spacing:.01em}.account-title-line-secondary{margin-left:14px}.account-interaction{padding:270px 24px 145px}.account-form-panel,.account-authenticated{min-height:454px;padding:20px 0;background:linear-gradient(90deg,rgba(27,26,23,.22),rgba(27,26,23,.82))}.account-info-gradient{display:block;min-height:120px;padding:42px 24px 18px}.account-info-gradient small{display:block;margin-top:9px;white-space:normal}.account-actions{grid-template-columns:1fr}}@media(prefers-reduced-motion:reduce){.account-layer-foreground,.account-home-link,.account-branding,.account-form-panel,.account-authenticated,.account-info-gradient,.account-form-transition,.account-title-line{animation:none;opacity:1;transform:none;filter:none;clip-path:none}.account-home-link,.account-submit,.account-primary-action,.account-secondary-action,.account-form-icon,.account-form input,.account-tabs button{transition:none}}
-      `}</style>
+      <div className="account-copyright">© 2026 UpThink — Đại học Công nghiệp TP.HCM / IUH</div>
+
+      <img className="account-cutout" src={FOREGROUND_IMAGE} alt="" aria-hidden="true" />
     </main>
   );
 }
