@@ -2,6 +2,7 @@
 
 import pytest
 
+from app.core.config import get_settings
 from app.models.product_vision import ProductGarmentType, ProductVisionRequest
 from app.services.gemini_product_vision_provider import (
     GeminiProductVisionOutput,
@@ -31,10 +32,14 @@ def test_gemini_provider_rejects_non_https_image_urls() -> None:
 
 def test_gemini_provider_requires_configured_key(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("GEMINI_API_KEY", "")
+    get_settings.cache_clear()
     provider = GeminiProductVisionProvider()
 
-    with pytest.raises(RuntimeError, match="GEMINI_API_KEY"):
-        provider._client()
+    try:
+        with pytest.raises(RuntimeError, match="GEMINI_API_KEY"):
+            provider._client()
+    finally:
+        get_settings.cache_clear()
 
 
 def test_request_contract_is_unchanged() -> None:
