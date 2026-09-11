@@ -54,14 +54,21 @@ function AccountPage() {
   return (
     <main className="account-page">
       <style>{`
+        html:has(.account-page), body:has(.account-page) {
+          margin: 0;
+          overflow: hidden;
+        }
+
         .account-page {
           --cream: #e6d5b8;
           --yellow: #f0a500;
           --ink: #1b1a17;
-          min-height: 100svh;
-          height: 100svh;
+          position: fixed;
+          inset: 0;
+          width: 100vw;
+          height: 100dvh;
+          min-height: 0;
           overflow: hidden;
-          position: relative;
           isolation: isolate;
           background: var(--ink);
           color: var(--cream);
@@ -80,11 +87,7 @@ function AccountPage() {
           user-select: none;
         }
 
-        .account-background {
-          z-index: 0;
-          object-fit: cover;
-          object-position: center center;
-        }
+        .account-background { z-index: 0; object-fit: cover; object-position: center center; }
 
         .account-page::after {
           content: "";
@@ -107,9 +110,7 @@ function AccountPage() {
         .account-brand,
         .account-title,
         .account-panel,
-        .account-info {
-          position: absolute;
-        }
+        .account-info { position: absolute; }
 
         .account-back-link {
           top: clamp(22px, 4.4vh, 46px);
@@ -123,11 +124,7 @@ function AccountPage() {
           letter-spacing: .12em;
           transition: color .2s ease, transform .2s ease;
         }
-
-        .account-back-link:hover {
-          color: var(--yellow);
-          transform: translateX(-3px);
-        }
+        .account-back-link:hover { color: var(--yellow); transform: translateX(-3px); }
 
         .account-brand {
           top: clamp(74px, 14vh, 132px);
@@ -157,20 +154,9 @@ function AccountPage() {
           white-space: nowrap;
         }
 
-        .account-title-line {
-          display: block;
-          opacity: 0;
-          will-change: transform, opacity, filter;
-        }
-
-        .account-title-line--first {
-          animation: titleFirstIn .75s cubic-bezier(.2,.75,.25,1) .08s forwards;
-        }
-
-        .account-title-line--second {
-          margin-left: clamp(18px, 2.3vw, 38px);
-          animation: titleSecondIn .75s cubic-bezier(.2,.75,.25,1) .02s forwards;
-        }
+        .account-title-line { display: block; opacity: 0; will-change: transform, opacity, filter; }
+        .account-title-line--first { animation: titleFirstIn .75s cubic-bezier(.2,.75,.25,1) .08s forwards; }
+        .account-title-line--second { margin-left: clamp(18px, 2.3vw, 38px); animation: titleSecondIn .75s cubic-bezier(.2,.75,.25,1) .02s forwards; }
 
         .account-panel {
           top: 50%;
@@ -187,251 +173,52 @@ function AccountPage() {
           animation: panelIn .75s cubic-bezier(.2,.75,.25,1) .3s forwards;
         }
 
-        .account-panel-inner {
-          height: 100%;
-          min-height: 428px;
-          padding: 0 clamp(22px, 2vw, 34px) 28px;
-          display: flex;
-          flex-direction: column;
-        }
+        .account-panel-inner { height: 100%; min-height: 428px; padding: 0 clamp(22px, 2vw, 34px) 28px; display: flex; flex-direction: column; }
+        .account-kicker { color: var(--yellow); font-size: 9px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 7px; }
+        .account-heading { display: flex; align-items: center; gap: 10px; margin: 0 0 22px; font-size: 17px; letter-spacing: .04em; font-weight: 500; }
+        .account-heading::before { content: "01"; display: grid; place-items: center; width: 27px; height: 27px; border: 1px solid var(--yellow); color: var(--yellow); font-size: 8px; letter-spacing: .08em; }
 
-        .account-kicker {
-          color: var(--yellow);
-          font-size: 9px;
-          font-weight: 800;
-          letter-spacing: .2em;
-          text-transform: uppercase;
-          margin-bottom: 7px;
-        }
-
-        .account-heading {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          margin: 0 0 22px;
-          font-size: 17px;
-          letter-spacing: .04em;
-          font-weight: 500;
-        }
-
-        .account-heading::before {
-          content: "01";
-          display: grid;
-          place-items: center;
-          width: 27px;
-          height: 27px;
-          border: 1px solid var(--yellow);
-          color: var(--yellow);
-          font-size: 8px;
-          letter-spacing: .08em;
-        }
-
-        .account-tabs {
-          display: flex;
-          gap: 24px;
-          margin-bottom: 24px;
-          border-bottom: 1px solid rgba(230,213,184,.26);
-        }
-
-        .account-tab {
-          position: relative;
-          padding: 0 0 11px;
-          border: 0;
-          background: transparent;
-          color: rgba(230,213,184,.45);
-          cursor: pointer;
-          font: inherit;
-          font-size: 9px;
-          font-weight: 800;
-          letter-spacing: .14em;
-          text-transform: uppercase;
-          transition: color .2s ease;
-        }
-
-        .account-tab::after {
-          content: "";
-          position: absolute;
-          left: 0;
-          bottom: -1px;
-          width: 0;
-          height: 2px;
-          background: var(--yellow);
-          transition: width .32s cubic-bezier(.2,.75,.25,1);
-        }
-
-        .account-tab:hover,
-        .account-tab--active { color: var(--yellow); }
+        .account-tabs { display: flex; gap: 24px; margin-bottom: 24px; border-bottom: 1px solid rgba(230,213,184,.26); }
+        .account-tab { position: relative; padding: 0 0 11px; border: 0; background: transparent; color: rgba(230,213,184,.45); cursor: pointer; font: inherit; font-size: 9px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; transition: color .2s ease; }
+        .account-tab::after { content: ""; position: absolute; left: 0; bottom: -1px; width: 0; height: 2px; background: var(--yellow); transition: width .32s cubic-bezier(.2,.75,.25,1); }
+        .account-tab:hover, .account-tab--active { color: var(--yellow); }
         .account-tab--active::after { width: 100%; }
 
-        .account-form-stage {
-          position: relative;
-          min-height: 264px;
-          flex: 1;
-          overflow: hidden;
-        }
-
-        .account-form {
-          position: absolute;
-          inset: 0;
-          display: flex;
-          flex-direction: column;
-          min-height: 264px;
-          animation: formIn .45s cubic-bezier(.2,.75,.25,1);
-        }
-
+        .account-form-stage { position: relative; min-height: 264px; flex: 1; overflow: hidden; }
+        .account-form { position: absolute; inset: 0; display: flex; flex-direction: column; min-height: 264px; animation: formIn .45s cubic-bezier(.2,.75,.25,1); }
         .account-field { margin-bottom: 18px; }
-
-        .account-field label {
-          display: block;
-          margin-bottom: 7px;
-          color: rgba(230,213,184,.7);
-          font-size: 8px;
-          font-weight: 800;
-          letter-spacing: .16em;
-          text-transform: uppercase;
-        }
-
-        .account-field input {
-          width: 100%;
-          height: 39px;
-          padding: 0;
-          border: 0;
-          border-bottom: 1px solid rgba(230,213,184,.36);
-          outline: 0;
-          border-radius: 0;
-          background: transparent;
-          color: var(--cream);
-          font: inherit;
-          font-size: 13px;
-          letter-spacing: .02em;
-          transition: border-color .2s ease, padding-left .2s ease;
-        }
-
-        .account-field input:focus {
-          border-bottom-color: var(--yellow);
-          padding-left: 5px;
-        }
-
-        .account-field input:-webkit-autofill,
-        .account-field input:-webkit-autofill:hover,
-        .account-field input:-webkit-autofill:focus {
-          -webkit-text-fill-color: var(--cream);
-          -webkit-box-shadow: 0 0 0 1000px rgba(27,26,23,.98) inset;
-          box-shadow: 0 0 0 1000px rgba(27,26,23,.98) inset;
-          transition: background-color 9999s ease-in-out 0s;
-        }
-
-        .account-submit {
-          margin-top: auto;
-          width: 100%;
-          min-height: 42px;
-          border: 0;
-          background: var(--yellow);
-          color: var(--ink);
-          cursor: pointer;
-          font: inherit;
-          font-size: 9px;
-          font-weight: 900;
-          letter-spacing: .17em;
-          text-transform: uppercase;
-          transition: transform .2s ease, filter .2s ease;
-        }
-
-        .account-submit:hover:not(:disabled) {
-          transform: translateY(-2px);
-          filter: brightness(1.08);
-        }
-
+        .account-field label { display: block; margin-bottom: 7px; color: rgba(230,213,184,.7); font-size: 8px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+        .account-field input { width: 100%; height: 39px; padding: 0; border: 0; border-bottom: 1px solid rgba(230,213,184,.36); outline: 0; border-radius: 0; background: transparent; color: var(--cream); font: inherit; font-size: 13px; letter-spacing: .02em; transition: border-color .2s ease, padding-left .2s ease; }
+        .account-field input:focus { border-bottom-color: var(--yellow); padding-left: 5px; }
+        .account-field input:-webkit-autofill, .account-field input:-webkit-autofill:hover, .account-field input:-webkit-autofill:focus { -webkit-text-fill-color: var(--cream); -webkit-box-shadow: 0 0 0 1000px rgba(27,26,23,.98) inset; box-shadow: 0 0 0 1000px rgba(27,26,23,.98) inset; transition: background-color 9999s ease-in-out 0s; }
+        .account-submit { margin-top: auto; width: 100%; min-height: 42px; border: 0; background: var(--yellow); color: var(--ink); cursor: pointer; font: inherit; font-size: 9px; font-weight: 900; letter-spacing: .17em; text-transform: uppercase; transition: transform .2s ease, filter .2s ease; }
+        .account-submit:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.08); }
         .account-submit:disabled { opacity: .55; cursor: wait; }
-
-        .account-feedback {
-          min-height: 38px;
-          margin-top: 11px;
-          font-size: 9px;
-          line-height: 1.5;
-          letter-spacing: .03em;
-        }
-
+        .account-feedback { min-height: 38px; margin-top: 11px; font-size: 9px; line-height: 1.5; letter-spacing: .03em; }
         .account-feedback--error { color: #ff9a76; }
         .account-feedback--success { color: var(--yellow); }
 
-        .account-info {
-          left: clamp(28px, 3.8vw, 58px);
-          bottom: clamp(20px, 4vh, 42px);
-          z-index: 6;
-          max-width: min(390px, 31vw);
-          opacity: 0;
-          animation: accountFadeUp .7s ease .48s forwards;
-        }
+        .account-info { left: clamp(28px, 3.8vw, 58px); bottom: clamp(20px, 4vh, 42px); z-index: 6; max-width: min(390px, 31vw); opacity: 0; animation: accountFadeUp .7s ease .48s forwards; }
+        .account-info strong { display: block; margin-bottom: 8px; color: var(--yellow); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; }
+        .account-info p { margin: 0; color: rgba(230,213,184,.82); font-size: 9px; line-height: 1.65; letter-spacing: .025em; }
+        .account-copyright { position: fixed; right: clamp(24px, 3.8vw, 58px); bottom: clamp(20px, 4vh, 42px); z-index: 7; color: rgba(230,213,184,.7); font-size: 7px; letter-spacing: .04em; }
 
-        .account-info strong {
-          display: block;
-          margin-bottom: 8px;
-          color: var(--yellow);
-          font-size: 10px;
-          letter-spacing: .18em;
-          text-transform: uppercase;
-        }
-
-        .account-info p {
-          margin: 0;
-          color: rgba(230,213,184,.82);
-          font-size: 9px;
-          line-height: 1.65;
-          letter-spacing: .025em;
-        }
-
-        .account-copyright {
-          position: fixed;
-          right: clamp(24px, 3.8vw, 58px);
-          bottom: clamp(20px, 4vh, 42px);
-          z-index: 7;
-          color: rgba(230,213,184,.7);
-          font-size: 7px;
-          letter-spacing: .04em;
-        }
-
-        @keyframes accountCutoutIn {
-          from { opacity: 0; transform: scale(1.012); }
-          to { opacity: 1; transform: scale(1); }
-        }
-
-        @keyframes titleFirstIn {
-          from { opacity: 0; transform: translateX(26px); filter: blur(5px); }
-          to { opacity: 1; transform: translateX(0); filter: blur(0); }
-        }
-
-        @keyframes titleSecondIn {
-          from { opacity: 0; transform: translateX(-22px); filter: blur(5px); }
-          to { opacity: 1; transform: translateX(0); filter: blur(0); }
-        }
-
-        @keyframes panelIn {
-          from { opacity: 0; transform: translate(24px, -50%); }
-          to { opacity: 1; transform: translate(0, -50%); }
-        }
-
-        @keyframes formIn {
-          from { opacity: 0; transform: translateX(18px); filter: blur(3px); }
-          to { opacity: 1; transform: translateX(0); filter: blur(0); }
-        }
-
-        @keyframes accountFadeUp {
-          from { opacity: 0; transform: translateY(12px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes accountCutoutIn { from { opacity: 0; transform: scale(1.012); } to { opacity: 1; transform: scale(1); } }
+        @keyframes titleFirstIn { from { opacity: 0; transform: translateX(26px); filter: blur(5px); } to { opacity: 1; transform: translateX(0); filter: blur(0); } }
+        @keyframes titleSecondIn { from { opacity: 0; transform: translateX(-22px); filter: blur(5px); } to { opacity: 1; transform: translateX(0); filter: blur(0); } }
+        @keyframes panelIn { from { opacity: 0; transform: translate(24px, -50%); } to { opacity: 1; transform: translate(0, -50%); } }
+        @keyframes formIn { from { opacity: 0; transform: translateX(18px); filter: blur(3px); } to { opacity: 1; transform: translateX(0); filter: blur(0); } }
+        @keyframes accountFadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes panelMobileIn { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
 
         @media (max-width: 900px) {
-          .account-page { overflow: hidden; }
           .account-title { font-size: clamp(50px, 9vw, 78px); left: 7vw; }
           .account-brand { left: 7vw; }
           .account-panel { right: 5vw; width: min(350px, 38vw); }
         }
 
         @media (max-width: 700px) {
-          .account-page { overflow: hidden; }
-          .account-background,
-          .account-cutout { object-position: 58% center; }
+          .account-background, .account-cutout { object-position: 58% center; }
           .account-page::after { background: linear-gradient(180deg, rgba(0,0,0,.14), rgba(10,8,6,.48) 42%, rgba(10,8,6,.98) 100%); }
           .account-back-link { top: 20px; left: 22px; font-size: 9px; }
           .account-brand { top: 72px; left: 22px; }
@@ -443,20 +230,13 @@ function AccountPage() {
           .account-info, .account-copyright { display: none; }
         }
 
-        @keyframes panelMobileIn {
-          from { opacity: 0; transform: translateY(18px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-
         @media (prefers-reduced-motion: reduce) {
           .account-page *, .account-page::after { animation-duration: .01ms !important; animation-delay: 0ms !important; transition-duration: .01ms !important; }
         }
       `}</style>
 
       <img className="account-background" src={BACKGROUND_IMAGE} alt="" aria-hidden="true" />
-
       <Link to="/" className="account-back-link">← Quay về trang chủ</Link>
-
       <div className="account-brand">UpThink Customer Account</div>
 
       <h1 className="account-title" aria-label="Không gian của bạn.">
@@ -480,26 +260,20 @@ function AccountPage() {
                 <label htmlFor="account-email">Email</label>
                 <input id="account-email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} required disabled={loading} />
               </div>
-
               <div className="account-field">
                 <label htmlFor="account-password">Mật khẩu</label>
                 <input id="account-password" type="password" autoComplete={mode === "login" ? "current-password" : "new-password"} value={password} onChange={(event) => setPassword(event.target.value)} required minLength={6} disabled={loading} />
               </div>
-
               {mode === "register" && (
                 <div className="account-field">
                   <label htmlFor="account-confirm-password">Xác nhận mật khẩu</label>
                   <input id="account-confirm-password" type="password" autoComplete="new-password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} required minLength={6} disabled={loading} />
                 </div>
               )}
-
               <button className="account-submit" type="submit" disabled={loading}>
                 {loading ? "Đang xử lý..." : mode === "login" ? "Đăng nhập  →" : "Tạo tài khoản  →"}
               </button>
-
-              <div className={`account-feedback ${error ? "account-feedback--error" : "account-feedback--success"}`} role="status" aria-live="polite">
-                {error || message}
-              </div>
+              <div className={`account-feedback ${error ? "account-feedback--error" : "account-feedback--success"}`} role="status" aria-live="polite">{error || message}</div>
             </form>
           </div>
         </div>
@@ -509,9 +283,7 @@ function AccountPage() {
         <strong>UpThink</strong>
         <p>Một ý tưởng khởi nghiệp của sinh viên IUH: thời trang cá nhân hóa với AI concept và virtual try-on.</p>
       </div>
-
       <div className="account-copyright">© 2026 UpThink — Đại học Công nghiệp TP.HCM / IUH</div>
-
       <img className="account-cutout" src={FOREGROUND_IMAGE} alt="" aria-hidden="true" />
     </main>
   );
