@@ -6,6 +6,7 @@ import uiStabilizationCss from "../ui-stabilization.css?url";
 import topbarCss from "../topbar.css?url";
 import adminUiCss from "../admin-ui.css?url";
 import adminComfortCss from "../admin-comfort.css?url";
+import paletteCss from "../palette.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { CartProvider } from "@/lib/cart";
 import { getCustomerUser, getSafeReturnPath, startCustomerSessionWatcher } from "@/lib/auth";
@@ -88,7 +89,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     { charSet: "utf-8" }, { name: "viewport", content: "width=device-width, initial-scale=1" }, { title: "UpThink — Thời trang streetwear với AI try-on" },
     { name: "description", content: "Nền tảng thời trang của sinh viên IUH: streetwear, AI concept styling và virtual try-on." }, { name: "author", content: "UpThink" }, { property: "og:title", content: "UpThink" }, { property: "og:description", content: "Streetwear cá nhân hóa với AI concept styling và virtual try-on." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }, { name: "twitter:site", content: "@Lovable" }
   ], links: [
-    { rel: "stylesheet", href: appCss }, { rel: "stylesheet", href: uiStabilizationCss }, { rel: "stylesheet", href: topbarCss }, { rel: "stylesheet", href: adminUiCss }, { rel: "stylesheet", href: adminComfortCss }, { rel: "icon", href: "/favicon.ico", type: "image/x-icon" }, { rel: "preconnect", href: "https://fonts.googleapis.com" }, { rel: "preconnect", href: "https://fonts.gstatic.com" }, { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Anton&family=Bodoni+Moda:opsz,wght@6..96,400..700&family=Oswald:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600&display=swap" }
+    { rel: "stylesheet", href: appCss }, { rel: "stylesheet", href: uiStabilizationCss }, { rel: "stylesheet", href: topbarCss }, { rel: "stylesheet", href: adminUiCss }, { rel: "stylesheet", href: adminComfortCss }, { rel: "stylesheet", href: paletteCss }, { rel: "icon", href: "/favicon.ico", type: "image/x-icon" }, { rel: "preconnect", href: "https://fonts.googleapis.com" }, { rel: "preconnect", href: "https://fonts.gstatic.com" }, { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Anton&family=Bodoni+Moda:opsz,wght@6..96,400..700&family=Oswald:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600&display=swap" }
   ] }),
   shellComponent: RootShell, component: RootComponent, notFoundComponent: NotFoundComponent, errorComponent: ErrorComponent,
 });
