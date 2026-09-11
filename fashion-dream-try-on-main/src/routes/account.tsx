@@ -7,7 +7,6 @@ export const Route = createFileRoute("/account")({
 });
 
 const BACKGROUND_IMAGE = "/account/account-background.png";
-const GHOST_PEOPLE_IMAGE = "/account/account-people-cutout.png";
 const FOREGROUND_IMAGE = "/account/account-2-people-sitting-cutout.png";
 
 type Mode = "login" | "register";
@@ -134,17 +133,15 @@ function AccountPage() {
         }
 
         .account-background,
-        .account-ghost,
         .account-cutout {
           position: absolute;
           pointer-events: none;
           user-select: none;
         }
 
-        /* LAYER 01 — original environment */
         .account-background {
           inset: 0;
-          z-index: 10;
+          z-index: 0;
           width: 100%;
           height: 100%;
           object-fit: fill;
@@ -154,37 +151,22 @@ function AccountPage() {
           content: "";
           position: absolute;
           inset: 0;
-          z-index: 11;
+          z-index: 1;
           pointer-events: none;
-          background: linear-gradient(180deg, rgba(0,0,0,.08) 0%, rgba(0,0,0,.02) 45%, rgba(10,8,6,.70) 100%);
+          background: linear-gradient(180deg, rgba(0,0,0,.08) 0%, rgba(0,0,0,.06) 45%, rgba(10,8,6,.88) 100%);
         }
 
-        /* LAYER 02 — full people cutout / print echo */
-        .account-ghost {
-          inset: 0;
-          z-index: 20;
-          width: 100%;
-          height: 100%;
-          object-fit: fill;
-          opacity: .26;
-          transform: translate(-.35%, .25%) scale(1.005);
-          filter: saturate(.78) contrast(.96);
-          mix-blend-mode: normal;
-          animation: ghostPeopleIn .9s cubic-bezier(.2,.75,.25,1) .05s both;
-        }
-
-        /* LAYER 03 — only the two seated people */
         .account-cutout {
-          left: 1%;
-          bottom: -1%;
-          z-index: 50;
-          width: 62%;
-          height: 105%;
-          object-fit: contain;
+          left: 0;
+          bottom: 0;
+          z-index: 3;
+          width: 67%;
+          height: 100%;
+          object-fit: cover;
           object-position: center bottom;
           opacity: 0;
-          filter: drop-shadow(7px 14px 20px rgba(0,0,0,.22));
-          animation: heroPeopleIn 1s cubic-bezier(.2,.75,.25,1) .16s forwards;
+          filter: drop-shadow(8px 14px 18px rgba(0,0,0,.16));
+          animation: accountCutoutIn .9s cubic-bezier(.2,.75,.25,1) .12s forwards;
         }
 
         .account-back-link,
@@ -197,7 +179,7 @@ function AccountPage() {
         .account-back-link {
           top: 5.2%;
           left: 4.1%;
-          z-index: 100;
+          z-index: 70;
           color: var(--cream);
           text-decoration: none;
           text-transform: uppercase;
@@ -209,9 +191,9 @@ function AccountPage() {
         .account-back-link:hover { color: var(--yellow); transform: translateX(-3px); }
 
         .account-brand {
-          top: 13.8%;
-          left: 17%;
-          z-index: 100;
+          top: 14.3%;
+          left: 12%;
+          z-index: 70;
           color: var(--yellow);
           font-size: clamp(11px, .92vw, 16px);
           font-weight: 900;
@@ -233,12 +215,11 @@ function AccountPage() {
           animation: brandRuleIn .55s cubic-bezier(.2,.75,.25,1) .48s both;
         }
 
-        /* TYPOGRAPHY BACK — behind the hero people */
         .account-title {
-          top: 20%;
-          left: 17%;
-          z-index: 30;
-          width: 49%;
+          top: 19%;
+          left: 12%;
+          z-index: 4;
+          width: 52%;
           margin: 0;
           color: var(--cream);
           font-size: clamp(48px, 7.05vw, 108px);
@@ -246,63 +227,32 @@ function AccountPage() {
           font-weight: 900;
           letter-spacing: .026em;
           text-transform: uppercase;
-          text-shadow: 0 8px 26px rgba(0,0,0,.18);
+          text-shadow: 0 8px 26px rgba(0,0,0,.16);
           pointer-events: none;
         }
 
-        .account-title-front {
-          position: absolute;
-          top: 20%;
-          left: 17%;
-          z-index: 60;
-          width: 49%;
-          margin: 0;
-          color: var(--cream);
-          font-size: clamp(48px, 7.05vw, 108px);
-          line-height: .91;
-          font-weight: 900;
-          letter-spacing: .026em;
-          text-transform: uppercase;
-          text-shadow: 0 8px 26px rgba(0,0,0,.18);
-          pointer-events: none;
-          clip-path: inset(0 0 49% 0);
-          -webkit-clip-path: inset(0 0 49% 0);
-        }
-
-        .account-title-line {
-          display: block;
-          opacity: 0;
-          will-change: transform, opacity, filter;
-          white-space: nowrap;
-        }
+        .account-title-line { display: block; opacity: 0; will-change: transform, opacity, filter; white-space: nowrap; }
         .account-title-line--first { animation: titleFirstIn .75s cubic-bezier(.2,.75,.25,1) .08s forwards; }
         .account-title-line--second { margin-left: 2.3%; animation: titleSecondIn .75s cubic-bezier(.2,.75,.25,1) .02s forwards; }
 
-        /* Transparent editorial access panel */
         .account-panel {
           top: 50%;
-          left: 58%;
+          right: 10%;
           z-index: 90;
-          width: min(540px, 36%);
+          width: min(520px, 38%);
           min-height: 454px;
           transform: translateY(-50%);
           padding: 26px 0 0;
-          background: linear-gradient(180deg, rgba(18,15,12,.34), rgba(18,15,12,.14));
-          border: 1px solid rgba(230,213,184,.13);
-          backdrop-filter: blur(4px);
-          -webkit-backdrop-filter: blur(4px);
-          box-shadow: 0 22px 55px rgba(0,0,0,.12);
+          background: linear-gradient(180deg, rgba(18,15,12,.42), rgba(18,15,12,.20));
+          border: 1px solid rgba(230,213,184,.10);
+          backdrop-filter: blur(5px);
+          -webkit-backdrop-filter: blur(5px);
+          box-shadow: 0 22px 55px rgba(0,0,0,.14);
           opacity: 0;
           animation: panelIn .75s cubic-bezier(.2,.75,.25,1) .3s forwards;
         }
 
-        .account-panel-inner {
-          height: 100%;
-          min-height: 428px;
-          padding: 0 clamp(26px, 2.3vw, 40px) 28px;
-          display: flex;
-          flex-direction: column;
-        }
+        .account-panel-inner { height: 100%; min-height: 428px; padding: 0 clamp(24px, 2.2vw, 38px) 28px; display: flex; flex-direction: column; }
         .account-kicker { color: var(--yellow); font-size: 9px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 7px; }
         .account-heading { display: flex; align-items: center; gap: 10px; margin: 0 0 22px; font-size: 17px; letter-spacing: .04em; font-weight: 500; }
         .account-heading::before { content: "01"; display: grid; place-items: center; width: 27px; height: 27px; border: 1px solid var(--yellow); color: var(--yellow); font-size: 8px; letter-spacing: .08em; }
@@ -316,10 +266,10 @@ function AccountPage() {
         .account-form-stage { position: relative; min-height: 264px; flex: 1; overflow: hidden; }
         .account-form { position: absolute; inset: 0; display: flex; flex-direction: column; min-height: 264px; animation: formIn .45s cubic-bezier(.2,.75,.25,1); }
         .account-field { margin-bottom: 18px; }
-        .account-field label { display: block; margin-bottom: 7px; color: rgba(230,213,184,.72); font-size: 8px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
-        .account-field input { width: 100%; height: 39px; padding: 0 10px; border: 0; border-bottom: 1px solid rgba(230,213,184,.40); outline: 0; border-radius: 0; background: rgba(27,26,23,.18); color: var(--cream); font: inherit; font-size: 13px; letter-spacing: .02em; transition: border-color .2s ease, padding-left .2s ease, background .2s ease; }
-        .account-field input:focus { border-bottom-color: var(--yellow); padding-left: 15px; background: rgba(27,26,23,.28); }
-        .account-field input:-webkit-autofill, .account-field input:-webkit-autofill:hover, .account-field input:-webkit-autofill:focus { -webkit-text-fill-color: var(--cream); -webkit-box-shadow: 0 0 0 1000px rgba(27,26,23,.55) inset; box-shadow: 0 0 0 1000px rgba(27,26,23,.55) inset; transition: background-color 9999s ease-in-out 0s; }
+        .account-field label { display: block; margin-bottom: 7px; color: rgba(230,213,184,.7); font-size: 8px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+        .account-field input { width: 100%; height: 39px; padding: 0; border: 0; border-bottom: 1px solid rgba(230,213,184,.36); outline: 0; border-radius: 0; background: rgba(27,26,23,.22); color: var(--cream); font: inherit; font-size: 13px; letter-spacing: .02em; transition: border-color .2s ease, padding-left .2s ease, background .2s ease; }
+        .account-field input:focus { border-bottom-color: var(--yellow); padding-left: 5px; background: rgba(27,26,23,.34); }
+        .account-field input:-webkit-autofill, .account-field input:-webkit-autofill:hover, .account-field input:-webkit-autofill:focus { -webkit-text-fill-color: var(--cream); -webkit-box-shadow: 0 0 0 1000px rgba(27,26,23,.72) inset; box-shadow: 0 0 0 1000px rgba(27,26,23,.72) inset; transition: background-color 9999s ease-in-out 0s; }
         .account-submit { margin-top: auto; width: 100%; min-height: 42px; border: 0; background: var(--yellow); color: var(--ink); cursor: pointer; font: inherit; font-size: 9px; font-weight: 900; letter-spacing: .17em; text-transform: uppercase; transition: transform .2s ease, filter .2s ease; }
         .account-submit:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.08); }
         .account-submit:disabled { opacity: .55; cursor: wait; }
@@ -328,9 +278,9 @@ function AccountPage() {
         .account-feedback--success { color: var(--yellow); }
 
         .account-info {
-          left: 4.5%;
+          left: 3.8%;
           bottom: 5.3%;
-          z-index: 100;
+          z-index: 70;
           max-width: 38%;
           opacity: 0;
           animation: accountFadeUp .7s ease .48s forwards;
@@ -352,22 +302,15 @@ function AccountPage() {
           letter-spacing: .025em;
         }
         .account-copyright {
-          right: 4.5%;
+          right: 3.8%;
           bottom: 5.3%;
-          z-index: 100;
+          z-index: 70;
           color: rgba(230,213,184,.76);
           font-size: 12px;
           letter-spacing: .04em;
         }
 
-        @keyframes ghostPeopleIn {
-          from { opacity: 0; transform: translate(-1.2%, .8%) scale(1.015); }
-          to { opacity: .26; transform: translate(-.35%, .25%) scale(1.005); }
-        }
-        @keyframes heroPeopleIn {
-          from { opacity: 0; transform: translateY(14px) scale(1.025); }
-          to { opacity: 1; transform: translateY(0) scale(1); }
-        }
+        @keyframes accountCutoutIn { from { opacity: 0; transform: scale(1.012); } to { opacity: 1; transform: scale(1); } }
         @keyframes titleFirstIn { from { opacity: 0; transform: translateX(26px); filter: blur(5px); } to { opacity: 1; transform: translateX(0); filter: blur(0); } }
         @keyframes titleSecondIn { from { opacity: 0; transform: translateX(-22px); filter: blur(5px); } to { opacity: 1; transform: translateX(0); filter: blur(0); } }
         @keyframes panelIn { from { opacity: 0; transform: translate(24px, -50%); } to { opacity: 1; transform: translate(0, -50%); } }
@@ -377,11 +320,9 @@ function AccountPage() {
         @keyframes panelMobileIn { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
 
         @media (max-width: 900px) and (min-width: 701px) {
-          .account-title,
-          .account-title-front { left: 10%; width: 52%; font-size: clamp(48px, 7.8vw, 78px); }
-          .account-brand { left: 10%; font-size: clamp(10px, 1.05vw, 14px); }
-          .account-cutout { width: 64%; }
-          .account-panel { left: 55%; width: 40%; }
+          .account-title { left: 9%; font-size: clamp(48px, 7.8vw, 78px); }
+          .account-panel { right: 5%; width: 40%; }
+          .account-brand { left: 9%; font-size: clamp(10px, 1.05vw, 14px); }
           .account-info { max-width: 36%; }
           .account-info strong { font-size: 15px; }
           .account-info p { font-size: 13px; }
@@ -395,16 +336,13 @@ function AccountPage() {
             aspect-ratio: auto;
           }
           .account-background { object-fit: cover; object-position: 58% center; }
-          .account-ghost { object-fit: cover; object-position: center center; opacity: .16; }
-          .account-cutout { left: 0; width: 100%; height: 58%; object-fit: contain; object-position: center bottom; }
-          .account-stage::after { background: linear-gradient(180deg, rgba(0,0,0,.14), rgba(10,8,6,.42) 42%, rgba(10,8,6,.96) 100%); }
+          .account-cutout { width: 100%; height: 58%; object-fit: cover; object-position: center bottom; }
+          .account-stage::after { background: linear-gradient(180deg, rgba(0,0,0,.14), rgba(10,8,6,.48) 42%, rgba(10,8,6,.98) 100%); }
           .account-back-link { top: 20px; left: 22px; font-size: 9px; }
           .account-brand { top: 72px; left: 22px; font-size: 11px; letter-spacing: .18em; }
-          .account-title,
-          .account-title-front { top: 98px; left: 22px; width: auto; font-size: clamp(45px, 15vw, 68px); letter-spacing: .02em; line-height: .9; }
+          .account-title { top: 98px; left: 22px; width: auto; font-size: clamp(45px, 15vw, 68px); letter-spacing: .02em; line-height: .9; }
           .account-title-line--second { margin-left: 14px; }
-          .account-title-front { clip-path: inset(0 0 48% 0); -webkit-clip-path: inset(0 0 48% 0); }
-          .account-panel { top: auto; left: 18px; right: 18px; bottom: 18px; width: calc(100% - 36px); min-height: 370px; transform: none; padding-top: 22px; background: linear-gradient(180deg, rgba(18,15,12,.48), rgba(18,15,12,.26)); animation-name: panelMobileIn; }
+          .account-panel { top: auto; right: 18px; bottom: 18px; width: calc(100% - 36px); min-height: 370px; transform: none; padding-top: 22px; background: linear-gradient(180deg, rgba(18,15,12,.54), rgba(18,15,12,.30)); animation-name: panelMobileIn; }
           .account-panel-inner { min-height: 344px; padding: 0 20px 20px; }
           .account-form-stage, .account-form { min-height: 208px; }
           .account-info, .account-copyright { display: none; }
@@ -416,26 +354,11 @@ function AccountPage() {
       `}</style>
 
       <div className="account-stage">
-        {/* Layer 01 — original image */}
         <img className="account-background" src={BACKGROUND_IMAGE} alt="" aria-hidden="true" />
-
-        {/* Layer 02 — full people cutout / print echo */}
-        <img className="account-ghost" src={GHOST_PEOPLE_IMAGE} alt="" aria-hidden="true" />
-
         <Link to="/" className="account-back-link">← Quay về trang chủ</Link>
         <div className="account-brand">UpThink Customer Account</div>
 
-        {/* Typography behind the hero */}
         <h1 className="account-title" aria-label="Không gian của bạn.">
-          <span className="account-title-line account-title-line--second">Không gian</span>
-          <span className="account-title-line account-title-line--first">Của bạn.</span>
-        </h1>
-
-        {/* Layer 03 — only the two seated people */}
-        <img className="account-cutout" src={FOREGROUND_IMAGE} alt="" aria-hidden="true" />
-
-        {/* Typography front pass — creates the editorial overlap */}
-        <h1 className="account-title-front" aria-hidden="true">
           <span className="account-title-line account-title-line--second">Không gian</span>
           <span className="account-title-line account-title-line--first">Của bạn.</span>
         </h1>
@@ -480,6 +403,7 @@ function AccountPage() {
           <p>Một ý tưởng khởi nghiệp của sinh viên IUH: thời trang cá nhân hóa với AI concept và virtual try-on.</p>
         </div>
         <div className="account-copyright">© 2026 UpThink — Đại học Công nghiệp TP.HCM / IUH</div>
+        <img className="account-cutout" src={FOREGROUND_IMAGE} alt="" aria-hidden="true" />
       </div>
     </main>
   );
