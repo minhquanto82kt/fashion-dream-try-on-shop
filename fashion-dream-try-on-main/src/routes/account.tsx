@@ -75,14 +75,15 @@ function AccountPage() {
           font-family: inherit;
         }
 
+        /* The widened source image fills the whole viewport behind the 16:9 content stage. */
         .account-page::before {
           content: "";
           position: absolute;
-          inset: -34px;
+          inset: -24px;
           z-index: 0;
           background: url("/account/account-background.png") center / cover no-repeat;
-          filter: blur(30px) brightness(.28) saturate(.78);
-          transform: scale(1.06);
+          filter: blur(10px) brightness(.42) saturate(.88);
+          transform: scale(1.035);
           pointer-events: none;
         }
 
@@ -94,15 +95,13 @@ function AccountPage() {
           pointer-events: none;
           background:
             linear-gradient(90deg,
-              rgba(27,26,23,.96) 0%,
-              rgba(27,26,23,.72) 5%,
-              rgba(27,26,23,.28) 12%,
-              rgba(27,26,23,0) 19%,
-              rgba(27,26,23,0) 81%,
-              rgba(27,26,23,.28) 88%,
-              rgba(27,26,23,.72) 95%,
-              rgba(27,26,23,.96) 100%),
-            linear-gradient(180deg, rgba(0,0,0,.16) 0%, rgba(0,0,0,0) 55%, rgba(10,8,6,.5) 100%);
+              rgba(27,26,23,.42) 0%,
+              rgba(27,26,23,.10) 12%,
+              rgba(27,26,23,0) 24%,
+              rgba(27,26,23,0) 76%,
+              rgba(27,26,23,.10) 88%,
+              rgba(27,26,23,.42) 100%),
+            linear-gradient(180deg, rgba(0,0,0,.12) 0%, rgba(0,0,0,0) 55%, rgba(10,8,6,.45) 100%);
         }
 
         .account-page * { box-sizing: border-box; }
@@ -125,11 +124,9 @@ function AccountPage() {
         .account-stage::before {
           content: "";
           position: absolute;
-          inset: -10%;
+          inset: 0;
           z-index: -2;
-          background: url("/account/account-background.png") center / cover no-repeat;
-          filter: blur(22px) brightness(.34);
-          transform: scale(1.08);
+          background: var(--ink);
         }
 
         .account-background,
@@ -144,7 +141,9 @@ function AccountPage() {
           z-index: 0;
           width: 100%;
           height: 100%;
-          object-fit: fill;
+          /* Preserve the model proportions. Never stretch the 2.13:1 source vertically. */
+          object-fit: cover;
+          object-position: center center;
         }
 
         .account-stage::after {
@@ -153,7 +152,7 @@ function AccountPage() {
           inset: 0;
           z-index: 1;
           pointer-events: none;
-          background: linear-gradient(180deg, rgba(0,0,0,.08) 0%, rgba(0,0,0,.06) 45%, rgba(10,8,6,.88) 100%);
+          background: linear-gradient(180deg, rgba(0,0,0,.08) 0%, rgba(0,0,0,.04) 45%, rgba(10,8,6,.78) 100%);
         }
 
         .account-cutout {
