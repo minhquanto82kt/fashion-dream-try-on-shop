@@ -9,7 +9,7 @@ const cards = [
   ["Products", "Manage catalog, pricing and publishing", "/admin/products"],
   ["Orders", "Review and manage customer orders", "/admin/orders"],
   ["Customers", "View customer accounts and activity", "#"],
-  ["Inventory", "Track stock and availability", "#"],
+  ["Inventory", "Track stock and availability", "/admin/inventory"],
 ] as const;
 
 function AdminDashboardPage() {
