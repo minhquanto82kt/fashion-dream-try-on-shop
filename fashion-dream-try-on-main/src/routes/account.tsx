@@ -182,30 +182,43 @@ function AccountPage() {
         .account-back-link:hover { color: var(--yellow); transform: translateX(-3px); }
 
         .account-brand {
-          top: 15.5%;
+          top: 14.3%;
           left: 9%;
-          z-index: 5;
+          z-index: 6;
           color: var(--yellow);
-          font-size: clamp(8px, .7vw, 12px);
-          font-weight: 800;
-          letter-spacing: .2em;
+          font-size: clamp(11px, .92vw, 16px);
+          font-weight: 900;
+          letter-spacing: .24em;
+          line-height: 1;
           text-transform: uppercase;
+          text-shadow: 0 2px 16px rgba(0,0,0,.58);
           opacity: 0;
           animation: accountFadeUp .65s ease .2s forwards;
         }
+        .account-brand::after {
+          content: "";
+          display: block;
+          width: clamp(30px, 3.4vw, 58px);
+          height: 2px;
+          margin-top: 8px;
+          background: var(--yellow);
+          transform-origin: left;
+          animation: brandRuleIn .55s cubic-bezier(.2,.75,.25,1) .48s both;
+        }
 
         .account-title {
-          top: 19%;
+          top: 20.2%;
           left: 9%;
           z-index: 4;
-          width: 47%;
+          width: 48%;
           margin: 0;
           color: var(--cream);
-          font-size: clamp(50px, 7.4vw, 112px);
-          line-height: .82;
+          font-size: clamp(48px, 7.05vw, 108px);
+          line-height: .91;
           font-weight: 900;
           letter-spacing: .026em;
           text-transform: uppercase;
+          text-shadow: 0 8px 26px rgba(0,0,0,.16);
           pointer-events: none;
         }
 
@@ -264,11 +277,13 @@ function AccountPage() {
         @keyframes panelIn { from { opacity: 0; transform: translate(24px, -50%); } to { opacity: 1; transform: translate(0, -50%); } }
         @keyframes formIn { from { opacity: 0; transform: translateX(18px); filter: blur(3px); } to { opacity: 1; transform: translateX(0); filter: blur(0); } }
         @keyframes accountFadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes brandRuleIn { from { transform: scaleX(0); opacity: 0; } to { transform: scaleX(1); opacity: 1; } }
         @keyframes panelMobileIn { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
 
         @media (max-width: 900px) and (min-width: 701px) {
           .account-title { font-size: clamp(48px, 7.8vw, 78px); }
           .account-panel { right: 4.5%; width: 34%; }
+          .account-brand { font-size: clamp(10px, 1.05vw, 14px); }
         }
 
         @media (max-width: 700px) {
@@ -280,8 +295,8 @@ function AccountPage() {
           .account-background, .account-cutout { object-fit: cover; object-position: 58% center; }
           .account-stage::after { background: linear-gradient(180deg, rgba(0,0,0,.14), rgba(10,8,6,.48) 42%, rgba(10,8,6,.98) 100%); }
           .account-back-link { top: 20px; left: 22px; font-size: 9px; }
-          .account-brand { top: 72px; left: 22px; }
-          .account-title { top: 91px; left: 22px; width: auto; font-size: clamp(45px, 15vw, 68px); letter-spacing: .02em; }
+          .account-brand { top: 72px; left: 22px; font-size: 11px; letter-spacing: .18em; }
+          .account-title { top: 98px; left: 22px; width: auto; font-size: clamp(45px, 15vw, 68px); letter-spacing: .02em; line-height: .9; }
           .account-title-line--second { margin-left: 14px; }
           .account-panel { top: auto; right: 18px; bottom: 18px; width: calc(100% - 36px); min-height: 370px; transform: none; padding-top: 22px; animation-name: panelMobileIn; }
           .account-panel-inner { min-height: 344px; padding: 0 20px 20px; }
