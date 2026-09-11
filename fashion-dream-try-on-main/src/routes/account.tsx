@@ -165,6 +165,7 @@ function AccountPage() {
           object-fit: cover;
           object-position: center bottom;
           opacity: 0;
+          filter: drop-shadow(8px 14px 18px rgba(0,0,0,.16));
           animation: accountCutoutIn .9s cubic-bezier(.2,.75,.25,1) .12s forwards;
         }
 
@@ -178,7 +179,7 @@ function AccountPage() {
         .account-back-link {
           top: 5.2%;
           left: 4.1%;
-          z-index: 7;
+          z-index: 70;
           color: var(--cream);
           text-decoration: none;
           text-transform: uppercase;
@@ -191,8 +192,8 @@ function AccountPage() {
 
         .account-brand {
           top: 14.3%;
-          left: 9%;
-          z-index: 6;
+          left: 12%;
+          z-index: 70;
           color: var(--yellow);
           font-size: clamp(11px, .92vw, 16px);
           font-weight: 900;
@@ -215,10 +216,10 @@ function AccountPage() {
         }
 
         .account-title {
-          top: 20.2%;
-          left: 9%;
+          top: 19%;
+          left: 12%;
           z-index: 4;
-          width: 48%;
+          width: 52%;
           margin: 0;
           color: var(--cream);
           font-size: clamp(48px, 7.05vw, 108px);
@@ -236,20 +237,22 @@ function AccountPage() {
 
         .account-panel {
           top: 50%;
-          right: 6.2%;
-          z-index: 8;
-          width: min(360px, 28.5%);
+          right: 10%;
+          z-index: 90;
+          width: min(520px, 38%);
           min-height: 454px;
           transform: translateY(-50%);
           padding: 26px 0 0;
-          background: linear-gradient(180deg, rgba(18,15,12,.72), rgba(18,15,12,.48));
-          backdrop-filter: blur(9px);
-          -webkit-backdrop-filter: blur(9px);
+          background: linear-gradient(180deg, rgba(18,15,12,.42), rgba(18,15,12,.20));
+          border: 1px solid rgba(230,213,184,.10);
+          backdrop-filter: blur(5px);
+          -webkit-backdrop-filter: blur(5px);
+          box-shadow: 0 22px 55px rgba(0,0,0,.14);
           opacity: 0;
           animation: panelIn .75s cubic-bezier(.2,.75,.25,1) .3s forwards;
         }
 
-        .account-panel-inner { height: 100%; min-height: 428px; padding: 0 clamp(22px, 2vw, 34px) 28px; display: flex; flex-direction: column; }
+        .account-panel-inner { height: 100%; min-height: 428px; padding: 0 clamp(24px, 2.2vw, 38px) 28px; display: flex; flex-direction: column; }
         .account-kicker { color: var(--yellow); font-size: 9px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 7px; }
         .account-heading { display: flex; align-items: center; gap: 10px; margin: 0 0 22px; font-size: 17px; letter-spacing: .04em; font-weight: 500; }
         .account-heading::before { content: "01"; display: grid; place-items: center; width: 27px; height: 27px; border: 1px solid var(--yellow); color: var(--yellow); font-size: 8px; letter-spacing: .08em; }
@@ -264,9 +267,9 @@ function AccountPage() {
         .account-form { position: absolute; inset: 0; display: flex; flex-direction: column; min-height: 264px; animation: formIn .45s cubic-bezier(.2,.75,.25,1); }
         .account-field { margin-bottom: 18px; }
         .account-field label { display: block; margin-bottom: 7px; color: rgba(230,213,184,.7); font-size: 8px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
-        .account-field input { width: 100%; height: 39px; padding: 0; border: 0; border-bottom: 1px solid rgba(230,213,184,.36); outline: 0; border-radius: 0; background: transparent; color: var(--cream); font: inherit; font-size: 13px; letter-spacing: .02em; transition: border-color .2s ease, padding-left .2s ease; }
-        .account-field input:focus { border-bottom-color: var(--yellow); padding-left: 5px; }
-        .account-field input:-webkit-autofill, .account-field input:-webkit-autofill:hover, .account-field input:-webkit-autofill:focus { -webkit-text-fill-color: var(--cream); -webkit-box-shadow: 0 0 0 1000px rgba(27,26,23,.98) inset; box-shadow: 0 0 0 1000px rgba(27,26,23,.98) inset; transition: background-color 9999s ease-in-out 0s; }
+        .account-field input { width: 100%; height: 39px; padding: 0; border: 0; border-bottom: 1px solid rgba(230,213,184,.36); outline: 0; border-radius: 0; background: rgba(27,26,23,.22); color: var(--cream); font: inherit; font-size: 13px; letter-spacing: .02em; transition: border-color .2s ease, padding-left .2s ease, background .2s ease; }
+        .account-field input:focus { border-bottom-color: var(--yellow); padding-left: 5px; background: rgba(27,26,23,.34); }
+        .account-field input:-webkit-autofill, .account-field input:-webkit-autofill:hover, .account-field input:-webkit-autofill:focus { -webkit-text-fill-color: var(--cream); -webkit-box-shadow: 0 0 0 1000px rgba(27,26,23,.72) inset; box-shadow: 0 0 0 1000px rgba(27,26,23,.72) inset; transition: background-color 9999s ease-in-out 0s; }
         .account-submit { margin-top: auto; width: 100%; min-height: 42px; border: 0; background: var(--yellow); color: var(--ink); cursor: pointer; font: inherit; font-size: 9px; font-weight: 900; letter-spacing: .17em; text-transform: uppercase; transition: transform .2s ease, filter .2s ease; }
         .account-submit:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.08); }
         .account-submit:disabled { opacity: .55; cursor: wait; }
@@ -277,7 +280,7 @@ function AccountPage() {
         .account-info {
           left: 3.8%;
           bottom: 5.3%;
-          z-index: 6;
+          z-index: 70;
           max-width: 38%;
           opacity: 0;
           animation: accountFadeUp .7s ease .48s forwards;
@@ -301,7 +304,7 @@ function AccountPage() {
         .account-copyright {
           right: 3.8%;
           bottom: 5.3%;
-          z-index: 7;
+          z-index: 70;
           color: rgba(230,213,184,.76);
           font-size: 12px;
           letter-spacing: .04em;
@@ -317,9 +320,9 @@ function AccountPage() {
         @keyframes panelMobileIn { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
 
         @media (max-width: 900px) and (min-width: 701px) {
-          .account-title { font-size: clamp(48px, 7.8vw, 78px); }
-          .account-panel { right: 4.5%; width: 34%; }
-          .account-brand { font-size: clamp(10px, 1.05vw, 14px); }
+          .account-title { left: 9%; font-size: clamp(48px, 7.8vw, 78px); }
+          .account-panel { right: 5%; width: 40%; }
+          .account-brand { left: 9%; font-size: clamp(10px, 1.05vw, 14px); }
           .account-info { max-width: 36%; }
           .account-info strong { font-size: 15px; }
           .account-info p { font-size: 13px; }
@@ -339,7 +342,7 @@ function AccountPage() {
           .account-brand { top: 72px; left: 22px; font-size: 11px; letter-spacing: .18em; }
           .account-title { top: 98px; left: 22px; width: auto; font-size: clamp(45px, 15vw, 68px); letter-spacing: .02em; line-height: .9; }
           .account-title-line--second { margin-left: 14px; }
-          .account-panel { top: auto; right: 18px; bottom: 18px; width: calc(100% - 36px); min-height: 370px; transform: none; padding-top: 22px; animation-name: panelMobileIn; }
+          .account-panel { top: auto; right: 18px; bottom: 18px; width: calc(100% - 36px); min-height: 370px; transform: none; padding-top: 22px; background: linear-gradient(180deg, rgba(18,15,12,.54), rgba(18,15,12,.30)); animation-name: panelMobileIn; }
           .account-panel-inner { min-height: 344px; padding: 0 20px 20px; }
           .account-form-stage, .account-form { min-height: 208px; }
           .account-info, .account-copyright { display: none; }
