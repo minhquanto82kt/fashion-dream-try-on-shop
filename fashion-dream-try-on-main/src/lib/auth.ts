@@ -65,13 +65,32 @@ async function checkAdminWithCustomerToken(accessToken: string) {
     body: JSON.stringify({}),
   });
 
-  if (!response.ok) return false;
+  if (!response.ok) {
+    throw new Error(`Không thể xác minh quyền tài khoản (${response.status}).`);
+  }
 
   try {
     return Boolean(await response.json());
   } catch {
-    return false;
+    throw new Error("Không thể xác minh quyền tài khoản.");
   }
+}
+
+async function rejectAdminCustomerSession(accessToken: string, message: string): Promise<never> {
+  try {
+    await fetch(`${supabaseConfig.url}/auth/v1/logout`, {
+      method: "POST",
+      headers: {
+        apikey: supabaseConfig.key,
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+  } catch {
+    // Local customer session was never stored, so a logout failure here is safe.
+  }
+
+  throw new Error(message);
 }
 
 export async function signInCustomer(email: string, password: string) {
@@ -93,20 +112,8 @@ export async function signInCustomer(email: string, password: string) {
   // service, so the application must enforce the account role after login.
   // An admin account is never accepted as a customer account.
   if (data.access_token && (await checkAdminWithCustomerToken(data.access_token))) {
-    try {
-      await fetch(`${supabaseConfig.url}/auth/v1/logout`, {
-        method: "POST",
-        headers: {
-          apikey: supabaseConfig.key,
-          Authorization: `Bearer ${data.access_token}`,
-          "Content-Type": "application/json",
-        },
-      });
-    } catch {
-      // Local customer session was never stored, so a logout failure here is safe.
-    }
-
-    throw new Error(
+    return rejectAdminCustomerSession(
+      data.access_token,
       "Tài khoản này dành cho quản trị viên. Hãy đăng nhập bằng tài khoản mua hàng riêng."
     );
   }
@@ -131,20 +138,8 @@ export async function signUpCustomer(email: string, password: string) {
     // A newly registered customer should not be an admin. Keep the same
     // authorization boundary here in case the backend ever pre-assigns a role.
     if (await checkAdminWithCustomerToken(data.access_token)) {
-      try {
-        await fetch(`${supabaseConfig.url}/auth/v1/logout`, {
-          method: "POST",
-          headers: {
-            apikey: supabaseConfig.key,
-            Authorization: `Bearer ${data.access_token}`,
-            "Content-Type": "application/json",
-          },
-        });
-      } catch {
-        // Do not persist a customer session for an admin account.
-      }
-
-      throw new Error(
+      return rejectAdminCustomerSession(
+        data.access_token,
         "Email này thuộc tài khoản quản trị viên và không thể đăng ký tài khoản mua hàng."
       );
     }
@@ -171,7 +166,13 @@ export async function getCustomerUser() {
     return null;
   }
 
-  if (await checkAdminWithCustomerToken(session.access_token)) {
+  try {
+    if (await checkAdminWithCustomerToken(session.access_token)) {
+      setCustomerSession(null);
+      return null;
+    }
+  } catch {
+    // Fail closed: without a successful role check, do not keep a customer session.
     setCustomerSession(null);
     return null;
   }
