@@ -53,6 +53,7 @@ function setCustomerSession(session: Session | null) {
 }
 function dispatchAuthEvent(type: "login" | "logout") { if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(`upthink:auth:${type}`)); }
 function dispatchCartChanged() { if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent("upthink:cart:changed")); }
+function dispatchAuthError(message: string) { if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent("upthink:auth:error", { detail: { message } })); }
 function readCart(key: string): CartLine[] {
   if (typeof window === "undefined") return [];
   try { const value = JSON.parse(window.localStorage.getItem(key) || "[]"); return Array.isArray(value) ? value.filter((line) => line && typeof line.productId === "string") : []; } catch { return []; }
@@ -99,6 +100,54 @@ export async function signInCustomer(email: string, password: string) {
   dispatchAuthEvent("login");
   return data;
 }
+
+export function signInWithGoogle() {
+  if (typeof window === "undefined") return;
+  const redirectTo = `${window.location.origin}/account`;
+  const authorizeUrl = new URL(`${supabaseConfig.url}/auth/v1/authorize`);
+  authorizeUrl.searchParams.set("provider", "google");
+  authorizeUrl.searchParams.set("redirect_to", redirectTo);
+  window.location.assign(authorizeUrl.toString());
+}
+
+async function handleGoogleCallback() {
+  if (typeof window === "undefined" || !window.location.hash.includes("access_token=")) return;
+  const params = new URLSearchParams(window.location.hash.slice(1));
+  const accessToken = params.get("access_token");
+  const refreshToken = params.get("refresh_token");
+  if (!accessToken || !refreshToken) return;
+
+  const expiresIn = Number(params.get("expires_in") || 3600);
+  const expiresAt = Number(params.get("expires_at") || Math.floor(Date.now() / 1000) + expiresIn);
+  const session: Session = {
+    access_token: accessToken,
+    refresh_token: refreshToken,
+    token_type: params.get("token_type") || "bearer",
+    expires_in: expiresIn,
+    expires_at: expiresAt,
+  };
+
+  try {
+    if (await checkAdminWithCustomerToken(accessToken)) {
+      await rejectAdminCustomerSession(accessToken, "Tài khoản Google này thuộc khu vực quản trị viên và không thể dùng để mua hàng.");
+    }
+    const userResponse = await fetch(`${supabaseConfig.url}/auth/v1/user`, {
+      headers: { apikey: supabaseConfig.key, Authorization: `Bearer ${accessToken}` },
+    });
+    if (!userResponse.ok) throw new Error("Không thể xác minh tài khoản Google.");
+    const user = (await userResponse.json()) as AuthUser;
+    setCustomerSession({ ...session, user });
+    syncCartForCustomer(user.id);
+    window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+    dispatchAuthEvent("login");
+  } catch (error) {
+    setCustomerSession(null);
+    const message = error instanceof Error ? error.message : "Đăng nhập Google thất bại.";
+    window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+    dispatchAuthError(message);
+  }
+}
+
 export async function signUpCustomer(email: string, password: string) {
   const normalizedEmail = normalizeEmail(email);
   const remaining = getSignupCooldownRemaining(normalizedEmail);
@@ -157,4 +206,54 @@ export function startCustomerSessionWatcher(onChange: (session: Session | null) 
 export function getSafeReturnPath(value: string | null | undefined, fallback = "/") {
   if (!value || !value.startsWith("/") || value.startsWith("//")) return fallback;
   return value;
+}
+
+function installGoogleAccountButton() {
+  if (typeof window === "undefined" || typeof document === "undefined") return;
+  const mount = () => {
+    const switcher = document.querySelector<HTMLElement>(".account-switch");
+    if (!switcher || document.querySelector("[data-google-account-button]")) return;
+
+    const wrapper = document.createElement("div");
+    wrapper.setAttribute("data-google-account-button", "true");
+    wrapper.innerHTML = `
+      <div class="account-google-divider"><span>OR CONTINUE WITH</span></div>
+      <button type="button" class="account-google-button" aria-label="Continue with Google">
+        <span class="account-google-icon" aria-hidden="true">G</span>
+        <span>Continue with Google</span>
+      </button>
+    `;
+    switcher.insertAdjacentElement("afterend", wrapper);
+    wrapper.querySelector("button")?.addEventListener("click", () => signInWithGoogle());
+
+    const style = document.createElement("style");
+    style.setAttribute("data-google-account-style", "true");
+    style.textContent = `
+      .account-google-divider { display:flex; align-items:center; gap:12px; margin:0 0 18px; color:rgba(230,213,184,.36); font-size:7px; font-weight:900; letter-spacing:.16em; }
+      .account-google-divider::before,.account-google-divider::after { content:""; height:1px; flex:1; background:rgba(230,213,184,.14); }
+      .account-google-button { width:100%; min-height:46px; display:flex; align-items:center; justify-content:center; gap:10px; border:1px solid rgba(230,213,184,.24); background:rgba(27,26,23,.42); color:#e6d5b8; cursor:pointer; font:inherit; font-size:8px; font-weight:900; letter-spacing:.14em; text-transform:uppercase; transition:border-color .2s ease,background .2s ease,transform .2s ease; }
+      .account-google-button:hover { border-color:rgba(240,165,0,.72); background:rgba(27,26,23,.62); transform:translateY(-1px); }
+      .account-google-icon { display:grid; place-items:center; width:20px; height:20px; border-radius:50%; background:#fff; color:#4285f4; font-family:Arial,sans-serif; font-size:13px; font-weight:700; letter-spacing:0; text-transform:none; }
+      @media (prefers-reduced-motion: reduce) { .account-google-button { transition:none; } }
+    `;
+    document.head.appendChild(style);
+  };
+  const callbackError = (event: Event) => {
+    const customEvent = event as CustomEvent<{ message?: string }>;
+    if (customEvent.detail?.message) {
+      const existing = document.querySelector<HTMLElement>(".account-feedback--error");
+      if (existing) existing.textContent = customEvent.detail.message;
+    }
+  };
+  mount();
+  const observer = new MutationObserver(mount);
+  observer.observe(document.documentElement, { childList: true, subtree: true });
+  window.addEventListener("upthink:auth:error", callbackError);
+  window.setTimeout(() => observer.disconnect(), 10000);
+}
+
+if (typeof window !== "undefined") {
+  void handleGoogleCallback();
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", installGoogleAccountButton, { once: true });
+  else installGoogleAccountButton();
 }
