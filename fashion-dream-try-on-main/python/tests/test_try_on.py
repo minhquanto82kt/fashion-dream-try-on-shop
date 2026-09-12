@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 from app.main import app
 from app.models.try_on import TryOnCategory, TryOnRequest, TryOnStatus
 from app.services.try_on_job_service import TryOnJobService
-from app.services.try_on_service import StubTryOnProvider, TryOnService
+from app.services.try_on_service import ProviderSubmission, StubTryOnProvider, TryOnService
 
 
 client = TestClient(app)
@@ -18,10 +18,11 @@ def test_stub_provider_creates_queued_job() -> None:
         category=TryOnCategory.TOP,
     )
 
-    job = TryOnService(StubTryOnProvider()).create_job(request)
+    job, submission = TryOnService(StubTryOnProvider()).create_job(request)
 
     assert job.status == TryOnStatus.QUEUED
     assert job.provider == "stub"
+    assert submission == ProviderSubmission(provider="stub")
     assert job.result_image_url is None
 
 
@@ -48,6 +49,10 @@ def test_create_try_on_job_endpoint(monkeypatch) -> None:
         "app.api.try_on.job_service",
         FakeTryOnJobService(),
     )
+    monkeypatch.setattr(
+        "app.api.try_on.provider_service",
+        TryOnService(StubTryOnProvider()),
+    )
 
     try:
         response = client.post(
@@ -71,5 +76,7 @@ def test_create_try_on_job_endpoint(monkeypatch) -> None:
 class FakeTryOnJobService(TryOnJobService):
     """In-memory persistence double for the protected endpoint test."""
 
-    def create_job(self, request, *, user_id, provider, job_id):
-        return TryOnService(StubTryOnProvider()).create_job(request)
+    def create_job(self, request, *, user_id, provider, job_id, metadata=None):
+        return TryOnService(StubTryOnProvider()).create_job(request)[0].model_copy(
+            update={"id": job_id, "provider": provider}
+        )
