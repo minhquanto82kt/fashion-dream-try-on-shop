@@ -3,6 +3,7 @@
 import httpx
 from fastapi.testclient import TestClient
 
+from app.core.config import get_settings
 from app.main import app
 from app.models.try_on import TryOnCategory, TryOnRequest, TryOnStatus
 from app.services.fashn_provider import FashnPrediction, FashnProviderError, FashnTryOnProvider
@@ -48,28 +49,34 @@ def test_fashn_provider_failure_becomes_failed_job(monkeypatch) -> None:
 
 
 def test_fashn_invalid_json_is_provider_error(monkeypatch) -> None:
-    provider = FashnTryOnProvider(api_key="test-key")
-
-    def fake_post(*args, **kwargs):
-        return httpx.Response(
-            200,
-            content=b"not-json",
-            request=httpx.Request("POST", provider.run_url),
-        )
-
-    monkeypatch.setattr("app.services.fashn_provider.httpx.post", fake_post)
-
-    request = TryOnRequest(
-        person_image_url=f"{TRUSTED_IMAGE_BASE}/person.webp",
-        garment_image_url=f"{TRUSTED_IMAGE_BASE}/garment.webp",
-        category=TryOnCategory.TOP,
-    )
+    monkeypatch.setenv("SUPABASE_URL", TRUSTED_SUPABASE_URL)
+    get_settings.cache_clear()
 
     try:
-        provider.submit(request)
-        raise AssertionError("Expected FashnProviderError")
-    except FashnProviderError as exc:
-        assert str(exc) == "FASHN returned invalid JSON"
+        provider = FashnTryOnProvider(api_key="test-key")
+
+        def fake_post(*args, **kwargs):
+            return httpx.Response(
+                200,
+                content=b"not-json",
+                request=httpx.Request("POST", provider.run_url),
+            )
+
+        monkeypatch.setattr("app.services.fashn_provider.httpx.post", fake_post)
+
+        request = TryOnRequest(
+            person_image_url=f"{TRUSTED_IMAGE_BASE}/person.webp",
+            garment_image_url=f"{TRUSTED_IMAGE_BASE}/garment.webp",
+            category=TryOnCategory.TOP,
+        )
+
+        try:
+            provider.submit(request)
+            raise AssertionError("Expected FashnProviderError")
+        except FashnProviderError as exc:
+            assert str(exc) == "FASHN returned invalid JSON"
+    finally:
+        get_settings.cache_clear()
 
 
 def test_fashn_status_requires_object_payload(monkeypatch) -> None:
