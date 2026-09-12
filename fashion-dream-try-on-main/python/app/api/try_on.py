@@ -33,6 +33,8 @@ def create_try_on_job(
             user_id=user_id,
             provider=job.provider,
             job_id=job.id,
+            status=job.status,
+            error=job.error,
             metadata=metadata,
         )
     except FashnProviderError as exc:
@@ -74,12 +76,34 @@ def get_try_on_job(
         provider = FashnProviderAdapter()
         payload = provider.get_status(prediction_id)
     except FashnProviderError as exc:
+        failed = job_service.update_status(
+            job_id,
+            user_id=user_id,
+            status=TryOnStatus.FAILED,
+            error=str(exc),
+        )
+        if failed is not None:
+            return failed
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
             detail=str(exc),
         ) from exc
 
-    provider_status = str(payload.get("status", "")).lower()
+    provider_status = str(payload.get("status", "")).strip().lower()
+    if not provider_status:
+        failed = job_service.update_status(
+            job_id,
+            user_id=user_id,
+            status=TryOnStatus.FAILED,
+            error="FASHN returned an invalid status payload",
+        )
+        if failed is not None:
+            return failed
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="FASHN returned an invalid status payload",
+        )
+
     mapped_status = {
         "starting": TryOnStatus.PROCESSING,
         "in_queue": TryOnStatus.PROCESSING,
@@ -94,14 +118,33 @@ def get_try_on_job(
         return job
 
     output = payload.get("output")
-    result_url = output[0] if mapped_status == TryOnStatus.COMPLETED and isinstance(output, list) and output else None
+    if mapped_status == TryOnStatus.COMPLETED:
+        if not isinstance(output, list) or not output or not isinstance(output[0], str) or not output[0].strip():
+            failed = job_service.update_status(
+                job_id,
+                user_id=user_id,
+                status=TryOnStatus.FAILED,
+                error="FASHN completed without a valid output image",
+            )
+            if failed is not None:
+                return failed
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail="FASHN completed without a valid output image",
+            )
+        result_url = output[0].strip()
+    else:
+        result_url = None
+
     error = payload.get("error") if mapped_status == TryOnStatus.FAILED else None
+    if mapped_status == TryOnStatus.FAILED and not error:
+        error = "FASHN prediction failed"
 
     updated = job_service.update_status(
         job_id,
         user_id=user_id,
         status=mapped_status,
-        result_image_path=str(result_url) if result_url else None,
+        result_image_path=result_url,
         error=str(error) if error else None,
     )
     return updated or job
