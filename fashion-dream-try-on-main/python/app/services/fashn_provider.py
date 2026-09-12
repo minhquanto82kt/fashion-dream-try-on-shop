@@ -58,7 +58,11 @@ class FashnTryOnProvider:
         if response.status_code >= 400:
             raise FashnProviderError(self._error_message(response))
 
-        body = response.json()
+        try:
+            body = response.json()
+        except ValueError as exc:
+            raise FashnProviderError("FASHN returned invalid JSON") from exc
+
         prediction_id = body.get("id") if isinstance(body, dict) else None
         if not prediction_id:
             raise FashnProviderError("FASHN did not return a prediction id")
@@ -82,7 +86,12 @@ class FashnTryOnProvider:
 
         if response.status_code >= 400:
             raise FashnProviderError(self._error_message(response))
-        body = response.json()
+
+        try:
+            body = response.json()
+        except ValueError as exc:
+            raise FashnProviderError("FASHN returned invalid status JSON") from exc
+
         if not isinstance(body, dict):
             raise FashnProviderError("FASHN returned an invalid status payload")
         return body
