@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from urllib.parse import urlparse
 
 import httpx
 from google import genai
@@ -11,6 +10,7 @@ from google.genai import types
 from pydantic import BaseModel, Field
 
 from app.core.config import get_settings
+from app.core.url_security import validate_trusted_image_url
 from app.models.product_vision import ProductGarmentType, ProductVisionRequest, ProductVisionResult
 
 
@@ -62,11 +62,9 @@ class GeminiProductVisionProvider:
 
     @staticmethod
     def _download_image(image_url: str) -> tuple[bytes, str]:
-        parsed = urlparse(image_url)
-        if parsed.scheme != "https" or not parsed.netloc:
-            raise ValueError("Product image URL must be a valid HTTPS URL")
+        validate_trusted_image_url(image_url)
 
-        with httpx.Client(timeout=30.0, follow_redirects=True) as client:
+        with httpx.Client(timeout=30.0, follow_redirects=False) as client:
             response = client.get(image_url)
             response.raise_for_status()
 
