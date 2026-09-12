@@ -5,6 +5,12 @@ from typing import Annotated, Any
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.api.dependencies import get_current_user
+from app.core.rate_limit import (
+    TRY_ON_REQUESTS,
+    TRY_ON_WINDOW_SECONDS,
+    RateLimitExceeded,
+    ai_rate_limiter,
+)
 from app.models.try_on import TryOnJob, TryOnRequest, TryOnStatus
 from app.services.fashn_provider import FashnProviderError
 from app.services.try_on_job_service import TryOnJobService
@@ -23,6 +29,15 @@ def create_try_on_job(
     """Create and persist a try-on job owned by the authenticated user."""
 
     user_id = str(user["id"])
+    try:
+        ai_rate_limiter.check(user_id, TRY_ON_REQUESTS, TRY_ON_WINDOW_SECONDS)
+    except RateLimitExceeded as exc:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Too many Try-On requests. Please wait before trying again.",
+            headers={"Retry-After": str(TRY_ON_WINDOW_SECONDS)},
+        ) from exc
+
     try:
         job, submission = provider_service.create_job(request)
         metadata = dict(request.metadata)
