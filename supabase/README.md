@@ -13,10 +13,38 @@ The production database already has its own migration history. The files in `sup
 ```text
 supabase/
 ├── schema/
-│   └── 001_core_products.sql
+│   ├── 001_core_products.sql
+│   ├── 002_inventory_variants.sql
+│   ├── 003_orders.sql
+│   ├── 004_payments.sql
+│   ├── 005_admin_auth.sql
+│   ├── 006_ai_try_on.sql
+│   ├── 007_product_vision.sql
+│   └── 008_backend_functions.sql
 ├── migrations/
 └── seed/
+    └── 001_development.sql
 ```
+
+## Architecture coverage
+
+| Area | Git SQL reference | Live database checked |
+|---|---|---|
+| Products | `001_core_products.sql` | Yes |
+| Inventory / Variants | `002_inventory_variants.sql` | Yes |
+| Orders / Order Items | `003_orders.sql` | Yes |
+| Payments / Payment Events | `004_payments.sql` | Yes |
+| Admin authorization | `005_admin_auth.sql` | Yes |
+| AI Try-On Jobs | `006_ai_try_on.sql` | Yes |
+| Product Vision | `007_product_vision.sql` | Yes |
+| SQL functions / triggers | `008_backend_functions.sql` | Yes |
+| Development seed | `seed/001_development.sql` | Template only |
+
+## Important distinction: schema snapshot vs migration
+
+These files document the current architecture so the database design is visible in GitHub. They do **not** replace the 25 production migrations already present in Supabase.
+
+Do not execute the schema files blindly against the existing production project. When the project is ready to make the Git repository fully replayable, reconcile the existing production migration history first and then generate a clean migration baseline.
 
 ## Rules
 
@@ -26,6 +54,9 @@ supabase/
 4. Do not run schema snapshots directly against production without first verifying migration state.
 5. New database changes should eventually be added as ordered migrations after the existing production migration history has been reconciled.
 6. RLS policies, constraints, triggers, and functions are part of the database architecture and must be version-controlled as well.
+7. Inventory source of truth is `product_variants.stock`; a separate inventory table is intentionally not introduced for the MVP.
+8. Orders and payments are historical financial records and should not be hard-deleted as part of normal admin CRUD.
+9. AI provider secrets remain server-side; `try_on_jobs` stores job state and storage paths, not provider secrets.
 
 ## Existing production migration history
 
@@ -43,4 +74,4 @@ The current Supabase project contains migrations covering:
 - Private Try-On storage and `try_on_jobs`
 - Product Vision attributes
 
-The exact existing migration SQL should be imported/reconstructed before this repository starts treating `supabase/migrations/` as the canonical replayable migration set.
+The live SQL layer also includes the atomic order/payment functions and payment synchronization/audit triggers. Their production migration history remains authoritative until a complete baseline is generated.
