@@ -8,7 +8,7 @@ from app.core.config import get_settings
 
 
 def is_trusted_image_url(image_url: str) -> bool:
-    """Allow only HTTPS URLs hosted by the configured Supabase project."""
+    """Allow only HTTPS Supabase Storage object URLs from the configured project."""
 
     parsed = urlparse(image_url)
     if parsed.scheme != "https" or not parsed.hostname:
@@ -16,11 +16,14 @@ def is_trusted_image_url(image_url: str) -> bool:
 
     supabase_url = get_settings().supabase_url.strip()
     trusted_host = urlparse(supabase_url).hostname if supabase_url else None
-    return bool(trusted_host and parsed.hostname.lower() == trusted_host.lower())
+    if not trusted_host or parsed.hostname.lower() != trusted_host.lower():
+        return False
+
+    return parsed.path.startswith("/storage/v1/object/")
 
 
 def validate_trusted_image_url(image_url: str) -> None:
-    """Reject image URLs that could make the backend fetch an arbitrary host."""
+    """Reject image URLs that could make the backend fetch an unintended resource."""
 
     if not is_trusted_image_url(image_url):
-        raise ValueError("Product image URL must use the configured Supabase HTTPS host")
+        raise ValueError("Product image URL must be a Supabase Storage HTTPS object URL")
