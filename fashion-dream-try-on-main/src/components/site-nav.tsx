@@ -4,6 +4,7 @@ import {
   ChevronDown,
   ChevronRight,
   CircleHelp,
+  Heart,
   Info,
   LogOut,
   Menu,
@@ -20,6 +21,14 @@ import { getCustomerUser, signOutCustomer } from "@/lib/auth";
 const PRIMARY_LINKS = [
   { to: "/ai", label: "AI Studio", beta: true },
   { to: "/about", label: "About" },
+] as const;
+
+const DISCOVERY_LINKS = [
+  { label: "New Arrivals", to: "/shop" },
+  { label: "Collections", to: "/shop" },
+  { label: "Best Sellers", to: "/shop" },
+  { label: "Sale / Offers", to: "/shop" },
+  { label: "Style Guide", to: "/ai" },
 ] as const;
 
 const TOPBAR_TEXT_STYLE = {
@@ -83,6 +92,12 @@ export function SiteNav() {
 
   return (
     <nav className="fashion-nav" aria-label="Điều hướng chính">
+      <div className="fashion-nav__announcement" role="status">
+        <span>UPTHINK / 2026</span>
+        <span>FREE SHIPPING — ĐƠN TỪ 700K</span>
+        <span>AI VIRTUAL TRY-ON / BETA</span>
+      </div>
+
       <div className="fashion-nav__inner">
         <Link to="/" className="fashion-brand" aria-label="UpThink home">
           <span className="fashion-brand__mark">U</span>
@@ -159,6 +174,18 @@ export function SiteNav() {
             )}
           </div>
 
+          {DISCOVERY_LINKS.map((link) => (
+            <Link
+              key={link.label}
+              to={link.to}
+              onClick={closeMenus}
+              className="fashion-discovery-link"
+              activeProps={{ className: "fashion-discovery-link is-active" }}
+            >
+              {link.label}
+            </Link>
+          ))}
+
           {PRIMARY_LINKS.map((link) =>
             link.beta ? (
               <div
@@ -166,42 +193,12 @@ export function SiteNav() {
                 className="fashion-ai-nav"
                 style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "2px", height: "72px" }}
               >
-                <span
-                  className="fashion-ai-nav__beta"
-                  style={{
-                    color: "var(--primary)",
-                    fontFamily: "var(--ft-meta)",
-                    fontSize: "8px",
-                    fontWeight: 700,
-                    lineHeight: 1,
-                    letterSpacing: ".18em",
-                    textAlign: "center",
-                    textTransform: "uppercase",
-                    minHeight: "8px",
-                  }}
-                >
-                  BETA
-                </span>
+                <span className="fashion-ai-nav__beta">BETA</span>
                 <Link
                   to={link.to}
                   className="fashion-ai-nav__button"
                   activeProps={{ className: "fashion-ai-nav__button is-active" }}
                   aria-label="AI Studio — Beta"
-                  style={{
-                    minHeight: "36px",
-                    padding: "0 15px",
-                    border: "1px solid var(--primary)",
-                    color: "var(--foreground)",
-                    opacity: 1,
-                    letterSpacing: ".1em",
-                    fontSize: "13px",
-                    lineHeight: 1,
-                    fontWeight: 600,
-                    textDecoration: "none",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
                 >
                   {link.label}
                 </Link>
@@ -229,13 +226,12 @@ export function SiteNav() {
             {searchOpen ? <X size={21} strokeWidth={2} /> : <Search size={21} strokeWidth={2} />}
           </button>
 
-          <Link
-            to="/account"
-            className="fashion-icon-btn fashion-account-btn"
-            aria-label={customerEmail ? `Tài khoản ${customerEmail}` : "Tài khoản"}
-            title={customerEmail ?? "Tài khoản"}
-          >
+          <Link to="/account" className="fashion-icon-btn fashion-account-btn" aria-label={customerEmail ? `Tài khoản ${customerEmail}` : "Tài khoản"} title={customerEmail ?? "Tài khoản"}>
             <UserRound size={21} strokeWidth={2} />
+          </Link>
+
+          <Link to="/account/wishlist" className="fashion-icon-btn fashion-wishlist-btn" aria-label="Danh sách yêu thích" title="Wishlist">
+            <Heart size={21} strokeWidth={2} />
           </Link>
 
           <Link to="/cart" className="fashion-cart-btn" aria-label="Giỏ hàng">
@@ -244,16 +240,16 @@ export function SiteNav() {
           </Link>
 
           {customerEmail && (
-            <button
-              type="button"
-              className="fashion-icon-btn fashion-logout-btn"
-              aria-label="Đăng xuất"
-              title="Đăng xuất"
-              onClick={() => void handleLogout()}
-            >
+            <button type="button" className="fashion-icon-btn fashion-logout-btn" aria-label="Đăng xuất" title="Đăng xuất" onClick={() => void handleLogout()}>
               <LogOut size={20} strokeWidth={2} />
             </button>
           )}
+
+          <div className="fashion-language-switcher" aria-label="Ngôn ngữ">
+            <span className="is-active">VNĐ</span>
+            <span aria-hidden="true">|</span>
+            <span>EN</span>
+          </div>
 
           <button
             type="button"
@@ -276,14 +272,7 @@ export function SiteNav() {
           <form onSubmit={submitSearch} className="fashion-search-form">
             <label htmlFor="site-search" className="sr-only">Tìm kiếm sản phẩm</label>
             <Search size={18} aria-hidden="true" />
-            <input
-              id="site-search"
-              type="search"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Tìm sản phẩm, phong cách..."
-              autoFocus
-            />
+            <input id="site-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Tìm sản phẩm, phong cách..." autoFocus />
             <button type="submit">Search</button>
           </form>
         </div>
