@@ -68,7 +68,12 @@ def _open_validated_image(data: bytes, content_type: str) -> Image.Image:
             if width * height > MAX_IMAGE_PIXELS:
                 image.close()
                 raise ValueError("Image pixel count is too large")
-            return image.copy()
+
+            validated = image.copy()
+            # PIL copy() may not preserve the format attribute. Preserve the
+            # verified format for accurate validation metadata.
+            validated.format = image_format
+            return validated
     except (DecompressionBombError, DecompressionBombWarning) as exc:
         raise ValueError("Image dimensions are unsafe") from exc
     except (UnidentifiedImageError, OSError) as exc:
