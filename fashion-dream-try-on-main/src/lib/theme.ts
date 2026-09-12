@@ -1,3 +1,5 @@
+import "../admin-theme.css";
+
 export type ThemeColors = { primary: string; secondary: string; background: string; surface: string; accent: string; foreground: string };
 export const DEFAULT_THEME_COLORS: ThemeColors = { primary: "#2E2910", secondary: "#2C5745", background: "#2E2910", surface: "#0B0909", accent: "#EB7D00", foreground: "#EBE3A7" };
 export const THEME_STORAGE_KEY = "upthink-theme-colors";
