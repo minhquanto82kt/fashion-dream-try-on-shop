@@ -1,38 +1,78 @@
 /* =========================================================
-   FASHION DREAM — MAIN TOPBAR
-   Visual + interaction layer only.
+   UPTHINK — TOPBAR / NAVIGATION v2
+   Purpose: clear hierarchy, readable controls, useful mobile menu.
+   No product-category sidebar; the menu is for discovery, account and help.
    ========================================================= */
 
+.fashion-nav {
+  border-bottom: 1px solid color-mix(in oklab, var(--border) 82%, transparent);
+  background: color-mix(in oklab, var(--background) 92%, transparent);
+  backdrop-filter: blur(18px) saturate(1.05);
+}
+
 .fashion-nav__inner {
-  position: relative;
-  gap: clamp(16px, 2.5vw, 34px);
+  width: min(1280px, calc(100% - 48px));
+  min-height: 72px;
+  height: 72px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: clamp(20px, 3vw, 52px);
 }
 
 .fashion-brand {
   flex: 0 0 auto;
   min-width: max-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fashion-brand__mark {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+}
+
+.fashion-brand__copy {
+  gap: 3px;
+}
+
+.fashion-brand__name {
+  font-size: 19px;
+  line-height: 1;
+  letter-spacing: .105em;
+}
+
+.fashion-brand__meta {
+  font-size: 9px;
+  line-height: 1.1;
+  letter-spacing: .18em;
+  white-space: nowrap;
 }
 
 .fashion-nav__links {
   flex: 1 1 auto;
-  justify-content: center;
   min-width: 0;
-  gap: clamp(22px, 3vw, 36px);
-}
-
-.fashion-nav__links a,
-.fashion-mobile-menu a,
-.fashion-mobile-menu button,
-.fashion-ai-btn,
-.fashion-search-form button {
-  font-family: var(--ft-body);
-  font-style: normal;
-  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(24px, 3.5vw, 46px);
 }
 
 .fashion-nav__links a {
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  color: var(--foreground);
+  text-decoration: none;
+  text-transform: uppercase;
   white-space: nowrap;
+  font: 500 12px/1.3 var(--ft-body);
+  letter-spacing: .13em;
+  opacity: .84;
   transition: color 180ms ease, opacity 180ms ease;
 }
 
@@ -41,7 +81,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -8px;
+  bottom: 5px;
   height: 1px;
   background: var(--primary);
   transform: scaleX(0);
@@ -49,82 +89,138 @@
   transition: transform 180ms ease;
 }
 
+.fashion-nav__links a:hover,
+.fashion-nav__links a.is-active {
+  color: var(--primary);
+  opacity: 1;
+}
+
 .fashion-nav__links a:hover::after,
 .fashion-nav__links a.is-active::after {
   transform: scaleX(1);
 }
 
+.fashion-beta-label {
+  display: inline-flex;
+  align-items: center;
+  min-height: 18px;
+  padding: 2px 5px;
+  border: 1px solid currentColor;
+  font: 600 9px/1 var(--ft-meta);
+  letter-spacing: .1em;
+  opacity: .9;
+}
+
 .fashion-nav__actions {
   flex: 0 0 auto;
-  gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .fashion-icon-btn,
 .fashion-cart-btn,
 .fashion-mobile-btn {
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
   display: grid;
   place-items: center;
   padding: 0;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--foreground);
+  text-decoration: none;
   cursor: pointer;
-  transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease;
+  transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
 }
 
 .fashion-icon-btn:hover,
 .fashion-icon-btn.is-active,
 .fashion-cart-btn:hover,
-.fashion-mobile-btn:hover {
+.fashion-mobile-btn:hover,
+.fashion-mobile-btn.is-active {
   color: var(--primary);
 }
 
-.fashion-ai-btn {
-  min-height: 36px;
-  white-space: nowrap;
+.fashion-icon-btn:focus-visible,
+.fashion-cart-btn:focus-visible,
+.fashion-mobile-btn:focus-visible,
+.fashion-nav__links a:focus-visible,
+.fashion-mobile-menu a:focus-visible,
+.fashion-mobile-menu button:focus-visible {
+  outline: 1px solid var(--primary);
+  outline-offset: 3px;
 }
 
+.fashion-cart-btn {
+  position: relative;
+}
+
+.fashion-cart-btn span {
+  position: absolute;
+  top: 1px;
+  right: 0;
+  width: 17px;
+  height: 17px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--background);
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font: 600 9px/1 var(--ft-body);
+}
+
+.fashion-mobile-btn {
+  display: none;
+}
+
+/* Search -------------------------------------------------- */
 .fashion-search-panel {
-  border-top: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
-  background: color-mix(in oklab, var(--background) 96%, transparent);
-  backdrop-filter: blur(18px);
+  border-top: 1px solid color-mix(in oklab, var(--border) 82%, transparent);
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in oklab, var(--background) 97%, transparent);
+  backdrop-filter: blur(20px);
 }
 
 .fashion-search-form {
-  width: min(760px, calc(100% - 48px));
-  min-height: 66px;
+  width: min(820px, calc(100% - 48px));
+  min-height: 72px;
   margin: 0 auto;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   color: var(--primary);
 }
 
 .fashion-search-form input {
   flex: 1 1 auto;
   min-width: 0;
-  height: 40px;
+  height: 42px;
   border: 0;
   outline: 0;
   background: transparent;
   color: var(--foreground);
-  font: 500 13px/1.4 var(--ft-body);
-  letter-spacing: .03em;
+  font: 500 14px/1.4 var(--ft-body);
+  letter-spacing: .02em;
 }
 
 .fashion-search-form input::placeholder {
   color: var(--foreground);
-  opacity: .48;
+  opacity: .52;
 }
 
 .fashion-search-form button {
   flex: 0 0 auto;
+  min-height: 38px;
   border: 1px solid var(--primary);
   background: transparent;
   color: var(--primary);
-  padding: 8px 12px;
+  padding: 8px 14px;
   cursor: pointer;
-  font-size: 9px;
-  letter-spacing: .13em;
+  font: 600 11px/1.2 var(--ft-body);
+  letter-spacing: .11em;
   text-transform: uppercase;
 }
 
@@ -133,70 +229,269 @@
   color: var(--primary-foreground);
 }
 
-.fashion-mobile-menu button {
-  border: 0;
-  padding: 12px 0;
-  background: transparent;
-  color: inherit;
-  text-align: left;
-  text-transform: uppercase;
-  letter-spacing: .14em;
-  font-size: 10px;
-  cursor: pointer;
+/* Discover menu ------------------------------------------ */
+.fashion-mobile-menu {
+  display: none;
 }
 
-@media (max-width: 980px) {
-  .fashion-nav__links {
-    gap: 20px;
-  }
-
-  .fashion-ai-btn {
-    padding-inline: 10px;
-  }
-}
-
-@media (max-width: 800px) {
+@media (max-width: 960px) {
   .fashion-nav__inner {
     width: calc(100% - 32px);
+    min-height: 64px;
     height: 64px;
-    gap: 10px;
+    gap: 12px;
+  }
+
+  .fashion-nav__links,
+  .fashion-brand__meta {
+    display: none;
   }
 
   .fashion-nav__actions {
     margin-left: auto;
-    gap: 4px;
+    gap: 2px;
   }
 
-  .fashion-icon-btn {
+  .fashion-mobile-btn {
     display: grid;
   }
 
-  .fashion-ai-btn {
-    display: none;
+  .fashion-mobile-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    display: block;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+    padding: 24px max(16px, calc((100% - 720px) / 2));
+    border-top: 1px solid color-mix(in oklab, var(--primary) 28%, var(--border));
+    border-bottom: 1px solid var(--border);
+    background: color-mix(in oklab, var(--background) 98%, transparent);
+    box-shadow: 0 24px 70px color-mix(in oklab, var(--background) 72%, transparent);
+    animation: upthink-menu-in 180ms ease-out both;
   }
 
-  .fashion-search-form {
-    width: calc(100% - 32px);
-    min-height: 60px;
+  .fashion-menu-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--border);
   }
 
-  .fashion-search-form button {
-    padding: 8px 10px;
+  .fashion-menu-kicker,
+  .fashion-menu-label,
+  .fashion-menu-status,
+  .fashion-menu-footer {
+    font-family: var(--ft-meta);
+    text-transform: uppercase;
+    letter-spacing: .13em;
+  }
+
+  .fashion-menu-kicker,
+  .fashion-menu-label {
+    color: var(--primary);
+    font-size: 10px;
+    line-height: 1.4;
+  }
+
+  .fashion-menu-header h2 {
+    margin: 7px 0 0;
+    color: var(--foreground);
+    font-family: var(--ft-editorial);
+    font-size: clamp(38px, 9vw, 58px);
+    font-weight: 600;
+    line-height: .9;
+    letter-spacing: -.045em;
+    text-transform: uppercase;
+  }
+
+  .fashion-menu-status {
+    flex: 0 0 auto;
+    color: var(--foreground);
+    opacity: .62;
+    font-size: 9px;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+
+  .fashion-menu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 26px 42px;
+    padding: 24px 0 28px;
+  }
+
+  .fashion-menu-section {
+    min-width: 0;
+  }
+
+  .fashion-menu-section--info {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 24px;
+  }
+
+  .fashion-menu-section--info .fashion-menu-label {
+    grid-column: 1 / -1;
+    margin-bottom: 4px;
+  }
+
+  .fashion-menu-section > a,
+  .fashion-menu-section > button {
+    width: 100%;
+    min-height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 11px 0;
+    border: 0;
+    border-bottom: 1px solid color-mix(in oklab, var(--border) 78%, transparent);
+    background: transparent;
+    color: var(--foreground);
+    text-decoration: none;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .fashion-menu-section > a:hover,
+  .fashion-menu-section > button:hover {
+    color: var(--primary);
+  }
+
+  .fashion-menu-section > a > span,
+  .fashion-menu-section > button > span {
+    min-width: 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    flex-direction: column;
+  }
+
+  .fashion-menu-section--info > a > span,
+  .fashion-menu-section--info > button > span {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .fashion-menu-section strong {
+    font: 600 14px/1.25 var(--ft-body);
+    letter-spacing: .01em;
+  }
+
+  .fashion-menu-section small {
+    color: var(--foreground);
+    opacity: .58;
+    font: 12px/1.4 var(--ft-body);
+  }
+
+  .fashion-menu-section svg {
+    flex: 0 0 auto;
+  }
+
+  .fashion-menu-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    color: var(--foreground);
+    opacity: .55;
+    font-size: 9px;
+    line-height: 1.4;
+  }
+
+  .fashion-search-toggle {
+    display: grid;
   }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 640px) {
+  .fashion-nav__inner {
+    width: calc(100% - 24px);
+  }
+
   .fashion-brand__name {
-    font-size: 17px;
+    font-size: 18px;
   }
 
   .fashion-brand__mark {
-    width: 27px;
-    height: 27px;
+    width: 28px;
+    height: 28px;
+    flex-basis: 28px;
   }
 
-  .fashion-search-form input {
-    font-size: 12px;
+  .fashion-search-toggle {
+    display: none;
+  }
+
+  .fashion-mobile-menu {
+    padding: 20px 16px 22px;
+  }
+
+  .fashion-menu-grid {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .fashion-menu-section--info {
+    grid-column: auto;
+    display: block;
+  }
+
+  .fashion-menu-section--info .fashion-menu-label {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .fashion-menu-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+
+@media (max-width: 380px) {
+  .fashion-nav__inner {
+    width: calc(100% - 16px);
+  }
+
+  .fashion-nav__actions {
+    gap: 0;
+  }
+
+  .fashion-icon-btn,
+  .fashion-cart-btn,
+  .fashion-mobile-btn {
+    width: 36px;
+    min-width: 36px;
+    height: 36px;
+  }
+
+  .fashion-menu-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .fashion-menu-status {
+    white-space: normal;
+  }
+}
+
+@keyframes upthink-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -205,7 +500,9 @@
   .fashion-nav__links a::after,
   .fashion-icon-btn,
   .fashion-cart-btn,
-  .fashion-mobile-btn {
+  .fashion-mobile-btn,
+  .fashion-mobile-menu {
     transition: none;
+    animation: none;
   }
 }
