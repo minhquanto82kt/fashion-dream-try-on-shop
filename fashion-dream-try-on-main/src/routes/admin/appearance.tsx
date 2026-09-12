@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   DEFAULT_THEME_COLORS,
   type ThemeColors,
+  getStoredTheme,
+  loadRemoteTheme,
   resetTheme,
-  saveTheme,
+  saveThemeToDatabase,
 } from "@/lib/theme";
 
 export const Route = createFileRoute("/admin/appearance")({
@@ -23,73 +25,78 @@ const COLOR_FIELDS: Array<{ key: keyof ThemeColors; label: string; description: 
 
 const PRESETS: Array<{ name: string; colors: ThemeColors }> = [
   { name: "UPTHINK 2026", colors: DEFAULT_THEME_COLORS },
-  {
-    name: "Midnight Editorial",
-    colors: {
-      primary: "#161616",
-      secondary: "#30302B",
-      background: "#161616",
-      surface: "#0B0909",
-      accent: "#EB7D00",
-      foreground: "#EBE3A7",
-    },
-  },
-  {
-    name: "Forest Studio",
-    colors: {
-      primary: "#17352C",
-      secondary: "#2C5745",
-      background: "#17352C",
-      surface: "#0B0909",
-      accent: "#EBE3A7",
-      foreground: "#F4F0D2",
-    },
-  },
+  { name: "Midnight Editorial", colors: { primary: "#161616", secondary: "#30302B", background: "#161616", surface: "#0B0909", accent: "#EB7D00", foreground: "#EBE3A7" } },
+  { name: "Forest Studio", colors: { primary: "#17352C", secondary: "#2C5745", background: "#17352C", surface: "#0B0909", accent: "#EBE3A7", foreground: "#F4F0D2" } },
 ];
 
 function AdminAppearancePage() {
-  const [colors, setColors] = useState<ThemeColors>(DEFAULT_THEME_COLORS);
+  const [colors, setColors] = useState<ThemeColors>(getStoredTheme());
   const [saved, setSaved] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    void loadRemoteTheme().then((remote) => {
+      if (active && remote) setColors(remote);
+    });
+    return () => { active = false; };
+  }, []);
 
   function updateColor(key: keyof ThemeColors, value: string) {
     setSaved(false);
+    setMessage(null);
+    setError(null);
     setColors((current) => ({ ...current, [key]: value }));
   }
 
-  function handleSave() {
-    saveTheme(colors);
-    setSaved(true);
+  async function handleSave() {
+    setBusy(true); setSaved(false); setMessage(null); setError(null);
+    try {
+      const next = await saveThemeToDatabase(colors);
+      setColors(next); setSaved(true); setMessage("Theme saved to Supabase.");
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Unable to save theme.");
+    } finally { setBusy(false); }
   }
 
-  function handleReset() {
-    setColors(resetTheme());
-    setSaved(true);
+  async function handleReset() {
+    setBusy(true); setSaved(false); setMessage(null); setError(null);
+    try {
+      const next = await resetTheme();
+      setColors(next); setSaved(true); setMessage("Theme reset to UPTHINK 2026.");
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Unable to reset theme.");
+    } finally { setBusy(false); }
   }
 
   return (
     <div className="up-theme-page">
       <style>{`
-        .up-theme-page { display: grid; gap: 24px; }
+        .up-theme-page { display:grid; gap:24px; }
         .up-theme-header { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; }
         .up-theme-kicker { color:#7d7e79; font-size:9px; font-weight:800; letter-spacing:.2em; }
         .up-theme-header h1 { margin:7px 0 5px; font-size:34px; letter-spacing:-.04em; }
         .up-theme-header p { margin:0; color:#777; font-size:13px; }
-        .up-theme-status { color:#2C5745; font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+        .up-theme-status { color:var(--theme-secondary,#2C5745); font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+        .up-theme-feedback { margin-top:8px; font-size:11px; }
+        .up-theme-feedback.success { color:var(--theme-secondary,#2C5745); }
+        .up-theme-feedback.error { color:var(--theme-accent,#EB7D00); }
         .up-theme-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(320px,.75fr); gap:16px; }
         .up-theme-panel { background:#fff; border:1px solid #e3e2dc; padding:24px; }
         .up-theme-panel h2 { margin:0 0 5px; font-size:17px; letter-spacing:-.02em; }
         .up-theme-panel > p { margin:0 0 20px; color:#888; font-size:11px; line-height:1.6; }
-        .up-theme-colors { display:grid; gap:10px; }
+        .up-theme-colors,.up-theme-presets { display:grid; gap:10px; }
         .up-theme-color { display:grid; grid-template-columns:58px 1fr auto; align-items:center; gap:14px; padding:12px; border:1px solid #e8e7e1; }
         .up-theme-swatch { width:58px; height:42px; border:1px solid rgba(0,0,0,.1); }
         .up-theme-color strong { display:block; font-size:12px; }
         .up-theme-color small { display:block; margin-top:4px; color:#92928d; font-size:10px; }
         .up-theme-color input[type=text] { width:105px; border:1px solid #dddcd5; padding:9px 10px; font:600 11px ui-monospace,SFMono-Regular,Menlo,monospace; text-transform:uppercase; outline:none; }
-        .up-theme-color input[type=text]:focus { border-color:#2C5745; }
+        .up-theme-color input[type=text]:focus { border-color:var(--theme-secondary,#2C5745); }
         .up-theme-color input[type=color] { width:42px; height:42px; padding:2px; border:1px solid #dddcd5; background:#fff; cursor:pointer; }
-        .up-theme-presets { display:grid; gap:10px; }
         .up-theme-preset { display:grid; grid-template-columns:1fr auto; align-items:center; gap:12px; padding:13px; border:1px solid #e3e2dc; background:#fff; text-align:left; cursor:pointer; }
-        .up-theme-preset:hover { border-color:#2C5745; }
+        .up-theme-preset:hover { border-color:var(--theme-secondary,#2C5745); }
         .up-theme-preset-name { font-size:11px; font-weight:800; letter-spacing:.04em; }
         .up-theme-preset-colors { display:flex; gap:3px; }
         .up-theme-preset-colors span { width:18px; height:18px; border:1px solid rgba(0,0,0,.08); }
@@ -104,7 +111,8 @@ function AdminAppearancePage() {
         .up-theme-preview-content button { border:0; padding:11px 15px; background:var(--theme-accent); color:var(--theme-surface); font-size:9px; font-weight:900; letter-spacing:.08em; }
         .up-theme-actions { display:flex; justify-content:flex-end; gap:9px; margin-top:20px; }
         .up-theme-actions button { border:1px solid #dddcd5; background:#fff; padding:12px 16px; font-size:10px; font-weight:800; letter-spacing:.06em; cursor:pointer; }
-        .up-theme-actions .primary { background:#EB7D00; border-color:#EB7D00; color:#0B0909; }
+        .up-theme-actions .primary { background:var(--theme-accent,#EB7D00); border-color:var(--theme-accent,#EB7D00); color:var(--theme-background,#0B0909); }
+        .up-theme-actions button:disabled { opacity:.55; cursor:wait; }
         @media (max-width:900px) { .up-theme-grid { grid-template-columns:1fr; } }
         @media (max-width:600px) { .up-theme-header { display:block; } .up-theme-color { grid-template-columns:42px 1fr; } .up-theme-swatch { width:42px; height:42px; } .up-theme-color input[type=text] { grid-column:2; width:100%; } .up-theme-color input[type=color] { position:absolute; opacity:0; pointer-events:none; } }
       `}</style>
@@ -114,6 +122,8 @@ function AdminAppearancePage() {
           <div className="up-theme-kicker">ADMIN / APPEARANCE / COLOR</div>
           <h1>Color System</h1>
           <p>Control the website palette from Admin without editing CSS files.</p>
+          {message && <div className="up-theme-feedback success">✓ {message}</div>}
+          {error && <div className="up-theme-feedback error">⚠ {error}</div>}
         </div>
         {saved && <div className="up-theme-status">✓ Theme saved</div>}
       </header>
@@ -126,23 +136,9 @@ function AdminAppearancePage() {
             {COLOR_FIELDS.map(({ key, label, description }) => (
               <label className="up-theme-color" key={key}>
                 <span className="up-theme-swatch" style={{ background: colors[key] }} />
-                <span>
-                  <strong>{label}</strong>
-                  <small>{description}</small>
-                </span>
-                <input
-                  type="color"
-                  value={colors[key]}
-                  onChange={(event) => updateColor(key, event.target.value.toUpperCase())}
-                  aria-label={`${label} color picker`}
-                />
-                <input
-                  type="text"
-                  value={colors[key]}
-                  maxLength={7}
-                  onChange={(event) => updateColor(key, event.target.value.toUpperCase())}
-                  aria-label={`${label} HEX value`}
-                />
+                <span><strong>{label}</strong><small>{description}</small></span>
+                <input type="color" value={colors[key]} onChange={(event) => updateColor(key, event.target.value.toUpperCase())} aria-label={`${label} color picker`} />
+                <input type="text" value={colors[key]} maxLength={7} onChange={(event) => updateColor(key, event.target.value.toUpperCase())} aria-label={`${label} HEX value`} />
               </label>
             ))}
           </div>
@@ -153,11 +149,9 @@ function AdminAppearancePage() {
           <p>Preset palettes are kept inside the project. Color Hunt can be added later as an import source without coupling the theme engine to it.</p>
           <div className="up-theme-presets">
             {PRESETS.map((preset) => (
-              <button className="up-theme-preset" key={preset.name} onClick={() => { setColors(preset.colors); setSaved(false); }}>
+              <button className="up-theme-preset" key={preset.name} disabled={busy} onClick={() => { setColors(preset.colors); setSaved(false); setMessage(null); setError(null); }}>
                 <span className="up-theme-preset-name">{preset.name}</span>
-                <span className="up-theme-preset-colors">
-                  {Object.values(preset.colors).map((color) => <span key={color} style={{ background: color }} />)}
-                </span>
+                <span className="up-theme-preset-colors">{Object.values(preset.colors).map((color) => <span key={color} style={{ background: color }} />)}</span>
               </button>
             ))}
           </div>
@@ -168,20 +162,13 @@ function AdminAppearancePage() {
             ["--theme-accent" as string]: colors.accent,
             ["--theme-surface" as string]: colors.surface,
           } as React.CSSProperties}>
-            <div className="up-theme-preview-nav">
-              <span className="up-theme-preview-brand"><span className="up-theme-preview-mark">U</span>UPTHINK.</span>
-              <span>SHOP / AI / ACCOUNT</span>
-            </div>
-            <div className="up-theme-preview-content">
-              <small>FASHION SYSTEM / 2026</small>
-              <h3>Your style.<br />Your identity.</h3>
-              <button>EXPLORE COLLECTION →</button>
-            </div>
+            <div className="up-theme-preview-nav"><span className="up-theme-preview-brand"><span className="up-theme-preview-mark">U</span>UPTHINK.</span><span>SHOP / AI / ACCOUNT</span></div>
+            <div className="up-theme-preview-content"><small>FASHION SYSTEM / 2026</small><h3>Your style.<br />Your identity.</h3><button>EXPLORE COLLECTION →</button></div>
           </div>
 
           <div className="up-theme-actions">
-            <button onClick={handleReset}>RESET</button>
-            <button className="primary" onClick={handleSave}>SAVE THEME</button>
+            <button disabled={busy} onClick={() => void handleReset()}>{busy ? "SAVING…" : "RESET"}</button>
+            <button className="primary" disabled={busy} onClick={() => void handleSave()}>{busy ? "SAVING…" : "SAVE THEME"}</button>
           </div>
         </section>
       </div>
