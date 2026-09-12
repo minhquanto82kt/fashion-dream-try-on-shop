@@ -22,6 +22,13 @@ const PRIMARY_LINKS = [
   { to: "/about", label: "About" },
 ] as const;
 
+const TOPBAR_TEXT_STYLE = {
+  fontSize: "13px",
+  lineHeight: 1,
+  fontWeight: 600,
+  letterSpacing: ".13em",
+} as const;
+
 export function SiteNav() {
   const { count } = useCart();
   const [open, setOpen] = useState(false);
@@ -92,9 +99,10 @@ export function SiteNav() {
                 setSearchOpen(false);
                 setOpen(false);
               }}
+              style={TOPBAR_TEXT_STYLE}
             >
               <span>Shop</span>
-              <ChevronDown size={14} aria-hidden="true" />
+              <ChevronDown size={16} strokeWidth={2} aria-hidden="true" />
             </button>
 
             {shopOpen && (
@@ -136,7 +144,7 @@ export function SiteNav() {
               <div
                 key={link.to}
                 className="fashion-ai-nav"
-                style={{ display: "flex", flexDirection: "column", alignItems: "stretch", gap: "3px" }}
+                style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "2px" }}
               >
                 <span
                   className="fashion-ai-nav__beta"
@@ -149,6 +157,7 @@ export function SiteNav() {
                     letterSpacing: ".18em",
                     textAlign: "center",
                     textTransform: "uppercase",
+                    minHeight: "8px",
                   }}
                 >
                   BETA
@@ -159,21 +168,26 @@ export function SiteNav() {
                   activeProps={{ className: "fashion-ai-nav__button is-active" }}
                   aria-label="AI Studio — Beta"
                   style={{
-                    minHeight: "34px",
-                    padding: "0 14px",
+                    minHeight: "36px",
+                    padding: "0 15px",
                     border: "1px solid var(--primary)",
                     color: "var(--foreground)",
                     opacity: 1,
                     letterSpacing: ".1em",
+                    fontSize: "13px",
+                    lineHeight: 1,
                     fontWeight: 600,
                     textDecoration: "none",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
                   {link.label}
                 </Link>
               </div>
             ) : (
-              <Link key={link.to} to={link.to} activeProps={{ className: "is-active" }}>
+              <Link key={link.to} to={link.to} activeProps={{ className: "is-active" }} style={TOPBAR_TEXT_STYLE}>
                 {link.label}
               </Link>
             ),
@@ -192,7 +206,7 @@ export function SiteNav() {
               setShopOpen(false);
             }}
           >
-            {searchOpen ? <X size={18} /> : <Search size={18} />}
+            {searchOpen ? <X size={21} strokeWidth={2} /> : <Search size={21} strokeWidth={2} />}
           </button>
 
           <Link
@@ -201,11 +215,11 @@ export function SiteNav() {
             aria-label={customerEmail ? `Tài khoản ${customerEmail}` : "Tài khoản"}
             title={customerEmail ?? "Tài khoản"}
           >
-            <UserRound size={18} />
+            <UserRound size={21} strokeWidth={2} />
           </Link>
 
           <Link to="/cart" className="fashion-cart-btn" aria-label="Giỏ hàng">
-            <ShoppingBag size={18} />
+            <ShoppingBag size={21} strokeWidth={2} />
             {count > 0 && <span>{count}</span>}
           </Link>
 
@@ -217,7 +231,7 @@ export function SiteNav() {
               title="Đăng xuất"
               onClick={() => void handleLogout()}
             >
-              <LogOut size={17} />
+              <LogOut size={20} strokeWidth={2} />
             </button>
           )}
 
@@ -232,7 +246,7 @@ export function SiteNav() {
               setShopOpen(false);
             }}
           >
-            {open ? <X size={21} /> : <Menu size={21} />}
+            {open ? <X size={23} strokeWidth={2} /> : <Menu size={23} strokeWidth={2} />}
           </button>
         </div>
       </div>
