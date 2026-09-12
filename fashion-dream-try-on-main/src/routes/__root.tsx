@@ -10,7 +10,7 @@ import paletteCss from "../palette.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { CartProvider } from "@/lib/cart";
 import { getCustomerUser, getSafeReturnPath, startCustomerSessionWatcher } from "@/lib/auth";
-import { applyTheme, getStoredTheme } from "@/lib/theme";
+import { applyTheme, getStoredTheme, loadRemoteTheme } from "@/lib/theme";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 const CUSTOMER_PROTECTED_PREFIXES = ["/checkout", "/account/profile", "/account/orders", "/account/wishlist"];
@@ -30,6 +30,7 @@ function consumeReturnPath() {
 function ThemeRuntime() {
   useEffect(() => {
     applyTheme(getStoredTheme());
+    void loadRemoteTheme();
     const onThemeChange = (event: Event) => {
       const detail = (event as CustomEvent).detail;
       applyTheme(detail);
@@ -62,9 +63,7 @@ function CustomerAuthGuard() {
   useEffect(() => {
     const onLogin = () => {
       const returnTo = consumeReturnPath();
-      if (returnTo !== "/" && isCustomerProtectedPath(new URL(returnTo, window.location.origin).pathname)) {
-        window.location.assign(returnTo);
-      }
+      if (returnTo !== "/" && isCustomerProtectedPath(new URL(returnTo, window.location.origin).pathname)) window.location.assign(returnTo);
     };
     const onLogout = () => {
       if (isCustomerProtectedPath(window.location.pathname)) void router.navigate({ to: "/account" });
@@ -82,9 +81,7 @@ function CustomerAuthGuard() {
     }
   }), [router]);
 
-  if (checking && isCustomerProtectedPath(pathname)) {
-    return <div className="min-h-screen bg-background text-foreground flex items-center justify-center"><p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Đang xác thực tài khoản…</p></div>;
-  }
+  if (checking && isCustomerProtectedPath(pathname)) return <div className="min-h-screen bg-background text-foreground flex items-center justify-center"><p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Đang xác thực tài khoản…</p></div>;
   return null;
 }
 
