@@ -27,6 +27,14 @@ def test_build_try_on_asset_paths_requires_ids() -> None:
         build_try_on_asset_paths("user-123", "")
 
 
+def test_build_try_on_asset_paths_rejects_path_injection() -> None:
+    with pytest.raises(ValueError):
+        build_try_on_asset_paths("../other-user", "job-456")
+
+    with pytest.raises(ValueError):
+        build_try_on_asset_paths("user-123", "job/456")
+
+
 def test_upload_asset_rejects_empty_data() -> None:
     with pytest.raises(ValueError, match="Asset is empty"):
         upload_asset("try-on/user/job/person.webp", b"")
@@ -35,6 +43,21 @@ def test_upload_asset_rejects_empty_data() -> None:
 def test_upload_asset_rejects_unscoped_path() -> None:
     with pytest.raises(ValueError, match="Invalid try-on asset path"):
         upload_asset("public/person.webp", b"image")
+
+
+def test_upload_asset_rejects_path_traversal() -> None:
+    with pytest.raises(ValueError, match="Invalid try-on asset path"):
+        upload_asset("try-on/user/../other/person.webp", b"image")
+
+
+def test_upload_asset_rejects_unknown_asset_name() -> None:
+    with pytest.raises(ValueError, match="Invalid try-on asset path"):
+        upload_asset("try-on/user/job/secret.webp", b"image")
+
+
+def test_upload_asset_rejects_wrong_content_type() -> None:
+    with pytest.raises(ValueError, match="image/webp"):
+        upload_asset("try-on/user/job/person.webp", b"image", "image/png")
 
 
 def test_upload_asset_returns_path_after_successful_upload() -> None:
@@ -47,6 +70,11 @@ def test_upload_asset_returns_path_after_successful_upload() -> None:
 
     assert result == "try-on/user/job/person.webp"
     storage.upload.assert_called_once()
+
+
+def test_signed_url_rejects_unscoped_path() -> None:
+    with pytest.raises(ValueError, match="Invalid try-on asset path"):
+        create_asset_signed_url("try-on/user/job/secret.webp")
 
 
 def test_signed_url_requires_safe_expiry() -> None:
