@@ -11,6 +11,8 @@ from app.services.try_on_service import ProviderSubmission, StubTryOnProvider, T
 
 
 client = TestClient(app)
+TRUSTED_SUPABASE_URL = "https://oazipcrbutizdncctkcg.supabase.co"
+TRUSTED_IMAGE_BASE = f"{TRUSTED_SUPABASE_URL}/storage/v1/object/public/products"
 
 
 def test_stub_provider_creates_queued_job() -> None:
@@ -58,8 +60,8 @@ def test_fashn_invalid_json_is_provider_error(monkeypatch) -> None:
     monkeypatch.setattr("app.services.fashn_provider.httpx.post", fake_post)
 
     request = TryOnRequest(
-        person_image_url="https://example.com/person.webp",
-        garment_image_url="https://example.com/garment.webp",
+        person_image_url=f"{TRUSTED_IMAGE_BASE}/person.webp",
+        garment_image_url=f"{TRUSTED_IMAGE_BASE}/garment.webp",
         category=TryOnCategory.TOP,
     )
 
