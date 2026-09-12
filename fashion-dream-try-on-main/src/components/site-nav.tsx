@@ -23,6 +23,11 @@ const PRIMARY_LINKS = [
 ] as const;
 
 const TOPBAR_TEXT_STYLE = {
+  height: "72px",
+  minHeight: "72px",
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
   fontSize: "13px",
   lineHeight: 1,
   fontWeight: 600,
@@ -88,7 +93,10 @@ export function SiteNav() {
         </Link>
 
         <div className="fashion-nav__links" aria-label="Điều hướng trang chính">
-          <div className={`fashion-shop-nav ${shopOpen ? "is-open" : ""}`}>
+          <div
+            className={`fashion-shop-nav ${shopOpen ? "is-open" : ""}`}
+            style={{ height: "72px", display: "flex", alignItems: "center", position: "relative", zIndex: 103 }}
+          >
             <button
               type="button"
               className="fashion-nav-link fashion-shop-trigger"
@@ -99,14 +107,26 @@ export function SiteNav() {
                 setSearchOpen(false);
                 setOpen(false);
               }}
-              style={TOPBAR_TEXT_STYLE}
+              style={{
+                ...TOPBAR_TEXT_STYLE,
+                position: "relative",
+                zIndex: 104,
+                color: "var(--foreground)",
+                opacity: 1,
+                visibility: "visible",
+              }}
             >
               <span>Shop</span>
               <ChevronDown size={16} strokeWidth={2} aria-hidden="true" />
             </button>
 
             {shopOpen && (
-              <div className="fashion-shop-mega" role="dialog" aria-label="Shop categories">
+              <div
+                className="fashion-shop-mega"
+                role="dialog"
+                aria-label="Shop categories"
+                style={{ top: "72px", zIndex: 100 }}
+              >
                 <div className="fashion-shop-mega__intro">
                   <span className="fashion-menu-kicker">COLLECTION / 2026</span>
                   <h2>Shop by category</h2>
@@ -144,7 +164,7 @@ export function SiteNav() {
               <div
                 key={link.to}
                 className="fashion-ai-nav"
-                style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "2px" }}
+                style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "2px", height: "72px" }}
               >
                 <span
                   className="fashion-ai-nav__beta"
