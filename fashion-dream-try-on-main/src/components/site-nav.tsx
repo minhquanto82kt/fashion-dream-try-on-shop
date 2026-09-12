@@ -18,7 +18,7 @@ import { useCart } from "@/lib/cart";
 import { getCustomerUser, signOutCustomer } from "@/lib/auth";
 
 const PRIMARY_LINKS = [
-  { to: "/ai", label: "AI Try-On", beta: true },
+  { to: "/ai", label: "AI Studio", beta: true },
   { to: "/about", label: "About" },
 ] as const;
 
@@ -131,12 +131,25 @@ export function SiteNav() {
             )}
           </div>
 
-          {PRIMARY_LINKS.map((link) => (
-            <Link key={link.to} to={link.to} activeProps={{ className: "is-active" }}>
-              {link.label}
-              {link.beta && <span className="fashion-beta-label">BETA</span>}
-            </Link>
-          ))}
+          {PRIMARY_LINKS.map((link) =>
+            link.beta ? (
+              <div key={link.to} className="fashion-ai-nav">
+                <span className="fashion-ai-nav__beta">BETA</span>
+                <Link
+                  to={link.to}
+                  className="fashion-ai-nav__button fashion-shop-all"
+                  activeProps={{ className: "fashion-ai-nav__button fashion-shop-all is-active" }}
+                  aria-label="AI Studio — Beta"
+                >
+                  {link.label}
+                </Link>
+              </div>
+            ) : (
+              <Link key={link.to} to={link.to} activeProps={{ className: "is-active" }}>
+                {link.label}
+              </Link>
+            ),
+          )}
         </div>
 
         <div className="fashion-nav__actions">
