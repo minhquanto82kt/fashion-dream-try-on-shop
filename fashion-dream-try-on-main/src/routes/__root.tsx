@@ -15,7 +15,9 @@ import { getCustomerUser, getSafeReturnPath, startCustomerSessionWatcher } from 
 import { applyTheme, getStoredTheme, loadRemoteTheme } from "@/lib/theme";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
-const CUSTOMER_PROTECTED_PREFIXES = ["/checkout", "/account/profile", "/account/orders", "/account/wishlist"];
+// Checkout is intentionally public so guests can complete an order without creating an account.
+// Account history/profile/wishlist remain protected by customer authentication.
+const CUSTOMER_PROTECTED_PREFIXES = ["/account/profile", "/account/orders", "/account/wishlist"];
 function isCustomerProtectedPath(pathname: string) { return CUSTOMER_PROTECTED_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)); }
 function rememberReturnPath() {
   if (typeof window === "undefined") return;
