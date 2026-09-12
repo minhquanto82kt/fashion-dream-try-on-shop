@@ -3,15 +3,24 @@
 import httpx
 import pytest
 
+from app.core.config import get_settings
 from app.models.try_on import TryOnCategory, TryOnRequest
 from app.services.fashn_provider import FashnProviderError, FashnTryOnProvider
 
 
 REQUEST = TryOnRequest(
-    person_image_url="https://example.com/person.webp",
-    garment_image_url="https://example.com/garment.webp",
+    person_image_url="https://project.supabase.co/storage/v1/object/sign/try-on/person.webp",
+    garment_image_url="https://project.supabase.co/storage/v1/object/sign/try-on/garment.webp",
     category=TryOnCategory.TOP,
 )
+
+
+@pytest.fixture(autouse=True)
+def configured_supabase(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setenv("SUPABASE_URL", "https://project.supabase.co")
+    get_settings.cache_clear()
+    yield
+    get_settings.cache_clear()
 
 
 def test_submit_builds_fashn_payload(monkeypatch) -> None:
@@ -33,6 +42,13 @@ def test_submit_builds_fashn_payload(monkeypatch) -> None:
     assert captured["json"]["model_name"] == "tryon-v1.6"
     assert captured["json"]["inputs"]["category"] == "tops"
     assert captured["headers"]["Authorization"] == "Bearer test-key"
+
+
+def test_submit_rejects_untrusted_image_host() -> None:
+    request = REQUEST.model_copy(update={"person_image_url": "https://example.com/person.webp"})
+
+    with pytest.raises(FashnProviderError, match="Supabase"):
+        FashnTryOnProvider(api_key="test-key").submit(request)
 
 
 def test_submit_requires_api_key() -> None:
