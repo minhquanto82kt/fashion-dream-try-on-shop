@@ -16,7 +16,7 @@ class TryOnAssetPath:
 
 
 def build_try_on_asset_paths(user_id: str, job_id: str) -> TryOnAssetPath:
-    """Build deterministic, user-scoped paths for a try-on job."""
+    """Build deterministic, user-scoped paths for one try-on job."""
 
     safe_user_id = user_id.strip()
     safe_job_id = job_id.strip()
@@ -40,11 +40,14 @@ def upload_asset(path: str, data: bytes, content_type: str = "image/webp") -> st
         raise ValueError("Invalid try-on asset path")
 
     bucket = get_settings().storage_bucket or "try-on-assets"
-    get_supabase_client().storage.from_(bucket).upload(
-        path,
-        data,
-        {"content-type": content_type, "upsert": False},
-    )
+    try:
+        get_supabase_client().storage.from_(bucket).upload(
+            path,
+            data,
+            {"content-type": content_type, "upsert": False},
+        )
+    except Exception as exc:
+        raise RuntimeError("Failed to upload try-on asset") from exc
     return path
 
 
@@ -57,10 +60,13 @@ def create_asset_signed_url(path: str, expires_in: int = 300) -> str:
         raise ValueError("expires_in must be between 60 and 3600 seconds")
 
     bucket = get_settings().storage_bucket or "try-on-assets"
-    response = get_supabase_client().storage.from_(bucket).create_signed_url(
-        path,
-        expires_in,
-    )
+    try:
+        response = get_supabase_client().storage.from_(bucket).create_signed_url(
+            path,
+            expires_in,
+        )
+    except Exception as exc:
+        raise RuntimeError("Failed to create asset signed URL") from exc
     if not response or "signedURL" not in response:
         raise RuntimeError("Supabase did not return a signed URL")
     return response["signedURL"]
