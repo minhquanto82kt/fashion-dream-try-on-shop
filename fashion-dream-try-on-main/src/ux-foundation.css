@@ -1,0 +1,288 @@
+/* UPTHINK UX FOUNDATION — readability, hierarchy and collision prevention.
+   Keep the existing visual identity; this layer standardizes legibility without redesigning layouts.
+*/
+
+:root {
+  --ux-body-size: 16px;
+  --ux-body-leading: 1.6;
+  --ux-ui-size: 12px;
+  --ux-meta-size: 11px;
+  --ux-small-size: 12px;
+}
+
+html {
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-size: var(--ux-body-size);
+  line-height: var(--ux-body-leading);
+}
+
+/* Public site typography */
+.fashion-site,
+.fashion-site p,
+.fashion-site li {
+  line-height: 1.6;
+}
+
+.fashion-site .fashion-eyebrow,
+.fashion-site .fashion-section-number {
+  font-size: 11px;
+  line-height: 1.4;
+  letter-spacing: .18em;
+}
+
+.fashion-site .fashion-display {
+  line-height: .92;
+  letter-spacing: -.045em;
+  text-wrap: balance;
+}
+
+.fashion-site .fashion-section-title {
+  line-height: 1.02;
+  letter-spacing: -.04em;
+  text-wrap: balance;
+}
+
+.fashion-site .fashion-hero__lede,
+.fashion-site .fashion-intro-copy,
+.fashion-site .fashion-ai-feature__copy > p:not(.fashion-eyebrow),
+.fashion-site .fashion-flow p {
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.fashion-site .fashion-hero__meta,
+.fashion-site .fashion-hero__vertical {
+  font-size: 10px;
+  line-height: 1.4;
+  letter-spacing: .13em;
+}
+
+.fashion-site .fashion-btn,
+.fashion-site .fashion-ai-btn,
+.fashion-site .fashion-text-link,
+.fashion-site .fashion-nav__links a {
+  font-size: 12px;
+  line-height: 1.3;
+  letter-spacing: .1em;
+}
+
+.fashion-site .fashion-btn {
+  min-height: 44px;
+}
+
+/* Navigation: readable labels without changing the compact editorial header. */
+.fashion-nav__links a {
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.fashion-brand__meta {
+  font-size: 10px;
+  line-height: 1.15;
+}
+
+.fashion-ai-btn {
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+.fashion-search-form button,
+.fashion-mobile-menu button,
+.fashion-mobile-menu a {
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.fashion-search-form input {
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+/* Product cards: make the information scan in a stable order. */
+.fashion-product-category {
+  font-size: 11px;
+  line-height: 1.35;
+  letter-spacing: .12em;
+}
+
+.fashion-product-title {
+  font-size: 15px;
+  line-height: 1.3;
+  letter-spacing: -.01em;
+}
+
+.fashion-product-spec {
+  font-size: 12px;
+  line-height: 1.45;
+  opacity: .82;
+}
+
+.fashion-product-price {
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.fashion-product-badge,
+.fashion-product-index {
+  font-size: 10px;
+  line-height: 1.25;
+}
+
+/* Editorial flow: avoid tiny body copy being mistaken for decorative metadata. */
+.fashion-flow__steps h3 {
+  line-height: 1.2;
+}
+
+/* Public Tailwind routes: prevent very small utility text from becoming the primary UI voice. */
+main .text-xs {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+main .text-sm {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+main .text-base {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+main .uppercase {
+  letter-spacing: .1em;
+}
+
+/* Headings: relax compressed line boxes that caused glyphs to visually collide. */
+main h1,
+main h2,
+main h3,
+main h4 {
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+main h1.leading-none,
+main h2.leading-none,
+main h3.leading-none,
+main h4.leading-none {
+  line-height: 1.08;
+}
+
+main h1.leading-tight,
+main h2.leading-tight,
+main h3.leading-tight,
+main h4.leading-tight {
+  line-height: 1.16;
+}
+
+/* Interactive controls: enough height and readable labels on touch devices. */
+main button,
+main [role="button"] {
+  line-height: 1.35;
+}
+
+main input,
+main select,
+main textarea {
+  font-size: 14px;
+}
+
+/* Account page has a photographic background: raise copy contrast and readable minimums. */
+.account-page {
+  line-height: 1.55;
+}
+
+.account-page .account-back,
+.account-page .account-eyebrow,
+.account-page .account-form-kicker,
+.account-page .account-form-number,
+.account-page .account-switch button,
+.account-page .account-field label,
+.account-page .account-status {
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.account-page .account-copy {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--cream);
+  opacity: .88;
+}
+
+.account-page .account-index {
+  font-size: 10px;
+  line-height: 1.4;
+  color: var(--cream);
+  opacity: .72;
+}
+
+.account-page .account-field input {
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.account-page .account-feedback {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.account-page .account-submit {
+  font-size: 11px;
+  line-height: 1.35;
+  min-height: 48px;
+}
+
+/* Do not let long words, emails or labels create horizontal collisions. */
+.fashion-site,
+.account-page,
+main {
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 720px) {
+  .fashion-site .fashion-eyebrow,
+  .fashion-site .fashion-section-number {
+    font-size: 10px;
+  }
+
+  .fashion-site .fashion-display {
+    line-height: .94;
+    letter-spacing: -.035em;
+  }
+
+  .fashion-site .fashion-section-title {
+    line-height: 1.04;
+    letter-spacing: -.03em;
+  }
+
+  .fashion-site .fashion-hero__lede,
+  .fashion-site .fashion-intro-copy,
+  .fashion-site .fashion-ai-feature__copy > p:not(.fashion-eyebrow),
+  .fashion-site .fashion-flow p {
+    font-size: 14px;
+    line-height: 1.68;
+  }
+
+  .fashion-site .fashion-btn,
+  .fashion-site .fashion-ai-btn,
+  .fashion-site .fashion-text-link,
+  .fashion-site .fashion-nav__links a {
+    font-size: 11px;
+  }
+
+  .account-page .account-copy {
+    font-size: 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+  }
+}
