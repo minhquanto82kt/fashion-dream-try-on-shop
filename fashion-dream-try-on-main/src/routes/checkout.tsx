@@ -78,7 +78,10 @@ function CheckoutPage() {
           } catch (error) { alert(error instanceof Error ? error.message : "Không thể tạo đơn hàng."); } finally { setSubmitting(false); }
         }}>
           <div className="min-w-0 space-y-4">
-            <Field label="Họ và tên" name="name" /><Field label="Số điện thoại" name="phone" type="tel" /><Field label="Email" name="email" type="email" /><Field label="Địa chỉ giao hàng" name="address" />
+            <Field label="Họ và tên" name="name" />
+            <Field label="Số điện thoại" name="phone" type="tel" />
+            <Field label="Email (không bắt buộc)" name="email" type="email" />
+            <Field label="Địa chỉ giao hàng" name="address" />
             <div className="grid min-w-0 gap-4 sm:grid-cols-2"><Field label="Tỉnh / Thành phố" name="city" /><Field label="Quận / Huyện" name="district" /></div>
             <p className="pt-4 text-xs uppercase leading-5 tracking-[0.2em] text-silver">Phương thức thanh toán</p>
             <div className="space-y-3">
@@ -103,5 +106,5 @@ function PaymentOption({ method, current, onChange, title, description }: { meth
 }
 
 function Field({ label, name, type = "text" }: { label: string; name: string; type?: string }) {
-  return <label className="block min-w-0"><span className="text-xs uppercase leading-5 tracking-[0.2em] text-silver">{label}</span><input required name={name} type={type} className="mt-2 min-h-11 w-full min-w-0 border border-border bg-card px-4 py-3 text-sm leading-6 outline-none focus:border-primary" /></label>;
+  return <label className="block min-w-0"><span className="text-xs uppercase leading-5 tracking-[0.2em] text-silver">{label}</span><input required={name !== "email"} name={name} type={type} className="mt-2 min-h-11 w-full min-w-0 border border-border bg-card px-4 py-3 text-sm leading-6 outline-none focus:border-primary" /></label>;
 }
