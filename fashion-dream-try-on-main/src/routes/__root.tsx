@@ -10,6 +10,7 @@ import paletteCss from "../palette.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { CartProvider } from "@/lib/cart";
 import { getCustomerUser, getSafeReturnPath, startCustomerSessionWatcher } from "@/lib/auth";
+import { applyTheme, getStoredTheme } from "@/lib/theme";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 const CUSTOMER_PROTECTED_PREFIXES = ["/checkout", "/account/profile", "/account/orders", "/account/wishlist"];
@@ -24,6 +25,19 @@ function consumeReturnPath() {
   const path = getSafeReturnPath(window.sessionStorage.getItem("upthink_auth_return_to"));
   window.sessionStorage.removeItem("upthink_auth_return_to");
   return path;
+}
+
+function ThemeRuntime() {
+  useEffect(() => {
+    applyTheme(getStoredTheme());
+    const onThemeChange = (event: Event) => {
+      const detail = (event as CustomEvent).detail;
+      applyTheme(detail);
+    };
+    window.addEventListener("upthink:theme:changed", onThemeChange);
+    return () => window.removeEventListener("upthink:theme:changed", onThemeChange);
+  }, []);
+  return null;
 }
 
 function CustomerAuthGuard() {
@@ -96,5 +110,5 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function RootShell({ children }: { children: ReactNode }) { return <html lang="vi"><head><HeadContent /></head><body>{children}<Scripts /></body></html>; }
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  return <QueryClientProvider client={queryClient}><CartProvider><CustomerAuthGuard /><Outlet /><Toaster /></CartProvider></QueryClientProvider>;
+  return <QueryClientProvider client={queryClient}><CartProvider><ThemeRuntime /><CustomerAuthGuard /><Outlet /><Toaster /></CartProvider></QueryClientProvider>;
 }
