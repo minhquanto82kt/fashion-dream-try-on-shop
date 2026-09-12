@@ -59,3 +59,22 @@ class ProductVisionRepository:
             .execute()
         )
         return response.data[0] if response.data else None
+
+    def list_by_product_ids(self, product_ids: list[str]) -> dict[str, dict[str, Any]]:
+        """Return persisted attributes for many products with one Supabase query."""
+
+        ids = [product_id.strip() for product_id in product_ids if product_id and product_id.strip()]
+        if not ids:
+            return {}
+
+        response = (
+            self.client.table(self.table_name)
+            .select("*")
+            .in_("product_id", ids)
+            .execute()
+        )
+        return {
+            str(row["product_id"]): row
+            for row in (response.data or [])
+            if row.get("product_id")
+        }
