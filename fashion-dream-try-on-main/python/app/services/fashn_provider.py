@@ -6,6 +6,7 @@ from typing import Any
 import httpx
 
 from app.core.config import get_settings
+from app.core.url_security import validate_trusted_image_url
 from app.models.try_on import TryOnCategory, TryOnRequest
 
 
@@ -35,6 +36,12 @@ class FashnTryOnProvider:
         """Submit a try-on prediction to FASHN."""
         if not self.api_key:
             raise FashnProviderError("FASHN_API_KEY is not configured")
+
+        try:
+            validate_trusted_image_url(request.person_image_url)
+            validate_trusted_image_url(request.garment_image_url)
+        except ValueError as exc:
+            raise FashnProviderError(str(exc)) from exc
 
         payload = {
             "model_name": "tryon-v1.6",
