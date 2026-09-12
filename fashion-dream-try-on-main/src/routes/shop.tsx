@@ -120,7 +120,10 @@ const SORTS = [
 function ShopPage() {
   const products = Route.useLoaderData();
 
-  const [cat, setCat] = useState<string>("all");
+  const [cat, setCat] = useState<string>(() => {
+    if (typeof window === "undefined") return "all";
+    return new URLSearchParams(window.location.search).get("category") ?? "all";
+  });
   const [sort, setSort] = useState<string>("featured");
   const [search, setSearch] = useState(() => {
     if (typeof window === "undefined") return "";
@@ -145,9 +148,27 @@ function ShopPage() {
           : 0,
     );
 
+  const selectCategory = (category: string) => {
+    setCat(category);
+    const params = new URLSearchParams(window.location.search);
+    if (category === "all") params.delete("category");
+    else params.set("category", category);
+    window.history.replaceState(
+      {},
+      "",
+      `/shop${params.toString() ? `?${params.toString()}` : ""}`,
+    );
+  };
+
   const clearSearch = () => {
     setSearch("");
-    window.history.replaceState({}, "", "/shop");
+    const params = new URLSearchParams(window.location.search);
+    params.delete("search");
+    window.history.replaceState(
+      {},
+      "",
+      `/shop${params.toString() ? `?${params.toString()}` : ""}`,
+    );
   };
 
   return (
@@ -164,7 +185,8 @@ function ShopPage() {
             </>
           ) : (
             <>
-              Tất cả <span className="text-primary">sản phẩm</span>
+              {cat === "all" ? "Tất cả" : CATEGORIES.find((item) => item.slug === cat)?.name ?? "Danh mục"} {" "}
+              <span className="text-primary">sản phẩm</span>
             </>
           )}
         </h1>
@@ -184,7 +206,7 @@ function ShopPage() {
             {[{ slug: "all", name: "Tất cả" }, ...CATEGORIES].map((c) => (
               <button
                 key={c.slug}
-                onClick={() => setCat(c.slug)}
+                onClick={() => selectCategory(c.slug)}
                 className={`shop-category-button shrink-0 border px-4 py-2 text-xs uppercase tracking-[0.15em] transition-colors ${
                   cat === c.slug
                     ? "border-primary bg-primary text-primary-foreground"
