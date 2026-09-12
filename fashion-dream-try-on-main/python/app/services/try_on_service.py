@@ -5,7 +5,7 @@ from uuid import uuid4
 
 from app.core.config import get_settings
 from app.models.try_on import TryOnJob, TryOnRequest, TryOnStatus
-from app.services.fashn_provider import FashnPrediction, FashnTryOnProvider
+from app.services.fashn_provider import FashnPrediction, FashnProviderError, FashnTryOnProvider
 
 
 @dataclass(frozen=True)
@@ -72,12 +72,27 @@ class TryOnService:
         return StubTryOnProvider()
 
     def create_job(self, request: TryOnRequest) -> tuple[TryOnJob, ProviderSubmission]:
-        """Submit a request and return the API job plus provider reference."""
+        """Submit a request and return a persisted-safe lifecycle state."""
 
-        submission = self.provider.submit(request)
-        job = TryOnJob(
-            id=str(uuid4()),
-            status=TryOnStatus.QUEUED,
-            provider=submission.provider,
+        job_id = str(uuid4())
+        try:
+            submission = self.provider.submit(request)
+        except FashnProviderError as exc:
+            return (
+                TryOnJob(
+                    id=job_id,
+                    status=TryOnStatus.FAILED,
+                    provider=self.provider.name,
+                    error=str(exc),
+                ),
+                ProviderSubmission(provider=self.provider.name),
+            )
+
+        return (
+            TryOnJob(
+                id=job_id,
+                status=TryOnStatus.QUEUED,
+                provider=submission.provider,
+            ),
+            submission,
         )
-        return job, submission
