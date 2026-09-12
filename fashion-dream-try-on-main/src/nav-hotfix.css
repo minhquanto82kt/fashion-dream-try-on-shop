@@ -1,0 +1,115 @@
+/* Navigation alignment hotfix: loaded from SiteNav after the shared stylesheet. */
+
+.fashion-nav__links {
+  height: 72px !important;
+  align-items: center !important;
+}
+
+.fashion-nav__links > a,
+.fashion-nav__links > .fashion-shop-nav,
+.fashion-nav__links > .fashion-ai-nav {
+  height: 72px !important;
+  min-height: 72px !important;
+  box-sizing: border-box !important;
+}
+
+.fashion-nav__links > a {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* AI Studio: main label shares the exact vertical center with SHOP/ABOUT.
+   BETA is decorative metadata positioned above it and does not affect layout. */
+.fashion-nav__links > .fashion-ai-nav {
+  position: relative !important;
+  display: block !important;
+  flex: 0 0 auto !important;
+  width: max-content !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.fashion-ai-nav__beta {
+  position: absolute !important;
+  top: 8px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  display: block !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: var(--primary) !important;
+  font: 700 8px/1 var(--ft-meta) !important;
+  letter-spacing: .18em !important;
+  white-space: nowrap !important;
+  z-index: 3 !important;
+}
+
+.fashion-ai-nav__button {
+  position: absolute !important;
+  top: 18px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: max-content !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  margin: 0 !important;
+  padding: 0 15px !important;
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid var(--primary) !important;
+  background: transparent !important;
+  color: var(--foreground) !important;
+  opacity: 1 !important;
+  font: 600 13px/1 var(--ft-body) !important;
+  letter-spacing: .1em !important;
+  text-decoration: none !important;
+  z-index: 2 !important;
+}
+
+.fashion-ai-nav__button:hover,
+.fashion-ai-nav__button.is-active {
+  background: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+}
+
+/* SHOP trigger remains visible above the mega menu. */
+.fashion-shop-nav {
+  position: relative !important;
+  z-index: 103 !important;
+  display: flex !important;
+  align-items: center !important;
+  flex: 0 0 auto !important;
+}
+
+.fashion-shop-trigger {
+  position: relative !important;
+  z-index: 104 !important;
+  height: 72px !important;
+  min-height: 72px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  color: var(--foreground) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.fashion-shop-trigger:hover,
+.fashion-shop-nav.is-open .fashion-shop-trigger,
+.fashion-shop-trigger:focus-visible {
+  color: var(--primary) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.fashion-shop-mega {
+  z-index: 100 !important;
+}
