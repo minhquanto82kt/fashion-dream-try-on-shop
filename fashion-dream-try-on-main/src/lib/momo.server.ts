@@ -141,7 +141,7 @@ export async function createMomoPayment(orderCode: string) {
     throw new Error("Số tiền thanh toán MoMo không hợp lệ.");
   }
 
-  const requestId = `FD-${order.order_code}-${randomUUID()}`;
+  const requestId = `FD-${order.order_code}-${randomUUID().replaceAll("-", "")}`;
   const requestType = "captureWallet";
   const extraData = Buffer.from(
     JSON.stringify({ orderCode: order.order_code }),
