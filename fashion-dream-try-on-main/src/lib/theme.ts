@@ -14,11 +14,28 @@ export const DEFAULT_THEME_COLORS: ThemeColors = {
 export const THEME_STORAGE_KEY = "upthink-theme-colors";
 const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
 const THEME_ENDPOINT = "/rest/v1/site_theme_settings";
+const ADMIN_SESSION_KEY = "upthink_admin_session";
+
+type AdminSession = {
+  access_token?: string;
+};
 
 function getSupabaseConfig(): { url: string; key: string } | null {
   const url = import.meta.env.VITE_SUPABASE_URL as string | undefined;
   const key = (import.meta.env.VITE_SUPABASE_ANON_KEY ?? import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY) as string | undefined;
   return url && key ? { url, key } : null;
+}
+
+function getAdminAccessToken(): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.sessionStorage.getItem(ADMIN_SESSION_KEY);
+    if (!raw) return null;
+    const session = JSON.parse(raw) as AdminSession;
+    return typeof session.access_token === "string" && session.access_token.length > 0 ? session.access_token : null;
+  } catch {
+    return null;
+  }
 }
 
 export function isValidHexColor(value: string): boolean { return HEX_COLOR.test(value); }
@@ -89,11 +106,14 @@ export async function saveThemeToDatabase(colors: ThemeColors): Promise<ThemeCol
   const theme = sanitizeThemeColors(colors);
   const config = getSupabaseConfig();
   if (!config) throw new Error("Supabase theme configuration is missing.");
+  const accessToken = getAdminAccessToken();
+  if (!accessToken) throw new Error("Admin session expired. Please sign in again.");
 
   const response = await fetch(`${config.url}${THEME_ENDPOINT}?id=eq.global`, {
     method: "PATCH",
     headers: {
       apikey: config.key,
+      Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
       Prefer: "return=representation",
     },
@@ -119,9 +139,7 @@ export async function saveThemeToDatabase(colors: ThemeColors): Promise<ThemeCol
 }
 
 export async function resetTheme(): Promise<ThemeColors> {
-  const saved = await saveThemeToDatabase(DEFAULT_THEME_COLORS);
-  if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent("upthink:theme:changed", { detail: saved }));
-  return saved;
+  return saveThemeToDatabase(DEFAULT_THEME_COLORS);
 }
 
 if (typeof window !== "undefined") applyTheme(getStoredTheme());
