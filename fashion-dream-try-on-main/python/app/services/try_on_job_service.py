@@ -27,15 +27,18 @@ class TryOnJobService:
         user_id: str,
         provider: str,
         job_id: str,
+        status: TryOnStatus = TryOnStatus.QUEUED,
+        error: str | None = None,
         metadata: dict[str, Any] | None = None,
     ) -> TryOnJob:
-        """Persist a newly queued job."""
+        """Persist a newly created job with its initial lifecycle state."""
         row: dict[str, Any] = {
             "id": job_id,
             "user_id": user_id,
-            "status": TryOnStatus.QUEUED.value,
+            "status": status.value,
             "provider": provider,
             "category": request.category.value,
+            "error": error,
             "metadata": metadata if metadata is not None else request.metadata,
         }
         response = self._table().insert(row).execute()
