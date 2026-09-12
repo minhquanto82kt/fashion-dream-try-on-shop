@@ -88,7 +88,7 @@ export function SiteNav() {
         <div className="fashion-nav__actions">
           <button
             type="button"
-            className={`fashion-icon-btn ${searchOpen ? "is-active" : ""}`}
+            className={`fashion-icon-btn fashion-search-toggle ${searchOpen ? "is-active" : ""}`}
             aria-label={searchOpen ? "Đóng tìm kiếm" : "Tìm kiếm sản phẩm"}
             aria-expanded={searchOpen}
             onClick={() => {
