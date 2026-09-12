@@ -133,13 +133,41 @@ export function SiteNav() {
 
           {PRIMARY_LINKS.map((link) =>
             link.beta ? (
-              <div key={link.to} className="fashion-ai-nav">
-                <span className="fashion-ai-nav__beta">BETA</span>
+              <div
+                key={link.to}
+                className="fashion-ai-nav"
+                style={{ display: "flex", flexDirection: "column", alignItems: "stretch", gap: "3px" }}
+              >
+                <span
+                  className="fashion-ai-nav__beta"
+                  style={{
+                    color: "var(--primary)",
+                    fontFamily: "var(--ft-meta)",
+                    fontSize: "8px",
+                    fontWeight: 700,
+                    lineHeight: 1,
+                    letterSpacing: ".18em",
+                    textAlign: "center",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  BETA
+                </span>
                 <Link
                   to={link.to}
-                  className="fashion-ai-nav__button fashion-shop-all"
-                  activeProps={{ className: "fashion-ai-nav__button fashion-shop-all is-active" }}
+                  className="fashion-ai-nav__button"
+                  activeProps={{ className: "fashion-ai-nav__button is-active" }}
                   aria-label="AI Studio — Beta"
+                  style={{
+                    minHeight: "34px",
+                    padding: "0 14px",
+                    border: "1px solid var(--primary)",
+                    color: "var(--foreground)",
+                    opacity: 1,
+                    letterSpacing: ".1em",
+                    fontWeight: 600,
+                    textDecoration: "none",
+                  }}
                 >
                   {link.label}
                 </Link>
