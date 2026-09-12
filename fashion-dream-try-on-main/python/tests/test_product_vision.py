@@ -24,7 +24,7 @@ def test_stub_product_vision_is_explicitly_unknown() -> None:
     assert result.confidence is None
 
 
-def test_product_vision_endpoint() -> None:
+def test_product_vision_endpoint_requires_authentication() -> None:
     response = client.post(
         "/api/product-vision/analyze",
         json={
@@ -33,6 +33,4 @@ def test_product_vision_endpoint() -> None:
         },
     )
 
-    assert response.status_code == 200
-    assert response.json()["provider"] == "stub"
-    assert response.json()["garment_type"] == "unknown"
+    assert response.status_code == 401
