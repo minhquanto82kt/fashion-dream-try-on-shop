@@ -6,12 +6,11 @@ from app.models.recommendation import RecommendationPreferences
 from app.services.recommendation_service import recommend_products
 
 
-def test_recommendations_read_persisted_vision_attributes() -> None:
+def test_recommendations_read_persisted_vision_attributes_in_one_batch() -> None:
     repository = Mock()
-    repository.get_by_product_id.side_effect = [
-        {"style_tags": ["casual"], "colors": ["black"], "garment_type": "top"},
-        None,
-    ]
+    repository.list_by_product_ids.return_value = {
+        "p1": {"style_tags": ["casual"], "colors": ["black"], "garment_type": "top"},
+    }
     products = [
         {"id": "p1", "name": "Vision Tee", "price": 300000},
         {"id": "p2", "name": "Plain Product", "price": 300000},
@@ -25,4 +24,5 @@ def test_recommendations_read_persisted_vision_attributes() -> None:
 
     assert result.items[0].product["id"] == "p1"
     assert result.items[0].score == 90.0
-    assert repository.get_by_product_id.call_count == 2
+    repository.list_by_product_ids.assert_called_once_with(["p1", "p2"])
+    repository.get_by_product_id.assert_not_called()
