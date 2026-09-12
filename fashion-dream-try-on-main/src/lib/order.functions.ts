@@ -15,7 +15,7 @@ type CreateOrderInput = {
   address: string;
   city: string;
   district: string;
-  paymentMethod: "cod" | "vietqr";
+  paymentMethod: "cod" | "vietqr" | "momo";
   items: OrderItemInput[];
 };
 
@@ -38,7 +38,7 @@ export const createOrder = createServerFn({ method: "POST" })
       throw new Error("Vui lòng nhập đầy đủ thông tin giao hàng.");
     }
 
-    if (!["cod", "vietqr"].includes(data.paymentMethod)) {
+    if (!["cod", "vietqr", "momo"].includes(data.paymentMethod)) {
       throw new Error("Phương thức thanh toán không hợp lệ.");
     }
 
@@ -90,6 +90,7 @@ export const createOrder = createServerFn({ method: "POST" })
     }
 
     return {
+      orderId: order.order_id,
       orderCode: order.order_code,
       total: order.total,
     };
