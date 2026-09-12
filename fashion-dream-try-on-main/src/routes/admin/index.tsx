@@ -10,6 +10,7 @@ const cards = [
   ["Orders", "Review and manage customer orders", "/admin/orders"],
   ["Customers", "View customer accounts and activity", "#"],
   ["Inventory", "Track stock and availability", "/admin/inventory"],
+  ["Appearance", "Control global color theme and visual system", "/admin/appearance"],
 ] as const;
 
 function AdminDashboardPage() {
