@@ -126,8 +126,8 @@
 .text-accent-foreground { color: var(--accent-foreground) !important; }
 .border-border, .border-input { border-color: var(--border) !important; }
 .ring-ring { --tw-ring-color: var(--ring) !important; }
-.focus\\:border-primary:focus { border-color: var(--primary) !important; }
-.hover\\:bg-primary\\/90:hover { background-color: color-mix(in oklab, var(--primary) 90%, var(--surface)) !important; }
-.hover\\:bg-accent:hover { background-color: var(--accent) !important; color: var(--accent-foreground) !important; }
+.focus\:border-primary:focus { border-color: var(--primary) !important; }
+.hover\:bg-primary\/90:hover { background-color: color-mix(in oklab, var(--primary) 90%, var(--surface)) !important; }
+.hover\:bg-accent:hover { background-color: var(--accent) !important; color: var(--accent-foreground) !important; }
 .bg-destructive { background-color: var(--destructive) !important; }
 .text-destructive-foreground { color: var(--destructive-foreground) !important; }
