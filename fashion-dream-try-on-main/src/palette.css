@@ -17,89 +17,99 @@
   --up-orange: var(--theme-accent, #EB7D00);
   --up-black: var(--theme-surface, #0B0909);
 
-  --ink: var(--up-olive);
-  --background: var(--theme-background, var(--up-olive));
-  --foreground: var(--up-cream);
-  --card: var(--up-black);
-  --card-foreground: var(--up-cream);
-  --popover: var(--up-black);
-  --popover-foreground: var(--up-cream);
-  --primary: var(--up-orange);
-  --primary-foreground: var(--up-black);
-  --secondary: var(--up-green);
-  --secondary-foreground: var(--up-cream);
-  --muted: var(--up-green);
-  --muted-foreground: var(--up-cream);
-  --accent: var(--up-cream);
-  --accent-foreground: var(--up-olive);
-  --destructive: var(--up-orange);
-  --destructive-foreground: var(--up-black);
-  --border: color-mix(in oklab, var(--up-green) 72%, var(--up-olive));
-  --input: var(--up-black);
-  --ring: var(--up-orange);
-  --electric: var(--up-orange);
-  --beige: var(--up-cream);
-  --silver: var(--up-cream);
-  --y2k-cyan: var(--up-cream);
+  /* Official semantic color API. Components should consume these tokens. */
+  --brand-primary: var(--theme-primary, #2E2910);
+  --brand-secondary: var(--theme-secondary, #2C5745);
+  --page-background: var(--theme-background, #2E2910);
+  --surface: var(--theme-surface, #0B0909);
+  --brand-accent: var(--theme-accent, #EB7D00);
+  --text-primary: var(--theme-foreground, #EBE3A7);
 
-  --ft-paper: var(--up-cream);
-  --ft-ink: var(--up-olive);
-  --ft-acid: var(--up-orange);
-  --ft-muted: var(--up-green);
+  /* Existing component-system compatibility bridge. */
+  --ink: var(--brand-primary);
+  --background: var(--page-background);
+  --foreground: var(--text-primary);
+  --card: var(--surface);
+  --card-foreground: var(--text-primary);
+  --popover: var(--surface);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--brand-primary);
+  --primary-foreground: var(--surface);
+  --secondary: var(--brand-secondary);
+  --secondary-foreground: var(--text-primary);
+  --muted: color-mix(in oklab, var(--brand-secondary) 38%, var(--page-background));
+  --muted-foreground: color-mix(in oklab, var(--text-primary) 62%, var(--page-background));
+  --accent: var(--brand-accent);
+  --accent-foreground: var(--surface);
+  --destructive: var(--brand-accent);
+  --destructive-foreground: var(--surface);
+  --border: color-mix(in oklab, var(--brand-secondary) 72%, var(--page-background));
+  --input: var(--surface);
+  --ring: var(--brand-accent);
+  --electric: var(--brand-accent);
+  --beige: var(--text-primary);
+  --silver: var(--text-primary);
+  --y2k-cyan: var(--text-primary);
+
+  /* Legacy FashionTry aliases — retained only as compatibility aliases. */
+  --ft-paper: var(--text-primary);
+  --ft-ink: var(--page-background);
+  --ft-acid: var(--brand-accent);
+  --ft-muted: var(--brand-secondary);
+  --ft-mustard: var(--brand-accent);
+  --ft-olive: var(--brand-secondary);
 }
 
+/* Existing data-theme="cream" is retained for compatibility, but values now
+   come from the runtime semantic system instead of a second palette. */
 :root[data-theme="cream"] {
-  --background: var(--theme-background, var(--up-olive));
-  --foreground: var(--up-cream);
-  --card: var(--up-black);
-  --card-foreground: var(--up-cream);
-  --popover: var(--up-black);
-  --popover-foreground: var(--up-cream);
-  --muted: var(--up-green);
-  --muted-foreground: var(--up-cream);
-  --border: color-mix(in oklab, var(--up-green) 72%, var(--up-olive));
-  --primary: var(--up-orange);
-  --primary-foreground: var(--up-black);
-  --accent: var(--up-cream);
-  --accent-foreground: var(--up-olive);
-  --input: var(--up-black);
-  --ring: var(--up-orange);
-  --electric: var(--up-orange);
-  --beige: var(--up-cream);
-  --silver: var(--up-cream);
+  --background: var(--page-background);
+  --foreground: var(--text-primary);
+  --card: var(--surface);
+  --card-foreground: var(--text-primary);
+  --popover: var(--surface);
+  --popover-foreground: var(--text-primary);
+  --muted: color-mix(in oklab, var(--brand-secondary) 38%, var(--page-background));
+  --muted-foreground: color-mix(in oklab, var(--text-primary) 62%, var(--page-background));
+  --border: color-mix(in oklab, var(--brand-secondary) 72%, var(--page-background));
+  --primary: var(--brand-primary);
+  --primary-foreground: var(--surface);
+  --accent: var(--brand-accent);
+  --accent-foreground: var(--surface);
+  --input: var(--surface);
+  --ring: var(--brand-accent);
 }
 
-/* Replace legacy hard-coded FashionTry color treatment. */
-.fashion-site { background: var(--up-olive); color: var(--up-cream); }
-.fashion-nav { background: color-mix(in oklab, var(--up-olive) 92%, transparent); border-color: color-mix(in oklab, var(--up-green) 72%, var(--up-olive)); }
-.fashion-brand__mark, .fashion-cart-btn span, .fashion-product-badge, .fashion-hero__label { background: var(--up-orange); color: var(--up-black); }
-.fashion-nav__links a:hover, .fashion-nav__links a.is-active, .fashion-brand__name span, .fashion-brand__meta, .fashion-eyebrow, .fashion-section-number, .fashion-feature-list b, .fashion-text-link, .fashion-section-number--mustard, .fashion-accent, .statement-line--accent-small, .statement-line--accent-display, .fashion-product-price { color: var(--up-orange); }
-.fashion-ai-btn, .fashion-btn, .fashion-hero__art, .fashion-ai-feature__visual { border-color: var(--up-orange); }
-.fashion-ai-btn:hover, .fashion-btn:not(.fashion-btn--ghost):hover, .fashion-category-filter:hover, .fashion-category-filter.is-active { background: var(--up-orange); color: var(--up-black); }
-.fashion-btn { background: var(--up-orange); color: var(--up-black); }
-.fashion-btn--ghost { background: transparent; color: var(--up-cream); }
-.fashion-btn--light { background: var(--up-cream); color: var(--up-olive); border-color: var(--up-cream); }
-.fashion-product-image { background: var(--up-green); color: var(--up-olive); }
-.fashion-products-section { background: var(--up-cream); color: var(--up-olive); border-color: var(--up-green); }
-.fashion-product-image, .fashion-product-meta, .fashion-feature-list, .fashion-feature-list div { border-color: color-mix(in oklab, var(--up-green) 72%, var(--up-olive)); }
-.fashion-product-badge--olive, .fashion-category-filter--olive { background: var(--up-green); border-color: var(--up-orange); color: var(--up-cream); }
-.fashion-category-filter--olive:hover, .fashion-category-filter--olive.is-active { background: var(--up-green); border-color: var(--up-orange); color: var(--up-cream); }
-.fashion-hero__art { box-shadow: 12px 12px 0 color-mix(in oklab, var(--up-orange) 58%, transparent); }
-.fashion-ai-feature__visual { box-shadow: 9px 9px 0 color-mix(in oklab, var(--up-orange) 58%, transparent); }
-.fashion-hero__overlay { background: linear-gradient(145deg, color-mix(in oklab, var(--up-olive) 72%, transparent), transparent 46%), linear-gradient(180deg, color-mix(in oklab, var(--up-olive) 18%, transparent), color-mix(in oklab, var(--up-black) 68%, transparent)), repeating-linear-gradient(0deg, transparent 0 5px, color-mix(in oklab, var(--up-orange) 8%, transparent) 6px 7px); }
-.fashion-hero__hud, .fashion-hero__vertical { color: color-mix(in oklab, var(--up-cream) 92%, transparent); }
-.fashion-hero__status b { background: var(--up-orange); box-shadow: 0 0 12px var(--up-orange); }
-.fashion-hero__dots button { background: color-mix(in oklab, var(--up-cream) 35%, transparent); }
-.fashion-hero__dots button.is-active { background: var(--up-orange); }
-.fashion-hero__scan { background: linear-gradient(90deg, transparent, var(--up-orange) 35%, var(--up-cream) 50%, var(--up-orange) 65%, transparent); box-shadow: 0 0 18px color-mix(in oklab, var(--up-orange) 80%, transparent); }
-.fashion-intro-section { background-color: var(--up-olive); background-image: linear-gradient(to top, color-mix(in oklab, var(--up-black) 86%, transparent) 0%, color-mix(in oklab, var(--up-olive) 55%, transparent) 42%, color-mix(in oklab, var(--up-olive) 6%, transparent) 78%), url("https://cdn.builder.io/api/v1/image/assets%2Fa8cc818942044ac39bb81f5eaf3b051c%2Ffb7f96c4487844e9af8fec2c7e54bd4c"); color: var(--up-cream); }
-.fashion-editorial { background: var(--up-black); color: var(--up-cream); }
-.fashion-editorial .fashion-eyebrow, .fashion-editorial .fashion-accent { color: var(--up-orange); }
-.fashion-flow__steps span { color: var(--up-orange); }
+/* Legacy FashionTry visual selectors consume the semantic API. */
+.fashion-site { background: var(--page-background); color: var(--text-primary); }
+.fashion-nav { background: color-mix(in oklab, var(--page-background) 92%, transparent); border-color: color-mix(in oklab, var(--brand-secondary) 72%, var(--page-background)); }
+.fashion-brand__mark, .fashion-cart-btn span, .fashion-product-badge, .fashion-hero__label { background: var(--brand-accent); color: var(--surface); }
+.fashion-nav__links a:hover, .fashion-nav__links a.is-active, .fashion-brand__name span, .fashion-brand__meta, .fashion-eyebrow, .fashion-section-number, .fashion-feature-list b, .fashion-text-link, .fashion-section-number--mustard, .fashion-accent, .statement-line--accent-small, .statement-line--accent-display, .fashion-product-price { color: var(--brand-accent); }
+.fashion-ai-btn, .fashion-btn, .fashion-hero__art, .fashion-ai-feature__visual { border-color: var(--brand-accent); }
+.fashion-ai-btn:hover, .fashion-btn:not(.fashion-btn--ghost):hover, .fashion-category-filter:hover, .fashion-category-filter.is-active { background: var(--brand-accent); color: var(--surface); }
+.fashion-btn { background: var(--brand-accent); color: var(--surface); }
+.fashion-btn--ghost { background: transparent; color: var(--text-primary); }
+.fashion-btn--light { background: var(--text-primary); color: var(--page-background); border-color: var(--text-primary); }
+.fashion-product-image { background: var(--brand-secondary); color: var(--page-background); }
+.fashion-products-section { background: var(--text-primary); color: var(--page-background); border-color: var(--brand-secondary); }
+.fashion-product-image, .fashion-product-meta, .fashion-feature-list, .fashion-feature-list div { border-color: color-mix(in oklab, var(--brand-secondary) 72%, var(--page-background)); }
+.fashion-product-badge--olive, .fashion-category-filter--olive { background: var(--brand-secondary); border-color: var(--brand-accent); color: var(--text-primary); }
+.fashion-category-filter--olive:hover, .fashion-category-filter--olive.is-active { background: var(--brand-secondary); border-color: var(--brand-accent); color: var(--text-primary); }
+.fashion-hero__art { box-shadow: 12px 12px 0 color-mix(in oklab, var(--brand-accent) 58%, transparent); }
+.fashion-ai-feature__visual { box-shadow: 9px 9px 0 color-mix(in oklab, var(--brand-accent) 58%, transparent); }
+.fashion-hero__overlay { background: linear-gradient(145deg, color-mix(in oklab, var(--page-background) 72%, transparent), transparent 46%), linear-gradient(180deg, color-mix(in oklab, var(--page-background) 18%, transparent), color-mix(in oklab, var(--surface) 68%, transparent)), repeating-linear-gradient(0deg, transparent 0 5px, color-mix(in oklab, var(--brand-accent) 8%, transparent) 6px 7px); }
+.fashion-hero__hud, .fashion-hero__vertical { color: color-mix(in oklab, var(--text-primary) 92%, transparent); }
+.fashion-hero__status b { background: var(--brand-accent); box-shadow: 0 0 12px var(--brand-accent); }
+.fashion-hero__dots button { background: color-mix(in oklab, var(--text-primary) 35%, transparent); }
+.fashion-hero__dots button.is-active { background: var(--brand-accent); }
+.fashion-hero__scan { background: linear-gradient(90deg, transparent, var(--brand-accent) 35%, var(--text-primary) 50%, var(--brand-accent) 65%, transparent); box-shadow: 0 0 18px color-mix(in oklab, var(--brand-accent) 80%, transparent); }
+.fashion-editorial { background: var(--surface); color: var(--text-primary); }
+.fashion-editorial .fashion-eyebrow, .fashion-editorial .fashion-accent { color: var(--brand-accent); }
+.fashion-flow__steps span { color: var(--brand-accent); }
 .fashion-category-filter { border-color: color-mix(in oklab, currentColor 38%, transparent); }
-.fashion-category-filter:hover, .fashion-category-filter.is-active { border-color: var(--up-orange); }
+.fashion-category-filter:hover, .fashion-category-filter.is-active { border-color: var(--brand-accent); }
 
-/* Generic Tailwind/shadcn surfaces used outside the FashionTry layer. */
+/* Generic Tailwind/shadcn surfaces consume the same semantic system. */
 .bg-background { background-color: var(--background) !important; }
 .text-foreground { color: var(--foreground) !important; }
 .bg-card { background-color: var(--card) !important; }
@@ -117,7 +127,7 @@
 .border-border, .border-input { border-color: var(--border) !important; }
 .ring-ring { --tw-ring-color: var(--ring) !important; }
 .focus\\:border-primary:focus { border-color: var(--primary) !important; }
-.hover\\:bg-primary\\/90:hover { background-color: color-mix(in oklab, var(--primary) 90%, var(--up-black)) !important; }
+.hover\\:bg-primary\\/90:hover { background-color: color-mix(in oklab, var(--primary) 90%, var(--surface)) !important; }
 .hover\\:bg-accent:hover { background-color: var(--accent) !important; color: var(--accent-foreground) !important; }
 .bg-destructive { background-color: var(--destructive) !important; }
 .text-destructive-foreground { color: var(--destructive-foreground) !important; }
