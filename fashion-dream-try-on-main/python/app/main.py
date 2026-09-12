@@ -6,6 +6,7 @@ from app.api.health import router as health_router
 from app.api.images import router as images_router
 from app.api.product_vision import router as product_vision_router
 from app.api.products import router as products_router
+from app.api.recommendations import router as recommendations_router
 from app.api.try_on import router as try_on_router
 
 app = FastAPI(
@@ -19,3 +20,4 @@ app.include_router(products_router)
 app.include_router(images_router)
 app.include_router(try_on_router)
 app.include_router(product_vision_router)
+app.include_router(recommendations_router)
