@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import {
   BookOpen,
+  ChevronDown,
   ChevronRight,
   CircleHelp,
   Info,
@@ -12,11 +13,11 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
+import { CATEGORIES } from "@/data/products";
 import { useCart } from "@/lib/cart";
 import { getCustomerUser, signOutCustomer } from "@/lib/auth";
 
 const PRIMARY_LINKS = [
-  { to: "/shop", label: "Shop" },
   { to: "/ai", label: "AI Try-On", beta: true },
   { to: "/about", label: "About" },
 ] as const;
@@ -24,6 +25,7 @@ const PRIMARY_LINKS = [
 export function SiteNav() {
   const { count } = useCart();
   const [open, setOpen] = useState(false);
+  const [shopOpen, setShopOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [customerEmail, setCustomerEmail] = useState<string | null>(null);
@@ -53,11 +55,13 @@ export function SiteNav() {
     window.location.href = `/shop?search=${encodeURIComponent(value)}`;
     setSearchOpen(false);
     setOpen(false);
+    setShopOpen(false);
   };
 
   const closeMenus = () => {
     setOpen(false);
     setSearchOpen(false);
+    setShopOpen(false);
   };
 
   const handleLogout = async () => {
@@ -77,6 +81,56 @@ export function SiteNav() {
         </Link>
 
         <div className="fashion-nav__links" aria-label="Điều hướng trang chính">
+          <div className={`fashion-shop-nav ${shopOpen ? "is-open" : ""}`}>
+            <button
+              type="button"
+              className="fashion-nav-link fashion-shop-trigger"
+              aria-expanded={shopOpen}
+              aria-haspopup="true"
+              onClick={() => {
+                setShopOpen((value) => !value);
+                setSearchOpen(false);
+                setOpen(false);
+              }}
+            >
+              <span>Shop</span>
+              <ChevronDown size={14} aria-hidden="true" />
+            </button>
+
+            {shopOpen && (
+              <div className="fashion-shop-mega" role="dialog" aria-label="Shop categories">
+                <div className="fashion-shop-mega__intro">
+                  <span className="fashion-menu-kicker">COLLECTION / 2026</span>
+                  <h2>Shop by category</h2>
+                  <Link to="/shop" onClick={closeMenus} className="fashion-shop-all">
+                    View all products <ChevronRight size={15} aria-hidden="true" />
+                  </Link>
+                </div>
+
+                <div className="fashion-shop-category-grid">
+                  {CATEGORIES.map((category) => (
+                    <Link
+                      key={category.slug}
+                      to="/shop"
+                      search={{ category: category.slug }}
+                      onClick={closeMenus}
+                      className="fashion-shop-category"
+                    >
+                      <span className="fashion-shop-category__image">
+                        <img src={category.image} alt="" loading="lazy" />
+                      </span>
+                      <span className="fashion-shop-category__meta">
+                        <strong>{category.name}</strong>
+                        <span>Explore category</span>
+                      </span>
+                      <ChevronRight size={15} aria-hidden="true" />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
           {PRIMARY_LINKS.map((link) => (
             <Link key={link.to} to={link.to} activeProps={{ className: "is-active" }}>
               {link.label}
@@ -94,6 +148,7 @@ export function SiteNav() {
             onClick={() => {
               setSearchOpen((value) => !value);
               setOpen(false);
+              setShopOpen(false);
             }}
           >
             {searchOpen ? <X size={18} /> : <Search size={18} />}
@@ -133,6 +188,7 @@ export function SiteNav() {
             onClick={() => {
               setOpen((value) => !value);
               setSearchOpen(false);
+              setShopOpen(false);
             }}
           >
             {open ? <X size={21} /> : <Menu size={21} />}
