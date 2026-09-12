@@ -81,11 +81,18 @@ def recommend_products(
     if repository is None and products is None:
         repository = ProductVisionRepository()
 
-    ranked = []
-    for product in catalog:
-        product_id = str(product.get("id") or "").strip()
-        vision = repository.get_by_product_id(product_id) if repository and product_id else None
-        ranked.append(score_product(product, preferences, vision))
+    product_ids = [str(product.get("id") or "").strip() for product in catalog]
+    product_ids = [product_id for product_id in product_ids if product_id]
+    vision_by_product_id = repository.list_by_product_ids(product_ids) if repository and product_ids else {}
+
+    ranked = [
+        score_product(
+            product,
+            preferences,
+            vision_by_product_id.get(str(product.get("id") or "").strip()),
+        )
+        for product in catalog
+    ]
 
     ranked.sort(key=lambda item: (item.score, item.product.get("featured", False), item.product.get("created_at", "")), reverse=True)
     return RecommendationResult(items=ranked[:limit])
