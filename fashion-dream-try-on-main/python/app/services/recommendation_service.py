@@ -4,14 +4,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from app.models.recommendation import (
-    RecommendationItem,
-    RecommendationPreferences,
-    RecommendationResult,
-)
+from app.models.recommendation import RecommendationItem, RecommendationPreferences, RecommendationResult
 from app.services.product_service import list_active_products
 from app.services.product_vision_repository import ProductVisionRepository
-
 
 STYLE_WEIGHT = 40.0
 COLOR_WEIGHT = 30.0
@@ -28,9 +23,8 @@ def _tokens(value: Any) -> set[str]:
 
 
 def _product_price(product: dict[str, Any]) -> float | None:
-    value = product.get("price")
     try:
-        return float(value) if value is not None else None
+        return float(product["price"]) if product.get("price") is not None else None
     except (TypeError, ValueError):
         return None
 
@@ -40,8 +34,7 @@ def score_product(
     preferences: RecommendationPreferences,
     vision_attributes: dict[str, Any] | None = None,
 ) -> RecommendationItem:
-    """Score one product using catalog fields plus persisted Product Vision attributes."""
-
+    """Score one product using persisted Product Vision attributes when available."""
     vision = vision_attributes or {}
     matched: list[str] = []
     score = 0.0
@@ -73,11 +66,7 @@ def score_product(
         score += PRICE_WEIGHT
         matched.append("price:within-budget")
 
-    return RecommendationItem(
-        product=product,
-        score=round(min(score, 100.0), 2),
-        matched_attributes=matched,
-    )
+    return RecommendationItem(product=product, score=round(min(score, 100.0), 2), matched_attributes=matched)
 
 
 def recommend_products(
@@ -87,23 +76,16 @@ def recommend_products(
     vision_repository: ProductVisionRepository | None = None,
 ) -> RecommendationResult:
     """Rank active products using persisted Product Vision attributes when available."""
-
     catalog = products if products is not None else list_active_products()
     repository = vision_repository
-    ranked = []
+    if repository is None and products is None:
+        repository = ProductVisionRepository()
 
+    ranked = []
     for product in catalog:
         product_id = str(product.get("id") or "").strip()
         vision = repository.get_by_product_id(product_id) if repository and product_id else None
         ranked.append(score_product(product, preferences, vision))
 
-    ranked.sort(
-        key=lambda item: (
-            item.score,
-            item.product.get("featured", False),
-            item.product.get("created_at", ""),
-        ),
-        reverse=True,
-    )
-
+    ranked.sort(key=lambda item: (item.score, item.product.get("featured", False), item.product.get("created_at", "")), reverse=True)
     return RecommendationResult(items=ranked[:limit])
