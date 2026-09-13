@@ -109,7 +109,6 @@
   color: var(--wearo-orange);
 }
 
-/* AI Studio: plain navigation text + BETA label. No surrounding orange border. */
 .fashion-ai-nav {
   display: inline-flex !important;
   flex-direction: row !important;
@@ -157,15 +156,9 @@
 }
 
 .fashion-ai-nav:hover,
-.fashion-ai-nav.is-active {
-  color: var(--wearo-orange) !important;
-}
-
+.fashion-ai-nav.is-active { color: var(--wearo-orange) !important; }
 .fashion-ai-nav:hover .fashion-ai-nav__beta,
-.fashion-ai-nav.is-active .fashion-ai-nav__beta {
-  background: var(--wearo-ink);
-  color: var(--wearo-orange) !important;
-}
+.fashion-ai-nav.is-active .fashion-ai-nav__beta { background: var(--wearo-ink); color: var(--wearo-orange) !important; }
 
 .fashion-nav__actions {
   flex: 0 0 auto;
@@ -255,7 +248,6 @@
   .fashion-mobile-btn { width: 35px; height: 35px; }
 }
 
-/* Header alignment fix: normalize the text controls to the same visual center. */
 .fashion-nav__links > .fashion-shop-nav {
   height: var(--wearo-header-height) !important;
   min-height: var(--wearo-header-height) !important;
@@ -275,7 +267,6 @@
   box-sizing: border-box;
 }
 
-/* The indicator belongs directly under the label, never at the header edge. */
 .fashion-nav__links > .fashion-shop-nav > .fashion-shop-trigger::after,
 .fashion-nav__links > .fashion-discovery-link::after,
 .fashion-nav__links > a:not(.fashion-ai-nav)[style]::after {
@@ -283,9 +274,39 @@
   height: 2px;
 }
 
-/* About uses an inline classless active state; keep it on the same baseline. */
 .fashion-nav__links > a:not(.fashion-ai-nav)[style]:hover,
 .fashion-nav__links > a:not(.fashion-ai-nav)[style].is-active {
   color: var(--wearo-orange) !important;
   opacity: 1 !important;
+}
+
+/* Shop mega menu: center it against the viewport instead of the narrow SHOP trigger.
+   This prevents the panel from drifting left and being clipped by the navigation area. */
+.fashion-shop-mega {
+  position: fixed !important;
+  top: 104px !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  width: min(820px, calc(100vw - 32px)) !important;
+  max-width: calc(100vw - 32px) !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  overflow: hidden;
+}
+
+.fashion-shop-mega__intro {
+  min-width: 0 !important;
+}
+
+.fashion-shop-category-grid {
+  min-width: 0 !important;
+}
+
+@media (max-width: 900px) {
+  .fashion-shop-mega {
+    top: 96px !important;
+    width: min(760px, calc(100vw - 24px)) !important;
+    max-width: calc(100vw - 24px) !important;
+  }
 }
