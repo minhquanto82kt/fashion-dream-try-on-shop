@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 960" role="img" aria-labelledby="title desc">
+  <title id="title">Facebook</title>
+  <desc id="desc">Facebook social media logo.</desc>
+  <circle cx="480" cy="480" r="480" fill="#1877F2"/>
+  <path fill="#fff" d="M530 960V630h111l23-129H530v-84c0-37 18-62 70-62h71V238c-12-2-52-6-99-6-99 0-167 60-167 171v98H297v129h108v330h125Z"/>
+</svg>
