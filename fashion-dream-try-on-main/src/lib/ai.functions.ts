@@ -2,7 +2,8 @@ import { createServerFn } from "@tanstack/react-start";
 import { generateImage } from "ai";
 import { z } from "zod";
 
-const IMAGE_MODEL = "openai/gpt-image-2";
+const CONCEPT_IMAGE_MODEL = "openai/gpt-image-2.5-flare";
+const TRY_ON_IMAGE_MODEL = "openai/gpt-image-2.5-sunburst";
 const MAX_PERSON_IMAGE_BYTES = 6 * 1024 * 1024;
 const MAX_NOTE_LENGTH = 400;
 const ALLOWED_IMAGE_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
@@ -12,9 +13,11 @@ type DbProduct = { id: string; name: string; category: string; price: number; im
 type DbProductImage = { image_url: string; sort_order: number; is_primary: boolean };
 type DbVariant = { size: string; color: string; stock: number };
 
-async function generateFashionImage(prompt: string, images: string[] = []): Promise<GeneratedImage> {
+type ImageModel = typeof CONCEPT_IMAGE_MODEL | typeof TRY_ON_IMAGE_MODEL;
+
+async function generateFashionImage(model: ImageModel, prompt: string, images: string[] = []): Promise<GeneratedImage> {
   try {
-    const result = await generateImage({ model: IMAGE_MODEL, prompt, images: images.length > 0 ? images : undefined, n: 1 });
+    const result = await generateImage({ model, prompt, images: images.length > 0 ? images : undefined, n: 1 });
     const image = result.image;
     if (!image) throw new Error("AI không trả về hình ảnh.");
     return { image: `data:${image.mediaType};base64,${image.base64}`, text: "" };
@@ -67,8 +70,8 @@ const ConceptInput = z.object({ style: z.string().trim().min(1).max(40), occasio
 export const generateConcept = createServerFn({ method: "POST" }).validator((input: unknown) => ConceptInput.parse(input)).handler(async ({ data }) => {
   const mentioned = data.mentions?.length ? await Promise.all(data.mentions.map((id) => getPublishedProduct(id))) : [];
   const items = mentioned.map(({ product }) => `${product.name} (${product.category})`).join(" | ");
-  const prompt = ["Create a full-body fashion editorial photograph of a young Vietnamese university student model.", `Style: ${data.style}.`, `Occasion: ${data.occasion}.`, items ? `The outfit MUST feature these UpThink clothing pieces: ${items}.` : "", data.prompt ? `Additional direction: ${data.prompt}.` : "", "Streetwear brand aesthetic.", "Charcoal and ivory palette with a lime-green accent.", "Urban concrete backdrop.", "Natural daylight.", "35mm photography.", "Sharp realistic detail.", "Photorealistic.", "No text.", "No watermark."].filter(Boolean).join(" ");
-  return generateFashionImage(prompt);
+  const prompt = ["Create a premium full-body fashion editorial photograph for the WEARO fashion brand.", "The image is an original fashion concept, not a product listing.", `Style: ${data.style}.`, `Occasion: ${data.occasion}.`, items ? `The outfit MUST feature these published WEARO clothing pieces: ${items}.` : "", data.prompt ? `Additional creative direction: ${data.prompt}.` : "", "Modern unisex fashion aesthetic.", "WEARO design language: charcoal-black, warm ivory, golden yellow and orange accents.", "Vietnamese urban context.", "Natural editorial lighting.", "35mm fashion photography.", "Realistic fabric texture, stitching and garment construction.", "Sharp subject detail with a refined fashion-magazine composition.", "No text.", "No watermark."].filter(Boolean).join(" ");
+  return generateFashionImage(CONCEPT_IMAGE_MODEL, prompt);
 });
 
 const TryOnInput = z.object({ personImage: z.string().min(20).max(8_500_000), productId: z.string().trim().min(1).max(100).optional(), garmentImage: z.string().min(5).max(2_000_000).optional(), garmentName: z.string().trim().min(1).max(200).optional(), note: z.string().trim().max(MAX_NOTE_LENGTH).optional() }).refine((data) => Boolean(data.productId || data.garmentName), { message: "Thiếu sản phẩm thử đồ." });
@@ -76,6 +79,20 @@ const TryOnInput = z.object({ personImage: z.string().min(20).max(8_500_000), pr
 export const generateTryOn = createServerFn({ method: "POST" }).validator((input: unknown) => TryOnInput.parse(input)).handler(async ({ data }) => {
   validatePersonImage(data.personImage);
   const { product, garmentImage } = await getPublishedProduct(data.productId, data.garmentName);
-  const prompt = ["Perform a realistic virtual try-on edit.", `Dress the person in the first reference image with the garment \"${product.name}\" from the second reference image.`, "Preserve the person's identity and facial features.", "Preserve body proportions, skin tone, pose and hairstyle.", "Keep the original background and camera composition.", "Replace only the clothing.", "Make the garment fit naturally according to the person's body shape.", "Preserve the garment's design, color, material, pattern, seams and important details.", "Add realistic fabric folds, shadows and lighting consistent with the original photograph.", "Do not change the person's face or body.", data.note ? `Additional request: ${data.note}.` : "", "Photorealistic result.", "No text.", "No watermark."].filter(Boolean).join(" ");
-  return generateFashionImage(prompt, [data.personImage, garmentImage]);
+  const prompt = [
+    "Perform a high-fidelity virtual try-on edit for WEARO.",
+    "REFERENCE IMAGE 1 is the customer photo. REFERENCE IMAGE 2 is the selected garment/product photo.",
+    `Dress the person in reference image 1 with the garment \"${product.name}\" shown in reference image 2.`,
+    "Treat the garment image as the authoritative source for design, silhouette, color, material, pattern, seams, trims, logos and construction details.",
+    "Preserve the person's identity, facial features, skin tone, body proportions, pose, hands, hairstyle and natural anatomy.",
+    "Replace only the clothing area required for the selected garment; do not redesign the person's body or face.",
+    "Adapt the garment naturally to the person's pose and body shape while preserving the original garment construction.",
+    "Create realistic fabric folds, tension, shadows, occlusion and lighting consistent with the customer photograph.",
+    "Preserve the original background, camera perspective and overall composition unless a clothing edit requires a minimal local adjustment.",
+    "Do not add accessories or garments that are not present in the selected product.",
+    data.note ? `Additional customer request: ${data.note}.` : "",
+    "Photorealistic fashion-commerce result.",
+    "No text. No watermark. No invented brand marks.",
+  ].filter(Boolean).join(" ");
+  return generateFashionImage(TRY_ON_IMAGE_MODEL, prompt, [data.personImage, garmentImage]);
 });
