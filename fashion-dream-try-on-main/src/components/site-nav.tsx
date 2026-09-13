@@ -82,7 +82,7 @@ export function SiteNav() {
     if (brandTapTimer.current) window.clearTimeout(brandTapTimer.current);
   }, []);
 
-  const handleBrandClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleBrandClick = (event: { preventDefault: () => void }) => {
     const nextCount = brandTapCount + 1;
     if (brandTapTimer.current) window.clearTimeout(brandTapTimer.current);
 
@@ -136,29 +136,8 @@ export function SiteNav() {
         </Link>
 
         <div className="fashion-nav__links" aria-label="Điều hướng trang chính">
-          <div
-            className={`fashion-shop-nav ${shopOpen ? "is-open" : ""}`}
-            style={{ height: "72px", display: "flex", alignItems: "center", position: "relative", zIndex: 103 }}
-          >
-            <button
-              type="button"
-              className="fashion-nav-link fashion-shop-trigger"
-              aria-expanded={shopOpen}
-              aria-haspopup="true"
-              onClick={() => {
-                setShopOpen((value) => !value);
-                setSearchOpen(false);
-                setOpen(false);
-              }}
-              style={{
-                ...TOPBAR_TEXT_STYLE,
-                position: "relative",
-                zIndex: 104,
-                color: "var(--foreground)",
-                opacity: 1,
-                visibility: "visible",
-              }}
-            >
+          <div className={`fashion-shop-nav ${shopOpen ? "is-open" : ""}`} style={{ height: "72px", display: "flex", alignItems: "center", position: "relative", zIndex: 103 }}>
+            <button type="button" className="fashion-nav-link fashion-shop-trigger" aria-expanded={shopOpen} aria-haspopup="true" onClick={() => { setShopOpen((value) => !value); setSearchOpen(false); setOpen(false); }} style={{ ...TOPBAR_TEXT_STYLE, position: "relative", zIndex: 104, color: "var(--foreground)", opacity: 1, visibility: "visible" }}>
               <span>Shop</span>
               <ChevronDown size={16} strokeWidth={2} aria-hidden="true" />
             </button>
@@ -168,21 +147,13 @@ export function SiteNav() {
                 <div className="fashion-shop-mega__intro">
                   <span className="fashion-menu-kicker">COLLECTION / 2026</span>
                   <h2>Shop by category</h2>
-                  <Link to="/shop" onClick={closeMenus} className="fashion-shop-all">
-                    View all products <ChevronRight size={15} aria-hidden="true" />
-                  </Link>
+                  <Link to="/shop" onClick={closeMenus} className="fashion-shop-all">View all products <ChevronRight size={15} aria-hidden="true" /></Link>
                 </div>
-
                 <div className="fashion-shop-category-grid">
                   {CATEGORIES.map((category) => (
                     <Link key={category.slug} to="/shop" search={{ category: category.slug }} onClick={closeMenus} className="fashion-shop-category">
-                      <span className="fashion-shop-category__image">
-                        <img src={category.image} alt="" loading="lazy" />
-                      </span>
-                      <span className="fashion-shop-category__meta">
-                        <strong>{category.name}</strong>
-                        <span>Explore category</span>
-                      </span>
+                      <span className="fashion-shop-category__image"><img src={category.image} alt="" loading="lazy" /></span>
+                      <span className="fashion-shop-category__meta"><strong>{category.name}</strong><span>Explore category</span></span>
                       <ChevronRight size={15} aria-hidden="true" />
                     </Link>
                   ))}
@@ -192,57 +163,28 @@ export function SiteNav() {
           </div>
 
           {DISCOVERY_LINKS.map((link) => (
-            <Link key={link.label} to={link.to} onClick={closeMenus} className="fashion-discovery-link" activeProps={{ className: "fashion-discovery-link is-active" }}>
-              {link.label}
-            </Link>
+            <Link key={link.label} to={link.to} onClick={closeMenus} className="fashion-discovery-link" activeProps={{ className: "fashion-discovery-link is-active" }}>{link.label}</Link>
           ))}
 
-          {PRIMARY_LINKS.map((link) =>
-            link.beta ? (
-              <div key={link.to} className="fashion-ai-nav" style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "2px", height: "72px" }}>
-                <span className="fashion-ai-nav__beta">BETA</span>
-                <Link to={link.to} className="fashion-ai-nav__button" activeProps={{ className: "fashion-ai-nav__button is-active" }} aria-label="AI Studio — Beta">
-                  {link.label}
-                </Link>
-              </div>
-            ) : (
-              <Link key={link.to} to={link.to} activeProps={{ className: "is-active" }} style={TOPBAR_TEXT_STYLE}>
-                {link.label}
-              </Link>
-            ),
-          )}
+          {PRIMARY_LINKS.map((link) => link.beta ? (
+            <div key={link.to} className="fashion-ai-nav" style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "2px", height: "72px" }}>
+              <span className="fashion-ai-nav__beta">BETA</span>
+              <Link to={link.to} className="fashion-ai-nav__button" activeProps={{ className: "fashion-ai-nav__button is-active" }} aria-label="AI Studio — Beta">{link.label}</Link>
+            </div>
+          ) : (
+            <Link key={link.to} to={link.to} activeProps={{ className: "is-active" }} style={TOPBAR_TEXT_STYLE}>{link.label}</Link>
+          ))}
         </div>
 
         <div className="fashion-nav__actions">
           <button type="button" className={`fashion-icon-btn fashion-search-toggle ${searchOpen ? "is-active" : ""}`} aria-label={searchOpen ? "Đóng tìm kiếm" : "Tìm kiếm sản phẩm"} aria-expanded={searchOpen} onClick={() => { setSearchOpen((value) => !value); setOpen(false); setShopOpen(false); }}>
             {searchOpen ? <X size={21} strokeWidth={2} /> : <Search size={21} strokeWidth={2} />}
           </button>
-
-          <Link to="/account" className="fashion-icon-btn fashion-account-btn" aria-label={customerEmail ? `Tài khoản ${customerEmail}` : "Tài khoản"} title={customerEmail ?? "Tài khoản"}>
-            <UserRound size={21} strokeWidth={2} />
-          </Link>
-
-          <Link to="/account/wishlist" className="fashion-icon-btn fashion-wishlist-btn" aria-label="Danh sách yêu thích" title="Wishlist">
-            <Heart size={21} strokeWidth={2} />
-          </Link>
-
-          <Link to="/cart" className="fashion-cart-btn" aria-label="Giỏ hàng">
-            <ShoppingBag size={21} strokeWidth={2} />
-            {count > 0 && <span>{count}</span>}
-          </Link>
-
-          {customerEmail && (
-            <button type="button" className="fashion-icon-btn fashion-logout-btn" aria-label="Đăng xuất" title="Đăng xuất" onClick={() => void handleLogout()}>
-              <LogOut size={20} strokeWidth={2} />
-            </button>
-          )}
-
-          <div className="fashion-language-switcher" aria-label="Ngôn ngữ">
-            <span className="is-active">VNĐ</span>
-            <span aria-hidden="true">|</span>
-            <span>EN</span>
-          </div>
-
+          <Link to="/account" className="fashion-icon-btn fashion-account-btn" aria-label={customerEmail ? `Tài khoản ${customerEmail}` : "Tài khoản"} title={customerEmail ?? "Tài khoản"}><UserRound size={21} strokeWidth={2} /></Link>
+          <Link to="/account/wishlist" className="fashion-icon-btn fashion-wishlist-btn" aria-label="Danh sách yêu thích" title="Wishlist"><Heart size={21} strokeWidth={2} /></Link>
+          <Link to="/cart" className="fashion-cart-btn" aria-label="Giỏ hàng"><ShoppingBag size={21} strokeWidth={2} />{count > 0 && <span>{count}</span>}</Link>
+          {customerEmail && <button type="button" className="fashion-icon-btn fashion-logout-btn" aria-label="Đăng xuất" title="Đăng xuất" onClick={() => void handleLogout()}><LogOut size={20} strokeWidth={2} /></button>}
+          <div className="fashion-language-switcher" aria-label="Ngôn ngữ"><span className="is-active">VNĐ</span><span aria-hidden="true">|</span><span>EN</span></div>
           <button type="button" className={`fashion-mobile-btn ${open ? "is-active" : ""}`} aria-label={open ? "Đóng menu" : "Mở menu"} aria-expanded={open} onClick={() => { setOpen((value) => !value); setSearchOpen(false); setShopOpen(false); }}>
             {open ? <X size={23} strokeWidth={2} /> : <Menu size={23} strokeWidth={2} />}
           </button>
@@ -276,68 +218,28 @@ export function SiteNav() {
 
       {open && (
         <div className="fashion-mobile-menu" role="dialog" aria-label="WEARO menu">
-          <div className="fashion-menu-header">
-            <div>
-              <span className="fashion-menu-kicker">WEARO / NAVIGATION</span>
-              <h2>Discover</h2>
-            </div>
-            <span className="fashion-menu-status">SYS 02 // ONLINE</span>
-          </div>
-
+          <div className="fashion-menu-header"><div><span className="fashion-menu-kicker">WEARO / NAVIGATION</span><h2>Discover</h2></div><span className="fashion-menu-status">SYS 02 // ONLINE</span></div>
           <div className="fashion-menu-grid">
             <section className="fashion-menu-section">
               <span className="fashion-menu-label">01 / EXPLORE</span>
-              <Link to="/shop" onClick={closeMenus}>
-                <span><strong>Shop</strong><small>Browse the collection</small></span>
-                <ChevronRight size={17} aria-hidden="true" />
-              </Link>
-              <Link to="/ai" onClick={closeMenus}>
-                <span><strong>Style Lab</strong><small>Experiment with your look</small></span>
-                <ChevronRight size={17} aria-hidden="true" />
-              </Link>
+              <Link to="/shop" onClick={closeMenus}><span><strong>Shop</strong><small>Browse the collection</small></span><ChevronRight size={17} aria-hidden="true" /></Link>
+              <Link to="/ai" onClick={closeMenus}><span><strong>Style Lab</strong><small>Experiment with your look</small></span><ChevronRight size={17} aria-hidden="true" /></Link>
             </section>
-
             <section className="fashion-menu-section">
               <span className="fashion-menu-label">02 / YOUR SPACE</span>
-              <Link to="/account/wishlist" onClick={closeMenus}>
-                <span><strong>Saved Looks</strong><small>Your saved fashion picks</small></span>
-                <ChevronRight size={17} aria-hidden="true" />
-              </Link>
-              <Link to="/account/orders" onClick={closeMenus}>
-                <span><strong>My Orders</strong><small>Track your purchases</small></span>
-                <ChevronRight size={17} aria-hidden="true" />
-              </Link>
-              <Link to="/account" onClick={closeMenus}>
-                <span><strong>My Account</strong><small>Profile and preferences</small></span>
-                <ChevronRight size={17} aria-hidden="true" />
-              </Link>
+              <Link to="/account/wishlist" onClick={closeMenus}><span><strong>Saved Looks</strong><small>Your saved fashion picks</small></span><ChevronRight size={17} aria-hidden="true" /></Link>
+              <Link to="/account/orders" onClick={closeMenus}><span><strong>My Orders</strong><small>Track your purchases</small></span><ChevronRight size={17} aria-hidden="true" /></Link>
+              <Link to="/account" onClick={closeMenus}><span><strong>My Account</strong><small>Profile and preferences</small></span><ChevronRight size={17} aria-hidden="true" /></Link>
             </section>
-
             <section className="fashion-menu-section fashion-menu-section--info">
               <span className="fashion-menu-label">03 / INFORMATION</span>
-              <Link to="/about" onClick={closeMenus}>
-                <span><strong>About WEARO</strong></span>
-                <ChevronRight size={17} aria-hidden="true" />
-              </Link>
-              <Link to="/about" onClick={closeMenus}>
-                <span><BookOpen size={15} aria-hidden="true" /><strong>How It Works</strong></span>
-                <ChevronRight size={17} aria-hidden="true" />
-              </Link>
-              <button type="button" onClick={() => { setOpen(false); setSearchOpen(true); }}>
-                <span><Search size={15} aria-hidden="true" /><strong>Search</strong></span>
-                <ChevronRight size={17} aria-hidden="true" />
-              </button>
-              <Link to="/about" onClick={closeMenus}>
-                <span><CircleHelp size={15} aria-hidden="true" /><strong>FAQ / Support</strong></span>
-                <ChevronRight size={17} aria-hidden="true" />
-              </Link>
+              <Link to="/about" onClick={closeMenus}><span><strong>About WEARO</strong></span><ChevronRight size={17} aria-hidden="true" /></Link>
+              <Link to="/about" onClick={closeMenus}><span><BookOpen size={15} aria-hidden="true" /><strong>How It Works</strong></span><ChevronRight size={17} aria-hidden="true" /></Link>
+              <button type="button" onClick={() => { setOpen(false); setSearchOpen(true); }}><span><Search size={15} aria-hidden="true" /><strong>Search</strong></span><ChevronRight size={17} aria-hidden="true" /></button>
+              <Link to="/about" onClick={closeMenus}><span><CircleHelp size={15} aria-hidden="true" /><strong>FAQ / Support</strong></span><ChevronRight size={17} aria-hidden="true" /></Link>
             </section>
           </div>
-
-          <div className="fashion-menu-footer">
-            <span>WEARO / AI FASHION — 2026</span>
-            <span>SYS 02 // ONLINE</span>
-          </div>
+          <div className="fashion-menu-footer"><span>WEARO / AI FASHION — 2026</span><span>SYS 02 // ONLINE</span></div>
         </div>
       )}
     </nav>
