@@ -4,12 +4,12 @@ import "./branding";
 export type ThemeColors = { primary: string; secondary: string; background: string; surface: string; accent: string; foreground: string };
 
 export const DEFAULT_THEME_COLORS: ThemeColors = {
-  primary: "#2E2910",
-  secondary: "#2C5745",
-  background: "#0B0909",
-  surface: "#2E2910",
-  accent: "#EB7D00",
-  foreground: "#EBE3A7",
+  primary: "#F0A500",
+  secondary: "#E6D5B8",
+  background: "#1B1A17",
+  surface: "#24221E",
+  accent: "#E45826",
+  foreground: "#F7F1E7",
 };
 
 export const THEME_STORAGE_KEY = "upthink-theme-colors";
@@ -17,9 +17,7 @@ const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
 const THEME_ENDPOINT = "/rest/v1/site_theme_settings";
 const ADMIN_SESSION_KEY = "upthink_admin_session";
 
-type AdminSession = {
-  access_token?: string;
-};
+type AdminSession = { access_token?: string };
 
 function getSupabaseConfig(): { url: string; key: string } | null {
   const url = import.meta.env.VITE_SUPABASE_URL as string | undefined;
@@ -52,14 +50,7 @@ export function sanitizeThemeColors(value: unknown): ThemeColors {
 }
 
 function fromDatabaseRow(row: Record<string, unknown>): ThemeColors {
-  return sanitizeThemeColors({
-    primary: row.primary_color,
-    secondary: row.secondary_color,
-    background: row.background_color,
-    surface: row.surface_color,
-    accent: row.accent_color,
-    foreground: row.foreground_color,
-  });
+  return sanitizeThemeColors({ primary: row.primary_color, secondary: row.secondary_color, background: row.background_color, surface: row.surface_color, accent: row.accent_color, foreground: row.foreground_color });
 }
 
 export function getStoredTheme(): ThemeColors {
@@ -79,17 +70,13 @@ export function applyTheme(colors: ThemeColors): void {
   for (const [key, value] of Object.entries(theme)) root.style.setProperty(`--theme-${key}`, value);
 }
 
-function cacheTheme(theme: ThemeColors): void {
-  if (typeof window !== "undefined") window.localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(theme));
-}
+function cacheTheme(theme: ThemeColors): void { if (typeof window !== "undefined") window.localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(theme)); }
 
 export async function loadRemoteTheme(): Promise<ThemeColors | null> {
   const config = getSupabaseConfig();
   if (!config || typeof window === "undefined") return null;
   try {
-    const response = await fetch(`${config.url}${THEME_ENDPOINT}?id=eq.global&select=primary_color,secondary_color,background_color,surface_color,accent_color,foreground_color`, {
-      headers: { apikey: config.key },
-    });
+    const response = await fetch(`${config.url}${THEME_ENDPOINT}?id=eq.global&select=primary_color,secondary_color,background_color,surface_color,accent_color,foreground_color`, { headers: { apikey: config.key } });
     if (!response.ok) return null;
     const rows = await response.json() as Record<string, unknown>[];
     if (!rows[0]) return null;
@@ -109,23 +96,10 @@ export async function saveThemeToDatabase(colors: ThemeColors): Promise<ThemeCol
   if (!config) throw new Error("Supabase theme configuration is missing.");
   const accessToken = getAdminAccessToken();
   if (!accessToken) throw new Error("Admin session expired. Please sign in again.");
-
   const response = await fetch(`${config.url}${THEME_ENDPOINT}?id=eq.global`, {
     method: "PATCH",
-    headers: {
-      apikey: config.key,
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-      Prefer: "return=representation",
-    },
-    body: JSON.stringify({
-      primary_color: theme.primary,
-      secondary_color: theme.secondary,
-      background_color: theme.background,
-      surface_color: theme.surface,
-      accent_color: theme.accent,
-      foreground_color: theme.foreground,
-    }),
+    headers: { apikey: config.key, Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json", Prefer: "return=representation" },
+    body: JSON.stringify({ primary_color: theme.primary, secondary_color: theme.secondary, background_color: theme.background, surface_color: theme.surface, accent_color: theme.accent, foreground_color: theme.foreground }),
   });
   if (!response.ok) {
     const detail = await response.text();
@@ -139,8 +113,6 @@ export async function saveThemeToDatabase(colors: ThemeColors): Promise<ThemeCol
   return saved;
 }
 
-export async function resetTheme(): Promise<ThemeColors> {
-  return saveThemeToDatabase(DEFAULT_THEME_COLORS);
-}
+export async function resetTheme(): Promise<ThemeColors> { return saveThemeToDatabase(DEFAULT_THEME_COLORS); }
 
 if (typeof window !== "undefined") applyTheme(getStoredTheme());
