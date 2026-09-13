@@ -109,6 +109,7 @@
   color: var(--wearo-orange);
 }
 
+/* AI Studio: plain navigation text + BETA label. No surrounding orange border. */
 .fashion-ai-nav {
   display: inline-flex !important;
   flex-direction: row !important;
@@ -118,15 +119,15 @@
   min-height: 32px !important;
   min-width: 0 !important;
   gap: 7px !important;
-  padding: 0 9px !important;
-  border: 1px solid var(--wearo-orange) !important;
+  padding: 0 !important;
+  border: 0 !important;
   background: transparent !important;
-  color: var(--wearo-orange) !important;
+  color: inherit !important;
   text-decoration: none !important;
   box-shadow: none !important;
   white-space: nowrap;
   position: relative;
-  transition: background .18s ease, color .18s ease, border-color .18s ease;
+  transition: color .18s ease, opacity .18s ease;
 }
 
 .fashion-ai-nav::after { display: none !important; }
@@ -136,6 +137,7 @@
   color: inherit !important;
   font: 700 10px/1 Arial, sans-serif;
   letter-spacing: .13em;
+  text-transform: uppercase;
   opacity: 1 !important;
   visibility: visible !important;
   white-space: nowrap;
@@ -156,8 +158,7 @@
 
 .fashion-ai-nav:hover,
 .fashion-ai-nav.is-active {
-  background: var(--wearo-orange) !important;
-  color: var(--wearo-ink) !important;
+  color: var(--wearo-orange) !important;
 }
 
 .fashion-ai-nav:hover .fashion-ai-nav__beta,
@@ -233,7 +234,7 @@
   .fashion-nav__links > a:not(.fashion-ai-nav),
   .fashion-nav-link,
   .fashion-discovery-link { font-size: 10px; letter-spacing: .14em; }
-  .fashion-ai-nav { min-width: 0 !important; padding-inline: 7px !important; }
+  .fashion-ai-nav { min-width: 0 !important; padding-inline: 0 !important; }
   .fashion-language-switcher { display: none; }
 }
 
