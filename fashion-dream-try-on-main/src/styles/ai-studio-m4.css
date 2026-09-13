@@ -1,0 +1,75 @@
+/* M4 — AI Result experience
+ * Presentation layer only: keeps existing AI generation and commerce logic intact.
+ */
+
+body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:first-child {
+  min-height: clamp(420px, 68vh, 760px);
+  padding: clamp(18px, 3vw, 40px);
+  background:
+    linear-gradient(135deg, color-mix(in oklab, var(--card) 94%, var(--primary) 6%), var(--background));
+}
+
+/* Editorial result frame */
+body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:first-child img {
+  width: auto;
+  max-width: min(100%, 760px);
+  max-height: min(70vh, 720px);
+  object-fit: contain;
+  background: var(--background);
+  transition: transform 320ms ease, box-shadow 320ms ease;
+}
+
+body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:first-child img:hover {
+  transform: scale(1.008);
+  box-shadow: 0 28px 80px color-mix(in oklab, var(--background) 25%, transparent);
+}
+
+/* Result canvas corner markers — fashion/editorial feel without adding new markup. */
+body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:first-child::after {
+  content: "WEARO / AI RESULT";
+  position: absolute;
+  right: clamp(14px, 2.5vw, 32px);
+  bottom: clamp(12px, 2vw, 24px);
+  z-index: 2;
+  padding: 7px 10px;
+  border: 1px solid color-mix(in oklab, var(--border) 80%, transparent);
+  background: color-mix(in oklab, var(--background) 82%, transparent);
+  color: var(--primary);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+/* Empty/loading states get a contained editorial stage. */
+body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:first-child > div:not(:has(img)) {
+  max-width: 560px;
+}
+
+/* Keep commerce/control area visually subordinate to the generated result. */
+body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div.border-t {
+  background: var(--card);
+}
+
+@media (max-width: 900px) {
+  body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:first-child {
+    min-height: 520px;
+  }
+}
+
+@media (max-width: 640px) {
+  body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:first-child {
+    min-height: 430px;
+    padding: 14px;
+  }
+
+  body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:first-child img {
+    max-height: 58vh;
+  }
+
+  body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:first-child::after {
+    font-size: 7px;
+    padding: 6px 8px;
+  }
+}
