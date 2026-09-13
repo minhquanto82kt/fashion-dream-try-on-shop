@@ -13,6 +13,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { CartProvider } from "@/lib/cart";
 import { getCustomerUser, getSafeReturnPath, startCustomerSessionWatcher } from "@/lib/auth";
 import { applyTheme, getStoredTheme, loadRemoteTheme } from "@/lib/theme";
+import { I18nProvider } from "@/lib/i18n";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 const CUSTOMER_PROTECTED_PREFIXES = ["/account/profile", "/account/orders", "/account/wishlist"];
@@ -33,4 +34,4 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   ] }), shellComponent: RootShell, component: RootComponent, notFoundComponent: NotFoundComponent, errorComponent: ErrorComponent,
 });
 function RootShell({ children }: { children: ReactNode }) { return <html lang="vi"><head><HeadContent /></head><body>{children}<Scripts /></body></html>; }
-function RootComponent() { const { queryClient } = Route.useRouteContext(); return <QueryClientProvider client={queryClient}><CartProvider><ThemeRuntime /><CustomerAuthGuard /><Outlet /><Toaster /></CartProvider></QueryClientProvider>; }
+function RootComponent() { const { queryClient } = Route.useRouteContext(); return <QueryClientProvider client={queryClient}><I18nProvider><CartProvider><ThemeRuntime /><CustomerAuthGuard /><Outlet /><Toaster /></CartProvider></I18nProvider></QueryClientProvider>; }
