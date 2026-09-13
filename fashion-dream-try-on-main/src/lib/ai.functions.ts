@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { generateImage } from "ai";
 import { z } from "zod";
+import { getAiTryOnEnabled } from "@/lib/feature-flags.server";
 
 const CONCEPT_IMAGE_MODEL = "openai/gpt-image-2.5-flare";
 const TRY_ON_IMAGE_MODEL = "openai/gpt-image-2.5-sunburst";
@@ -77,6 +78,9 @@ export const generateConcept = createServerFn({ method: "POST" }).validator((inp
 const TryOnInput = z.object({ personImage: z.string().min(20).max(8_500_000), productId: z.string().trim().min(1).max(100).optional(), garmentImage: z.string().min(5).max(2_000_000).optional(), garmentName: z.string().trim().min(1).max(200).optional(), note: z.string().trim().max(MAX_NOTE_LENGTH).optional() }).refine((data) => Boolean(data.productId || data.garmentName), { message: "Thiếu sản phẩm thử đồ." });
 
 export const generateTryOn = createServerFn({ method: "POST" }).validator((input: unknown) => TryOnInput.parse(input)).handler(async ({ data }) => {
+  const enabled = await getAiTryOnEnabled();
+  if (!enabled) throw new Error("AI Virtual Try-On hiện đang tạm tắt. Vui lòng thử lại sau.");
+
   validatePersonImage(data.personImage);
   const { product, garmentImage } = await getPublishedProduct(data.productId, data.garmentName);
   const prompt = [
