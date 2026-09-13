@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import {
-  BookOpen,
   ChevronDown,
   ChevronRight,
   CircleHelp,
@@ -28,7 +27,6 @@ const DISCOVERY_LINKS = [
   { label: "Collections", to: "/shop" },
   { label: "Best Sellers", to: "/shop" },
   { label: "Sale / Offers", to: "/shop" },
-  { label: "Style Guide", to: "/ai" },
 ] as const;
 
 const TOPBAR_TEXT_STYLE = {
@@ -234,7 +232,7 @@ export function SiteNav() {
             <section className="fashion-menu-section fashion-menu-section--info">
               <span className="fashion-menu-label">03 / INFORMATION</span>
               <Link to="/about" onClick={closeMenus}><span><strong>About WEARO</strong></span><ChevronRight size={17} aria-hidden="true" /></Link>
-              <Link to="/about" onClick={closeMenus}><span><BookOpen size={15} aria-hidden="true" /><strong>How It Works</strong></span><ChevronRight size={17} aria-hidden="true" /></Link>
+              <Link to="/about" onClick={closeMenus}><span><strong>How It Works</strong></span><ChevronRight size={17} aria-hidden="true" /></Link>
               <button type="button" onClick={() => { setOpen(false); setSearchOpen(true); }}><span><Search size={15} aria-hidden="true" /><strong>Search</strong></span><ChevronRight size={17} aria-hidden="true" /></button>
               <Link to="/about" onClick={closeMenus}><span><CircleHelp size={15} aria-hidden="true" /><strong>FAQ / Support</strong></span><ChevronRight size={17} aria-hidden="true" /></Link>
             </section>
