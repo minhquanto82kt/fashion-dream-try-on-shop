@@ -80,20 +80,11 @@
   padding: 0 !important;
 }
 
+/* BETA badge styling is controlled in header-enhancements.css (orange price-tag, top-right).
+   Keep only non-conflicting layout hints here. */
 .fashion-ai-nav__beta {
-  position: absolute !important;
-  top: 8px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  display: block !important;
-  min-height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  color: var(--brand-accent) !important;
-  font: 700 8px/1 var(--ft-meta) !important;
-  letter-spacing: .18em !important;
-  white-space: nowrap !important;
-  z-index: 3 !important;
+  /* Intentionally minimal — full visual style lives in header-enhancements.css */
+  pointer-events: none !important;
 }
 
 .fashion-ai-nav__button {
