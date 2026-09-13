@@ -1,8 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight, Heart } from "lucide-react";
-import { formatVnd, type Product } from "@/data/products";
+import { formatPrice, type Product } from "@/data/products";
+import { useI18n } from "@/lib/i18n";
 
 export function ProductCard({ product }: { product: Product }) {
+  const { language } = useI18n();
   return (
     <article className="fashion-product-card">
       <Link to="/product/$id" params={{ id: product.id }} className="fashion-product-image">
@@ -14,16 +16,12 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="fashion-product-meta">
         <div>
           <p className="fashion-product-category">{product.category}</p>
-          <Link to="/product/$id" params={{ id: product.id }} className="fashion-product-title">
-            {product.name}
-          </Link>
+          <Link to="/product/$id" params={{ id: product.id }} className="fashion-product-title">{product.name}</Link>
           <p className="fashion-product-spec">{product.sizes.join(" / ")} · {product.colors.slice(0, 2).join(" / ")}</p>
         </div>
         <div className="fashion-product-price-wrap">
-          <span className="fashion-product-price">{formatVnd(product.price)}</span>
-          <button aria-label={`Lưu ${product.name}`} className="fashion-heart" onClick={(e) => e.preventDefault()}>
-            <Heart size={16} />
-          </button>
+          <span className="fashion-product-price">{formatPrice(product.price, language)}</span>
+          <button aria-label={language === "vi" ? `Lưu ${product.name}` : `Save ${product.name}`} className="fashion-heart" onClick={(e) => e.preventDefault()}><Heart size={16} /></button>
         </div>
       </div>
     </article>
