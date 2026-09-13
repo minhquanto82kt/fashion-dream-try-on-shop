@@ -11,6 +11,11 @@ insert into public.site_branding (id)
 values ('global')
 on conflict (id) do nothing;
 
+-- Explicit Data API grants are required for new public tables under Supabase's
+-- 2026 Data API exposure changes. RLS remains the authorization boundary.
+grant select on public.site_branding to anon, authenticated;
+grant update on public.site_branding to authenticated;
+
 alter table public.site_branding enable row level security;
 
 -- The active logo is public website content and may be read by visitors.
