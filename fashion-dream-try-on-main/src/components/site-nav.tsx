@@ -139,7 +139,7 @@ export function SiteNav() {
               <ChevronDown size={16} strokeWidth={2} aria-hidden="true" />
             </button>
             {shopOpen && (
-              <div className="fashion-shop-mega" role="dialog" aria-label="Shop categories" style={{ top: "72px", zIndex: 100 }}>
+              <div className="fashion-shop-mega" role="dialog" aria-label="Shop categories" style={{ position: "fixed", top: "96px", left: "50%", right: "auto", width: "min(860px, calc(100vw - 48px))", maxWidth: "860px", maxHeight: "calc(100vh - 120px)", overflow: "auto", transform: "translateX(-50%)", boxSizing: "border-box", zIndex: 100 }}>
                 <div className="fashion-shop-mega__intro">
                   <span className="fashion-menu-kicker">COLLECTION / 2026</span>
                   <h2>Shop by category</h2>
