@@ -20,6 +20,13 @@ const STATS = [
   { k: "1:1", v: "Hybrid Stylist tư vấn trực tiếp" },
 ];
 
+const DESIGN_TOKENS = [
+  { k: "01", title: "Palette", value: "INK / YELLOW / ORANGE / PAPER", detail: "#1B1A17 · #F0A500 · #E45826 · #F7F1E7" },
+  { k: "02", title: "Typography", value: "EDITORIAL + FUNCTIONAL", detail: "Tiêu đề có tính thời trang; body rõ ràng, ưu tiên khả năng đọc và hỗ trợ tiếng Việt." },
+  { k: "03", title: "Layout", value: "GRID / SPACE / EDGE", detail: "Bố cục thoáng, đường viền rõ, nhịp spacing nhất quán và ưu tiên hình ảnh sản phẩm." },
+  { k: "04", title: "Interaction", value: "DIRECT / TACTILE / CLEAR", detail: "CTA có thứ bậc rõ, trạng thái loading / success / error dễ nhận biết, không có hiệu ứng thừa." },
+];
+
 function AboutPage() {
   return <div className="min-h-screen"><SiteNav /><main className="pt-16">
     <section className="relative"><img src="https://images.pexels.com/photos/18698406/pexels-photo-18698406.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="WEARO fashion editorial" className="h-[46vh] w-full object-cover opacity-60" /><div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" /><div className="absolute inset-x-0 bottom-0 mx-auto max-w-7xl px-6 pb-12 sm:px-12 lg:px-20"><p className="eyebrow">About WEARO</p><h1 className="mt-3 max-w-3xl text-4xl leading-none sm:text-6xl">Mặc theo cách của <span className="text-primary">riêng bạn.</span></h1></div></section>
@@ -35,6 +42,26 @@ function AboutPage() {
         <article className="border border-border bg-card p-6"><span className="text-xs tracking-[0.18em] text-primary">02 / AI PERSONAL STYLIST</span><h3 className="mt-4 text-2xl">Mua cả một outfit.</h3><p className="mt-3 text-sm leading-6 text-silver">AI phân tích vóc dáng, tone màu và bối cảnh để đề xuất Full-Set gồm áo, quần/chân váy và phụ kiện theo hướng tôn dáng.</p></article>
         <article className="border border-border bg-card p-6"><span className="text-xs tracking-[0.18em] text-primary">03 / HYBRID STYLIST</span><h3 className="mt-4 text-2xl">AI gợi ý, người thật tinh chỉnh.</h3><p className="mt-3 text-sm leading-6 text-silver">Stylist hỗ trợ 1:1 qua chat để kiểm duyệt outfit, tư vấn phụ kiện và chọn size khi khách hàng cần thêm một góc nhìn chuyên môn.</p></article>
       </div></div>
+
+      <section id="design-language" className="mt-16 border-t border-border pt-12 scroll-mt-24" aria-labelledby="design-language-title">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="eyebrow">Design language</p>
+            <h2 id="design-language-title" className="mt-3 text-3xl sm:text-4xl">The visual system behind WEARO.</h2>
+          </div>
+          <span className="text-xs uppercase tracking-[0.18em] text-silver">WEARO / UI SYSTEM 01</span>
+        </div>
+        <p className="mt-5 max-w-3xl text-beige leading-7">WEARO không dùng một “Style Guide” như tài liệu kỹ thuật dành cho khách hàng. Thay vào đó, Design Language là cách thương hiệu giữ trải nghiệm nhất quán từ trang chủ, catalogue, AI Studio đến checkout.</p>
+        <div className="mt-8 grid gap-px border border-border bg-border sm:grid-cols-2">
+          {DESIGN_TOKENS.map((item) => <article key={item.k} className="bg-background p-6 sm:p-7"><div className="flex items-start justify-between gap-4"><span className="text-xs tracking-[0.18em] text-primary">{item.k}</span><span className="text-xs uppercase tracking-[0.14em] text-silver">{item.title}</span></div><h3 className="mt-8 text-lg tracking-[0.08em]">{item.value}</h3><p className="mt-3 text-sm leading-6 text-silver">{item.detail}</p></article>)}
+        </div>
+        <div className="mt-8 grid gap-4 sm:grid-cols-4">
+          <div className="h-20 border border-border bg-[#1B1A17] p-3 text-[10px] uppercase tracking-[0.14em] text-[#F7F1E7]">INK<br /><span className="opacity-70">#1B1A17</span></div>
+          <div className="h-20 border border-border bg-[#F0A500] p-3 text-[10px] uppercase tracking-[0.14em] text-[#1B1A17]">YELLOW<br /><span className="opacity-70">#F0A500</span></div>
+          <div className="h-20 border border-border bg-[#E45826] p-3 text-[10px] uppercase tracking-[0.14em] text-[#F7F1E7]">ORANGE<br /><span className="opacity-80">#E45826</span></div>
+          <div className="h-20 border border-border bg-[#F7F1E7] p-3 text-[10px] uppercase tracking-[0.14em] text-[#1B1A17]">PAPER<br /><span className="opacity-70">#F7F1E7</span></div>
+        </div>
+      </section>
 
       <div className="mt-14 border border-primary/40 bg-primary/5 p-7 sm:p-9"><p className="eyebrow">Core value proposition</p><blockquote className="mt-4 text-2xl leading-9 sm:text-3xl">“WEARO — Mặc theo cách của riêng bạn: Định hình phong cách cá nhân với Thử đồ ảo AI chuẩn dáng.”</blockquote><p className="mt-5 text-sm leading-6 text-silver">Dành cho người trẻ và người đi làm bận rộn từ 16–30 tuổi, WEARO kết hợp AI Virtual Try-On và AI Personal Stylist để giảm nỗi lo mua sai form, rút ngắn thời gian phối đồ và giúp khách hàng tự tin thể hiện bản sắc riêng.</p></div>
 
