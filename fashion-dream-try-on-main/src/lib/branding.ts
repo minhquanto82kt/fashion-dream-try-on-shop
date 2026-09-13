@@ -40,17 +40,57 @@ function fromRow(row: Record<string, unknown> | undefined): BrandingSettings {
   return { logoUrl: typeof row?.logo_url === "string" && row.logo_url.length > 0 ? row.logo_url : null };
 }
 
+export function applyBranding(branding: BrandingSettings): void {
+  if (typeof document === "undefined") return;
+  const root = document.documentElement;
+  if (branding.logoUrl) {
+    root.style.setProperty("--site-logo-url", `url(\"${branding.logoUrl.replace(/\"/g, "\\\"")}\")`);
+    root.dataset.siteLogo = "custom";
+  } else {
+    root.style.removeProperty("--site-logo-url");
+    delete root.dataset.siteLogo;
+  }
+}
+
+function installBrandingStyles(): void {
+  if (typeof document === "undefined" || document.getElementById("upthink-branding-runtime-style")) return;
+  const style = document.createElement("style");
+  style.id = "upthink-branding-runtime-style";
+  style.textContent = `
+    html[data-site-logo=custom] .fashion-brand__mark {
+      color: transparent !important;
+      background-color: transparent !important;
+      background-image: var(--site-logo-url) !important;
+      background-repeat: no-repeat !important;
+      background-position: center !important;
+      background-size: contain !important;
+    }
+    html[data-site-logo=custom] .upthink-footer a[aria-label=\"UpThink home\"] > span:first-child {
+      color: transparent !important;
+      background-color: transparent !important;
+      background-image: var(--site-logo-url) !important;
+      background-repeat: no-repeat !important;
+      background-position: center !important;
+      background-size: contain !important;
+      font-size: 0 !important;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 export async function loadBranding(): Promise<BrandingSettings> {
   const config = getSupabaseConfig();
   if (!config) return { logoUrl: null };
 
   try {
-    const response = await fetch(`${config.url}${BRANDING_ENDPOINT}?id=eq.global&select=logo_url` , {
+    const response = await fetch(`${config.url}${BRANDING_ENDPOINT}?id=eq.global&select=logo_url`, {
       headers: { apikey: config.key },
     });
     if (!response.ok) return { logoUrl: null };
     const rows = await response.json() as Record<string, unknown>[];
-    return fromRow(rows[0]);
+    const branding = fromRow(rows[0]);
+    applyBranding(branding);
+    return branding;
   } catch {
     return { logoUrl: null };
   }
@@ -105,8 +145,14 @@ export async function uploadLogo(file: File): Promise<BrandingSettings> {
 
   const rows = await updateResponse.json() as Record<string, unknown>[];
   const branding = fromRow(rows[0]);
+  applyBranding(branding);
   if (typeof window !== "undefined") {
     window.dispatchEvent(new CustomEvent("upthink:branding:changed", { detail: branding }));
   }
   return branding;
+}
+
+if (typeof document !== "undefined") {
+  installBrandingStyles();
+  void loadBranding();
 }
