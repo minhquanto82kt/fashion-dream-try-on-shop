@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Mail, MapPin, Phone, Clock, ArrowUpRight } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import "@/styles/ai-studio.css";
 
 const linkClass = "upthink-footer-link inline-flex items-center gap-1.5 text-sm text-foreground/80 transition-colors hover:text-[var(--brand-accent)]";
 const socialClass = "group grid size-12 place-items-center overflow-hidden border border-border bg-background transition-transform duration-200 hover:-translate-y-1";
