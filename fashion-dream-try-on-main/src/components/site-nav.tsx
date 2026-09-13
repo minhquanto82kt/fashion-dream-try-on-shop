@@ -5,7 +5,6 @@ import {
   ChevronRight,
   CircleHelp,
   Heart,
-  Info,
   LogOut,
   Menu,
   Search,
@@ -13,10 +12,11 @@ import {
   UserRound,
   X,
 } from "lucide-react";
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { CATEGORIES } from "@/data/products";
 import { useCart } from "@/lib/cart";
 import { getCustomerUser, signOutCustomer } from "@/lib/auth";
+import "@/styles/brand-easter-egg.css";
 
 const PRIMARY_LINKS = [
   { to: "/ai", label: "AI Studio", beta: true },
@@ -50,6 +50,9 @@ export function SiteNav() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [customerEmail, setCustomerEmail] = useState<string | null>(null);
+  const [brandTapCount, setBrandTapCount] = useState(0);
+  const [easterEggOpen, setEasterEggOpen] = useState(false);
+  const brandTapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -68,6 +71,31 @@ export function SiteNav() {
       window.removeEventListener("upthink:auth:logout", onLogout);
     };
   }, []);
+
+  useEffect(() => {
+    if (!easterEggOpen) return;
+    const timer = window.setTimeout(() => setEasterEggOpen(false), 6500);
+    return () => window.clearTimeout(timer);
+  }, [easterEggOpen]);
+
+  useEffect(() => () => {
+    if (brandTapTimer.current) window.clearTimeout(brandTapTimer.current);
+  }, []);
+
+  const handleBrandClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    const nextCount = brandTapCount + 1;
+    if (brandTapTimer.current) window.clearTimeout(brandTapTimer.current);
+
+    if (nextCount >= 5) {
+      event.preventDefault();
+      setEasterEggOpen(true);
+      setBrandTapCount(0);
+      return;
+    }
+
+    setBrandTapCount(nextCount);
+    brandTapTimer.current = window.setTimeout(() => setBrandTapCount(0), 1200);
+  };
 
   const submitSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -93,16 +121,16 @@ export function SiteNav() {
   return (
     <nav className="fashion-nav" aria-label="Điều hướng chính">
       <div className="fashion-nav__announcement" role="status">
-        <span>UPTHINK / 2026</span>
+        <span>WEARO / 2026</span>
         <span>FREE SHIPPING — ĐƠN TỪ 700K</span>
         <span>AI VIRTUAL TRY-ON / BETA</span>
       </div>
 
       <div className="fashion-nav__inner">
-        <Link to="/" className="fashion-brand" aria-label="UpThink home">
-          <span className="fashion-brand__mark">U</span>
+        <Link to="/" className="fashion-brand" aria-label="WEARO home" onClick={handleBrandClick}>
+          <span className="fashion-brand__mark">W</span>
           <span className="fashion-brand__copy">
-            <span className="fashion-brand__name">UPTHINK<span>.</span></span>
+            <span className="fashion-brand__name">WEARO<span>.</span></span>
             <span className="fashion-brand__meta">AI FASHION / 2026</span>
           </span>
         </Link>
@@ -136,12 +164,7 @@ export function SiteNav() {
             </button>
 
             {shopOpen && (
-              <div
-                className="fashion-shop-mega"
-                role="dialog"
-                aria-label="Shop categories"
-                style={{ top: "72px", zIndex: 100 }}
-              >
+              <div className="fashion-shop-mega" role="dialog" aria-label="Shop categories" style={{ top: "72px", zIndex: 100 }}>
                 <div className="fashion-shop-mega__intro">
                   <span className="fashion-menu-kicker">COLLECTION / 2026</span>
                   <h2>Shop by category</h2>
@@ -152,13 +175,7 @@ export function SiteNav() {
 
                 <div className="fashion-shop-category-grid">
                   {CATEGORIES.map((category) => (
-                    <Link
-                      key={category.slug}
-                      to="/shop"
-                      search={{ category: category.slug }}
-                      onClick={closeMenus}
-                      className="fashion-shop-category"
-                    >
+                    <Link key={category.slug} to="/shop" search={{ category: category.slug }} onClick={closeMenus} className="fashion-shop-category">
                       <span className="fashion-shop-category__image">
                         <img src={category.image} alt="" loading="lazy" />
                       </span>
@@ -175,31 +192,16 @@ export function SiteNav() {
           </div>
 
           {DISCOVERY_LINKS.map((link) => (
-            <Link
-              key={link.label}
-              to={link.to}
-              onClick={closeMenus}
-              className="fashion-discovery-link"
-              activeProps={{ className: "fashion-discovery-link is-active" }}
-            >
+            <Link key={link.label} to={link.to} onClick={closeMenus} className="fashion-discovery-link" activeProps={{ className: "fashion-discovery-link is-active" }}>
               {link.label}
             </Link>
           ))}
 
           {PRIMARY_LINKS.map((link) =>
             link.beta ? (
-              <div
-                key={link.to}
-                className="fashion-ai-nav"
-                style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "2px", height: "72px" }}
-              >
+              <div key={link.to} className="fashion-ai-nav" style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "2px", height: "72px" }}>
                 <span className="fashion-ai-nav__beta">BETA</span>
-                <Link
-                  to={link.to}
-                  className="fashion-ai-nav__button"
-                  activeProps={{ className: "fashion-ai-nav__button is-active" }}
-                  aria-label="AI Studio — Beta"
-                >
+                <Link to={link.to} className="fashion-ai-nav__button" activeProps={{ className: "fashion-ai-nav__button is-active" }} aria-label="AI Studio — Beta">
                   {link.label}
                 </Link>
               </div>
@@ -212,17 +214,7 @@ export function SiteNav() {
         </div>
 
         <div className="fashion-nav__actions">
-          <button
-            type="button"
-            className={`fashion-icon-btn fashion-search-toggle ${searchOpen ? "is-active" : ""}`}
-            aria-label={searchOpen ? "Đóng tìm kiếm" : "Tìm kiếm sản phẩm"}
-            aria-expanded={searchOpen}
-            onClick={() => {
-              setSearchOpen((value) => !value);
-              setOpen(false);
-              setShopOpen(false);
-            }}
-          >
+          <button type="button" className={`fashion-icon-btn fashion-search-toggle ${searchOpen ? "is-active" : ""}`} aria-label={searchOpen ? "Đóng tìm kiếm" : "Tìm kiếm sản phẩm"} aria-expanded={searchOpen} onClick={() => { setSearchOpen((value) => !value); setOpen(false); setShopOpen(false); }}>
             {searchOpen ? <X size={21} strokeWidth={2} /> : <Search size={21} strokeWidth={2} />}
           </button>
 
@@ -251,21 +243,25 @@ export function SiteNav() {
             <span>EN</span>
           </div>
 
-          <button
-            type="button"
-            className={`fashion-mobile-btn ${open ? "is-active" : ""}`}
-            aria-label={open ? "Đóng menu" : "Mở menu"}
-            aria-expanded={open}
-            onClick={() => {
-              setOpen((value) => !value);
-              setSearchOpen(false);
-              setShopOpen(false);
-            }}
-          >
+          <button type="button" className={`fashion-mobile-btn ${open ? "is-active" : ""}`} aria-label={open ? "Đóng menu" : "Mở menu"} aria-expanded={open} onClick={() => { setOpen((value) => !value); setSearchOpen(false); setShopOpen(false); }}>
             {open ? <X size={23} strokeWidth={2} /> : <Menu size={23} strokeWidth={2} />}
           </button>
         </div>
       </div>
+
+      {easterEggOpen && (
+        <button type="button" className="wearo-easter-egg" aria-label="Đóng system signature" onClick={() => setEasterEggOpen(false)}>
+          <span className="wearo-easter-egg__grid" aria-hidden="true" />
+          <span className="wearo-easter-egg__panel">
+            <span className="wearo-easter-egg__eyebrow">WEARO / SYSTEM 02</span>
+            <strong>UPTHINK</strong>
+            <span className="wearo-easter-egg__rule" />
+            <span>ORIGINAL SYSTEM</span>
+            <span>IUH — SAIGON / 2026</span>
+            <span className="wearo-easter-egg__status">SYS 02 // ONLINE</span>
+          </span>
+        </button>
+      )}
 
       {searchOpen && (
         <div className="fashion-search-panel">
@@ -279,10 +275,10 @@ export function SiteNav() {
       )}
 
       {open && (
-        <div className="fashion-mobile-menu" role="dialog" aria-label="UPTHINK menu">
+        <div className="fashion-mobile-menu" role="dialog" aria-label="WEARO menu">
           <div className="fashion-menu-header">
             <div>
-              <span className="fashion-menu-kicker">UPTHINK / NAVIGATION</span>
+              <span className="fashion-menu-kicker">WEARO / NAVIGATION</span>
               <h2>Discover</h2>
             </div>
             <span className="fashion-menu-status">SYS 02 // ONLINE</span>
@@ -320,7 +316,7 @@ export function SiteNav() {
             <section className="fashion-menu-section fashion-menu-section--info">
               <span className="fashion-menu-label">03 / INFORMATION</span>
               <Link to="/about" onClick={closeMenus}>
-                <span><Info size={15} aria-hidden="true" /><strong>About UpThink</strong></span>
+                <span><strong>About WEARO</strong></span>
                 <ChevronRight size={17} aria-hidden="true" />
               </Link>
               <Link to="/about" onClick={closeMenus}>
@@ -339,8 +335,8 @@ export function SiteNav() {
           </div>
 
           <div className="fashion-menu-footer">
-            <span>UPTHINK / IUH — SAIGON 2026</span>
-            <span>AI FASHION SYSTEM</span>
+            <span>WEARO / AI FASHION — 2026</span>
+            <span>SYS 02 // ONLINE</span>
           </div>
         </div>
       )}
