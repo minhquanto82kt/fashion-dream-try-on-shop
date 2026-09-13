@@ -110,13 +110,14 @@ export function signInWithGoogle() {
   window.location.assign(authorizeUrl.toString());
 }
 
-async function handleGoogleCallback() {
+async function handleOAuthCallback() {
   if (typeof window === "undefined" || !window.location.hash.includes("access_token=")) return;
   const params = new URLSearchParams(window.location.hash.slice(1));
   const accessToken = params.get("access_token");
   const refreshToken = params.get("refresh_token");
   if (!accessToken || !refreshToken) return;
 
+  const provider = params.get("provider") || "OAuth";
   const expiresIn = Number(params.get("expires_in") || 3600);
   const expiresAt = Number(params.get("expires_at") || Math.floor(Date.now() / 1000) + expiresIn);
   const session: Session = {
@@ -129,12 +130,12 @@ async function handleGoogleCallback() {
 
   try {
     if (await checkAdminWithCustomerToken(accessToken)) {
-      await rejectAdminCustomerSession(accessToken, "Tài khoản Google này thuộc khu vực quản trị viên và không thể dùng để mua hàng.");
+      await rejectAdminCustomerSession(accessToken, `Tài khoản ${provider} này thuộc khu vực quản trị viên và không thể dùng để mua hàng.`);
     }
     const userResponse = await fetch(`${supabaseConfig.url}/auth/v1/user`, {
       headers: { apikey: supabaseConfig.key, Authorization: `Bearer ${accessToken}` },
     });
-    if (!userResponse.ok) throw new Error("Không thể xác minh tài khoản Google.");
+    if (!userResponse.ok) throw new Error(`Không thể xác minh tài khoản ${provider}.`);
     const user = (await userResponse.json()) as AuthUser;
     setCustomerSession({ ...session, user });
     syncCartForCustomer(user.id);
@@ -142,7 +143,7 @@ async function handleGoogleCallback() {
     dispatchAuthEvent("login");
   } catch (error) {
     setCustomerSession(null);
-    const message = error instanceof Error ? error.message : "Đăng nhập Google thất bại.";
+    const message = error instanceof Error ? error.message : `Đăng nhập ${provider} thất bại.`;
     window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
     dispatchAuthError(message);
   }
@@ -253,7 +254,7 @@ function installGoogleAccountButton() {
 }
 
 if (typeof window !== "undefined") {
-  void handleGoogleCallback();
+  void handleOAuthCallback();
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", installGoogleAccountButton, { once: true });
   else installGoogleAccountButton();
 }
