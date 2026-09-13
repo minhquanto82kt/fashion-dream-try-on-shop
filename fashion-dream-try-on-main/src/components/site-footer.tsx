@@ -1,8 +1,11 @@
 import { Link } from "@tanstack/react-router";
-import { Facebook, Instagram, Mail, MapPin, Phone, Clock, ArrowUpRight } from "lucide-react";
+import { Mail, MapPin, Phone, Clock, ArrowUpRight } from "lucide-react";
 
 const linkClass =
   "upthink-footer-link inline-flex items-center gap-1.5 text-sm text-foreground/80 transition-colors hover:text-[var(--brand-accent)]";
+
+const socialClass =
+  "group grid size-12 place-items-center overflow-hidden border border-border bg-background transition-transform duration-200 hover:-translate-y-1";
 
 export function SiteFooter() {
   return (
@@ -91,15 +94,48 @@ export function SiteFooter() {
             <p className="mb-5 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--brand-accent)]">
               03 / Kết nối
             </p>
-            <div className="flex items-center gap-3">
-              <a className="upthink-footer-social" href="https://www.instagram.com/upthink.iuh" target="_blank" rel="noreferrer" aria-label="Instagram">
-                <Instagram size={18} />
+            <div className="flex items-center gap-3" aria-label="UpThink social media">
+              <a
+                className={`${socialClass} rounded-[14px]`}
+                href="https://www.instagram.com/upthink.iuh"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Instagram"
+              >
+                <img
+                  src="/brand/instagram.svg"
+                  alt=""
+                  aria-hidden="true"
+                  className="size-8 transition-transform duration-200 group-hover:scale-110"
+                />
               </a>
-              <a className="upthink-footer-social" href="https://www.tiktok.com/@upthink.iuh" target="_blank" rel="noreferrer" aria-label="TikTok">
-                <span className="text-sm font-bold">TT</span>
+              <a
+                className={`${socialClass} rounded-full bg-[#1b1a17]`}
+                href="https://www.tiktok.com/@upthink.iuh"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="TikTok"
+              >
+                <img
+                  src="/brand/tiktok.svg"
+                  alt=""
+                  aria-hidden="true"
+                  className="size-7 transition-transform duration-200 group-hover:scale-110"
+                />
               </a>
-              <a className="upthink-footer-social" href="https://www.facebook.com/upthink.iuh" target="_blank" rel="noreferrer" aria-label="Facebook">
-                <Facebook size={18} />
+              <a
+                className={`${socialClass} rounded-full`}
+                href="https://www.facebook.com/upthink.iuh"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Facebook"
+              >
+                <img
+                  src="/brand/facebook.svg"
+                  alt=""
+                  aria-hidden="true"
+                  className="size-8 transition-transform duration-200 group-hover:scale-110"
+                />
               </a>
             </div>
             <p className="mt-5 text-sm leading-6 text-foreground/70">
