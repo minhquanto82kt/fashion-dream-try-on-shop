@@ -1,4 +1,5 @@
 import "../admin-theme.css";
+import "./branding";
 
 export type ThemeColors = { primary: string; secondary: string; background: string; surface: string; accent: string; foreground: string };
 
