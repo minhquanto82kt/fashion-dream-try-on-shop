@@ -84,14 +84,12 @@ export function SiteNav() {
   const handleBrandClick = (event: { preventDefault: () => void }) => {
     const nextCount = brandTapCount + 1;
     if (brandTapTimer.current) window.clearTimeout(brandTapTimer.current);
-
     if (nextCount >= 5) {
       event.preventDefault();
       setEasterEggOpen(true);
       setBrandTapCount(0);
       return;
     }
-
     setBrandTapCount(nextCount);
     brandTapTimer.current = window.setTimeout(() => setBrandTapCount(0), 1200);
   };
@@ -140,7 +138,6 @@ export function SiteNav() {
               <span>Shop</span>
               <ChevronDown size={16} strokeWidth={2} aria-hidden="true" />
             </button>
-
             {shopOpen && (
               <div className="fashion-shop-mega" role="dialog" aria-label="Shop categories" style={{ top: "72px", zIndex: 100 }}>
                 <div className="fashion-shop-mega__intro">
@@ -166,10 +163,10 @@ export function SiteNav() {
           ))}
 
           {PRIMARY_LINKS.map((link) => link.beta ? (
-            <div key={link.to} className="fashion-ai-nav" style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "2px", height: "72px" }}>
+            <Link key={link.to} to={link.to} className="fashion-ai-nav" activeProps={{ className: "fashion-ai-nav is-active" }} aria-label="AI Studio — Beta">
+              <span className="fashion-ai-nav__label">{link.label}</span>
               <span className="fashion-ai-nav__beta">BETA</span>
-              <Link to={link.to} className="fashion-ai-nav__button" activeProps={{ className: "fashion-ai-nav__button is-active" }} aria-label="AI Studio — Beta">{link.label}</Link>
-            </div>
+            </Link>
           ) : (
             <Link key={link.to} to={link.to} activeProps={{ className: "is-active" }} style={TOPBAR_TEXT_STYLE}>{link.label}</Link>
           ))}
