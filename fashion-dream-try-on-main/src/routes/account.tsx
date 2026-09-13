@@ -1,75 +1,173 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { FormEvent, useState } from "react";
-import { ArrowLeft, Eye, EyeOff } from "lucide-react";
-import { signInCustomer, signUpCustomer } from "@/lib/auth";
+import { FormEvent, useEffect, useMemo, useState } from "react";
+import { ArrowLeft, Eye, EyeOff, Heart, LogOut, Package, Sparkles, UserRound, WandSparkles } from "lucide-react";
+import { getCustomerSession, signInCustomer, signOutCustomer } from "@/lib/auth";
+import { supabaseConfig } from "@/lib/upthink-supabase";
 
 export const Route = createFileRoute("/account")({ component: AccountPage });
 type Mode = "login" | "register";
+type AccountUser = { id: string; email?: string; user_metadata?: { full_name?: string; name?: string } };
+
+function getFriendlyAuthCallbackError() {
+  if (typeof window === "undefined" || !window.location.hash) return "";
+  const params = new URLSearchParams(window.location.hash.slice(1));
+  const code = params.get("error_code");
+  const description = params.get("error_description");
+  if (!code && !description) return "";
+  if (code === "otp_expired" || /expired|invalid/i.test(description || "")) return "Liên kết xác nhận đã hết hạn hoặc đã được sử dụng. Hãy gửi lại email xác nhận để tiếp tục.";
+  return "Xác nhận email chưa hoàn tất. Vui lòng thử lại bằng email xác nhận mới nhất.";
+}
 
 function AccountPage() {
   const [mode, setMode] = useState<Mode>("login");
   const [email, setEmail] = useState("");
+  const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [user, setUser] = useState<AccountUser | null>(null);
+  const [checkingUser, setCheckingUser] = useState(true);
 
-  const switchMode = (nextMode: Mode) => { if (nextMode !== mode) { setMode(nextMode); setMessage(""); setError(""); } };
+  const redirectTo = useMemo(() => typeof window === "undefined" ? "" : `${window.location.origin}/account?verified=1`, []);
+
+  const loadUser = async () => {
+    const session = getCustomerSession();
+    if (!session?.access_token) { setUser(null); setCheckingUser(false); return; }
+    try {
+      const response = await fetch(`${supabaseConfig.url}/auth/v1/user`, { headers: { apikey: supabaseConfig.key, Authorization: `Bearer ${session.access_token}` } });
+      if (!response.ok) throw new Error("Session không còn hợp lệ.");
+      setUser((await response.json()) as AccountUser);
+    } catch { setUser(null); }
+    finally { setCheckingUser(false); }
+  };
+
+  useEffect(() => {
+    const callbackError = getFriendlyAuthCallbackError();
+    if (callbackError) {
+      setError(callbackError);
+      window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+    }
+    if (new URLSearchParams(window.location.search).get("verified") === "1") {
+      setMessage("Email đã được xác nhận. Chào mừng bạn đến với UpThink.");
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+    void loadUser();
+    const onAuth = () => void loadUser();
+    window.addEventListener("upthink:auth:login", onAuth);
+    window.addEventListener("upthink:auth:logout", onAuth);
+    return () => { window.removeEventListener("upthink:auth:login", onAuth); window.removeEventListener("upthink:auth:logout", onAuth); };
+  }, []);
+
+  const switchMode = (nextMode: Mode) => {
+    if (nextMode === mode) return;
+    setMode(nextMode); setMessage(""); setError("");
+  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault(); setLoading(true); setMessage(""); setError("");
     try {
       if (mode === "register") {
+        if (!fullName.trim()) throw new Error("Vui lòng nhập tên tài khoản.");
         if (password !== confirmPassword) throw new Error("Mật khẩu xác nhận không khớp.");
-        const signupResult = await signUpCustomer(email, password);
-        setMessage(signupResult.access_token ? "Đăng ký thành công." : "Đăng ký thành công. Kiểm tra email để xác nhận tài khoản trước khi đăng nhập.");
-      } else { await signInCustomer(email, password); setMessage("Đăng nhập thành công."); }
+        const normalizedEmail = email.trim().toLowerCase();
+        const response = await fetch(`${supabaseConfig.url}/auth/v1/signup?redirect_to=${encodeURIComponent(redirectTo)}`, {
+          method: "POST",
+          headers: { apikey: supabaseConfig.key, "Content-Type": "application/json" },
+          body: JSON.stringify({ email: normalizedEmail, password, data: { full_name: fullName.trim() } }),
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.msg || data.message || data.error_description || "Không thể tạo tài khoản.");
+        setEmail(normalizedEmail);
+        setPassword(""); setConfirmPassword("");
+        setMessage(data.access_token ? "Đăng ký thành công." : "Đăng ký thành công. Kiểm tra email để xác nhận tài khoản trước khi đăng nhập.");
+        if (data.access_token) await loadUser();
+      } else {
+        await signInCustomer(email, password);
+        setPassword(""); setMessage("Đăng nhập thành công."); await loadUser();
+      }
     } catch (submitError) { setError(submitError instanceof Error ? submitError.message : "Đã xảy ra lỗi. Vui lòng thử lại."); }
     finally { setLoading(false); }
   };
+
+  const handleResend = async () => {
+    const normalizedEmail = email.trim().toLowerCase();
+    if (!normalizedEmail) { setError("Nhập email để gửi lại email xác nhận."); return; }
+    setResending(true); setMessage(""); setError("");
+    try {
+      const response = await fetch(`${supabaseConfig.url}/auth/v1/resend?redirect_to=${encodeURIComponent(redirectTo)}`, {
+        method: "POST",
+        headers: { apikey: supabaseConfig.key, "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "signup", email: normalizedEmail }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.msg || data.message || data.error_description || "Không thể gửi lại email xác nhận.");
+      setMessage("Đã gửi lại email xác nhận. Hãy mở email mới nhất và chỉ nhấn xác nhận một lần.");
+    } catch (resendError) { setError(resendError instanceof Error ? resendError.message : "Không thể gửi lại email xác nhận."); }
+    finally { setResending(false); }
+  };
+
+  const handleLogout = async () => { setLoading(true); await signOutCustomer(); setMessage("Bạn đã đăng xuất."); setLoading(false); };
+
+  if (checkingUser) return <main className="account-page"><div className="account-loading">UPTHINK / VERIFYING ACCOUNT</div></main>;
 
   return (
     <main className="account-page">
       <style>{`
         :root:has(.account-page),body:has(.account-page){margin:0;overflow:hidden}
-        .account-page{--olive:#2E2910;--green:#2C5745;--cream:#EBE3A7;--orange:#EB7D00;--black:#0B0909;position:fixed;inset:0;width:100vw;height:100dvh;overflow:auto;isolation:isolate;background:var(--olive);color:var(--cream);font-family:inherit}.account-page *{box-sizing:border-box}
-        .account-background{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;object-position:center;pointer-events:none;user-select:none}.account-overlay{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,rgba(11,9,9,.86),rgba(46,41,16,.5) 42%,rgba(44,87,69,.3)),linear-gradient(180deg,rgba(11,9,9,.58),rgba(11,9,9,.12) 46%,rgba(11,9,9,.9))}.account-noise{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
-        .account-content{position:relative;z-index:10;width:min(1240px,calc(100vw - 64px));min-height:100%;margin:0 auto;display:grid;grid-template-rows:auto 1fr auto;padding:24px 0}.account-top{display:flex;align-items:center;justify-content:space-between;gap:24px}.account-brand{display:inline-flex;align-items:center;gap:11px;color:var(--cream);text-decoration:none}.account-brand-mark{width:30px;height:30px;display:grid;place-items:center;background:var(--orange);color:var(--black);font-family:var(--ft-display,Impact,sans-serif);font-size:16px}.account-brand-copy{display:flex;flex-direction:column;gap:2px;align-items:flex-start}.account-brand-name{font-family:var(--ft-display,Impact,sans-serif);font-size:20px;font-weight:400;letter-spacing:.1em;line-height:1}.account-brand-name span{color:var(--orange)}.account-brand-meta{color:var(--orange);font:9px var(--ft-sans,Arial,sans-serif);letter-spacing:.18em;line-height:1}.account-back{display:inline-flex;align-items:center;gap:8px;color:rgba(235,227,167,.72);text-decoration:none;text-transform:uppercase;font:600 9px var(--ft-meta,Arial,sans-serif);letter-spacing:.16em;transition:.2s}.account-back:hover{color:var(--orange);transform:translateX(-3px)}
-        .account-main{min-height:0;display:flex;align-items:center;justify-content:center;padding:30px 0}.account-composition{width:min(1080px,100%);display:grid;grid-template-columns:minmax(300px,.92fr) minmax(420px,1.08fr);gap:clamp(38px,6vw,86px);align-items:center}.account-intro{padding:12px 0 22px;animation:accountIntroIn .7s cubic-bezier(.2,.75,.25,1) both}.account-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:20px;color:var(--orange);font:700 9px var(--ft-meta,Arial,sans-serif);letter-spacing:.22em;text-transform:uppercase}.account-eyebrow:before{content:"";width:38px;height:1px;background:var(--orange)}.account-title{max-width:620px;margin:0;color:var(--cream);font:400 clamp(54px,7vw,104px)/.82 var(--ft-display,Impact,sans-serif);letter-spacing:-.025em;text-transform:uppercase;text-shadow:0 12px 34px rgba(11,9,9,.38)}.account-title span{display:block}.account-title .account-title-accent{color:var(--orange)}.account-copy{max-width:410px;margin:28px 0 0 3px;color:rgba(235,227,167,.76);font:13px/1.7 var(--ft-body,Arial,sans-serif)}.account-index{display:flex;align-items:center;gap:14px;margin-top:30px;color:rgba(235,227,167,.52);font:700 8px var(--ft-meta,Arial,sans-serif);letter-spacing:.16em;text-transform:uppercase}.account-index strong{color:var(--orange);font-size:9px}
-        .account-form-wrap{width:100%;max-width:540px;justify-self:end;padding:clamp(28px,3.2vw,42px);background:linear-gradient(145deg,rgba(44,87,69,.88),rgba(46,41,16,.84));border:1px solid rgba(235,227,167,.24);border-left:3px solid var(--orange);box-shadow:18px 18px 0 rgba(11,9,9,.36),0 28px 70px rgba(11,9,9,.28);animation:accountFormIn .8s cubic-bezier(.2,.75,.25,1) .1s both}.account-form-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:24px}.account-form-kicker{margin-bottom:8px;color:var(--orange);font:700 8px var(--ft-meta,Arial,sans-serif);letter-spacing:.2em;text-transform:uppercase}.account-form-title{margin:0;color:var(--cream);font:600 clamp(25px,2.4vw,34px)/1 var(--ft-editorial,Georgia,serif);letter-spacing:-.025em}.account-form-number{display:grid;place-items:center;flex:0 0 auto;width:34px;height:34px;border:1px solid rgba(235,125,0,.72);color:var(--orange);font:700 8px var(--ft-meta,Arial,sans-serif)}
-        .account-switch{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid rgba(235,227,167,.2);border-bottom:1px solid rgba(235,227,167,.2);margin-bottom:28px}.account-switch button{position:relative;padding:13px 4px 12px;border:0;background:transparent;color:rgba(235,227,167,.46);cursor:pointer;font:700 8px var(--ft-meta,Arial,sans-serif);letter-spacing:.14em;text-transform:uppercase}.account-switch button+button{border-left:1px solid rgba(235,227,167,.12)}.account-switch button:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--orange);transform:scaleX(0);transition:transform .3s}.account-switch button:hover,.account-switch button[aria-selected="true"]{color:var(--cream)}.account-switch button[aria-selected="true"]:after{transform:scaleX(1)}
-        .account-form{display:flex;flex-direction:column;gap:20px}.account-field{display:flex;flex-direction:column;gap:8px}.account-field label{color:rgba(235,227,167,.7);font:700 8px var(--ft-meta,Arial,sans-serif);letter-spacing:.16em;text-transform:uppercase}.account-field input{width:100%;height:46px;padding:0 13px;border:1px solid rgba(235,227,167,.2);border-radius:0;outline:0;background:rgba(11,9,9,.28);color:var(--cream);font:13px var(--ft-body,Arial,sans-serif);letter-spacing:.02em;transition:.2s}.account-field input::placeholder{color:rgba(235,227,167,.3)}.account-field input:focus{border-color:var(--orange);background:rgba(11,9,9,.42);box-shadow:0 0 0 1px rgba(235,125,0,.14)}.account-field input:disabled{opacity:.55}.account-password-wrap{position:relative}.account-password-wrap input{padding-right:48px}.account-password-toggle{position:absolute;top:50%;right:4px;width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;transform:translateY(-50%);padding:0;border:0;background:transparent;color:rgba(235,227,167,.52);cursor:pointer}.account-password-toggle:hover,.account-password-toggle:focus-visible{color:var(--orange)}.account-password-toggle svg{width:17px;height:17px;stroke:currentColor;stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round}.account-submit{width:100%;min-height:48px;margin-top:4px;border:0;background:var(--orange);color:var(--black);cursor:pointer;font:700 9px var(--ft-display,Impact,sans-serif);letter-spacing:.18em;text-transform:uppercase;transition:.2s}.account-submit:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.06)}.account-submit:disabled{opacity:.55;cursor:wait}.account-feedback{min-height:30px;margin:-4px 0 0;font:9px/1.5 var(--ft-body,Arial,sans-serif)}.account-feedback--error{color:#ffd0a8}.account-feedback--success{color:var(--cream)}
-        .account-bottom{display:flex;align-items:flex-end;justify-content:space-between;gap:30px;color:rgba(235,227,167,.62)}.account-description{max-width:440px;font:10px/1.6 var(--ft-meta,Arial,sans-serif);letter-spacing:.06em;text-transform:uppercase}.account-status{display:flex;align-items:center;gap:8px;font:8px var(--ft-meta,Arial,sans-serif);letter-spacing:.16em;text-transform:uppercase}.account-status i{width:7px;height:7px;display:block;background:var(--orange);box-shadow:0 0 12px rgba(235,125,0,.65)}
-        @keyframes accountIntroIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:none}}@keyframes accountFormIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
-        @media(max-width:900px){.account-content{width:min(680px,calc(100vw - 36px));padding:18px 0}.account-main{align-items:flex-start}.account-composition{grid-template-columns:1fr;gap:28px}.account-intro{padding:20px 0 0}.account-title{font-size:clamp(48px,13vw,78px)}.account-form-wrap{justify-self:stretch;max-width:none}.account-bottom{padding-top:10px}.account-description{display:none}}
-        @media(max-width:560px){:root:has(.account-page),body:has(.account-page){overflow:auto}.account-page{min-height:100dvh;height:auto}.account-content{min-height:100dvh;width:calc(100vw - 28px);padding:14px 0}.account-brand-name{font-size:17px}.account-brand-meta{font-size:7px}.account-brand-mark{width:27px;height:27px;font-size:14px}.account-back span{display:none}.account-main{padding:22px 0}.account-composition{gap:20px}.account-intro{padding-top:8px}.account-eyebrow{margin-bottom:14px}.account-title{font-size:clamp(43px,15vw,64px)}.account-copy{font-size:11px;margin-top:18px}.account-index{margin-top:18px}.account-form-wrap{padding:22px 18px;box-shadow:10px 10px 0 rgba(11,9,9,.36)}.account-form-head{margin-bottom:20px}.account-switch{margin-bottom:22px}.account-form{gap:16px}.account-bottom{padding-top:0}}
-        @media(prefers-reduced-motion:reduce){.account-intro,.account-form-wrap{animation:none}.account-back,.account-submit{transition:none}}
+        .account-page{--cream:#e6d5b8;--orange:#f0a500;--red:#e45826;--ink:#1b1a17;--panel:rgba(27,26,23,.86);position:fixed;inset:0;overflow:auto;background:radial-gradient(circle at 80% 10%,rgba(240,165,0,.12),transparent 34%),linear-gradient(135deg,#1b1a17,#30251a 58%,#1b1a17);color:var(--cream);font-family:inherit;isolation:isolate}.account-page *{box-sizing:border-box}.account-loading{min-height:100dvh;display:grid;place-items:center;color:var(--orange);font:800 9px Arial,sans-serif;letter-spacing:.22em}.account-shell{position:relative;z-index:2;width:min(1180px,calc(100vw - 48px));min-height:100%;margin:auto;padding:24px 0;display:flex;flex-direction:column}.account-top{display:flex;align-items:center;justify-content:space-between;gap:20px}.account-brand,.account-back{color:var(--cream);text-decoration:none}.account-brand{display:flex;align-items:center;gap:10px}.account-mark{display:grid;place-items:center;width:30px;height:30px;background:var(--orange);color:var(--ink);font-weight:900}.account-brand strong{font-size:18px;letter-spacing:.1em}.account-brand small{display:block;color:var(--orange);font-size:7px;letter-spacing:.18em;margin-top:2px}.account-back{display:flex;align-items:center;gap:7px;color:rgba(230,213,184,.65);font:700 8px Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase}.account-back:hover{color:var(--orange)}.account-main{flex:1;display:flex;align-items:center;padding:36px 0}.account-auth-grid{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}.account-kicker{color:var(--orange);font:800 9px Arial,sans-serif;letter-spacing:.2em}.account-title{margin:12px 0 0;font:900 clamp(58px,8vw,112px)/.82 Arial,sans-serif;letter-spacing:-.055em;text-transform:uppercase}.account-title span{display:block}.account-title .accent{color:var(--orange)}.account-copy{max-width:430px;margin:28px 0 0;color:rgba(230,213,184,.72);font-size:13px;line-height:1.7}.account-index{margin-top:30px;color:rgba(230,213,184,.42);font:800 8px Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase}.account-index b{color:var(--orange);margin-right:12px}.account-card{background:var(--panel);border:1px solid rgba(230,213,184,.18);border-left:3px solid var(--orange);padding:32px;box-shadow:18px 18px 0 rgba(0,0,0,.22)}.account-card-head{display:flex;justify-content:space-between;gap:20px;margin-bottom:22px}.account-kicker-small{color:var(--orange);font:800 8px Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase}.account-card h2{margin:7px 0 0;font:600 30px/1.1 Georgia,serif}.account-number{display:grid;place-items:center;width:32px;height:32px;border:1px solid rgba(240,165,0,.65);color:var(--orange);font:800 8px Arial,sans-serif}.account-switch{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid rgba(230,213,184,.18);border-bottom:1px solid rgba(230,213,184,.18);margin-bottom:24px}.account-switch button{position:relative;padding:12px;border:0;background:transparent;color:rgba(230,213,184,.45);font:800 8px Arial,sans-serif;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}.account-switch button[aria-selected=true]{color:var(--cream)}.account-switch button[aria-selected=true]:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--orange)}.account-form{display:flex;flex-direction:column;gap:16px}.account-field{display:flex;flex-direction:column;gap:7px}.account-field label{font:800 8px Arial,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:rgba(230,213,184,.68)}.account-field input{height:46px;width:100%;padding:0 12px;border:1px solid rgba(230,213,184,.18);background:rgba(0,0,0,.22);color:var(--cream);outline:none;border-radius:0}.account-field input:focus{border-color:var(--orange)}.account-password{position:relative}.account-password input{padding-right:46px}.account-eye{position:absolute;right:3px;top:3px;width:40px;height:40px;border:0;background:transparent;color:rgba(230,213,184,.55);cursor:pointer}.account-feedback{margin:0;font:9px/1.55 Arial,sans-serif}.account-feedback--error{color:#ffc5a8}.account-feedback--success{color:var(--cream)}.account-submit{min-height:48px;border:0;background:var(--orange);color:var(--ink);font:900 9px Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase;cursor:pointer}.account-submit:disabled{opacity:.55;cursor:wait}.account-resend{border:0;background:transparent;color:var(--orange);font:800 8px Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;text-align:left}.account-resend:disabled{opacity:.5}.account-dashboard{width:100%}.account-welcome{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;border-bottom:1px solid rgba(230,213,184,.16);padding-bottom:26px}.account-welcome h1{margin:8px 0 0;font:900 clamp(42px,6vw,78px)/.88 Arial,sans-serif;letter-spacing:-.05em;text-transform:uppercase}.account-welcome h1 span{color:var(--orange)}.account-welcome p{max-width:460px;color:rgba(230,213,184,.65);font-size:12px;line-height:1.7}.account-logout{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(230,213,184,.2);background:transparent;color:rgba(230,213,184,.7);padding:10px 13px;font:800 8px Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}.account-logout:hover{border-color:var(--orange);color:var(--orange)}.account-modules{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}.account-module{min-height:150px;padding:20px;border:1px solid rgba(230,213,184,.15);background:rgba(27,26,23,.6);color:var(--cream);text-decoration:none;display:flex;flex-direction:column;justify-content:space-between;transition:.2s}.account-module:hover{transform:translateY(-3px);border-color:rgba(240,165,0,.55);background:rgba(240,165,0,.07)}.account-module-icon{color:var(--orange)}.account-module strong{font-size:13px}.account-module small{display:block;margin-top:6px;color:rgba(230,213,184,.45);font:800 7px Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase}.account-profile{margin-top:18px;display:grid;grid-template-columns:1.3fr .7fr;gap:12px}.account-profile-card{padding:20px;border:1px solid rgba(230,213,184,.15);background:rgba(27,26,23,.6)}.account-profile-card h3{margin:0 0 16px;color:var(--orange);font:800 8px Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase}.account-profile-row{display:flex;justify-content:space-between;gap:20px;padding:10px 0;border-bottom:1px solid rgba(230,213,184,.08);font-size:12px}.account-profile-row:last-child{border-bottom:0}.account-profile-row span{color:rgba(230,213,184,.45)}.account-note{color:rgba(230,213,184,.62);font-size:11px;line-height:1.7}.account-note strong{color:var(--cream)}.account-bottom{padding-top:20px;color:rgba(230,213,184,.35);font:800 7px Arial,sans-serif;letter-spacing:.15em;text-transform:uppercase}.account-bottom b{color:var(--orange)}
+        @media(max-width:900px){.account-auth-grid{grid-template-columns:1fr;gap:30px}.account-modules{grid-template-columns:repeat(2,1fr)}.account-profile{grid-template-columns:1fr}.account-welcome{align-items:flex-start;flex-direction:column}.account-title{font-size:clamp(54px,15vw,84px)}}
+        @media(max-width:560px){:root:has(.account-page),body:has(.account-page){overflow:auto}.account-shell{width:calc(100vw - 28px);padding:14px 0}.account-main{padding:30px 0}.account-card{padding:22px 18px}.account-modules{grid-template-columns:1fr}.account-module{min-height:125px}.account-brand strong{font-size:16px}.account-back span{display:none}}
       `}</style>
-      <img className="account-background" src="/account/account-background.png" alt="" aria-hidden="true" />
-      <div className="account-overlay" aria-hidden="true" /><div className="account-noise" aria-hidden="true" />
-      <div className="account-content">
+      <div className="account-shell">
         <header className="account-top">
-          <Link to="/" className="account-brand" aria-label="UpThink home"><span className="account-brand-mark">U</span><span className="account-brand-copy"><span className="account-brand-name">UPTHINK<span>.</span></span><span className="account-brand-meta">AI FASHION / 2026</span></span></Link>
-          <Link to="/" className="account-back"><ArrowLeft size={14}/><span>Back to collection</span></Link>
+          <Link to="/" className="account-brand" aria-label="UpThink home"><span className="account-mark">U</span><span><strong>UPTHINK.</strong><small>AI FASHION / 2026</small></span></Link>
+          <Link to="/" className="account-back"><ArrowLeft size={13}/><span>Back to collection</span></Link>
         </header>
-        <section className="account-main"><div className="account-composition">
-          <div className="account-intro"><div className="account-eyebrow">UPTHINK / MEMBER ACCESS</div><h1 className="account-title"><span>YOUR</span><span>STYLE.</span><span className="account-title-accent">YOUR ID.</span></h1><p className="account-copy">Đăng nhập để lưu phong cách, quản lý đơn hàng và tiếp tục hành trình thử đồ AI của bạn.</p><div className="account-index"><strong>01</strong><span>Personal fashion system / online</span></div></div>
-          <div className="account-form-wrap">
-            <div className="account-form-head"><div><div className="account-form-kicker">Account / Access</div><h2 className="account-form-title">{mode === "login" ? "Welcome back" : "Create account"}</h2></div><span className="account-form-number">{mode === "login" ? "01" : "02"}</span></div>
-            <div className="account-switch" role="tablist" aria-label="Account mode"><button type="button" role="tab" aria-selected={mode === "login"} onClick={() => switchMode("login")}>Đăng nhập</button><button type="button" role="tab" aria-selected={mode === "register"} onClick={() => switchMode("register")}>Đăng ký</button></div>
-            <form className="account-form" onSubmit={handleSubmit}>
-              <div className="account-field"><label htmlFor="account-email">Email</label><input id="account-email" type="email" value={email} onChange={(e)=>setEmail(e.target.value)} placeholder="you@example.com" autoComplete="email" disabled={loading} required/></div>
-              <div className="account-field"><label htmlFor="account-password">Mật khẩu</label><div className="account-password-wrap"><input id="account-password" type={showPassword?"text":"password"} value={password} onChange={(e)=>setPassword(e.target.value)} placeholder="••••••••" autoComplete={mode === "login" ? "current-password" : "new-password"} disabled={loading} required minLength={6}/><button className="account-password-toggle" type="button" onClick={()=>setShowPassword(v=>!v)} aria-label={showPassword?"Ẩn mật khẩu":"Hiện mật khẩu"} disabled={loading}>{showPassword?<EyeOff/>:<Eye/>}</button></div></div>
-              {mode === "register" && <div className="account-field"><label htmlFor="account-confirm-password">Xác nhận mật khẩu</label><div className="account-password-wrap"><input id="account-confirm-password" type={showConfirmPassword?"text":"password"} value={confirmPassword} onChange={(e)=>setConfirmPassword(e.target.value)} placeholder="••••••••" autoComplete="new-password" disabled={loading} required minLength={6}/><button className="account-password-toggle" type="button" onClick={()=>setShowConfirmPassword(v=>!v)} aria-label={showConfirmPassword?"Ẩn mật khẩu xác nhận":"Hiện mật khẩu xác nhận"} disabled={loading}>{showConfirmPassword?<EyeOff/>:<Eye/>}</button></div></div>}
-              {error && <p className="account-feedback account-feedback--error" role="alert">{error}</p>}{message && <p className="account-feedback account-feedback--success" role="status">{message}</p>}
-              <button className="account-submit" type="submit" disabled={loading}>{loading?"Đang xử lý…":mode === "login"?"Đăng nhập":"Tạo tài khoản"}</button>
-            </form>
-          </div>
-        </div></section>
-        <footer className="account-bottom"><p className="account-description"><strong>Progressive access.</strong> Browse freely as a guest. Your account becomes useful when you want to save products, complete checkout, track orders or use AI Try-On.</p><div className="account-status"><i/>System online</div></footer>
+
+        <section className="account-main">
+          {user ? (
+            <div className="account-dashboard">
+              <div className="account-welcome">
+                <div><div className="account-kicker">UPTHINK / PERSONAL FASHION SYSTEM</div><h1>CHÀO MỪNG <span>{user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split("@")[0] || "BẠN"}</span></h1></div>
+                <div><p>Không gian cá nhân của bạn đã sẵn sàng. Quản lý tài khoản, khám phá sản phẩm và tiếp tục hành trình AI TRY-ON theo phong cách riêng.</p><button className="account-logout" type="button" onClick={handleLogout} disabled={loading}><LogOut size={13}/> Đăng xuất</button></div>
+              </div>
+              <div className="account-modules">
+                <Link className="account-module" to="/shop"><span className="account-module-icon"><Sparkles size={22}/></span><span><strong>Khám phá sản phẩm</strong><small>Shop / Collection</small></span></Link>
+                <Link className="account-module" to="/ai"><span className="account-module-icon"><WandSparkles size={22}/></span><span><strong>AI TRY-ON</strong><small>Virtual fitting</small></span></Link>
+                <Link className="account-module" to="/cart"><span className="account-module-icon"><Package size={22}/></span><span><strong>Giỏ hàng</strong><small>Cart / Checkout</small></span></Link>
+                <div className="account-module"><span className="account-module-icon"><Heart size={22}/></span><span><strong>Sản phẩm yêu thích</strong><small>Personalization / Coming soon</small></span></div>
+              </div>
+              <div className="account-profile">
+                <div className="account-profile-card"><h3><UserRound size={12} style={{verticalAlign:"-2px",marginRight:6}}/> Hồ sơ tài khoản</h3><div className="account-profile-row"><span>Tên tài khoản</span><strong>{user.user_metadata?.full_name || user.user_metadata?.name || "Chưa cập nhật"}</strong></div><div className="account-profile-row"><span>Email</span><strong>{user.email || "—"}</strong></div><div className="account-profile-row"><span>Account ID</span><strong>{user.id.slice(0, 8)}…</strong></div></div>
+                <div className="account-profile-card"><h3>PERSONALIZATION</h3><p className="account-note"><strong>Phong cách của bạn.</strong><br/>Đây là nền tảng để bổ sung wishlist, lịch sử AI TRY-ON, style preferences và đề xuất stylist cá nhân hóa trong các milestone tiếp theo.</p></div>
+              </div>
+            </div>
+          ) : (
+            <div className="account-auth-grid">
+              <div><div className="account-kicker">UPTHINK / MEMBER ACCESS</div><h1 className="account-title"><span>YOUR</span><span>STYLE.</span><span className="accent">YOUR ID.</span></h1><p className="account-copy">Đăng nhập để lưu phong cách, quản lý trải nghiệm mua sắm và tiếp tục hành trình thử đồ AI của bạn.</p><div className="account-index"><b>01</b> PERSONAL FASHION SYSTEM / ONLINE</div></div>
+              <div className="account-card">
+                <div className="account-card-head"><div><div className="account-kicker-small">Account / Access</div><h2>{mode === "login" ? "Welcome back" : "Create account"}</h2></div><span className="account-number">{mode === "login" ? "01" : "02"}</span></div>
+                <div className="account-switch" role="tablist" aria-label="Account mode"><button type="button" role="tab" aria-selected={mode === "login"} onClick={() => switchMode("login")}>Đăng nhập</button><button type="button" role="tab" aria-selected={mode === "register"} onClick={() => switchMode("register")}>Đăng ký</button></div>
+                <form className="account-form" onSubmit={handleSubmit}>
+                  {mode === "register" && <div className="account-field"><label htmlFor="account-name">Tên tài khoản</label><input id="account-name" value={fullName} onChange={e=>setFullName(e.target.value)} placeholder="Tên hiển thị của bạn" autoComplete="name" disabled={loading} required/></div>}
+                  <div className="account-field"><label htmlFor="account-email">Email</label><input id="account-email" type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@example.com" autoComplete="email" disabled={loading} required/></div>
+                  <div className="account-field"><label htmlFor="account-password">Mật khẩu</label><div className="account-password"><input id="account-password" type={showPassword?"text":"password"} value={password} onChange={e=>setPassword(e.target.value)} placeholder="••••••••" autoComplete={mode === "login" ? "current-password" : "new-password"} disabled={loading} required minLength={6}/><button className="account-eye" type="button" onClick={()=>setShowPassword(v=>!v)} aria-label={showPassword?"Ẩn mật khẩu":"Hiện mật khẩu"} disabled={loading}>{showPassword?<EyeOff size={17}/>:<Eye size={17}/>}</button></div></div>
+                  {mode === "register" && <div className="account-field"><label htmlFor="account-confirm-password">Xác nhận mật khẩu</label><div className="account-password"><input id="account-confirm-password" type={showConfirmPassword?"text":"password"} value={confirmPassword} onChange={e=>setConfirmPassword(e.target.value)} placeholder="••••••••" autoComplete="new-password" disabled={loading} required minLength={6}/><button className="account-eye" type="button" onClick={()=>setShowConfirmPassword(v=>!v)} aria-label={showConfirmPassword?"Ẩn mật khẩu xác nhận":"Hiện mật khẩu xác nhận"} disabled={loading}>{showConfirmPassword?<EyeOff size={17}/>:<Eye size={17}/>}</button></div></div>}
+                  {error && <p className="account-feedback account-feedback--error" role="alert">{error}</p>}
+                  {message && <p className="account-feedback account-feedback--success" role="status">{message}</p>}
+                  {mode === "register" && message && !user && <button className="account-resend" type="button" onClick={handleResend} disabled={resending}>{resending ? "Đang gửi…" : "Gửi lại email xác nhận"}</button>}
+                  <button className="account-submit" type="submit" disabled={loading}>{loading ? "Đang xử lý…" : mode === "login" ? "Đăng nhập" : "Tạo tài khoản"}</button>
+                </form>
+              </div>
+            </div>
+          )}
+        </section>
+        <footer className="account-bottom"><b>●</b> SYSTEM ONLINE / CUSTOMER ACCOUNT / UPTHINK 2026</footer>
       </div>
     </main>
   );
