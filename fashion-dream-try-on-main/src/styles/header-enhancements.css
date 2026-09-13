@@ -36,17 +36,15 @@
 .fashion-shop-trigger svg { transition: transform .2s ease; }
 .fashion-shop-nav.is-open .fashion-shop-trigger svg { transform: rotate(180deg); color: var(--wearo-orange); }
 
-/* AI Studio: same 32px navigation control as Shop/Discovery/About. Only BETA has a border. */
+/* AI Studio: label stays centered; BETA becomes a compact notification-style badge at the top-right. */
 .fashion-ai-nav {
   display: inline-flex !important;
-  flex-direction: row !important;
   align-items: center !important;
   justify-content: center !important;
   height: 32px !important;
   min-height: 32px !important;
   width: auto !important;
   min-width: 0 !important;
-  gap: 7px !important;
   padding: 0 !important;
   margin: 0 !important;
   border: 0 !important;
@@ -55,15 +53,45 @@
   text-decoration: none !important;
   box-shadow: none !important;
   white-space: nowrap;
-  position: relative;
+  position: relative !important;
   align-self: center !important;
   line-height: 1 !important;
   box-sizing: border-box !important;
   transition: color .18s ease, opacity .18s ease;
 }
 .fashion-ai-nav::after { display: none !important; }
-.fashion-ai-nav__label { display: inline-flex; align-items: center; height: 32px; color: inherit !important; font: 650 11px/1 Space Grotesk, Arial, sans-serif; letter-spacing: .19em; text-transform: uppercase; opacity: 1 !important; visibility: visible !important; white-space: nowrap; }
-.fashion-ai-nav__beta { display: inline-flex; align-items: center; justify-content: center; height: 17px; padding: 0 4px; border: 1px solid currentColor; background: var(--wearo-orange); color: var(--wearo-ink) !important; font: 800 7px/1 Arial, sans-serif; letter-spacing: .1em; }
+.fashion-ai-nav__label {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  color: inherit !important;
+  font: 650 11px/1 Space Grotesk, Arial, sans-serif;
+  letter-spacing: .19em;
+  text-transform: uppercase;
+  opacity: 1 !important;
+  visibility: visible !important;
+  white-space: nowrap;
+}
+.fashion-ai-nav__beta {
+  position: absolute !important;
+  top: -5px !important;
+  right: -14px !important;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 14px;
+  min-width: 19px;
+  padding: 0 3px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  background: var(--wearo-orange);
+  color: var(--wearo-ink) !important;
+  font: 800 7px/1 Arial, sans-serif;
+  letter-spacing: .06em;
+  box-sizing: border-box;
+  pointer-events: none;
+}
 .fashion-ai-nav:hover, .fashion-ai-nav.is-active { color: var(--wearo-orange) !important; }
 .fashion-ai-nav:hover .fashion-ai-nav__beta, .fashion-ai-nav.is-active .fashion-ai-nav__beta { background: var(--wearo-ink); color: var(--wearo-orange) !important; }
 
