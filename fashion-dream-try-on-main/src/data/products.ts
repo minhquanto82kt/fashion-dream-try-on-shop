@@ -1,3 +1,5 @@
+import { formatPrice } from "@/lib/i18n";
+
 export type Product = {
   id: string;
   name: string;
@@ -38,7 +40,5 @@ export const PRODUCTS: Product[] = [
 export function getProduct(id: string) { return PRODUCTS.find((p) => p.id === id); }
 
 export function formatVnd(value: number) {
-  const english = typeof window !== "undefined" && window.localStorage.getItem("wearo-language") === "en";
-  if (english) return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 2 }).format(value / 25000);
-  return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND", maximumFractionDigits: 0 }).format(value);
+  return formatPrice(value);
 }
