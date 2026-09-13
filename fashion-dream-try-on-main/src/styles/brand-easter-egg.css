@@ -1,0 +1,77 @@
+.wearo-easter-egg {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  border: 0;
+  padding: 24px;
+  background: color-mix(in oklab, var(--background) 92%, transparent);
+  color: var(--foreground);
+  backdrop-filter: blur(18px) saturate(.8);
+  cursor: pointer;
+  animation: wearo-easter-in .24s ease-out both;
+}
+
+.wearo-easter-egg__grid {
+  position: absolute;
+  inset: 0;
+  opacity: .16;
+  background-image:
+    linear-gradient(var(--primary) 1px, transparent 1px),
+    linear-gradient(90deg, var(--primary) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+}
+
+.wearo-easter-egg__panel {
+  position: relative;
+  width: min(430px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 30px;
+  border: 1px solid color-mix(in oklab, var(--primary) 72%, transparent);
+  background: color-mix(in oklab, var(--background) 96%, var(--primary));
+  box-shadow: 10px 10px 0 color-mix(in oklab, var(--primary) 68%, transparent);
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  font: 10px/1.5 var(--ft-meta, "Oswald", Arial, sans-serif);
+}
+
+.wearo-easter-egg__eyebrow {
+  color: var(--primary);
+  font-size: 9px;
+  letter-spacing: .2em;
+}
+
+.wearo-easter-egg__panel strong {
+  margin-top: 8px;
+  font: 400 clamp(48px, 10vw, 76px)/.9 var(--ft-impact, "Anton", Impact, sans-serif);
+  letter-spacing: .02em;
+}
+
+.wearo-easter-egg__rule {
+  width: 100%;
+  height: 1px;
+  margin: 12px 0 4px;
+  background: var(--border);
+}
+
+.wearo-easter-egg__status {
+  margin-top: 10px;
+  color: var(--primary);
+}
+
+@keyframes wearo-easter-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 720px) {
+  .wearo-easter-egg__panel {
+    padding: 24px;
+    box-shadow: 6px 6px 0 color-mix(in oklab, var(--primary) 68%, transparent);
+  }
+}
