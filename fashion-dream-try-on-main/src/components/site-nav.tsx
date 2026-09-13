@@ -1,243 +1,55 @@
 import { Link } from "@tanstack/react-router";
-import {
-  ChevronDown,
-  ChevronRight,
-  CircleHelp,
-  Heart,
-  LogOut,
-  Menu,
-  Search,
-  ShoppingBag,
-  UserRound,
-  X,
-} from "lucide-react";
+import { ChevronDown, ChevronRight, CircleHelp, Heart, LogOut, Menu, Search, ShoppingBag, UserRound, X } from "lucide-react";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { CATEGORIES } from "@/data/products";
 import { useCart } from "@/lib/cart";
 import { getCustomerUser, signOutCustomer } from "@/lib/auth";
+import { useI18n } from "@/lib/i18n";
 import "@/styles/brand-easter-egg.css";
 import "@/styles/header-enhancements.css";
 
-const PRIMARY_LINKS = [
-  { to: "/ai", label: "AI Studio", beta: true },
-  { to: "/about", label: "About" },
-] as const;
-
-const DISCOVERY_LINKS = [
-  { label: "New Arrivals", to: "/shop" },
-  { label: "Collections", to: "/shop" },
-  { label: "Best Sellers", to: "/shop" },
-  { label: "Sale / Offers", to: "/shop" },
-] as const;
-
-const TOPBAR_TEXT_STYLE = {
-  height: "72px",
-  minHeight: "72px",
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  fontSize: "13px",
-  lineHeight: 1,
-  fontWeight: 600,
-  letterSpacing: ".13em",
-} as const;
+const PRIMARY_LINKS = [{ to: "/ai", label: "AI Studio", beta: true }, { to: "/about", label: "About" }] as const;
+const DISCOVERY_LINKS = [{ label: "New Arrivals", to: "/shop" }, { label: "Collections", to: "/shop" }, { label: "Best Sellers", to: "/shop" }, { label: "Sale / Offers", to: "/shop" }] as const;
+const TOPBAR_TEXT_STYLE = { height: "72px", minHeight: "72px", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "13px", lineHeight: 1, fontWeight: 600, letterSpacing: ".13em" } as const;
 
 export function SiteNav() {
   const { count } = useCart();
-  const [open, setOpen] = useState(false);
-  const [shopOpen, setShopOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const [customerEmail, setCustomerEmail] = useState<string | null>(null);
-  const [brandTapCount, setBrandTapCount] = useState(0);
-  const [easterEggOpen, setEasterEggOpen] = useState(false);
+  const { language, toggleLanguage, t } = useI18n();
+  const [open, setOpen] = useState(false), [shopOpen, setShopOpen] = useState(false), [searchOpen, setSearchOpen] = useState(false), [query, setQuery] = useState(""), [customerEmail, setCustomerEmail] = useState<string | null>(null), [brandTapCount, setBrandTapCount] = useState(0), [easterEggOpen, setEasterEggOpen] = useState(false);
   const brandTapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => { let mounted = true; const sync = async () => { const user = await getCustomerUser(); if (mounted) setCustomerEmail(user?.email ?? null); }; void sync(); const onLogin = () => void sync(); const onLogout = () => setCustomerEmail(null); window.addEventListener("upthink:auth:login", onLogin); window.addEventListener("upthink:auth:logout", onLogout); return () => { mounted = false; window.removeEventListener("upthink:auth:login", onLogin); window.removeEventListener("upthink:auth:logout", onLogout); }; }, []);
+  useEffect(() => { if (!easterEggOpen) return; const timer = window.setTimeout(() => setEasterEggOpen(false), 6500); return () => window.clearTimeout(timer); }, [easterEggOpen]);
+  useEffect(() => () => { if (brandTapTimer.current) window.clearTimeout(brandTapTimer.current); }, []);
+  const handleBrandClick = (event: { preventDefault: () => void }) => { const next = brandTapCount + 1; if (brandTapTimer.current) window.clearTimeout(brandTapTimer.current); if (next >= 5) { event.preventDefault(); setEasterEggOpen(true); setBrandTapCount(0); return; } setBrandTapCount(next); brandTapTimer.current = window.setTimeout(() => setBrandTapCount(0), 1200); };
+  const submitSearch = (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); const value = query.trim(); if (!value) return; window.location.href = `/shop?search=${encodeURIComponent(value)}`; setSearchOpen(false); setOpen(false); setShopOpen(false); };
+  const closeMenus = () => { setOpen(false); setSearchOpen(false); setShopOpen(false); };
+  const handleLogout = async () => { await signOutCustomer(); closeMenus(); };
+  const switchLanguage = () => { toggleLanguage(); window.setTimeout(() => window.location.reload(), 0); };
 
-  useEffect(() => {
-    let mounted = true;
-    const sync = async () => {
-      const user = await getCustomerUser();
-      if (mounted) setCustomerEmail(user?.email ?? null);
-    };
-    void sync();
-    const onLogin = () => void sync();
-    const onLogout = () => setCustomerEmail(null);
-    window.addEventListener("upthink:auth:login", onLogin);
-    window.addEventListener("upthink:auth:logout", onLogout);
-    return () => {
-      mounted = false;
-      window.removeEventListener("upthink:auth:login", onLogin);
-      window.removeEventListener("upthink:auth:logout", onLogout);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!easterEggOpen) return;
-    const timer = window.setTimeout(() => setEasterEggOpen(false), 6500);
-    return () => window.clearTimeout(timer);
-  }, [easterEggOpen]);
-
-  useEffect(() => () => {
-    if (brandTapTimer.current) window.clearTimeout(brandTapTimer.current);
-  }, []);
-
-  const handleBrandClick = (event: { preventDefault: () => void }) => {
-    const nextCount = brandTapCount + 1;
-    if (brandTapTimer.current) window.clearTimeout(brandTapTimer.current);
-    if (nextCount >= 5) {
-      event.preventDefault();
-      setEasterEggOpen(true);
-      setBrandTapCount(0);
-      return;
-    }
-    setBrandTapCount(nextCount);
-    brandTapTimer.current = window.setTimeout(() => setBrandTapCount(0), 1200);
-  };
-
-  const submitSearch = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const value = query.trim();
-    if (!value) return;
-    window.location.href = `/shop?search=${encodeURIComponent(value)}`;
-    setSearchOpen(false);
-    setOpen(false);
-    setShopOpen(false);
-  };
-
-  const closeMenus = () => {
-    setOpen(false);
-    setSearchOpen(false);
-    setShopOpen(false);
-  };
-
-  const handleLogout = async () => {
-    await signOutCustomer();
-    closeMenus();
-  };
-
-  return (
-    <nav className="fashion-nav" aria-label="Điều hướng chính">
-      <div className="fashion-nav__announcement" role="status">
-        <span>WEARO / 2026</span>
-        <span>FREE SHIPPING — ĐƠN TỪ 700K</span>
-        <span>AI VIRTUAL TRY-ON / BETA</span>
+  return <nav className="fashion-nav" aria-label={t("Điều hướng chính", "Main navigation")}>
+    <div className="fashion-nav__announcement" role="status"><span>WEARO / 2026</span><span>{t("MIỄN PHÍ VẬN CHUYỂN — ĐƠN TỪ 700K", "FREE SHIPPING — ORDERS FROM 700K")}</span><span>AI VIRTUAL TRY-ON / BETA</span></div>
+    <div className="fashion-nav__inner">
+      <Link to="/" className="fashion-brand" aria-label="WEARO home" onClick={handleBrandClick}><span className="fashion-brand__mark">W</span><span className="fashion-brand__copy"><span className="fashion-brand__name">WEARO<span>.</span></span><span className="fashion-brand__meta">AI FASHION / 2026</span></span></Link>
+      <div className="fashion-nav__links" aria-label={t("Điều hướng trang chính", "Primary navigation")}>
+        <div className={`fashion-shop-nav ${shopOpen ? "is-open" : ""}`} style={{ height: "72px", display: "flex", alignItems: "center", position: "relative", zIndex: 103 }}>
+          <button type="button" className="fashion-nav-link fashion-shop-trigger" aria-expanded={shopOpen} aria-haspopup="true" onClick={() => { setShopOpen(v => !v); setSearchOpen(false); setOpen(false); }} style={{ ...TOPBAR_TEXT_STYLE, position: "relative", zIndex: 104, color: "var(--foreground)", opacity: 1, visibility: "visible" }}><span>{t("Cửa hàng", "Shop")}</span><ChevronDown size={16} strokeWidth={2} aria-hidden="true" /></button>
+          {shopOpen && <div className="fashion-shop-mega" role="dialog" aria-label={t("Danh mục sản phẩm", "Shop categories")} style={{ position: "fixed", top: "96px", left: "50%", right: "auto", width: "min(860px, calc(100vw - 48px))", maxWidth: "860px", maxHeight: "calc(100vh - 120px)", overflow: "auto", transform: "translateX(-50%)", boxSizing: "border-box", zIndex: 100 }}><div className="fashion-shop-mega__intro"><span className="fashion-menu-kicker">COLLECTION / 2026</span><h2>{t("Mua theo danh mục", "Shop by category")}</h2><Link to="/shop" onClick={closeMenus} className="fashion-shop-all">{t("Xem tất cả sản phẩm", "View all products")} <ChevronRight size={15} aria-hidden="true" /></Link></div><div className="fashion-shop-category-grid">{CATEGORIES.map(category => <Link key={category.slug} to="/shop" search={{ category: category.slug }} onClick={closeMenus} className="fashion-shop-category"><span className="fashion-shop-category__image"><img src={category.image} alt="" loading="lazy" /></span><span className="fashion-shop-category__meta"><strong>{category.name}</strong><span>{t("Khám phá danh mục", "Explore category")}</span></span><ChevronRight size={15} aria-hidden="true" /></Link>)}</div></div>}
+        </div>
+        {DISCOVERY_LINKS.map(link => <Link key={link.label} to={link.to} onClick={closeMenus} className="fashion-discovery-link" activeProps={{ className: "fashion-discovery-link is-active" }}>{link.label === "New Arrivals" ? t("Hàng mới về", link.label) : link.label === "Collections" ? t("Bộ sưu tập", link.label) : link.label === "Best Sellers" ? t("Bán chạy", link.label) : t("Ưu đãi", link.label)}</Link>)}
+        {PRIMARY_LINKS.map(link => link.beta ? <Link key={link.to} to={link.to} className="fashion-ai-nav" activeProps={{ className: "fashion-ai-nav is-active" }} aria-label="AI Studio — Beta"><span className="fashion-ai-nav__label">AI Studio</span><span className="fashion-ai-nav__beta">BETA</span></Link> : <Link key={link.to} to={link.to} activeProps={{ className: "is-active" }} style={TOPBAR_TEXT_STYLE}>{link.label === "About" ? t("Giới thiệu", "About") : link.label}</Link>)}
       </div>
-
-      <div className="fashion-nav__inner">
-        <Link to="/" className="fashion-brand" aria-label="WEARO home" onClick={handleBrandClick}>
-          <span className="fashion-brand__mark">W</span>
-          <span className="fashion-brand__copy">
-            <span className="fashion-brand__name">WEARO<span>.</span></span>
-            <span className="fashion-brand__meta">AI FASHION / 2026</span>
-          </span>
-        </Link>
-
-        <div className="fashion-nav__links" aria-label="Điều hướng trang chính">
-          <div className={`fashion-shop-nav ${shopOpen ? "is-open" : ""}`} style={{ height: "72px", display: "flex", alignItems: "center", position: "relative", zIndex: 103 }}>
-            <button type="button" className="fashion-nav-link fashion-shop-trigger" aria-expanded={shopOpen} aria-haspopup="true" onClick={() => { setShopOpen((value) => !value); setSearchOpen(false); setOpen(false); }} style={{ ...TOPBAR_TEXT_STYLE, position: "relative", zIndex: 104, color: "var(--foreground)", opacity: 1, visibility: "visible" }}>
-              <span>Shop</span>
-              <ChevronDown size={16} strokeWidth={2} aria-hidden="true" />
-            </button>
-            {shopOpen && (
-              <div className="fashion-shop-mega" role="dialog" aria-label="Shop categories" style={{ position: "fixed", top: "96px", left: "50%", right: "auto", width: "min(860px, calc(100vw - 48px))", maxWidth: "860px", maxHeight: "calc(100vh - 120px)", overflow: "auto", transform: "translateX(-50%)", boxSizing: "border-box", zIndex: 100 }}>
-                <div className="fashion-shop-mega__intro">
-                  <span className="fashion-menu-kicker">COLLECTION / 2026</span>
-                  <h2>Shop by category</h2>
-                  <Link to="/shop" onClick={closeMenus} className="fashion-shop-all">View all products <ChevronRight size={15} aria-hidden="true" /></Link>
-                </div>
-                <div className="fashion-shop-category-grid">
-                  {CATEGORIES.map((category) => (
-                    <Link key={category.slug} to="/shop" search={{ category: category.slug }} onClick={closeMenus} className="fashion-shop-category">
-                      <span className="fashion-shop-category__image"><img src={category.image} alt="" loading="lazy" /></span>
-                      <span className="fashion-shop-category__meta"><strong>{category.name}</strong><span>Explore category</span></span>
-                      <ChevronRight size={15} aria-hidden="true" />
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {DISCOVERY_LINKS.map((link) => (
-            <Link key={link.label} to={link.to} onClick={closeMenus} className="fashion-discovery-link" activeProps={{ className: "fashion-discovery-link is-active" }}>{link.label}</Link>
-          ))}
-
-          {PRIMARY_LINKS.map((link) => link.beta ? (
-            <Link key={link.to} to={link.to} className="fashion-ai-nav" activeProps={{ className: "fashion-ai-nav is-active" }} aria-label="AI Studio — Beta">
-              <span className="fashion-ai-nav__label">{link.label}</span>
-              <span className="fashion-ai-nav__beta">BETA</span>
-            </Link>
-          ) : (
-            <Link key={link.to} to={link.to} activeProps={{ className: "is-active" }} style={TOPBAR_TEXT_STYLE}>{link.label}</Link>
-          ))}
-        </div>
-
-        <div className="fashion-nav__actions">
-          <button type="button" className={`fashion-icon-btn fashion-search-toggle ${searchOpen ? "is-active" : ""}`} aria-label={searchOpen ? "Đóng tìm kiếm" : "Tìm kiếm sản phẩm"} aria-expanded={searchOpen} onClick={() => { setSearchOpen((value) => !value); setOpen(false); setShopOpen(false); }}>
-            {searchOpen ? <X size={21} strokeWidth={2} /> : <Search size={21} strokeWidth={2} />}
-          </button>
-          <Link to="/account" className="fashion-icon-btn fashion-account-btn" aria-label={customerEmail ? `Tài khoản ${customerEmail}` : "Tài khoản"} title={customerEmail ?? "Tài khoản"}><UserRound size={21} strokeWidth={2} /></Link>
-          <Link to="/account/wishlist" className="fashion-icon-btn fashion-wishlist-btn" aria-label="Danh sách yêu thích" title="Wishlist"><Heart size={21} strokeWidth={2} /></Link>
-          <Link to="/cart" className="fashion-cart-btn" aria-label="Giỏ hàng"><ShoppingBag size={21} strokeWidth={2} />{count > 0 && <span>{count}</span>}</Link>
-          {customerEmail && <button type="button" className="fashion-icon-btn fashion-logout-btn" aria-label="Đăng xuất" title="Đăng xuất" onClick={() => void handleLogout()}><LogOut size={20} strokeWidth={2} /></button>}
-          <div className="fashion-language-switcher" aria-label="Ngôn ngữ"><span className="is-active">VNĐ</span><span aria-hidden="true">|</span><span>EN</span></div>
-          <button type="button" className={`fashion-mobile-btn ${open ? "is-active" : ""}`} aria-label={open ? "Đóng menu" : "Mở menu"} aria-expanded={open} onClick={() => { setOpen((value) => !value); setSearchOpen(false); setShopOpen(false); }}>
-            {open ? <X size={23} strokeWidth={2} /> : <Menu size={23} strokeWidth={2} />}
-          </button>
-        </div>
+      <div className="fashion-nav__actions">
+        <button type="button" className={`fashion-icon-btn fashion-search-toggle ${searchOpen ? "is-active" : ""}`} aria-label={searchOpen ? t("Đóng tìm kiếm", "Close search") : t("Tìm kiếm sản phẩm", "Search products")} aria-expanded={searchOpen} onClick={() => { setSearchOpen(v => !v); setOpen(false); setShopOpen(false); }}>{searchOpen ? <X size={21} strokeWidth={2} /> : <Search size={21} strokeWidth={2} />}</button>
+        <Link to="/account" className="fashion-icon-btn fashion-account-btn" aria-label={customerEmail ? `${t("Tài khoản", "Account")} ${customerEmail}` : t("Tài khoản", "Account")} title={customerEmail ?? t("Tài khoản", "Account")}><UserRound size={21} strokeWidth={2} /></Link>
+        <Link to="/account/wishlist" className="fashion-icon-btn fashion-wishlist-btn" aria-label={t("Danh sách yêu thích", "Wishlist")} title={t("Yêu thích", "Wishlist")}><Heart size={21} strokeWidth={2} /></Link>
+        <Link to="/cart" className="fashion-cart-btn" aria-label={t("Giỏ hàng", "Cart")}><ShoppingBag size={21} strokeWidth={2} />{count > 0 && <span>{count}</span>}</Link>
+        {customerEmail && <button type="button" className="fashion-icon-btn fashion-logout-btn" aria-label={t("Đăng xuất", "Log out")} title={t("Đăng xuất", "Log out")} onClick={() => void handleLogout()}><LogOut size={20} strokeWidth={2} /></button>}
+        <button type="button" className="fashion-language-switcher" aria-label={t("Chuyển sang tiếng Anh", "Switch to Vietnamese")} onClick={switchLanguage}><span className={language === "vi" ? "is-active" : ""}>VI</span><span aria-hidden="true">|</span><span className={language === "en" ? "is-active" : ""}>EN</span></button>
+        <button type="button" className={`fashion-mobile-btn ${open ? "is-active" : ""}`} aria-label={open ? t("Đóng menu", "Close menu") : t("Mở menu", "Open menu")} aria-expanded={open} onClick={() => { setOpen(v => !v); setSearchOpen(false); setShopOpen(false); }}>{open ? <X size={23} strokeWidth={2} /> : <Menu size={23} strokeWidth={2} />}</button>
       </div>
-
-      {easterEggOpen && (
-        <button type="button" className="wearo-easter-egg" aria-label="Đóng system signature" onClick={() => setEasterEggOpen(false)}>
-          <span className="wearo-easter-egg__grid" aria-hidden="true" />
-          <span className="wearo-easter-egg__panel">
-            <span className="wearo-easter-egg__eyebrow">WEARO / SYSTEM 02</span>
-            <strong>UPTHINK</strong>
-            <span className="wearo-easter-egg__rule" />
-            <span>ORIGINAL SYSTEM</span>
-            <span>IUH — SAIGON / 2026</span>
-            <span className="wearo-easter-egg__status">SYS 02 // ONLINE</span>
-          </span>
-        </button>
-      )}
-
-      {searchOpen && (
-        <div className="fashion-search-panel">
-          <form onSubmit={submitSearch} className="fashion-search-form">
-            <label htmlFor="site-search" className="sr-only">Tìm kiếm sản phẩm</label>
-            <Search size={18} aria-hidden="true" />
-            <input id="site-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Tìm sản phẩm, phong cách..." autoFocus />
-            <button type="submit">Search</button>
-          </form>
-        </div>
-      )}
-
-      {open && (
-        <div className="fashion-mobile-menu" role="dialog" aria-label="WEARO menu">
-          <div className="fashion-menu-header"><div><span className="fashion-menu-kicker">WEARO / NAVIGATION</span><h2>Discover</h2></div><span className="fashion-menu-status">SYS 02 // ONLINE</span></div>
-          <div className="fashion-menu-grid">
-            <section className="fashion-menu-section">
-              <span className="fashion-menu-label">01 / EXPLORE</span>
-              <Link to="/shop" onClick={closeMenus}><span><strong>Shop</strong><small>Browse the collection</small></span><ChevronRight size={17} aria-hidden="true" /></Link>
-              <Link to="/ai" onClick={closeMenus}><span><strong>Style Lab</strong><small>Experiment with your look</small></span><ChevronRight size={17} aria-hidden="true" /></Link>
-            </section>
-            <section className="fashion-menu-section">
-              <span className="fashion-menu-label">02 / YOUR SPACE</span>
-              <Link to="/account/wishlist" onClick={closeMenus}><span><strong>Saved Looks</strong><small>Your saved fashion picks</small></span><ChevronRight size={17} aria-hidden="true" /></Link>
-              <Link to="/account/orders" onClick={closeMenus}><span><strong>My Orders</strong><small>Track your purchases</small></span><ChevronRight size={17} aria-hidden="true" /></Link>
-              <Link to="/account" onClick={closeMenus}><span><strong>My Account</strong><small>Profile and preferences</small></span><ChevronRight size={17} aria-hidden="true" /></Link>
-            </section>
-            <section className="fashion-menu-section fashion-menu-section--info">
-              <span className="fashion-menu-label">03 / INFORMATION</span>
-              <Link to="/about" onClick={closeMenus}><span><strong>About WEARO</strong></span><ChevronRight size={17} aria-hidden="true" /></Link>
-              <Link to="/about" onClick={closeMenus}><span><strong>How It Works</strong></span><ChevronRight size={17} aria-hidden="true" /></Link>
-              <button type="button" onClick={() => { setOpen(false); setSearchOpen(true); }}><span><Search size={15} aria-hidden="true" /><strong>Search</strong></span><ChevronRight size={17} aria-hidden="true" /></button>
-              <Link to="/about" onClick={closeMenus}><span><CircleHelp size={15} aria-hidden="true" /><strong>FAQ / Support</strong></span><ChevronRight size={17} aria-hidden="true" /></Link>
-            </section>
-          </div>
-          <div className="fashion-menu-footer"><span>WEARO / AI FASHION — 2026</span><span>SYS 02 // ONLINE</span></div>
-        </div>
-      )}
-    </nav>
-  );
+    </div>
+    {easterEggOpen && <button type="button" className="wearo-easter-egg" aria-label={t("Đóng system signature", "Close system signature")} onClick={() => setEasterEggOpen(false)}><span className="wearo-easter-egg__grid" aria-hidden="true" /><span className="wearo-easter-egg__panel"><span className="wearo-easter-egg__eyebrow">WEARO / SYSTEM 02</span><strong>UPTHINK</strong><span className="wearo-easter-egg__rule" /><span>ORIGINAL SYSTEM</span><span>IUH — SAIGON / 2026</span><span className="wearo-easter-egg__status">SYS 02 // ONLINE</span></span></button>}
+    {searchOpen && <div className="fashion-search-panel"><form onSubmit={submitSearch} className="fashion-search-form"><label htmlFor="site-search" className="sr-only">{t("Tìm kiếm sản phẩm", "Search products")}</label><Search size={18} aria-hidden="true" /><input id="site-search" type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder={t("Tìm sản phẩm, phong cách...", "Search products, styles...")} autoFocus /><button type="submit">{t("Tìm", "Search")}</button></form></div>}
+    {open && <div className="fashion-mobile-menu" role="dialog" aria-label="WEARO menu"><div className="fashion-menu-header"><div><span className="fashion-menu-kicker">WEARO / NAVIGATION</span><h2>{t("Khám phá", "Discover")}</h2></div><span className="fashion-menu-status">SYS 02 // ONLINE</span></div><div className="fashion-menu-grid"><section className="fashion-menu-section"><span className="fashion-menu-label">01 / EXPLORE</span><Link to="/shop" onClick={closeMenus}><span><strong>{t("Cửa hàng", "Shop")}</strong><small>{t("Xem bộ sưu tập", "Browse the collection")}</small></span><ChevronRight size={17} /></Link><Link to="/ai" onClick={closeMenus}><span><strong>Style Lab</strong><small>{t("Thử nghiệm phong cách", "Experiment with your look")}</small></span><ChevronRight size={17} /></Link></section><section className="fashion-menu-section"><span className="fashion-menu-label">02 / YOUR SPACE</span><Link to="/account/wishlist" onClick={closeMenus}><span><strong>{t("Đã lưu", "Saved Looks")}</strong><small>{t("Các lựa chọn thời trang đã lưu", "Your saved fashion picks")}</small></span><ChevronRight size={17} /></Link><Link to="/account/orders" onClick={closeMenus}><span><strong>{t("Đơn hàng", "My Orders")}</strong><small>{t("Theo dõi đơn hàng", "Track your purchases")}</small></span><ChevronRight size={17} /></Link><Link to="/account" onClick={closeMenus}><span><strong>{t("Tài khoản", "My Account")}</strong><small>{t("Hồ sơ và tùy chọn", "Profile and preferences")}</small></span><ChevronRight size={17} /></Link></section><section className="fashion-menu-section fashion-menu-section--info"><span className="fashion-menu-label">03 / INFORMATION</span><Link to="/about" onClick={closeMenus}><span><strong>{t("Về WEARO", "About WEARO")}</strong></span><ChevronRight size={17} /></Link><Link to="/about" onClick={closeMenus}><span><strong>{t("Cách hoạt động", "How It Works")}</strong></span><ChevronRight size={17} /></Link><button type="button" onClick={() => { setOpen(false); setSearchOpen(true); }}><span><Search size={15} /><strong>{t("Tìm kiếm", "Search")}</strong></span><ChevronRight size={17} /></button><Link to="/about" onClick={closeMenus}><span><CircleHelp size={15} /><strong>FAQ / Support</strong></span><ChevronRight size={17} /></Link></section></div><div className="fashion-menu-footer"><span>WEARO / AI FASHION — 2026</span><span>SYS 02 // ONLINE</span></div></div>}
+  </nav>;
 }
