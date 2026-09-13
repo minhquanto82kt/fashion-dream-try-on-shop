@@ -21,9 +21,9 @@
 .fashion-brand__meta { font-size: 8px; letter-spacing: .2em; }
 
 .fashion-nav__links { flex: 1 1 auto; justify-content: center; align-items: center; gap: clamp(22px, 2.25vw, 38px); min-width: 0; }
-.fashion-nav__links > a, .fashion-nav-link, .fashion-discovery-link { position: relative; font-size: 11px; font-weight: 650; letter-spacing: .19em; white-space: nowrap; transition: color .2s ease, opacity .2s ease; }
-.fashion-nav__links > a::after, .fashion-discovery-link::after { content: ""; position: absolute; left: 0; right: 0; bottom: -8px; height: 2px; background: var(--wearo-orange); transform: scaleX(0); transform-origin: right; transition: transform .22s ease; }
-.fashion-nav__links > a:hover::after, .fashion-nav__links > a.is-active::after, .fashion-discovery-link:hover::after, .fashion-discovery-link.is-active::after { transform: scaleX(1); transform-origin: left; }
+.fashion-nav__links > a:not(.fashion-ai-nav), .fashion-nav-link, .fashion-discovery-link { position: relative; font-size: 11px; font-weight: 650; letter-spacing: .19em; white-space: nowrap; transition: color .2s ease, opacity .2s ease; }
+.fashion-nav__links > a:not(.fashion-ai-nav)::after, .fashion-discovery-link::after { content: ""; position: absolute; left: 0; right: 0; bottom: -8px; height: 2px; background: var(--wearo-orange); transform: scaleX(0); transform-origin: right; transition: transform .22s ease; }
+.fashion-nav__links > a:not(.fashion-ai-nav):hover::after, .fashion-nav__links > a:not(.fashion-ai-nav).is-active::after, .fashion-discovery-link:hover::after, .fashion-discovery-link.is-active::after { transform: scaleX(1); transform-origin: left; }
 
 .fashion-shop-trigger { gap: 7px; border: 0; background: transparent; cursor: pointer; padding: 0; color: inherit; }
 .fashion-shop-trigger svg { transition: transform .2s ease; }
@@ -46,16 +46,18 @@
   text-decoration: none !important;
   box-shadow: none !important;
   white-space: nowrap;
+  position: relative;
   transition: background .18s ease, color .18s ease, border-color .18s ease;
 }
 
 .fashion-ai-nav__label {
   display: inline-block;
   color: inherit !important;
-  font: 700 10px/1 var(--ft-meta, Arial, sans-serif);
+  font: 700 10px/1 Arial, sans-serif;
   letter-spacing: .13em;
   opacity: 1 !important;
   visibility: visible !important;
+  white-space: nowrap;
 }
 
 .fashion-ai-nav__beta {
@@ -67,7 +69,7 @@
   border: 1px solid currentColor;
   background: var(--wearo-orange);
   color: var(--wearo-ink) !important;
-  font: 800 7px/1 var(--ft-meta, Arial, sans-serif);
+  font: 800 7px/1 Arial, sans-serif;
   letter-spacing: .1em;
 }
 
@@ -89,7 +91,7 @@
 .fashion-icon-btn:hover, .fashion-icon-btn.is-active, .fashion-cart-btn:hover { color: var(--wearo-orange); border-color: color-mix(in srgb, var(--wearo-orange) 60%, transparent); background: color-mix(in srgb, var(--wearo-orange) 9%, transparent); transform: translateY(-1px); }
 .fashion-cart-btn { position: relative; text-decoration: none; }
 .fashion-cart-btn span { right: -2px; top: -3px; width: 17px; height: 17px; border: 2px solid var(--wearo-ink); background: var(--wearo-orange-hot); color: #fff; font-size: 8px; font-weight: 800; }
-.fashion-language-switcher { display: inline-flex; align-items: center; gap: 6px; margin-left: 2px; padding-left: 8px; border-left: 1px solid color-mix(in srgb, var(--wearo-paper) 18%, transparent); font: 700 9px/1 var(--ft-meta, Arial, sans-serif); letter-spacing: .1em; opacity: .72; }
+.fashion-language-switcher { display: inline-flex; align-items: center; gap: 6px; margin-left: 2px; padding-left: 8px; border-left: 1px solid color-mix(in srgb, var(--wearo-paper) 18%, transparent); font: 700 9px/1 Arial, sans-serif; letter-spacing: .1em; opacity: .72; }
 .fashion-language-switcher .is-active { color: var(--wearo-orange); opacity: 1; }
 .fashion-logout-btn:hover { color: var(--wearo-orange-hot); }
 
@@ -97,7 +99,7 @@
   .fashion-nav__inner { width: min(100% - 36px, 1100px); gap: 18px; }
   .fashion-brand { min-width: 150px; }
   .fashion-nav__links { gap: 18px; }
-  .fashion-nav__links > a, .fashion-nav-link, .fashion-discovery-link { font-size: 10px; letter-spacing: .14em; }
+  .fashion-nav__links > a:not(.fashion-ai-nav), .fashion-nav-link, .fashion-discovery-link { font-size: 10px; letter-spacing: .14em; }
   .fashion-ai-nav { min-width: 0 !important; padding-inline: 7px !important; }
   .fashion-language-switcher { display: none; }
 }
