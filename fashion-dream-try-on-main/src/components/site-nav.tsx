@@ -16,6 +16,7 @@ import { CATEGORIES } from "@/data/products";
 import { useCart } from "@/lib/cart";
 import { getCustomerUser, signOutCustomer } from "@/lib/auth";
 import "@/styles/brand-easter-egg.css";
+import "@/styles/header-enhancements.css";
 
 const PRIMARY_LINKS = [
   { to: "/ai", label: "AI Studio", beta: true },
