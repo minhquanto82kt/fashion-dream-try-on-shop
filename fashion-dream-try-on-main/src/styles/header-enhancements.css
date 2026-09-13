@@ -36,7 +36,7 @@
 .fashion-shop-trigger svg { transition: transform .2s ease; }
 .fashion-shop-nav.is-open .fashion-shop-trigger svg { transform: rotate(180deg); color: var(--wearo-orange); }
 
-/* AI Studio: label stays centered; BETA is an orange price-tag badge at the top-right. */
+/* AI Studio: clean label with a compact BETA badge perched at the top-right. */
 .fashion-ai-nav {
   display: inline-flex !important;
   align-items: center !important;
@@ -57,7 +57,7 @@
   align-self: center !important;
   line-height: 1 !important;
   box-sizing: border-box !important;
-  transition: color .18s ease, opacity .18s ease;
+  transition: color .18s ease, opacity .18s ease, transform .28s cubic-bezier(.22, 1, .36, 1);
 }
 .fashion-ai-nav::after { display: none !important; }
 .fashion-ai-nav__label {
@@ -72,11 +72,12 @@
   visibility: visible !important;
   white-space: nowrap;
 }
-/* BETA badge — orange price-tag style (2 tones), top-right of AI Studio */
+
+/* BETA badge — compact notification-style tag, slightly floating above the corner. */
 .fashion-ai-nav__beta {
   position: absolute !important;
-  top: -8px !important;
-  right: -22px !important;
+  top: -10px !important;
+  right: -20px !important;
   z-index: 5;
   display: inline-flex;
   align-items: center;
@@ -92,13 +93,27 @@
   text-transform: uppercase;
   border: none;
   border-radius: 3px 2px 2px 3px;
-  clip-path: polygon(0 0, 82% 0, 100% 50%, 82% 100%, 0 100%);
-  transform: rotate(6deg);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 8px 100%, 0 72%);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.28);
   pointer-events: none;
   white-space: nowrap;
+  transition: transform .28s cubic-bezier(.22, 1, .36, 1), box-shadow .28s ease;
 }
-/* Hole on the right of the tag */
+
+/* Small downward pointer visually hooks the badge onto the AI Studio corner. */
+.fashion-ai-nav__beta::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  bottom: -4px;
+  width: 7px;
+  height: 7px;
+  background: #e45826;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  pointer-events: none;
+}
+
+/* Tiny notification hole/detail remains on the far-right. */
 .fashion-ai-nav__beta::after {
   content: "";
   position: absolute;
@@ -112,15 +127,19 @@
   box-shadow: 0 0 0 1.5px #e45826;
   pointer-events: none;
 }
+
+/* Natural lift: the whole AI Studio control rises slightly, then settles back smoothly. */
 .fashion-ai-nav:hover,
 .fashion-ai-nav.is-active {
   color: var(--wearo-orange) !important;
+  transform: translateY(-2px);
 }
-/* Keep tag colors stable on hover/active */
 .fashion-ai-nav:hover .fashion-ai-nav__beta,
 .fashion-ai-nav.is-active .fashion-ai-nav__beta {
   background: linear-gradient(90deg, #f0a500 0%, #f0a500 52%, #e45826 52%, #e45826 100%);
   color: #fff !important;
+  transform: translateY(-1px) rotate(1deg);
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.25);
 }
 
 .fashion-nav__actions { flex: 0 0 auto; gap: 7px; padding-left: 8px; border-left: 1px solid color-mix(in srgb, var(--wearo-paper) 18%, transparent); }
@@ -174,3 +193,8 @@
 .fashion-nav__links > .fashion-discovery-link::after,
 .fashion-nav__links > a:not(.fashion-ai-nav)[style]::after { bottom: -4px; height: 2px; }
 .fashion-nav__links > a:not(.fashion-ai-nav)[style]:hover, .fashion-nav__links > a:not(.fashion-ai-nav)[style].is-active { color: var(--wearo-orange) !important; opacity: 1 !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fashion-ai-nav,
+  .fashion-ai-nav__beta { transition: none !important; }
+}
