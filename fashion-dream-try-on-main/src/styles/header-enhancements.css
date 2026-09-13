@@ -57,7 +57,6 @@
   min-width: 0;
 }
 
-/* All normal navigation items share one contained hover treatment. */
 .fashion-nav__links > a:not(.fashion-ai-nav),
 .fashion-nav-link,
 .fashion-discovery-link {
@@ -110,7 +109,6 @@
   color: var(--wearo-orange);
 }
 
-/* Compact AI Studio CTA: no generic nav underline and no oversized pill treatment. */
 .fashion-ai-nav {
   display: inline-flex !important;
   flex-direction: row !important;
@@ -168,7 +166,6 @@
   color: var(--wearo-orange) !important;
 }
 
-/* Keep every interactive element visually inside the header box. */
 .fashion-nav__actions {
   flex: 0 0 auto;
   gap: 7px;
@@ -255,4 +252,39 @@
   .fashion-icon-btn,
   .fashion-cart-btn,
   .fashion-mobile-btn { width: 35px; height: 35px; }
+}
+
+/* Header alignment fix: normalize the text controls to the same visual center. */
+.fashion-nav__links > .fashion-shop-nav {
+  height: var(--wearo-header-height) !important;
+  min-height: var(--wearo-header-height) !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.fashion-nav__links > .fashion-shop-nav > .fashion-shop-trigger,
+.fashion-nav__links > .fashion-discovery-link,
+.fashion-nav__links > a:not(.fashion-ai-nav)[style] {
+  height: 32px !important;
+  min-height: 32px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  box-sizing: border-box;
+}
+
+/* The indicator belongs directly under the label, never at the header edge. */
+.fashion-nav__links > .fashion-shop-nav > .fashion-shop-trigger::after,
+.fashion-nav__links > .fashion-discovery-link::after,
+.fashion-nav__links > a:not(.fashion-ai-nav)[style]::after {
+  bottom: -4px;
+  height: 2px;
+}
+
+/* About uses an inline classless active state; keep it on the same baseline. */
+.fashion-nav__links > a:not(.fashion-ai-nav)[style]:hover,
+.fashion-nav__links > a:not(.fashion-ai-nav)[style].is-active {
+  color: var(--wearo-orange) !important;
+  opacity: 1 !important;
 }
