@@ -196,6 +196,122 @@
   color: var(--brand-accent);
 }
 
+/* AI Studio consent gate — scoped to the pre-workspace notice only. */
+main:has(> section > h1) {
+  min-height: calc(100vh - 96px) !important;
+  padding-top: 112px !important;
+  padding-bottom: 64px !important;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(240, 165, 0, .08), transparent 42%),
+    var(--background) !important;
+}
+
+main:has(> section > h1) > section {
+  position: relative;
+  max-width: 820px !important;
+  border: 1px solid rgba(240, 165, 0, .42) !important;
+  background: #1b1a17 !important;
+  box-shadow: 10px 10px 0 rgba(240, 165, 0, .12), 0 30px 80px rgba(0, 0, 0, .38) !important;
+}
+
+main:has(> section > h1) > section::before {
+  content: "✦";
+  display: block;
+  width: 34px;
+  height: 34px;
+  margin-bottom: 14px;
+  border: 1px solid #f0a500;
+  background: #f0a500;
+  color: #1b1a17;
+  font: 700 20px/32px var(--ft-meta);
+  text-align: center;
+}
+
+main:has(> section > h1) > section > h1 {
+  margin-top: 0 !important;
+  font-size: clamp(42px, 6vw, 68px) !important;
+  line-height: .94 !important;
+  letter-spacing: -.015em !important;
+  color: #f0a500 !important;
+}
+
+main:has(> section > h1) > section > p:not(.eyebrow) {
+  max-width: 680px !important;
+  font-size: 15px !important;
+  line-height: 1.65 !important;
+  color: #e6d5b8 !important;
+}
+
+main:has(> section > h1) > section > div {
+  max-height: 360px !important;
+  margin-top: 28px !important;
+  padding: 22px 24px !important;
+  border: 1px solid rgba(230, 213, 184, .22) !important;
+  border-left: 3px solid #f0a500 !important;
+  background: #12110f !important;
+  color: #e6d5b8 !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  scrollbar-width: thin;
+  scrollbar-color: #f0a500 #12110f;
+}
+
+main:has(> section > h1) > section > div::-webkit-scrollbar {
+  width: 6px;
+}
+
+main:has(> section > h1) > section > div::-webkit-scrollbar-track {
+  background: #12110f;
+}
+
+main:has(> section > h1) > section > div::-webkit-scrollbar-thumb {
+  background: #f0a500;
+  border-radius: 999px;
+}
+
+main:has(> section > h1) > section > div h2 {
+  font-size: 13px !important;
+  letter-spacing: .08em !important;
+  color: #f0a500 !important;
+}
+
+main:has(> section > h1) > section > label {
+  margin-top: 22px !important;
+  gap: 12px !important;
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+  color: #e6d5b8 !important;
+}
+
+main:has(> section > h1) > section > label input {
+  width: 18px !important;
+  height: 18px !important;
+  margin-top: 2px !important;
+  accent-color: #f0a500 !important;
+}
+
+main:has(> section > h1) > section > button {
+  min-height: 52px !important;
+  margin-top: 22px !important;
+  background: #f0a500 !important;
+  color: #1b1a17 !important;
+  font-weight: 800 !important;
+  letter-spacing: .2em !important;
+  box-shadow: 5px 5px 0 #e45826 !important;
+  transition: transform 160ms ease, opacity 160ms ease, box-shadow 160ms ease, filter 160ms ease !important;
+}
+
+main:has(> section > h1) > section > button:not(:disabled):hover {
+  transform: translate(2px, 2px) !important;
+  box-shadow: 3px 3px 0 #e45826 !important;
+  filter: brightness(1.08) !important;
+}
+
+main:has(> section > h1) > section > button:disabled {
+  opacity: .3 !important;
+  box-shadow: none !important;
+}
+
 @media (max-width: 1120px) {
   .fashion-discovery-link:nth-of-type(n+3) {
     display: none !important;
@@ -219,5 +335,20 @@
 
   .fashion-nav__announcement span:first-child {
     display: none;
+  }
+
+  main:has(> section > h1) {
+    padding-top: 96px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  main:has(> section > h1) > section {
+    padding: 22px !important;
+  }
+
+  main:has(> section > h1) > section > div {
+    max-height: 340px !important;
+    padding: 18px !important;
   }
 }
