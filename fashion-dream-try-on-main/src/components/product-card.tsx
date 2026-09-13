@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight, Heart } from "lucide-react";
-import { formatPrice, type Product } from "@/data/products";
-import { useI18n } from "@/lib/i18n";
+import type { Product } from "@/data/products";
+import { formatPrice, useI18n } from "@/lib/i18n";
 
 export function ProductCard({ product }: { product: Product }) {
   const { language } = useI18n();
