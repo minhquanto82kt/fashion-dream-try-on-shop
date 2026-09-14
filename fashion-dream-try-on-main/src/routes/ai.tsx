@@ -136,30 +136,34 @@ function AiConsentGate({ onContinue }: { onContinue: () => void }) {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen overflow-x-hidden bg-background">
       <SiteNav />
-      <main className="flex min-h-[calc(100vh-5rem)] items-center px-5 py-16 sm:px-12 sm:py-24">
-        <section className="mx-auto w-full max-w-2xl border border-border bg-card p-6 sm:p-10">
+      <main className="flex min-h-[calc(100vh-5rem)] items-center justify-center px-4 py-12 sm:px-8 sm:py-20 lg:px-12">
+        <section className="mx-auto w-full max-w-3xl border border-border bg-card p-6 sm:p-10 lg:max-w-4xl lg:p-12">
           <p className="eyebrow">AI Experience · Notice</p>
-          <h1 className="mt-3 text-3xl leading-tight sm:text-4xl">Quy định sử dụng AI Studio</h1>
-          <p className="mt-3 max-w-xl text-sm leading-6 text-beige sm:text-[15px]">
+          <h1 className="mt-3 text-3xl leading-tight sm:text-4xl lg:text-5xl">
+            Quy định sử dụng AI Studio
+          </h1>
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-beige sm:text-[15px]">
             Để trải nghiệm AI Studio an toàn và tốt nhất, vui lòng đọc nhanh các quy định sau rồi
             xác nhận đồng ý.
           </p>
 
-          <div className="mt-7 space-y-4 rounded-xl border border-border bg-background p-4 sm:p-5">
+          <div className="mt-7 space-y-4 rounded-xl border border-border bg-background p-4 sm:p-6">
             {rules.map((rule, idx) => {
               const Icon = rule.icon;
               return (
-                <div key={idx} className="flex gap-3">
-                  <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full border border-border bg-card text-primary">
-                    <Icon className="size-4" strokeWidth={1.75} />
+                <div key={idx} className="flex gap-3 sm:gap-4">
+                  <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full border border-border bg-card text-primary sm:size-9">
+                    <Icon className="size-4 sm:size-[18px]" strokeWidth={1.75} />
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium text-foreground">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-foreground sm:text-[15px]">
                       {idx + 1}. {rule.title}
                     </p>
-                    <p className="mt-0.5 text-[13px] leading-5 text-silver">{rule.text}</p>
+                    <p className="mt-0.5 text-[13px] leading-5 text-silver sm:text-sm sm:leading-6">
+                      {rule.text}
+                    </p>
                   </div>
                 </div>
               );
