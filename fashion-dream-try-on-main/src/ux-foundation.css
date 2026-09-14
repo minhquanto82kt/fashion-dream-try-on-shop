@@ -289,11 +289,8 @@ main {
 
 /* ============================================================
    AI Consent panel
-   - Wide horizontal card
-   - Never cause horizontal scrollbar (esp. at 90% zoom)
    ============================================================ */
 
-/* Kill horizontal overflow at the root for this experience */
 html,
 body {
   overflow-x: hidden !important;
@@ -301,7 +298,6 @@ body {
 }
 
 .ai-consent-panel {
-  /* Fill parent; parent already has side padding — do NOT use 92vw */
   width: 100% !important;
   max-width: 1100px !important;
   min-width: 0 !important;
@@ -330,4 +326,61 @@ body {
   overflow: visible !important;
   max-width: 100% !important;
   box-sizing: border-box !important;
+}
+
+/* Custom checkbox — aligned + WEARO style */
+.ai-consent-check {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
+  cursor: pointer !important;
+  margin-top: 24px !important;
+  user-select: none !important;
+}
+
+.ai-consent-check input[type="checkbox"] {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  min-height: 18px !important;
+  margin: 2px 0 0 0 !important;
+  padding: 0 !important;
+  flex-shrink: 0 !important;
+  border: 1.5px solid var(--primary, #f2e205) !important;
+  border-radius: 2px !important;
+  background: transparent !important;
+  cursor: pointer !important;
+  position: relative !important;
+  transition: background .15s ease, border-color .15s ease !important;
+}
+
+.ai-consent-check input[type="checkbox"]:checked {
+  background: var(--primary, #f2e205) !important;
+  border-color: var(--primary, #f2e205) !important;
+}
+
+.ai-consent-check input[type="checkbox"]:checked::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 5px !important;
+  top: 1px !important;
+  width: 5px !important;
+  height: 10px !important;
+  border: solid var(--primary-foreground, #010626) !important;
+  border-width: 0 2px 2px 0 !important;
+  transform: rotate(45deg) !important;
+}
+
+.ai-consent-check input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--primary, #f2e205) !important;
+  outline-offset: 2px !important;
+}
+
+.ai-consent-check span {
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  color: var(--beige, #594b02) !important;
+  padding-top: 0 !important;
 }
