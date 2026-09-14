@@ -141,8 +141,9 @@ function AiConsentGate({ onContinue }: { onContinue: () => void }) {
         <section
           className="w-full border border-border bg-card"
           style={{
-            maxWidth: "1000px",
-            padding: "28px 32px 32px",
+            maxWidth: "min(92vw, 1100px)",
+            width: "100%",
+            padding: "28px 40px 32px",   // tăng padding ngang
             overflow: "visible",
             overflowWrap: "normal",
             wordBreak: "normal",
