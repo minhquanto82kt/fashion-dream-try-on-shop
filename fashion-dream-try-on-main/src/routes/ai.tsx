@@ -136,25 +136,19 @@ function AiConsentGate({ onContinue }: { onContinue: () => void }) {
   return (
     <div className="min-h-screen overflow-x-hidden bg-background">
       <SiteNav />
-      <main className="flex min-h-[calc(100vh-5rem)] w-full items-center justify-center px-4 py-10 sm:px-8 sm:py-14">
-        <section className="ai-consent-panel relative w-full max-w-4xl">
+      <main className="flex min-h-[calc(100vh-5rem)] w-full items-center justify-center px-3 py-8 sm:px-8 sm:py-14">
+        <section className="ai-consent-panel w-full">
           {step === 2 && (
-            <button
-              type="button"
-              onClick={() => setStep(1)}
-              className="absolute right-0 top-0 text-[12px] text-silver transition-colors hover:text-primary"
-            >
+            <button type="button" onClick={() => setStep(1)} className="ai-consent-back">
               ← Quay lại
             </button>
           )}
 
           <p className="eyebrow">AI Experience · Notice</p>
 
-          <h1 className="mt-3 text-[28px] font-semibold leading-tight text-primary sm:text-4xl">
-            Quy định sử dụng AI Studio
-          </h1>
+          <h1 className="mt-3 font-semibold text-primary">Quy định sử dụng AI Studio</h1>
 
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-beige sm:text-[15px]">
+          <p className="mt-3 text-sm leading-6 text-beige sm:text-[15px]">
             {step === 1
               ? "Đọc nhanh 2 quy định đầu, rồi bấm Đọc tiếp để xem phần còn lại và xác nhận."
               : "Đọc xong các quy định cuối, tick xác nhận rồi bấm Tiếp tục."}
@@ -162,7 +156,7 @@ function AiConsentGate({ onContinue }: { onContinue: () => void }) {
 
           <div
             key={step}
-            className="mt-7 space-y-5"
+            className="mt-6 space-y-4 sm:mt-7 sm:space-y-5"
             style={{
               animation: "aiConsentFade 0.35s ease-out",
             }}
@@ -189,14 +183,14 @@ function AiConsentGate({ onContinue }: { onContinue: () => void }) {
             <button
               type="button"
               onClick={() => setStep(2)}
-              className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-primary transition-opacity hover:opacity-80"
+              className="mt-7 inline-flex min-h-11 items-center gap-2 text-sm font-medium text-primary transition-opacity hover:opacity-80 sm:mt-8"
             >
               Đọc tiếp
               <ArrowRight className="size-4" />
             </button>
           ) : (
             <>
-              <label className="ai-consent-check mt-8">
+              <label className="ai-consent-check mt-7 sm:mt-8">
                 <input
                   type="checkbox"
                   checked={checked}
@@ -216,7 +210,7 @@ function AiConsentGate({ onContinue }: { onContinue: () => void }) {
             </>
           )}
 
-          <p className="mt-6 text-center text-[11px] leading-5 text-silver">
+          <p className="mt-5 text-center text-[11px] leading-5 text-silver sm:mt-6">
             Bạn có thể rời trang này bất cứ lúc nào.
           </p>
         </section>
