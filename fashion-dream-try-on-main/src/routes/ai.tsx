@@ -133,111 +133,29 @@ function AiConsentGate({ onContinue }: { onContinue: () => void }) {
   return (
     <div className="min-h-screen bg-background">
       <SiteNav />
-      <main
-        className="flex min-h-[calc(100vh-5rem)] items-center justify-center px-3 py-8 sm:px-6 sm:py-12"
-        style={{ overflowX: "visible" }}
-      >
-        {/* Horizontal rectangle: wider than tall, fixed readable width */}
-        <section
-          className="w-full border border-border bg-card"
-          style={{
-            maxWidth: "min(92vw, 1100px)",
-            width: "100%",
-            padding: "28px 40px 32px",   // tăng padding ngang
-            overflow: "visible",
-            overflowWrap: "normal",
-            wordBreak: "normal",
-          }}
-        >
+      <main className="flex min-h-[calc(100vh-5rem)] w-full items-center justify-center px-3 py-8 sm:px-6 sm:py-12">
+        {/* Class ai-consent-panel is forced by ux-foundation.css (loads last) */}
+        <section className="ai-consent-panel w-full border border-border bg-card px-8 py-8 sm:px-10 sm:py-10">
           <p className="eyebrow">AI Experience · Notice</p>
 
-          <h1
-            className="mt-3 text-primary"
-            style={{
-              fontSize: "clamp(26px, 4vw, 40px)",
-              fontWeight: 600,
-              lineHeight: 1.2,
-              letterSpacing: "-0.02em",
-              textTransform: "none",
-              overflowWrap: "normal",
-              wordBreak: "normal",
-            }}
-          >
+          <h1 className="mt-3 text-[28px] font-semibold leading-tight text-primary sm:text-4xl">
             Quy định sử dụng AI Studio
           </h1>
 
-          <p
-            className="mt-3 text-beige"
-            style={{ fontSize: "15px", lineHeight: 1.6, overflowWrap: "normal" }}
-          >
+          <p className="mt-3 text-sm leading-6 text-beige sm:text-[15px]">
             Để trải nghiệm AI Studio an toàn và tốt nhất, vui lòng đọc nhanh các quy định sau rồi
             xác nhận đồng ý.
           </p>
 
-          {/* Rules box — fully contains all 5 items, no clipping */}
-          <div
-            className="mt-6 border border-border bg-background"
-            style={{
-              padding: "20px 24px",
-              overflow: "visible",
-              overflowWrap: "normal",
-              wordBreak: "normal",
-            }}
-          >
+          <div className="ai-consent-rules mt-6 space-y-4 border border-border bg-background px-5 py-5 sm:px-6 sm:py-6">
             {rules.map((rule, idx) => (
-              <div
-                key={idx}
-                style={{
-                  display: "flex",
-                  gap: "12px",
-                  marginBottom: idx === rules.length - 1 ? 0 : "18px",
-                  overflow: "visible",
-                  minWidth: 0,
-                }}
-              >
-                <span
-                  style={{
-                    flexShrink: 0,
-                    width: "24px",
-                    height: "24px",
-                    marginTop: "2px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: "9999px",
-                    border: "1px solid var(--border)",
-                    fontSize: "11px",
-                    fontWeight: 500,
-                    color: "var(--primary)",
-                  }}
-                >
+              <div key={idx} className="flex gap-3">
+                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border text-[11px] font-medium text-primary">
                   {idx + 1}
                 </span>
-                <div style={{ flex: "1 1 auto", minWidth: 0, overflow: "visible" }}>
-                  <p
-                    style={{
-                      margin: 0,
-                      fontSize: "14px",
-                      fontWeight: 500,
-                      lineHeight: 1.4,
-                      color: "var(--foreground)",
-                      overflowWrap: "normal",
-                      wordBreak: "normal",
-                    }}
-                  >
-                    {rule.title}
-                  </p>
-                  <p
-                    style={{
-                      margin: "4px 0 0",
-                      fontSize: "13px",
-                      lineHeight: 1.55,
-                      color: "var(--silver)",
-                      overflowWrap: "break-word",
-                      wordBreak: "normal",
-                      whiteSpace: "normal",
-                    }}
-                  >
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium leading-5 text-foreground">{rule.title}</p>
+                  <p className="mt-1 text-[13px] leading-5 text-silver sm:text-sm sm:leading-6">
                     {rule.text}
                   </p>
                 </div>
@@ -245,17 +163,14 @@ function AiConsentGate({ onContinue }: { onContinue: () => void }) {
             ))}
           </div>
 
-          <label
-            className="mt-6 flex cursor-pointer items-start gap-3"
-            style={{ overflowWrap: "normal" }}
-          >
+          <label className="mt-6 flex cursor-pointer items-start gap-3">
             <input
               type="checkbox"
               checked={checked}
               onChange={(e) => setChecked(e.target.checked)}
               className="mt-1 h-4 w-4 shrink-0 accent-primary"
             />
-            <span className="text-sm leading-6 text-beige" style={{ overflowWrap: "normal" }}>
+            <span className="text-sm leading-6 text-beige">
               Tôi đã đọc và chấp hành các quy định sử dụng AI Studio.
             </span>
           </label>
