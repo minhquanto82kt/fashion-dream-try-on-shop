@@ -137,21 +137,19 @@ function AiConsentGate({ onContinue }: { onContinue: () => void }) {
     <div className="min-h-screen overflow-x-hidden bg-background">
       <SiteNav />
       <main className="flex min-h-[calc(100vh-5rem)] w-full items-center justify-center px-4 py-10 sm:px-8 sm:py-14">
-        {/* No outer border — open layout to stay short and avoid scrollbar */}
-        <section className="ai-consent-panel w-full max-w-2xl">
+        <section className="ai-consent-panel w-full max-w-4xl">
           <p className="eyebrow">AI Experience · Notice</p>
 
           <h1 className="mt-3 text-[28px] font-semibold leading-tight text-primary sm:text-4xl">
             Quy định sử dụng AI Studio
           </h1>
 
-          <p className="mt-3 max-w-xl text-sm leading-6 text-beige sm:text-[15px]">
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-beige sm:text-[15px]">
             {step === 1
               ? "Đọc nhanh 2 quy định đầu, rồi bấm Đọc tiếp để xem phần còn lại và xác nhận."
               : "Đọc xong các quy định cuối, tick xác nhận rồi bấm Tiếp tục."}
           </p>
 
-          {/* Step content with fade animation */}
           <div
             key={step}
             className="mt-7 space-y-5"
