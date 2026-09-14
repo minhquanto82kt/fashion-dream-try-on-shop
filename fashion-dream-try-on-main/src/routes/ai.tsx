@@ -137,7 +137,17 @@ function AiConsentGate({ onContinue }: { onContinue: () => void }) {
     <div className="min-h-screen overflow-x-hidden bg-background">
       <SiteNav />
       <main className="flex min-h-[calc(100vh-5rem)] w-full items-center justify-center px-4 py-10 sm:px-8 sm:py-14">
-        <section className="ai-consent-panel w-full max-w-4xl">
+        <section className="ai-consent-panel relative w-full max-w-4xl">
+          {step === 2 && (
+            <button
+              type="button"
+              onClick={() => setStep(1)}
+              className="absolute right-0 top-0 text-[12px] text-silver transition-colors hover:text-primary"
+            >
+              ← Quay lại
+            </button>
+          )}
+
           <p className="eyebrow">AI Experience · Notice</p>
 
           <h1 className="mt-3 text-[28px] font-semibold leading-tight text-primary sm:text-4xl">
@@ -202,14 +212,6 @@ function AiConsentGate({ onContinue }: { onContinue: () => void }) {
                 className="mt-5 flex h-12 w-full items-center justify-center bg-primary text-xs font-medium uppercase tracking-[0.16em] text-primary-foreground transition-opacity disabled:cursor-not-allowed disabled:opacity-40"
               >
                 Tiếp tục
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setStep(1)}
-                className="mt-3 w-full text-center text-[11px] text-silver hover:text-beige"
-              >
-                ← Quay lại
               </button>
             </>
           )}
