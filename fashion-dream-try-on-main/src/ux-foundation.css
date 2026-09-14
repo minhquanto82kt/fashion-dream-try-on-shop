@@ -288,7 +288,7 @@ main {
 }
 
 /* ============================================================
-   AI Consent panel
+   AI Consent — progressive 2-step, open layout (no card border)
    ============================================================ */
 
 html,
@@ -299,33 +299,19 @@ body {
 
 .ai-consent-panel {
   width: 100% !important;
-  max-width: 1100px !important;
+  max-width: 42rem !important; /* ~max-w-2xl — short page, no vertical scroll */
   min-width: 0 !important;
   margin-left: auto !important;
   margin-right: auto !important;
   box-sizing: border-box !important;
   overflow-x: hidden !important;
-  overflow-wrap: break-word !important;
-  word-break: normal !important;
-}
-
-.ai-consent-panel,
-.ai-consent-panel * {
-  max-width: 100%;
-  overflow-wrap: break-word !important;
-  word-break: normal !important;
+  border: none !important;
+  background: transparent !important;
 }
 
 .ai-consent-panel h1 {
   text-transform: none !important;
   line-height: 1.2 !important;
-  max-width: 100% !important;
-}
-
-.ai-consent-rules {
-  overflow: visible !important;
-  max-width: 100% !important;
-  box-sizing: border-box !important;
 }
 
 /* Custom checkbox — aligned + WEARO style */
@@ -334,7 +320,6 @@ body {
   align-items: flex-start !important;
   gap: 12px !important;
   cursor: pointer !important;
-  margin-top: 24px !important;
   user-select: none !important;
 }
 
@@ -381,6 +366,6 @@ body {
 .ai-consent-check span {
   font-size: 14px !important;
   line-height: 1.5 !important;
-  color: var(--beige, #594b02) !important;
+  color: var(--beige, #c4b896) !important;
   padding-top: 0 !important;
 }
