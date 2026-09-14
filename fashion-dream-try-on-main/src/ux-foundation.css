@@ -299,7 +299,7 @@ body {
 
 .ai-consent-panel {
   width: 100% !important;
-  max-width: 42rem !important; /* ~max-w-2xl — short page, no vertical scroll */
+  max-width: min(56rem, 92vw) !important; /* wider horizontal layout */
   min-width: 0 !important;
   margin-left: auto !important;
   margin-right: auto !important;
