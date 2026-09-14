@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useMemo, useRef, useState } from "react";
-import { Loader2, Sparkles, Upload, Shield, Camera, Eye, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Loader2, Sparkles, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
@@ -109,73 +109,65 @@ function AiConsentGate({ onContinue }: { onContinue: () => void }) {
 
   const rules = [
     {
-      icon: Camera,
       title: "Quyền sử dụng ảnh",
       text: "Chỉ tải lên hình ảnh bạn có quyền sử dụng hoặc đã được người trong ảnh cho phép.",
     },
     {
-      icon: Shield,
       title: "Không vi phạm pháp luật",
       text: "Không dùng AI Studio để tạo nội dung vi phạm pháp luật, xâm phạm quyền riêng tư, danh dự hoặc quyền sở hữu trí tuệ.",
     },
     {
-      icon: Eye,
       title: "Kết quả chỉ mang tính tham khảo",
       text: "Hình ảnh thử đồ có thể khác sản phẩm thực tế về kích thước, màu sắc hoặc độ vừa vặn.",
     },
     {
-      icon: AlertTriangle,
       title: "Trách nhiệm nội dung",
       text: "Không tải ảnh chứa thông tin nhạy cảm nếu không cần thiết. Bạn chịu trách nhiệm về nội dung cung cấp.",
     },
     {
-      icon: CheckCircle2,
       title: "Xác nhận đồng ý",
       text: "Khi tiếp tục, bạn xác nhận đã đọc, hiểu và chấp hành các quy định sử dụng AI Studio.",
     },
   ];
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-background">
+    <div className="min-h-screen bg-background">
       <SiteNav />
-      <main className="flex min-h-[calc(100vh-5rem)] items-center justify-center px-4 py-12 sm:px-8 sm:py-20 lg:px-12">
-        <section className="mx-auto w-full max-w-3xl border border-border bg-card p-6 sm:p-10 lg:max-w-4xl lg:p-12">
+      <main className="flex min-h-[calc(100vh-5rem)] items-center justify-center px-4 py-10 sm:px-6 sm:py-16">
+        <section className="w-full max-w-[720px] border border-border bg-card px-5 py-7 sm:px-10 sm:py-10">
           <p className="eyebrow">AI Experience · Notice</p>
-          <h1 className="mt-3 text-3xl leading-tight sm:text-4xl lg:text-5xl">
+
+          <h1 className="mt-3 text-[28px] font-semibold leading-tight tracking-tight text-primary sm:text-4xl">
             Quy định sử dụng AI Studio
           </h1>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-beige sm:text-[15px]">
+
+          <p className="mt-3 text-sm leading-6 text-beige sm:text-[15px]">
             Để trải nghiệm AI Studio an toàn và tốt nhất, vui lòng đọc nhanh các quy định sau rồi
             xác nhận đồng ý.
           </p>
 
-          <div className="mt-7 space-y-4 rounded-xl border border-border bg-background p-4 sm:p-6">
-            {rules.map((rule, idx) => {
-              const Icon = rule.icon;
-              return (
-                <div key={idx} className="flex gap-3 sm:gap-4">
-                  <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full border border-border bg-card text-primary sm:size-9">
-                    <Icon className="size-4 sm:size-[18px]" strokeWidth={1.75} />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-foreground sm:text-[15px]">
-                      {idx + 1}. {rule.title}
-                    </p>
-                    <p className="mt-0.5 text-[13px] leading-5 text-silver sm:text-sm sm:leading-6">
-                      {rule.text}
-                    </p>
-                  </div>
+          <div className="mt-6 space-y-5 border border-border bg-background px-4 py-5 sm:px-6 sm:py-6">
+            {rules.map((rule, idx) => (
+              <div key={idx} className="flex gap-3">
+                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border text-[11px] font-medium text-primary">
+                  {idx + 1}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium leading-5 text-foreground">{rule.title}</p>
+                  <p className="mt-1 text-[13px] leading-5 text-silver sm:text-sm sm:leading-6">
+                    {rule.text}
+                  </p>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
 
-          <label className="mt-6 flex cursor-pointer items-start gap-3 rounded-lg border border-transparent p-2 transition-colors hover:border-border hover:bg-background/50">
+          <label className="mt-6 flex cursor-pointer items-start gap-3">
             <input
               type="checkbox"
               checked={checked}
               onChange={(e) => setChecked(e.target.checked)}
-              className="mt-1 size-4.5 shrink-0 accent-primary"
+              className="mt-1 h-4 w-4 shrink-0 accent-primary"
             />
             <span className="text-sm leading-6 text-beige">
               Tôi đã đọc và chấp hành các quy định sử dụng AI Studio.
@@ -186,7 +178,7 @@ function AiConsentGate({ onContinue }: { onContinue: () => void }) {
             type="button"
             disabled={!checked}
             onClick={onContinue}
-            className="mt-5 flex min-h-12 w-full items-center justify-center rounded-md bg-primary px-6 py-3 text-xs font-medium uppercase tracking-[0.16em] text-primary-foreground transition-all disabled:cursor-not-allowed disabled:opacity-40 enabled:hover:brightness-110"
+            className="mt-5 flex h-12 w-full items-center justify-center bg-primary text-xs font-medium uppercase tracking-[0.16em] text-primary-foreground transition-opacity disabled:cursor-not-allowed disabled:opacity-40"
           >
             Tiếp tục
           </button>
@@ -236,9 +228,7 @@ function ResultFrame({
           </div>
           <p className="text-xs uppercase tracking-[0.16em] text-silver">AI result</p>
           <p className="mt-3 text-[15px] leading-6 text-beige">{emptyLabel}</p>
-          {emptyHint && (
-            <p className="mt-2 text-xs leading-5 text-silver">{emptyHint}</p>
-          )}
+          {emptyHint && <p className="mt-2 text-xs leading-5 text-silver">{emptyHint}</p>}
         </div>
       )}
     </div>
