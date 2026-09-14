@@ -15,9 +15,10 @@ body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl 
 
 /* —— Desktop: 2 columns — controls | result —— */
 body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl {
-  max-width: 1320px;
-  display: grid;
-  grid-template-columns: minmax(380px, 440px) minmax(0, 1fr);
+  max-width: 1320px !important;
+  width: 100%;
+  display: grid !important;
+  grid-template-columns: 420px minmax(0, 1fr) !important;
   align-items: stretch;
   min-height: 620px;
   background: var(--card);
@@ -26,8 +27,8 @@ body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl 
 
 /* ResultFrame = first child → right column */
 body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:first-child {
-  grid-column: 2;
-  grid-row: 1;
+  grid-column: 2 !important;
+  grid-row: 1 !important;
   min-width: 0;
   min-height: 620px;
   height: 100%;
@@ -36,11 +37,11 @@ body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl 
 
 /* Controls = second child → left column */
 body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:nth-child(2) {
-  grid-column: 1;
-  grid-row: 1;
+  grid-column: 1 !important;
+  grid-row: 1 !important;
   min-width: 0;
-  width: 100%;
-  max-width: 100%;
+  width: 100% !important;
+  max-width: 100% !important;
   padding: 24px 22px;
   overflow-x: hidden;
   overflow-y: auto;
@@ -48,41 +49,27 @@ body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl 
   box-sizing: border-box;
 }
 
-/* Kill any accidental vertical writing from narrow flex crush */
+/* Kill vertical writing / letter stacking */
 body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl button,
 body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl label,
 body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl span,
 body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl p,
+body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl strong,
 body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl textarea {
   writing-mode: horizontal-tb !important;
   text-orientation: mixed !important;
-  white-space: normal;
 }
 
-/* Primary CTA buttons — always horizontal, full width of controls column */
-body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:nth-child(2) button.bg-primary {
+/* Prompt shell must stay stacked (textarea above, actions below) */
+body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:nth-child(2) [class*="focus-within:border-primary"] {
   display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  justify-content: center !important;
+  flex-direction: column !important;
   width: 100% !important;
-  min-height: 48px !important;
-  height: auto !important;
-  padding: 12px 20px !important;
-  white-space: nowrap !important;
-  writing-mode: horizontal-tb !important;
-  letter-spacing: 0.12em;
-  font-weight: 700;
-  border-radius: 999px;
+  max-width: 100% !important;
+  border-radius: 14px;
   box-sizing: border-box;
 }
 
-body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:nth-child(2) button.bg-primary:not(:disabled):hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 24px color-mix(in oklab, var(--primary) 24%, transparent);
-}
-
-/* Textarea + prompt box — full width, readable height */
 body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:nth-child(2) textarea {
   display: block;
   width: 100% !important;
@@ -95,20 +82,46 @@ body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl 
   box-sizing: border-box;
 }
 
-body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:nth-child(2) [class*="focus-within:border-primary"] {
-  width: 100%;
-  max-width: 100%;
-  border-radius: 14px;
+/* CTA inside prompt footer */
+body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:nth-child(2) [class*="focus-within:border-primary"] button.bg-primary {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  width: auto !important;
+  min-width: 140px;
+  min-height: 40px !important;
+  padding: 8px 18px !important;
+  white-space: nowrap !important;
+  border-radius: 999px;
+}
+
+/* Full-width primary CTAs outside prompt shell (Try-On start) */
+body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:nth-child(2) > button.bg-primary,
+body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:nth-child(2) > div > button.bg-primary:not([class*="rounded-full"]) {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  min-height: 48px !important;
+  padding: 12px 20px !important;
+  white-space: nowrap !important;
+  border-radius: 12px;
+  font-weight: 700;
   box-sizing: border-box;
 }
 
-/* Chip / mood row — wrap cleanly */
+body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:nth-child(2) button.bg-primary:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px color-mix(in oklab, var(--primary) 24%, transparent);
+}
+
+/* Chip row */
 body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:nth-child(2) .flex.flex-wrap {
   width: 100%;
   gap: 8px;
 }
 
-/* Upload dashed button — horizontal content, not vertical text */
+/* Upload dashed — horizontal */
 body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl button[class*="border-dashed"] {
   display: flex !important;
   flex-direction: row !important;
@@ -129,8 +142,8 @@ body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl 
 body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl button[class*="border-dashed"] span {
   writing-mode: horizontal-tb !important;
   white-space: normal !important;
-  text-transform: none;
-  letter-spacing: normal;
+  text-transform: none !important;
+  letter-spacing: normal !important;
 }
 
 body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl button[class*="border-dashed"]:hover {
@@ -138,7 +151,7 @@ body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl 
   background: color-mix(in oklab, var(--card) 72%, var(--primary) 7%);
 }
 
-/* Product grid — 2 cols in the control pane */
+/* Product grid */
 body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:nth-child(2) .grid {
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   gap: 10px !important;
@@ -156,23 +169,23 @@ body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl 
   white-space: nowrap;
 }
 
-/* Result empty state */
 body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:first-child img {
   max-height: min(68vh, 680px);
   border-radius: 2px;
 }
 
-/* —— Tablet / mobile: stack result on top —— */
+/* Tablet / mobile: stack */
 @media (max-width: 980px) {
   body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl {
-    display: flex;
-    flex-direction: column;
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: none !important;
     min-height: 0;
   }
 
   body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:first-child {
     order: 1;
-    grid-column: auto;
+    grid-column: auto !important;
     min-height: 420px;
     border-left: 0;
     border-bottom: 1px solid var(--border);
@@ -180,13 +193,8 @@ body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl 
 
   body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:nth-child(2) {
     order: 2;
-    grid-column: auto;
+    grid-column: auto !important;
     padding: 20px 16px;
-    max-height: none;
-  }
-
-  body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:nth-child(2) .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 }
 
@@ -198,10 +206,5 @@ body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl 
 
   body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:first-child {
     min-height: 360px;
-  }
-
-  body:has(main > section.mx-auto.w-full.max-w-4xl) main.mx-auto.w-full.max-w-5xl > section.mx-auto.w-full.max-w-4xl > div:nth-child(2) .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 8px !important;
   }
 }
