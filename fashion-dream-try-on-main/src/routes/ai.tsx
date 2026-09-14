@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useMemo, useRef, useState } from "react";
-import { Loader2, Sparkles, Upload } from "lucide-react";
+import { ArrowRight, Loader2, Sparkles, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
@@ -106,6 +106,7 @@ function AiPage() {
 
 function AiConsentGate({ onContinue }: { onContinue: () => void }) {
   const [checked, setChecked] = useState(false);
+  const [step, setStep] = useState<1 | 2>(1);
 
   const rules = [
     {
@@ -130,63 +131,103 @@ function AiConsentGate({ onContinue }: { onContinue: () => void }) {
     },
   ];
 
+  const visibleRules = step === 1 ? rules.slice(0, 2) : rules.slice(2);
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen overflow-x-hidden bg-background">
       <SiteNav />
-      <main className="flex min-h-[calc(100vh-5rem)] w-full items-center justify-center px-3 py-8 sm:px-6 sm:py-12">
-        <section className="ai-consent-panel w-full border border-border bg-card px-8 py-8 sm:px-10 sm:py-10">
+      <main className="flex min-h-[calc(100vh-5rem)] w-full items-center justify-center px-4 py-10 sm:px-8 sm:py-14">
+        {/* No outer border — open layout to stay short and avoid scrollbar */}
+        <section className="ai-consent-panel w-full max-w-2xl">
           <p className="eyebrow">AI Experience · Notice</p>
 
           <h1 className="mt-3 text-[28px] font-semibold leading-tight text-primary sm:text-4xl">
             Quy định sử dụng AI Studio
           </h1>
 
-          <p className="mt-3 text-sm leading-6 text-beige sm:text-[15px]">
-            Để trải nghiệm AI Studio an toàn và tốt nhất, vui lòng đọc nhanh các quy định sau rồi
-            xác nhận đồng ý.
+          <p className="mt-3 max-w-xl text-sm leading-6 text-beige sm:text-[15px]">
+            {step === 1
+              ? "Đọc nhanh 2 quy định đầu, rồi bấm Đọc tiếp để xem phần còn lại và xác nhận."
+              : "Đọc xong các quy định cuối, tick xác nhận rồi bấm Tiếp tục."}
           </p>
 
-          <div className="ai-consent-rules mt-6 space-y-4 border border-border bg-background px-5 py-5 sm:px-6 sm:py-6">
-            {rules.map((rule, idx) => (
-              <div key={idx} className="flex gap-3">
-                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border text-[11px] font-medium text-primary">
-                  {idx + 1}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium leading-5 text-foreground">{rule.title}</p>
-                  <p className="mt-1 text-[13px] leading-5 text-silver sm:text-sm sm:leading-6">
-                    {rule.text}
-                  </p>
+          {/* Step content with fade animation */}
+          <div
+            key={step}
+            className="mt-7 space-y-5"
+            style={{
+              animation: "aiConsentFade 0.35s ease-out",
+            }}
+          >
+            {visibleRules.map((rule, idx) => {
+              const num = step === 1 ? idx + 1 : idx + 3;
+              return (
+                <div key={num} className="flex gap-3">
+                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border text-[11px] font-medium text-primary">
+                    {num}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium leading-5 text-foreground">{rule.title}</p>
+                    <p className="mt-1 text-[13px] leading-5 text-silver sm:text-sm sm:leading-6">
+                      {rule.text}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
-          <label className="ai-consent-check">
-            <input
-              type="checkbox"
-              checked={checked}
-              onChange={(e) => setChecked(e.target.checked)}
-            />
-            <span>
-              Tôi đã đọc và chấp hành các quy định sử dụng AI Studio.
-            </span>
-          </label>
+          {step === 1 ? (
+            <button
+              type="button"
+              onClick={() => setStep(2)}
+              className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-primary transition-opacity hover:opacity-80"
+            >
+              Đọc tiếp
+              <ArrowRight className="size-4" />
+            </button>
+          ) : (
+            <>
+              <label className="ai-consent-check mt-8">
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  onChange={(e) => setChecked(e.target.checked)}
+                />
+                <span>Tôi đã đọc và chấp hành các quy định sử dụng AI Studio.</span>
+              </label>
 
-          <button
-            type="button"
-            disabled={!checked}
-            onClick={onContinue}
-            className="mt-5 flex h-12 w-full items-center justify-center bg-primary text-xs font-medium uppercase tracking-[0.16em] text-primary-foreground transition-opacity disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            Tiếp tục
-          </button>
+              <button
+                type="button"
+                disabled={!checked}
+                onClick={onContinue}
+                className="mt-5 flex h-12 w-full items-center justify-center bg-primary text-xs font-medium uppercase tracking-[0.16em] text-primary-foreground transition-opacity disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Tiếp tục
+              </button>
 
-          <p className="mt-4 text-center text-[11px] leading-5 text-silver">
-            Bạn có thể quay lại bất cứ lúc nào bằng cách rời trang này.
+              <button
+                type="button"
+                onClick={() => setStep(1)}
+                className="mt-3 w-full text-center text-[11px] text-silver hover:text-beige"
+              >
+                ← Quay lại
+              </button>
+            </>
+          )}
+
+          <p className="mt-6 text-center text-[11px] leading-5 text-silver">
+            Bạn có thể rời trang này bất cứ lúc nào.
           </p>
         </section>
       </main>
+
+      <style>{`
+        @keyframes aiConsentFade {
+          from { opacity: 0; transform: translateX(12px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+      `}</style>
     </div>
   );
 }
