@@ -286,3 +286,36 @@ main {
     scroll-behavior: auto !important;
   }
 }
+
+/* ============================================================
+   AI Consent panel — force horizontal rectangle width
+   Loaded last so it wins against ui-stabilization / Tailwind.
+   ============================================================ */
+.ai-consent-panel {
+  width: min(92vw, 1100px) !important;
+  max-width: min(92vw, 1100px) !important;
+  min-width: 0 !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+}
+
+.ai-consent-panel,
+.ai-consent-panel * {
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
+}
+
+.ai-consent-panel h1 {
+  text-transform: none !important;
+  line-height: 1.2 !important;
+  max-width: 100% !important;
+}
+
+.ai-consent-rules {
+  overflow: visible !important;
+  max-width: 100% !important;
+}
