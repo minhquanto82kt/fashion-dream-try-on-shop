@@ -288,23 +288,34 @@ main {
 }
 
 /* ============================================================
-   AI Consent panel — force horizontal rectangle width
-   Loaded last so it wins against ui-stabilization / Tailwind.
+   AI Consent panel
+   - Wide horizontal card
+   - Never cause horizontal scrollbar (esp. at 90% zoom)
    ============================================================ */
+
+/* Kill horizontal overflow at the root for this experience */
+html,
+body {
+  overflow-x: hidden !important;
+  max-width: 100% !important;
+}
+
 .ai-consent-panel {
-  width: min(92vw, 1100px) !important;
-  max-width: min(92vw, 1100px) !important;
+  /* Fill parent; parent already has side padding — do NOT use 92vw */
+  width: 100% !important;
+  max-width: 1100px !important;
   min-width: 0 !important;
   margin-left: auto !important;
   margin-right: auto !important;
   box-sizing: border-box !important;
-  overflow: visible !important;
-  overflow-wrap: normal !important;
+  overflow-x: hidden !important;
+  overflow-wrap: break-word !important;
   word-break: normal !important;
 }
 
 .ai-consent-panel,
 .ai-consent-panel * {
+  max-width: 100%;
   overflow-wrap: break-word !important;
   word-break: normal !important;
 }
@@ -318,4 +329,5 @@ main {
 .ai-consent-rules {
   overflow: visible !important;
   max-width: 100% !important;
+  box-sizing: border-box !important;
 }
