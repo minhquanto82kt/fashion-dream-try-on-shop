@@ -42,7 +42,7 @@ function Index() {
       <div className="fashion-hero__copy">
         <div className="fashion-hero__primary">
           <p className="fashion-eyebrow">01 / WEARO FASHION SYSTEM</p>
-          <h1 className="fashion-display">Wear it<br /><span className="fashion-accent">your way.</span></h1>
+          <h1 className="fashion-display"><span>Wear it</span><br /><span className="fashion-accent">your way.</span></h1>
           <p className="fashion-hero__lede">WEARO kết hợp thời trang, AI Virtual Try-On và AI Personal Stylist để bạn hình dung đúng outfit trên chính mình, chọn trọn bộ và mặc theo cách riêng.</p>
           <div className="fashion-hero__actions">
             <Link to="/shop" className="fashion-btn">Explore collection ↗</Link>
@@ -54,10 +54,14 @@ function Index() {
       <div className="fashion-hero__art">
         {HERO_SLIDES.map((item, index) => <img key={item.image} src={item.image} alt="WEARO fashion editorial" fetchPriority={index === 0 ? "high" : undefined} className={index === slide ? "is-active" : ""} />)}
         <div className="fashion-hero__overlay" /><div className="fashion-hero__scan" />
+        <div className="fashion-hero__frame" />
         <div className="fashion-hero__hud"><span className="fashion-hero__status"><b /> AI VISION / LIVE</span><span>{active.title}</span></div>
         <span className="fashion-hero__label">{active.label}</span><span className="fashion-hero__vertical">VIRTUAL FIT / PERSONAL EDIT</span>
+        <div className="fashion-hero__side-note"><span>YOUR STYLE</span><strong>YOUR STORY</strong></div>
         <div className="fashion-hero__dots" aria-label="Hero slides">{HERO_SLIDES.map((item, index) => <button key={item.label} type="button" aria-label={`Xem ${item.label}`} className={index === slide ? "is-active" : ""} onClick={() => setSlide(index)} />)}</div>
       </div>
+      <div className="fashion-hero__plus" aria-hidden="true">+</div>
+      <div className="fashion-hero__transition" aria-hidden="true"><span>02</span><i /></div>
     </header>
 
     <nav className="fashion-canvas-nav" aria-label="Homepage sections">
