@@ -13,7 +13,7 @@
 .fashion-hero::before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,var(--background) 0%,var(--background) 27%,color-mix(in oklab,var(--background) 96%,transparent) 40%,transparent 70%),linear-gradient(180deg,transparent 56%,color-mix(in oklab,var(--background) 78%,transparent) 86%,var(--background) 100%);pointer-events:none}
 .fashion-hero::after{content:"";position:absolute;left:7vw;right:7vw;bottom:0;height:1px;background:linear-gradient(90deg,transparent,var(--primary) 22%,var(--primary) 78%,transparent);opacity:.5;pointer-events:none}
 .fashion-hero__copy{position:relative;z-index:8;min-height:100%;width:min(650px,57vw);padding:clamp(54px,8vh,88px) 0 28px max(24px,calc((100% - 1240px)/2));display:flex;flex-direction:column;justify-content:space-between}
-.fashion-hero__primary{position:relative;max-width:650px}
+.fashion-hero__primary{position:relative;max-width:650px;transform:translateY(42px)}
 .fashion-hero__primary::before{content:"";position:absolute;left:-26px;top:4px;width:1px;height:62px;background:var(--primary);box-shadow:0 0 22px color-mix(in oklab,var(--primary) 65%,transparent)}
 .fashion-hero__primary::after{content:"01";position:absolute;left:-24px;top:-18px;font:9px var(--ft-meta);letter-spacing:.18em;color:var(--primary);transform:translateX(-100%)}
 .fashion-display{position:relative;z-index:3;margin-top:22px;text-shadow:0 18px 55px color-mix(in oklab,var(--background) 92%,transparent);max-width:720px}
@@ -65,7 +65,7 @@
   .fashion-hero{display:grid;grid-template-columns:1fr;min-height:0;height:auto;padding-top:64px}
   .fashion-hero::before{background:linear-gradient(180deg,var(--background) 0%,color-mix(in oklab,var(--background) 94%,transparent) 22%,transparent 48%,color-mix(in oklab,var(--background) 72%,transparent) 78%,var(--background) 100%)}
   .fashion-hero__copy{width:100%;min-height:0;padding:46px 20px 24px;display:block}
-  .fashion-hero__primary{max-width:100%}
+  .fashion-hero__primary{max-width:100%;transform:translateY(24px)}
   .fashion-display{max-width:100%;font-size:clamp(68px,19vw,105px)}
   .fashion-display>span:first-child{white-space:normal}
   .fashion-hero__lede{max-width:460px}
