@@ -1,0 +1,122 @@
+.fashion-hero__copy {
+  min-width: 0;
+  padding-right: clamp(32px, 5vw, 84px);
+}
+
+.fashion-hero__primary,
+.fashion-hero__lede,
+.fashion-ai-feature__copy > p:not(.fashion-eyebrow) {
+  max-width: 34rem;
+}
+
+.fashion-display {
+  font-size: clamp(4.5rem, 8.4vw, 8.25rem);
+  overflow-wrap: anywhere;
+}
+
+.fashion-hero__meta {
+  align-items: flex-end;
+}
+
+.fashion-intro-section {
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: clamp(20px, 3vw, 42px);
+}
+
+.fashion-intro-content {
+  max-width: 920px;
+}
+
+.fashion-section-title--statement {
+  width: min(100%, 820px);
+}
+
+.statement-line--solid {
+  line-height: .82;
+  letter-spacing: -.055em;
+}
+
+.statement-line--accent-small {
+  margin: clamp(16px, 2vw, 24px) 0 clamp(8px, 1.5vw, 16px) clamp(54px, 10vw, 170px);
+}
+
+.statement-line--accent-display {
+  margin-left: clamp(82px, 15vw, 250px);
+  max-width: calc(100% - clamp(82px, 15vw, 250px));
+  white-space: normal;
+}
+
+.fashion-ai-feature {
+  grid-template-columns: minmax(0, 1.08fr) minmax(18rem, .82fr);
+  gap: clamp(40px, 6vw, 76px);
+}
+
+.fashion-ai-feature__visual {
+  min-height: clamp(440px, 44vw, 580px);
+}
+
+.fashion-feature-list div {
+  align-items: baseline;
+}
+
+.fashion-feature-list b,
+.fashion-feature-list span {
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+}
+
+.fashion-products-section {
+  padding-inline: max(24px, calc((100% - 1240px) / 2));
+}
+
+.fashion-product-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.fashion-editorial {
+  grid-template-columns: minmax(0, 1.3fr) minmax(20rem, .7fr);
+}
+
+@media (max-width: 960px) {
+  .fashion-nav__inner {
+    width: calc(100% - 32px);
+    height: 64px;
+  }
+
+  .fashion-nav__links,
+  .fashion-ai-btn,
+  .fashion-brand__meta {
+    display: none;
+  }
+
+  .fashion-mobile-btn {
+    display: block;
+  }
+
+  .fashion-mobile-menu {
+    display: flex;
+  }
+
+  .fashion-hero {
+    grid-template-columns: minmax(0, 1fr) minmax(0, .9fr);
+    min-height: 660px;
+    height: auto;
+    padding-top: 64px;
+  }
+
+  .fashion-hero__copy {
+    padding: clamp(44px, 7vw, 70px) clamp(24px, 5vw, 48px) 30px 0;
+  }
+
+  .fashion-hero__art {
+    height: auto;
+  }
+
+  .fashion-ai-feature {
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, .8fr);
+    gap: 36px;
+  }
+
+  .fashion-editorial > div {
+    padding: clamp(40px, 5vw, 64px);
+  }
+}
