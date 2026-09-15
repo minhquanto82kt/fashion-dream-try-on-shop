@@ -14,7 +14,7 @@
 .fashion-hero::after{content:"";position:absolute;left:7vw;right:7vw;bottom:0;height:1px;background:linear-gradient(90deg,transparent,var(--primary) 22%,var(--primary) 78%,transparent);opacity:.5;pointer-events:none}
 .fashion-hero__copy{position:relative;z-index:8;min-height:100%;width:min(650px,57vw);padding:clamp(54px,8vh,88px) 0 28px max(24px,calc((100% - 1240px)/2));display:flex;flex-direction:column;justify-content:space-between}
 .fashion-hero__primary{position:relative;max-width:650px;transform:translateY(42px)}
-.fashion-hero__primary::before{content:"";position:absolute;left:-26px;top:4px;width:1px;height:62px;background:var(--primary);box-shadow:0 0 22px color-mix(in oklab,var(--primary) 65%,transparent)}
+.fashion-hero__primary::before{content:"01";position:absolute;left:-26px;top:4px;font:9px var(--ft-meta);letter-spacing:.18em;color:var(--primary)}
 .fashion-hero__primary::after{content:"01";position:absolute;left:-24px;top:-18px;font:9px var(--ft-meta);letter-spacing:.18em;color:var(--primary);transform:translateX(-100%)}
 .fashion-display{position:relative;z-index:3;margin-top:22px;text-shadow:0 18px 55px color-mix(in oklab,var(--background) 92%,transparent);max-width:720px}
 .fashion-display>span:first-child{display:inline-block;white-space:nowrap}
@@ -40,12 +40,15 @@
 .fashion-hero__label{z-index:9}
 .fashion-hero__dots{z-index:9}
 
-.fashion-intro-section{position:relative;z-index:2;margin-top:-1px;background:linear-gradient(180deg,var(--background),color-mix(in oklab,var(--background) 96%,var(--primary) 4%));}
-.fashion-intro-section::before{content:"";position:absolute;left:7vw;top:0;width:1px;height:54px;background:linear-gradient(var(--primary),transparent)}
-.fashion-intro-section::after{content:"";position:absolute;left:7vw;right:7vw;top:0;height:1px;background:linear-gradient(90deg,var(--primary),transparent 28%,transparent 72%,var(--primary));opacity:.24}
-.fashion-intro-content{position:relative}
+/* Manifesto: restore the full-bleed editorial image behind the statement. */
+.fashion-intro-section{position:relative;z-index:2;width:100%;min-height:clamp(560px,56vw,700px);margin-top:-1px;padding:clamp(24px,5vw,80px);overflow:hidden;isolation:isolate;color:var(--ft-paper);border-bottom:1px solid var(--border);background:var(--ft-ink);background-image:linear-gradient(to top,rgba(1,6,38,.94) 0%,rgba(1,6,38,.58) 42%,rgba(1,6,38,.08) 78%),var(--gradient-pixel-gold),url("https://cdn.builder.io/api/v1/image/assets%2Fa8cc818942044ac39bb81f5eaf3b051c%2Ffb7f96c4487844e9af8fec2c7e54bd4c");background-repeat:no-repeat;background-position:center;background-size:auto,cover,cover}
+.fashion-intro-section::before{content:"";position:absolute;left:clamp(24px,5vw,80px);top:clamp(24px,5vw,80px);width:1px;height:54px;background:linear-gradient(var(--primary),transparent);z-index:2}
+.fashion-intro-section::after{content:"";position:absolute;left:7vw;right:7vw;top:0;height:1px;background:linear-gradient(90deg,var(--primary),transparent 28%,transparent 72%,var(--primary));opacity:.3;z-index:2}
+.fashion-intro-section>.fashion-section-number{position:absolute;top:clamp(24px,5vw,80px);left:clamp(24px,5vw,80px);margin:0;z-index:3;color:var(--primary)}
+.fashion-intro-content{position:relative;z-index:3;min-height:clamp(512px,calc(56vw - 10vw),540px);width:100%;max-width:none;margin:0}
 .fashion-intro-content::after{content:"FASHION\A MEETS\A TECHNOLOGY";white-space:pre;position:absolute;right:0;top:8%;font:10px/1.45 var(--ft-meta);letter-spacing:.14em;color:color-mix(in oklab,var(--primary) 70%,var(--silver));text-transform:uppercase;text-align:right;opacity:.7}
-.fashion-section-title--statement{max-width:980px}
+.fashion-intro-content>.fashion-eyebrow{margin:0 0 clamp(18px,2vw,28px);padding-left:clamp(40px,4vw,56px);color:var(--primary)}
+.fashion-section-title--statement{max-width:min(720px,70%)}
 .fashion-collection-title{font-size:clamp(44px,5vw,72px)}
 .fashion-products-section .fashion-section-head{align-items:flex-end}
 
@@ -76,8 +79,11 @@
   .fashion-hero__side-note{display:none}
   .fashion-hero__plus{left:18px;bottom:26px;font-size:28px}
   .fashion-hero__transition{display:none}
-  .fashion-intro-section{padding-top:72px}
-  .fashion-intro-section::before{left:24px}
+  .fashion-intro-section{min-height:620px;padding:56px 24px 48px;background-position:center;background-size:auto,cover,cover}
+  .fashion-intro-content{min-height:516px}
+  .fashion-intro-section>.fashion-section-number{top:56px;left:24px}
+  .fashion-intro-content>.fashion-eyebrow{padding-left:42px}
+  .fashion-intro-section::before{left:24px;top:56px}
   .fashion-intro-section::after{left:24px;right:24px}
 }
 @media (prefers-reduced-motion:reduce){.fashion-canvas-nav__links a,.fashion-canvas-nav__top,.fashion-hero__art img{transition:none}}
