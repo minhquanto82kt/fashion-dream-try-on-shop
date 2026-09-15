@@ -1,2 +1,3 @@
-@import "tailwindcss" source(none);
-/* RESTORED - see following push if truncated */
+/* Entry: full styles restored via split imports (hero label/art cleaned). */
+@import "./styles-a.css";
+@import "./styles-b.css";
