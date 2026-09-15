@@ -10,7 +10,6 @@
 .fashion-canvas-nav__links a:hover,.fashion-canvas-nav__top:hover{color:var(--primary)}
 .fashion-canvas-nav__top{justify-self:end}
 
-/* ===== HERO: continuous field, model right, copy left (reference mock) ===== */
 .fashion-hero{
   position:relative;
   isolation:isolate;
@@ -21,16 +20,14 @@
   padding-top:0;
   background:var(--background);
 }
-/* Angular orange light beams behind art */
 .fashion-hero__beams{
   position:absolute;
   inset:0;
   z-index:0;
   pointer-events:none;
   background:
-    linear-gradient(115deg, transparent 42%, color-mix(in oklab, var(--primary) 18%, transparent) 52%, transparent 62%),
-    linear-gradient(155deg, transparent 35%, color-mix(in oklab, var(--primary) 28%, transparent) 48%, transparent 58%),
-    linear-gradient(90deg, var(--background) 0%, var(--background) 28%, color-mix(in oklab, var(--background) 88%, transparent) 42%, transparent 68%);
+    linear-gradient(115deg, transparent 48%, color-mix(in oklab, var(--primary) 8%, transparent) 56%, transparent 64%),
+    linear-gradient(90deg, var(--background) 0%, var(--background) 30%, color-mix(in oklab, var(--background) 85%, transparent) 48%, transparent 72%);
 }
 .fashion-hero::after{
   content:"";
@@ -152,7 +149,6 @@
   text-shadow:0 2px 14px var(--background);
 }
 
-/* Art panel — model sits in continuous field (not a card) */
 .fashion-hero__art{
   position:absolute;
   z-index:1;
@@ -161,13 +157,16 @@
   width:62%;
   height:100%;
   min-height:0;
-  border:0;
-  box-shadow:none;
+  border:0 !important;
+  box-shadow:none !important;
+  background:transparent !important;
+  background-color:transparent !important;
   overflow:hidden;
 }
 .fashion-hero__art img{
   position:absolute;
   inset:0;
+  z-index:2;
   width:100%;
   height:100%;
   object-fit:cover;
@@ -176,34 +175,35 @@
   opacity:0;
   transform:scale(1.04);
   transition:opacity .8s ease, transform 6s cubic-bezier(.2,.65,.2,1);
+  background:transparent;
 }
-.fashion-hero__art img.is-active{opacity:1;transform:scale(1)}
+.fashion-hero__art img.is-active{opacity:1 !important;transform:scale(1)}
 .fashion-hero__art::before{
   content:"";
   position:absolute;z-index:3;inset:0;pointer-events:none;
   background:
     linear-gradient(90deg, var(--background) 0%, color-mix(in oklab, var(--background) 88%, transparent) 12%, color-mix(in oklab, var(--background) 35%, transparent) 28%, transparent 48%),
-    linear-gradient(180deg, color-mix(in oklab, var(--background) 20%, transparent), transparent 30%, color-mix(in oklab, var(--background) 55%, transparent) 100%),
-    linear-gradient(135deg, transparent 40%, color-mix(in oklab, var(--primary) 22%, transparent) 70%, transparent 85%);
+    linear-gradient(180deg, color-mix(in oklab, var(--background) 20%, transparent), transparent 30%, color-mix(in oklab, var(--background) 55%, transparent) 100%);
 }
 .fashion-hero__overlay{
   position:absolute;inset:0;z-index:4;pointer-events:none;
   background:
-    radial-gradient(ellipse 55% 50% at 70% 40%, color-mix(in oklab, var(--primary) 16%, transparent), transparent 70%),
-    repeating-linear-gradient(0deg, transparent 0 5px, color-mix(in oklab, var(--primary) 4%, transparent) 6px 7px);
+    radial-gradient(ellipse 55% 50% at 70% 40%, color-mix(in oklab, var(--primary) 10%, transparent), transparent 70%),
+    repeating-linear-gradient(0deg, transparent 0 5px, color-mix(in oklab, var(--primary) 3%, transparent) 6px 7px);
 }
 .fashion-hero__scan{
   position:absolute;left:0;right:0;top:18%;height:2px;z-index:6;pointer-events:none;
   background:linear-gradient(90deg, transparent, var(--primary) 35%, var(--foreground) 50%, var(--primary) 65%, transparent);
-  opacity:.4;
-  box-shadow:0 0 18px color-mix(in oklab, var(--primary) 70%, transparent);
+  opacity:.35;
+  box-shadow:0 0 18px color-mix(in oklab, var(--primary) 50%, transparent);
   animation:wearo-scan 4.8s ease-in-out infinite;
 }
-@keyframes wearo-scan{0%,100%{top:16%;opacity:.25}50%{top:62%;opacity:.55}}
+@keyframes wearo-scan{0%,100%{top:16%;opacity:.2}50%{top:62%;opacity:.45}}
 
 .fashion-hero__frame{
   position:absolute;z-index:7;left:22%;right:14%;top:12%;bottom:14%;
   border:1px solid color-mix(in oklab, var(--primary) 40%, transparent);
+  background:transparent !important;
   pointer-events:none;
   box-shadow:none;
 }
@@ -221,14 +221,28 @@
   text-transform:uppercase;
   color:var(--silver);
   text-align:right;
+  background:transparent !important;
 }
 .fashion-hero__label{
-  position:absolute;z-index:9;top:28%;right:12%;
+  position:absolute;
+  z-index:9;
+  top:28%;
+  right:12%;
+  left:auto;
+  bottom:auto;
+  width:auto !important;
+  height:auto !important;
+  max-width:none;
+  margin:0;
+  padding:0 0 0 10px !important;
   font:9px var(--ft-meta);
   letter-spacing:.14em;
-  color:var(--primary);
+  color:var(--primary) !important;
+  background:transparent !important;
+  background-color:transparent !important;
+  border:0;
   border-left:2px solid var(--primary);
-  padding-left:10px;
+  box-shadow:none !important;
 }
 .fashion-hero__side-note{
   position:absolute;z-index:9;right:11%;top:42%;
@@ -240,6 +254,7 @@
   color:var(--primary);
   opacity:.92;
   transform:rotate(4deg);
+  background:transparent !important;
   text-shadow:0 0 16px color-mix(in oklab, var(--primary) 35%, transparent);
 }
 .fashion-hero__stories{
@@ -251,6 +266,7 @@
   color:var(--silver);
   writing-mode:vertical-rl;
   text-orientation:mixed;
+  background:transparent !important;
 }
 .fashion-hero__stories i{
   display:block;width:1px;height:36px;margin:6px auto 0;
@@ -274,7 +290,6 @@
   font-size:28px;line-height:1;color:var(--primary);opacity:.75;
 }
 
-/* Manifesto keep full-bleed */
 .fashion-intro-section{position:relative;z-index:2;width:100%;min-height:clamp(560px,56vw,700px);margin-top:-1px;padding:clamp(24px,5vw,80px);overflow:hidden;isolation:isolate;color:var(--ft-paper);border-bottom:1px solid var(--border);background:var(--ft-ink);background-image:linear-gradient(to top,rgba(1,6,38,.94) 0%,rgba(1,6,38,.58) 42%,rgba(1,6,38,.08) 78%),var(--gradient-pixel-gold),url("https://cdn.builder.io/api/v1/image/assets%2Fa8cc818942044ac39bb81f5eaf3b051c%2Ffb7f96c4487844e9af8fec2c7e54bd4c");background-repeat:no-repeat;background-position:center;background-size:auto,cover,cover}
 .fashion-intro-section::before{content:"";position:absolute;left:clamp(24px,5vw,80px);top:clamp(24px,5vw,80px);width:1px;height:54px;background:linear-gradient(var(--primary),transparent);z-index:2}
 .fashion-intro-section::after{content:"";position:absolute;left:7vw;right:7vw;top:0;height:1px;background:linear-gradient(90deg,var(--primary),transparent 28%,transparent 72%,var(--primary));opacity:.3;z-index:2}
@@ -299,14 +314,14 @@
   .fashion-canvas-nav__links a{font-size:8px;letter-spacing:.1em}
   .fashion-canvas-nav__brand,.fashion-canvas-nav__top{font-size:8px}
   .fashion-hero{display:grid;grid-template-columns:1fr;min-height:0;height:auto;padding-top:64px}
-  .fashion-hero__beams{background:linear-gradient(180deg,var(--background) 0%,color-mix(in oklab,var(--background) 90%,transparent) 20%,transparent 45%,color-mix(in oklab,var(--primary) 12%,transparent) 70%,var(--background) 100%)}
+  .fashion-hero__beams{background:linear-gradient(180deg,var(--background) 0%,color-mix(in oklab,var(--background) 90%,transparent) 20%,transparent 45%,color-mix(in oklab,var(--primary) 8%,transparent) 70%,var(--background) 100%)}
   .fashion-hero__copy{width:100%;min-height:0;padding:42px 20px 20px;display:block}
   .fashion-hero__primary{max-width:100%}
   .fashion-display__solid{font-size:clamp(48px,14vw,72px)}
   .fashion-display__brush{font-size:clamp(44px,13vw,68px);transform:rotate(-1.5deg)}
   .fashion-hero__lede{max-width:460px}
   .fashion-hero__meta{width:100%;margin-top:40px;padding-top:20px}
-  .fashion-hero__art{position:relative;right:auto;top:auto;width:calc(100% + 40px);margin-left:-20px;height:min(560px,110vw);min-height:0;order:2}
+  .fashion-hero__art{position:relative;right:auto;top:auto;width:calc(100% + 40px);margin-left:-20px;height:min(560px,110vw);min-height:0;order:2;background:transparent !important}
   .fashion-hero__frame{left:10%;right:10%;top:12%;bottom:10%;opacity:.55}
   .fashion-hero__badge{top:12%;right:12%}
   .fashion-hero__label{top:22%;right:12%}
@@ -323,4 +338,27 @@
 }
 @media (prefers-reduced-motion:reduce){
   .fashion-canvas-nav__links a,.fashion-canvas-nav__top,.fashion-hero__art img,.fashion-hero__scan{transition:none;animation:none}
+}
+
+/* Kill solid orange/yellow plaque covering hero photo */
+.fashion-site .fashion-hero__art,
+.fashion-site .fashion-hero__art::before,
+.fashion-site .fashion-hero__overlay,
+.fashion-site .fashion-hero__frame {
+  background-color: transparent !important;
+}
+.fashion-site .fashion-hero__art {
+  background-image: none !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
+.fashion-site .fashion-hero__label {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  color: var(--primary) !important;
+  box-shadow: none !important;
+}
+.fashion-site .fashion-hero__art img.is-active {
+  opacity: 1 !important;
 }
