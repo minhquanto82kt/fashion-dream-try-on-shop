@@ -1,0 +1,19 @@
+/* Phase 2D — homepage editorial canvas layer. Scoped to new home elements only. */
+.fashion-canvas-nav{position:sticky;top:74px;z-index:35;border-bottom:1px solid var(--border);background:color-mix(in oklab,var(--background) 94%,transparent);backdrop-filter:blur(12px)}
+.fashion-canvas-nav__inner{width:min(1240px,calc(100% - 48px));min-height:48px;margin:auto;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:24px}
+.fashion-canvas-nav__brand,.fashion-canvas-nav__top,.fashion-canvas-nav__links a{font:9px var(--ft-meta);letter-spacing:.16em;text-transform:uppercase;text-decoration:none}
+.fashion-canvas-nav__brand{color:var(--primary)}
+.fashion-canvas-nav__links{display:flex;align-items:center;gap:26px}
+.fashion-canvas-nav__links a,.fashion-canvas-nav__top{color:var(--silver);transition:color .18s ease}
+.fashion-canvas-nav__links a:hover,.fashion-canvas-nav__top:hover{color:var(--primary)}
+.fashion-canvas-nav__top{justify-self:end}
+.fashion-collection-title{font-size:clamp(44px,5vw,72px)}
+.fashion-products-section .fashion-section-head{align-items:flex-end}
+@media (max-width:800px){
+  .fashion-canvas-nav{top:64px;overflow-x:auto}
+  .fashion-canvas-nav__inner{width:max-content;min-width:100%;grid-template-columns:auto auto auto;gap:18px;padding:0 16px}
+  .fashion-canvas-nav__links{gap:16px}
+  .fashion-canvas-nav__links a{font-size:8px;letter-spacing:.1em}
+  .fashion-canvas-nav__brand,.fashion-canvas-nav__top{font-size:8px}
+}
+@media (prefers-reduced-motion:reduce){.fashion-canvas-nav__links a,.fashion-canvas-nav__top{transition:none}}
