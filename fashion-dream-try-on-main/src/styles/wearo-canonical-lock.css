@@ -1,0 +1,39 @@
+/* =============================================================================
+   WEARO — canonical palette + type lock
+   Source of truth for colors/fonts. Hero LAYOUT lives in home-editorial.css.
+   ============================================================================= */
+.fashion-site {
+  font-family: var(--ft-sans), "Space Grotesk", system-ui, sans-serif !important;
+  background: var(--background) !important;
+  color: var(--foreground) !important;
+}
+.fashion-site .fashion-display,
+.fashion-site .fashion-display__solid {
+  font-family: var(--ft-editorial), "Bodoni Moda", Georgia, serif !important;
+}
+.fashion-site .fashion-display__brush {
+  font-family: "Caveat", var(--ft-impact), cursive !important;
+  color: var(--primary) !important;
+}
+.fashion-site .fashion-eyebrow,
+.fashion-site .fashion-hero__mark,
+.fashion-site .fashion-hero__meta,
+.fashion-site .fashion-hero__label,
+.fashion-site .fashion-hero__badge,
+.fashion-site .fashion-hero__stories,
+.fashion-site .type-meta {
+  font-family: var(--ft-meta), "Oswald", "Space Grotesk", sans-serif !important;
+}
+.fashion-site .fashion-btn,
+.fashion-site .fashion-ai-btn {
+  font-family: var(--ft-impact), "Oswald", sans-serif !important;
+}
+/* Hero art: never a solid primary plaque (layout still from home-editorial) */
+.fashion-site .fashion-hero__art {
+  box-shadow: none !important;
+  background: transparent !important;
+}
+.fashion-site .fashion-hero__label {
+  background: transparent !important;
+  background-color: transparent !important;
+}
