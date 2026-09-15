@@ -206,10 +206,6 @@ function AiSidebar({
           <span>Outfit Builder</span>
           <span className="text-[9px]">SOON</span>
         </button>
-        <button type="button" disabled className={`${itemClass(false)} cursor-not-allowed opacity-45`}>
-          <span>Style Analyzer</span>
-          <span className="text-[9px]">SOON</span>
-        </button>
       </nav>
 
       <div className="mt-7 border-t border-border pt-5">
