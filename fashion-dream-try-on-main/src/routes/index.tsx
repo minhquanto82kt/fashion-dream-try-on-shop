@@ -4,6 +4,7 @@ import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { ProductCard } from "@/components/product-card";
 import { PRODUCTS } from "@/data/products";
+import "@/styles/home-editorial.css";
 
 const HERO_SLIDES = [
   { image: "https://images.pexels.com/photos/7271149/pexels-photo-7271149.jpeg?auto=compress&cs=tinysrgb&w=1920", label: "LOOK / 001", title: "WEARO / PERSONAL" },
@@ -63,10 +64,7 @@ function Index() {
       <div className="fashion-canvas-nav__inner">
         <span className="fashion-canvas-nav__brand">WEARO / INDEX</span>
         <div className="fashion-canvas-nav__links">
-          <a href="#intro">02 / Manifesto</a>
-          <a href="#ai-studio">03 / AI Studio</a>
-          <a href="#collection">04 / Collection</a>
-          <a href="#experience">05 / Experience</a>
+          <a href="#intro">02 / Manifesto</a><a href="#ai-studio">03 / AI Studio</a><a href="#collection">04 / Collection</a><a href="#experience">05 / Experience</a>
         </div>
         <a href="#top" className="fashion-canvas-nav__top">↑ TOP</a>
       </div>
