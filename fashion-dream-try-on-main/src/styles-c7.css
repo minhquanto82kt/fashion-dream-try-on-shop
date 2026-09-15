@@ -1,0 +1,125 @@
+.statement-line {
+  display: block;
+  font-style: normal;
+  white-space: nowrap;
+}
+
+.statement-line--solid {
+  font-family: var(--ft-impact);
+  font-size: clamp(54px, 6.2vw, 94px);
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.statement-line--offset {
+  margin-left: clamp(42px, 5vw, 90px);
+  margin-top: -2px;
+}
+
+.statement-line--accent-small {
+  margin-top: 18px;
+  margin-left: clamp(84px, 10vw, 170px);
+  color: var(--primary);
+  font: 600 clamp(17px, 1.55vw, 25px)/1 var(--ft-sans);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.statement-line--accent-display {
+  margin-left: clamp(126px, 15vw, 250px);
+  color: var(--primary);
+  font: 400 clamp(45px, 5.1vw, 76px)/.82 var(--ft-impact);
+  letter-spacing: -.055em;
+  text-transform: uppercase;
+  position: relative;
+  width: fit-content;
+}
+
+.statement-line--accent-display::after {
+  content: "";
+  position: absolute;
+  left: 2px;
+  right: -18px;
+  bottom: -10px;
+  height: 3px;
+  background: var(--primary);
+  transform: skewX(-18deg);
+  transform-origin: left;
+}
+
+@media (max-width: 800px) {
+  .fashion-section-title--statement {
+    gap: 1px;
+  }
+  .statement-line--solid {
+    font-size: clamp(48px, 14vw, 76px);
+  }
+  .statement-line--accent-small {
+    margin-top: 14px;
+    font-size: 12px;
+    letter-spacing: .12em;
+  }
+  .statement-line--offset {
+    margin-left: 30px;
+  }
+  .statement-line--accent-small {
+    margin-left: 58px;
+  }
+  .statement-line--accent-display {
+    margin-left: 86px;
+    font-size: clamp(38px, 11vw, 60px);
+  }
+}
+
+
+/* Global typography enforcement: every page follows the same four-tier system. */
+.fashion-site,
+.fashion-site input,
+.fashion-site textarea,
+.fashion-site button,
+.fashion-site select {
+  font-family: var(--ft-body);
+  font-style: normal;
+}
+.fashion-site h1,
+.fashion-site h2,
+.fashion-site h3,
+.fashion-site h4,
+.fashion-site h5,
+.fashion-site h6 {
+  font-family: var(--ft-display);
+  font-style: normal;
+  text-transform: uppercase;
+}
+.fashion-site .fashion-display,
+.fashion-site .fashion-section-title,
+.fashion-site .fashion-product-title,
+.fashion-site .fashion-editorial h2,
+.fashion-site .fashion-flow__steps h3 {
+  font-family: var(--ft-editorial);
+  font-style: normal;
+}
+.fashion-site .fashion-accent,
+.fashion-site .statement-line--solid,
+.fashion-site .statement-line--accent-display,
+.fashion-site .fashion-btn,
+.fashion-site .fashion-brand__mark,
+.fashion-site .fashion-brand__name,
+.fashion-site .fashion-product-price {
+  font-family: var(--ft-display);
+  font-style: normal;
+}
+.fashion-site .fashion-eyebrow,
+.fashion-site .fashion-section-number,
+.fashion-site .fashion-hero__meta,
+.fashion-site .fashion-hero__hud,
+.fashion-site .fashion-hero__label,
+.fashion-site .fashion-hero__vertical,
+.fashion-site .fashion-product-category,
+.fashion-site .fashion-product-spec,
+.fashion-site .fashion-product-badge,
+.fashion-site .fashion-product-index,
+.fashion-site .fashion-text-link {
+  font-family: var(--ft-meta);
+  font-style: normal;
+}
