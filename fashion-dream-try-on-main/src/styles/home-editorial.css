@@ -8,8 +8,8 @@
 .fashion-canvas-nav__links a:hover,.fashion-canvas-nav__top:hover{color:var(--primary)}
 .fashion-canvas-nav__top{justify-self:end}
 .fashion-hero{position:relative;isolation:isolate;overflow:hidden;grid-template-columns:1fr 1fr;background:radial-gradient(circle at 72% 46%,color-mix(in oklab,var(--primary) 10%,transparent),transparent 34%),var(--background)}
-.fashion-hero::before{content:"";position:absolute;inset:0;z-index:-3;background:linear-gradient(90deg,var(--background) 0%,color-mix(in oklab,var(--background) 96%,transparent) 42%,transparent 72%),linear-gradient(180deg,transparent 72%,var(--background) 100%);pointer-events:none}
-.fashion-hero::after{content:"";position:absolute;left:50%;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,var(--primary),transparent);opacity:.65;pointer-events:none}
+.fashion-hero::before{content:"";position:absolute;inset:0;z-index:-3;background:linear-gradient(90deg,var(--background) 0%,color-mix(in oklab,var(--background) 96%,transparent) 42%,transparent 72%),linear-gradient(180deg,transparent 62%,color-mix(in oklab,var(--background) 86%,transparent) 88%,var(--background) 100%);pointer-events:none}
+.fashion-hero::after{content:"";position:absolute;left:7vw;right:7vw;bottom:0;height:1px;background:linear-gradient(90deg,transparent,var(--primary) 22%,var(--primary) 78%,transparent);opacity:.55;pointer-events:none}
 .fashion-hero__copy{position:relative;z-index:8}
 .fashion-hero__primary{position:relative}
 .fashion-hero__primary::before{content:"";position:absolute;left:-26px;top:4px;width:1px;height:62px;background:var(--primary);box-shadow:0 0 22px color-mix(in oklab,var(--primary) 65%,transparent)}
@@ -17,13 +17,13 @@
 .fashion-display{position:relative;z-index:3;text-shadow:0 18px 50px color-mix(in oklab,var(--background) 78%,transparent)}
 .fashion-display>span:first-child{display:inline-block;white-space:nowrap}
 .fashion-hero__lede{position:relative;z-index:4}
-.fashion-hero__art{position:absolute;z-index:1;right:0;top:0;width:58%;height:100%;min-height:0;border-left:1px solid var(--primary);box-shadow:-42px 0 90px color-mix(in oklab,var(--background) 72%,transparent),12px 12px 0 color-mix(in oklab,var(--primary) 48%,transparent);clip-path:polygon(7% 0,100% 0,100% 100%,0 100%)}
-.fashion-hero__art::before{content:"";position:absolute;z-index:3;inset:0;background:linear-gradient(90deg,var(--background) 0%,color-mix(in oklab,var(--background) 65%,transparent) 14%,transparent 40%),linear-gradient(180deg,color-mix(in oklab,var(--background) 22%,transparent),transparent 45%,color-mix(in oklab,var(--background) 74%,transparent) 100%);pointer-events:none}
-.fashion-hero__art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.68) contrast(1.08);opacity:0;transform:scale(1.045);transition:opacity .8s ease,transform 6s cubic-bezier(.2,.65,.2,1)}
+.fashion-hero__art{position:absolute;z-index:1;right:0;top:0;width:60%;height:100%;min-height:0;border-left:1px solid var(--primary);box-shadow:-48px 0 100px color-mix(in oklab,var(--background) 76%,transparent),12px 12px 0 color-mix(in oklab,var(--primary) 42%,transparent);clip-path:polygon(6% 0,100% 0,100% 100%,0 100%)}
+.fashion-hero__art::before{content:"";position:absolute;z-index:3;inset:0;background:linear-gradient(90deg,var(--background) 0%,color-mix(in oklab,var(--background) 72%,transparent) 13%,transparent 38%),linear-gradient(180deg,color-mix(in oklab,var(--background) 18%,transparent),transparent 46%,color-mix(in oklab,var(--background) 84%,transparent) 100%);pointer-events:none}
+.fashion-hero__art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;filter:saturate(.68) contrast(1.08);opacity:0;transform:scale(1.045);transition:opacity .8s ease,transform 6s cubic-bezier(.2,.65,.2,1)}
 .fashion-hero__art img.is-active{opacity:1;transform:scale(1)}
 .fashion-hero__overlay{z-index:4;background:linear-gradient(145deg,rgba(1,6,38,.35),transparent 44%),linear-gradient(180deg,rgba(1,6,38,.1),rgba(1,6,38,.62)),repeating-linear-gradient(0deg,transparent 0 5px,color-mix(in oklab,var(--primary) 8%,transparent) 6px 7px);pointer-events:none}
 .fashion-hero__scan{z-index:6}
-.fashion-hero__frame{position:absolute;z-index:7;left:17%;right:8%;top:19%;bottom:13%;border:1px solid color-mix(in oklab,var(--primary) 68%,transparent);box-shadow:inset 0 0 30px color-mix(in oklab,var(--primary) 7%,transparent);pointer-events:none}
+.fashion-hero__frame{position:absolute;z-index:7;left:15%;right:8%;top:16%;bottom:11%;border:1px solid color-mix(in oklab,var(--primary) 68%,transparent);box-shadow:inset 0 0 30px color-mix(in oklab,var(--primary) 7%,transparent);pointer-events:none}
 .fashion-hero__frame::before,.fashion-hero__frame::after{content:"";position:absolute;background:var(--primary)}
 .fashion-hero__frame::before{left:-1px;top:-1px;width:72px;height:2px;box-shadow:0 0 14px color-mix(in oklab,var(--primary) 55%,transparent)}
 .fashion-hero__frame::after{right:-1px;bottom:-1px;width:54px;height:2px}
@@ -34,6 +34,7 @@
 .fashion-hero__transition i{display:block;width:64px;height:1px;background:linear-gradient(90deg,var(--primary),transparent)}
 .fashion-intro-section{position:relative;z-index:2;margin-top:-1px;background:linear-gradient(180deg,var(--background),color-mix(in oklab,var(--background) 96%,var(--primary) 4%));}
 .fashion-intro-section::before{content:"";position:absolute;left:7vw;top:0;width:1px;height:54px;background:linear-gradient(var(--primary),transparent)}
+.fashion-intro-section::after{content:"";position:absolute;left:7vw;right:7vw;top:0;height:1px;background:linear-gradient(90deg,var(--primary),transparent 28%,transparent 72%,var(--primary));opacity:.24}
 .fashion-intro-content{position:relative}
 .fashion-intro-content::after{content:"FASHION\A MEETS\A TECHNOLOGY";white-space:pre;position:absolute;right:0;top:8%;font:10px/1.45 var(--ft-meta);letter-spacing:.14em;color:color-mix(in oklab,var(--primary) 70%,var(--silver));text-transform:uppercase;text-align:right;opacity:.7}
 .fashion-section-title--statement{max-width:980px}
@@ -53,7 +54,7 @@
   .fashion-hero{display:grid;grid-template-columns:1fr;min-height:0;padding-top:64px}
   .fashion-hero__copy{padding:46px 0 24px}
   .fashion-hero__art{position:relative;right:auto;top:auto;width:100%;height:min(620px,120vw);min-height:0;border-left:0;clip-path:none;box-shadow:none;order:2}
-  .fashion-hero__art::before{background:linear-gradient(180deg,var(--background) 0%,transparent 22%,transparent 70%,color-mix(in oklab,var(--background) 78%,transparent) 100%)}
+  .fashion-hero__art::before{background:linear-gradient(180deg,var(--background) 0%,transparent 22%,transparent 70%,color-mix(in oklab,var(--background) 84%,transparent) 100%)}
   .fashion-hero__frame{left:10%;right:10%;top:12%;bottom:10%}
   .fashion-hero__side-note{display:none}
   .fashion-hero__plus{left:18px;bottom:26px;font-size:28px}
@@ -62,5 +63,6 @@
   .fashion-display>span:first-child{white-space:normal}
   .fashion-intro-section{padding-top:72px}
   .fashion-intro-section::before{left:24px}
+  .fashion-intro-section::after{left:24px;right:24px}
 }
 @media (prefers-reduced-motion:reduce){.fashion-canvas-nav__links a,.fashion-canvas-nav__top,.fashion-hero__art img{transition:none}}
