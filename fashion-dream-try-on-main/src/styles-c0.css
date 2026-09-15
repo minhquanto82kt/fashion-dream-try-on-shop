@@ -1,0 +1,117 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-electric: var(--electric);
+  --color-beige: var(--beige);
+  --color-silver: var(--silver);
+  --color-cyan: var(--y2k-cyan);
+  /* Màu cấp 3 của FashionTry */
+  --color-mustard: var(--ft-mustard);
+  --color-olive: var(--ft-olive);
+  --font-display: "Anton", sans-serif;
+  --font-sans: "Space Grotesk", sans-serif;
+}
+
+:root {
+  --radius: 0px;
+  --ink: #010626;
+  --background: #010626;
+  --foreground: #fff89c;
+  --card: #010626;
+  --card-foreground: #fff89c;
+  --popover: #010626;
+  --popover-foreground: #fff89c;
+  --primary: #f2e205;
+  --primary-foreground: #010626;
+  --secondary: #d9b504;
+  --secondary-foreground: #010626;
+  --muted: #594b02;
+  --muted-foreground: #fff89c;
+  --accent: #fff89c;
+  --accent-foreground: #010626;
+  --destructive: #d9b504;
+  --destructive-foreground: #010626;
+  --border: #594b02;
+  --input: #010626;
+  --ring: #f2e205;
+  --electric: #f2e205;
+  --beige: #594b02;
+  --silver: #d9b504;
+  --y2k-cyan: #fff89c;
+
+  /* Màu cấp 3: vàng mù tạt và nâu ô liu */
+  --ft-mustard: #d9b504;
+  --ft-olive: #594b02;
+
+  --gradient-mustard-olive: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--ft-mustard) 25%, transparent),
+    color-mix(in oklab, var(--ft-olive) 18%, transparent) 60%
+  );
+
+  --gradient-gloss: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--electric) 20%, transparent),
+    transparent 60%
+  );
+  --shadow-lift: 0 24px 60px -30px color-mix(in oklab, var(--electric) 45%, transparent);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--ft-body);
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--ft-display);
+    font-style: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+  }
+}
+
+@utility eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--silver);
+}
