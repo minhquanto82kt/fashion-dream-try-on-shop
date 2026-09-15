@@ -1,0 +1,160 @@
+.fashion-editorial .fashion-eyebrow {
+  font-size: 12px;
+}
+
+.fashion-flow__steps span {
+  font-size: 20px;
+}
+
+.fashion-flow__steps h3 {
+  font-size: 30px;
+}
+
+.fashion-flow__steps p {
+  font-size: 15px;
+}
+
+.fashion-editorial h2 {
+  line-height: 60px;
+}
+
+.fashion-editorial .fashion-accent {
+  line-height: 65px;
+}
+
+.fashion-product-price {
+  font-size: 20px;
+  text-shadow: 2px 2px 3px rgba(0, 0, 0, 1);
+}
+
+.fashion-category-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: -18px 0 32px;
+}
+
+.fashion-category-filter {
+  border: 1px solid color-mix(in oklab, currentColor 38%, transparent);
+  background: transparent;
+  color: inherit;
+  padding: 8px 13px;
+  font: 10px var(--ft-meta);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background .18s, color .18s, border-color .18s;
+}
+
+.fashion-category-filter:hover,
+.fashion-category-filter.is-active {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--ft-ink);
+}
+
+@media (max-width: 800px) {
+  .fashion-category-filters {
+    margin: -22px 0 26px;
+  }
+}
+
+.fashion-intro-section {
+  position: relative;
+  isolation: isolate;
+  grid-template-columns: 80px minmax(0, 1fr);
+  overflow: hidden;
+  background-image: url("https://images.pexels.com/photos/7271149/pexels-photo-7271149.jpeg?auto=compress&cs=tinysrgb&w=1600");
+  background-size: cover;
+  background-position: center;
+  color: var(--ft-paper);
+}
+
+.fashion-intro-section::before {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(90deg, rgba(89, 75, 2, .86), rgba(217, 181, 4, .58) 58%, rgba(89, 75, 2, .8));
+  content: "";
+}
+
+.fashion-intro-section > * {
+  position: relative;
+  z-index: 1;
+}
+
+.fashion-intro-section > .fashion-section-number {
+  align-self: start;
+}
+
+.fashion-intro-content {
+  min-width: 0;
+}
+
+.fashion-intro-copy {
+  align-self: auto;
+  max-width: 640px;
+  margin: 42px 0 0;
+  color: var(--ft-paper);
+  opacity: .9;
+}
+
+@media (max-width: 800px) {
+  .fashion-intro-section {
+    display: block;
+  }
+
+  .fashion-intro-copy {
+    margin-top: 36px;
+  }
+
+  .fashion-intro-content .statement-line--accent-small {
+    margin: 20px 0 15px 58px !important;
+  }
+
+  .fashion-intro-content .statement-line--accent-display {
+    margin-left: 86px !important;
+  }
+}
+
+.statement-line--accent-display {
+  font-size: clamp(56px, 6vw, 95px);
+}
+
+.statement-line--accent-display::after {
+  display: none;
+}
+
+.fashion-hero__meta > span {
+  color: var(--foreground);
+  font-size: 13px;
+  opacity: .78;
+}
+
+@media (max-width: 800px) {
+  .statement-line--accent-display {
+    font-size: clamp(44px, 12vw, 68px);
+  }
+
+  .fashion-hero__meta > span {
+    font-size: 10px;
+  }
+}
+
+/* Homepage layout normalization */
+.fashion-site {
+  overflow-x: clip;
+}
+
+.fashion-nav__inner,
+.fashion-intro-section,
+.fashion-ai-feature,
+.fashion-flow {
+  width: min(1240px, calc(100% - 48px));
+}
+
+.fashion-hero {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  min-height: max(620px, calc(100svh - 74px));
+  height: min(820px, calc(100svh - 74px));
+}
