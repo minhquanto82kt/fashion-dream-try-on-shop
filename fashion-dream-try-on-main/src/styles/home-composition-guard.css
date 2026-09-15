@@ -35,6 +35,8 @@
   border:0;
   box-shadow:none;
   overflow:hidden;
+  background:transparent !important;
+  background-color:transparent !important;
 }
 .fashion-site .fashion-intro-section{
   position:relative;
@@ -80,4 +82,20 @@
     height:min(560px,110vw);
     order:2;
   }
+}
+
+/* No solid primary card over hero image */
+.fashion-site .fashion-hero__art {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+}
+.fashion-site .fashion-hero__label {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: var(--primary) !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 0 0 0 10px !important;
 }
