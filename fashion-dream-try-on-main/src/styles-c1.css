@@ -1,0 +1,61 @@
+@utility gloss {
+  background-image: var(--gradient-gloss);
+}
+
+/* Utility cho bảng màu cấp 3 */
+@utility gradient-mustard-olive {
+  background-image: var(--gradient-mustard-olive);
+}
+
+/* FashionTry color variants */
+.fashion-btn--mustard {
+  background: var(--ft-mustard);
+  border-color: var(--ft-mustard);
+  color: var(--ft-ink);
+}
+
+.fashion-btn--mustard:hover {
+  background: color-mix(in oklab, var(--ft-mustard) 86%, white);
+}
+
+.fashion-product-badge--olive {
+  background: var(--ft-olive);
+  border: 1px solid var(--ft-mustard);
+  color: var(--ft-paper);
+}
+
+.fashion-category-filter--olive {
+  background: color-mix(in oklab, var(--ft-olive) 35%, transparent);
+  border: 1px solid var(--ft-olive);
+  color: var(--ft-paper);
+}
+
+.fashion-category-filter--olive:hover,
+.fashion-category-filter--olive.is-active {
+  background: var(--ft-olive);
+  border-color: var(--ft-mustard);
+  color: var(--ft-paper);
+}
+
+.fashion-section-number--mustard {
+  color: var(--ft-mustard);
+}
+
+/* FashionTry Typography System — v1
+   01 Display: Anton — high-impact headings, prices, buttons, brand marks
+   02 Editorial: Bodoni Moda — fashion/editorial headlines only
+   03 Body/UI: Space Grotesk — Vietnamese-safe body copy, navigation, controls
+   04 Meta: Oswald — compact labels, indexes, technical metadata
+   Rule: no handwritten/script fonts and no decorative italics.
+*/
+.type-display,.font-display{font-family:var(--ft-display);font-weight:400;letter-spacing:.01em}
+.type-editorial{font-family:var(--ft-editorial);font-weight:600;letter-spacing:-.055em}
+.type-body,.font-sans{font-family:var(--ft-body)}
+.type-meta{font-family:var(--ft-meta);font-weight:500;letter-spacing:.12em;text-transform:uppercase}
+
+/* FashionTry / Atelier commerce layer */
+:root { --ft-paper:#fff89c; --ft-ink:#010626; --ft-acid:#f2e205; --ft-muted:#594b02; --ft-serif:"Bodoni Moda", Georgia, serif; --ft-editorial:"Bodoni Moda", Georgia, serif; --ft-display:"Anton", Impact, sans-serif; --ft-body:"Space Grotesk", sans-serif; --ft-meta:"Oswald", Arial, sans-serif; --ft-sans:"Space Grotesk", sans-serif; --ft-impact:"Anton", Impact, sans-serif; }
+:root[data-theme="cream"] { --background:#010626; --foreground:#fff89c; --card:#010626; --card-foreground:#fff89c; --popover:#010626; --popover-foreground:#fff89c; --muted:#594b02; --muted-foreground:#fff89c; --border:#594b02; --primary:#f2e205; --primary-foreground:#010626; --accent:#fff89c; --accent-foreground:#010626; --input:#010626; --ring:#f2e205; --electric:#f2e205; --beige:#594b02; --silver:#d9b504; }
+.fashion-site{font-family:var(--ft-sans); background:var(--background); color:var(--foreground)}
+.fashion-nav{position:fixed;inset:0 0 auto;z-index:50;border-bottom:1px solid var(--border);background:color-mix(in oklab,var(--background) 90%,transparent);backdrop-filter:blur(14px)}
+.fashion-nav__inner{width:min(1240px,calc(100% - 48px));height:74px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:24px}
