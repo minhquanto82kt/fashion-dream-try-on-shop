@@ -130,7 +130,8 @@ p, li, a, button, label, span, h1, h2, h3, h4, h5, h6 {
 }
 
 .fashion-hero__copy {
-  overflow: hidden;
+  /* Do not clip editorial hero layers (primary translateY, side marks). */
+  overflow: visible;
 }
 
 .fashion-hero__actions {
@@ -370,29 +371,7 @@ main textarea {
     padding-inline: 10px;
   }
 
-  .fashion-hero {
-    grid-template-columns: 1fr;
-  }
-
-  .fashion-hero__copy {
-    padding-right: 0;
-  }
-
-  .fashion-hero__art {
-    min-height: 58vw;
-    max-height: 720px;
-    border-left: 0;
-    border-top: 1px solid var(--primary);
-  }
-
-  .fashion-intro-section {
-    grid-template-columns: 64px 1fr;
-  }
-
-  .fashion-intro-copy {
-    grid-column: 2;
-    max-width: 600px;
-  }
+  /* Hero/intro composition owned by home-editorial.css — do not force legacy grid here. */
 
   .fashion-ai-feature {
     grid-template-columns: 1fr;
@@ -460,63 +439,15 @@ main textarea {
     text-transform: uppercase;
   }
 
-  .fashion-hero {
-    padding-top: 64px;
-  }
-
-  .fashion-hero__copy {
-    padding: 48px 0 32px;
-  }
-
-  .fashion-display {
-    font-size: clamp(58px, 17vw, 92px);
-    line-height: .9;
-    max-width: 100%;
-    letter-spacing: -.045em;
-    margin-top: 20px;
-  }
-
-  .fashion-hero__lede {
-    font-size: 14px;
-    margin-top: 24px;
-  }
-
-  .fashion-hero__actions {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
-    margin-top: 26px;
-  }
+  /* Hero/intro sizing owned by home-editorial.css on mobile. */
 
   .fashion-btn {
     width: 100%;
     padding-inline: 14px;
   }
 
-  .fashion-hero__meta {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 8px;
-    padding-top: 28px;
-  }
-
-  .fashion-hero__art {
-    min-height: 120vw;
-  }
-
-  .fashion-intro-section,
   .fashion-ai-feature {
     width: calc(100% - 28px);
-  }
-
-  .fashion-intro-section {
-    padding: 68px 0;
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  .fashion-intro-copy {
-    grid-column: auto;
   }
 
   .fashion-section-title {

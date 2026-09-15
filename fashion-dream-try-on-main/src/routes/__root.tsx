@@ -9,6 +9,7 @@ import adminUiCss from "../admin-ui.css?url";
 import adminComfortCss from "../admin-comfort.css?url";
 import paletteCss from "../palette.css?url";
 import uxFoundationCss from "../ux-foundation.css?url";
+import homeCompositionGuardCss from "../styles/home-composition-guard.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { CartProvider } from "@/lib/cart";
 import { getCustomerUser, getSafeReturnPath, startCustomerSessionWatcher } from "@/lib/auth";
@@ -28,9 +29,9 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({ meta: [
     { charSet: "utf-8" }, { name: "viewport", content: "width=device-width, initial-scale=1" }, { title: "WEARO — Mặc theo cách của riêng bạn" },
-    { name: "description", content: "WEARO — cửa hàng thời trang trực tuyến kết hợp AI Virtual Try-On, AI Personal Stylist và Hybrid Stylist 1:1." }, { name: "author", content: "WEARO" }, { property: "og:title", content: "WEARO — Mặc theo cách của riêng bạn" }, { property: "og:description", content: "Thử đồ ảo trên ảnh thật, phối Full-Set theo vóc dáng và nhận tư vấn stylist 1:1." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }
+    { name: "description", content: "WEARO — cửa hàng thời trang trực tuyến kết hợp AI Virtual Try-On, AI Personal Stylist và Hybrid Stylist 1:1." }, { name: "author", content: "WEARO" }, { property: "og:title", content: "WEARO — Mặc theo cách của riêng bạn" }, { property: "og:description", content: "Thử đồ ảo trên ảnh thật, phối Full-Set theo vốc dáng và nhận tư vấn stylist 1:1." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }
   ], links: [
-    { rel: "stylesheet", href: appCss }, { rel: "stylesheet", href: uiStabilizationCss }, { rel: "stylesheet", href: topbarCss }, { rel: "stylesheet", href: navHotfixCss }, { rel: "stylesheet", href: adminUiCss }, { rel: "stylesheet", href: adminComfortCss }, { rel: "stylesheet", href: paletteCss }, { rel: "stylesheet", href: uxFoundationCss }, { rel: "icon", href: "/favicon.ico", type: "image/x-icon" }, { rel: "preconnect", href: "https://fonts.googleapis.com" }, { rel: "preconnect", href: "https://fonts.gstatic.com" }, { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Anton&family=Bodoni+Moda:opsz,wght@6..96,400..700&family=Oswald:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600&display=swap" }
+    { rel: "stylesheet", href: appCss }, { rel: "stylesheet", href: uiStabilizationCss }, { rel: "stylesheet", href: topbarCss }, { rel: "stylesheet", href: navHotfixCss }, { rel: "stylesheet", href: adminUiCss }, { rel: "stylesheet", href: adminComfortCss }, { rel: "stylesheet", href: paletteCss }, { rel: "stylesheet", href: uxFoundationCss }, { rel: "stylesheet", href: homeCompositionGuardCss }, { rel: "icon", href: "/favicon.ico", type: "image/x-icon" }, { rel: "preconnect", href: "https://fonts.googleapis.com" }, { rel: "preconnect", href: "https://fonts.gstatic.com" }, { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Anton&family=Bodoni+Moda:opsz,wght@6..96,400..700&family=Oswald:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600&display=swap" }
   ] }), shellComponent: RootShell, component: RootComponent, notFoundComponent: NotFoundComponent, errorComponent: ErrorComponent,
 });
 function RootShell({ children }: { children: ReactNode }) { return <html lang="vi"><head><HeadContent /></head><body>{children}<Scripts /></body></html>; }
