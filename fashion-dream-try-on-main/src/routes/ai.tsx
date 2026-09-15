@@ -1,13 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useMemo, useRef, useState } from "react";
-import { Loader2, Menu, Upload, X } from "lucide-react";
+import { ArrowRight, Loader2, Menu, Sparkles, Upload, X } from "lucide-react";
 import { toast } from "sonner";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
-import { PRODUCTS, formatVnd, getProduct } from "@/data/products";
-import { generateConcept, generateTryOn } from "@/lib/ai.functions";
+import { PRODUCTS, formatVnd } from "@/data/products";
+import { generateConcept, generateTryOn, listAiProducts } from "@/lib/ai.functions";
 import { useCart } from "@/lib/cart";
 
 export const Route = createFileRoute("/ai")({
@@ -19,7 +19,7 @@ export const Route = createFileRoute("/ai")({
       {
         name: "description",
         content:
-          "Tạo concept outfit bằng AI và thử đồ ảo trên ảnh của chính bạn trước khi mua tại UpThink.",
+          "Tạo concept outfit bằng AI và thử đồ ảo trên ảnh của bạn trước khi mua tại UpThink.",
       },
       { property: "og:title", content: "UpThink AI Lab" },
       {
@@ -34,12 +34,26 @@ export const Route = createFileRoute("/ai")({
 const STYLES = ["Street", "Minimal", "Smart casual", "Y2K"];
 const OCCASIONS = ["Đi học", "Đi làm", "Hẹn hò", "Đi chơi"];
 
+type AiProduct = {
+  id: string;
+  name: string;
+  category: string;
+  price: number;
+  image: string;
+  defaultVariant: { size: string; color: string };
+};
+
 type AiMode = "concept" | "tryon";
 
 function AiPage() {
   const search = Route.useSearch();
+  const [consentAccepted, setConsentAccepted] = useState(false);
   const [mode, setMode] = useState<AiMode>(search.product ? "tryon" : "concept");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  if (!consentAccepted) {
+    return <AiConsentGate onContinue={() => setConsentAccepted(true)} />;
+  }
 
   const selectMode = (nextMode: AiMode) => {
     setMode(nextMode);
@@ -47,9 +61,8 @@ function AiPage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       <SiteNav />
-
       <main className="mx-auto w-full max-w-[1440px] px-4 pb-24 pt-24 sm:px-8 sm:pt-28">
         <div className="mb-6 flex items-center justify-between gap-4 lg:hidden">
           <div>
@@ -131,10 +144,14 @@ function AiPage() {
             </div>
 
             <div className="mt-8 min-w-0">
-              {mode === "concept" ? <ConceptPanel /> : <TryOnPanel initialProduct={search.product} />}
+              {mode === "concept" ? <ConceptWorkspace /> : <TryOnWorkspace initialProduct={search.product} />}
             </div>
           </section>
         </div>
+
+        <p className="mx-auto mt-4 max-w-2xl text-center text-[11px] leading-5 text-silver">
+          Kết quả AI mang tính tham khảo. Hình ảnh có thể khác với sản phẩm thực tế.
+        </p>
       </main>
       <SiteFooter />
     </div>
@@ -166,7 +183,11 @@ function AiSidebar({
         </div>
       )}
 
-      <button type="button" onClick={() => onSelectMode("concept")} className="mb-3 flex w-full items-center justify-between border border-primary/70 bg-background px-3 py-3 text-left text-xs uppercase tracking-[0.15em] text-primary hover:bg-primary hover:text-primary-foreground">
+      <button
+        type="button"
+        onClick={() => onSelectMode("concept")}
+        className="mb-3 flex w-full items-center justify-between border border-primary/70 bg-background px-3 py-3 text-left text-xs uppercase tracking-[0.15em] text-primary hover:bg-primary hover:text-primary-foreground"
+      >
         <span>+ New Look</span>
         <span className="text-[10px]">⌘ N</span>
       </button>
@@ -208,32 +229,132 @@ function AiSidebar({
   );
 }
 
-function ResultPanel({
+function AiConsentGate({ onContinue }: { onContinue: () => void }) {
+  const [checked, setChecked] = useState(false);
+  const [step, setStep] = useState<1 | 2>(1);
+
+  const rules = [
+    {
+      title: "Quyền sử dụng ảnh",
+      text: "Chỉ tải lên hình ảnh bạn có quyền sử dụng hoặc đã được người trong ảnh cho phép.",
+    },
+    {
+      title: "Không vi phạm pháp luật",
+      text: "Không dùng AI Studio để tạo nội dung vi phạm pháp luật, xâm phạm quyền riêng tư, danh dự hoặc quyền sở hữu trí tuệ.",
+    },
+    {
+      title: "Kết quả chỉ mang tính tham khảo",
+      text: "Hình ảnh thử đồ có thể khác sản phẩm thực tế về kích thước, màu sắc hoặc độ vừa vặn.",
+    },
+    {
+      title: "Trách nhiệm nội dung",
+      text: "Không tải ảnh chứa thông tin nhạy cảm nếu không cần thiết. Bạn chịu trách nhiệm về nội dung cung cấp.",
+    },
+    {
+      title: "Xác nhận đồng ý",
+      text: "Khi tiếp tục, bạn xác nhận đã đọc, hiểu và chấp hành các quy định sử dụng AI Studio.",
+    },
+  ];
+
+  const visibleRules = step === 1 ? rules.slice(0, 2) : rules.slice(2);
+
+  return (
+    <div className="min-h-screen overflow-x-hidden bg-background">
+      <SiteNav />
+      <main className="flex min-h-[calc(100vh-5rem)] w-full items-center justify-center px-3 py-8 sm:px-8 sm:py-14">
+        <section className="ai-consent-panel w-full">
+          {step === 2 && (
+            <button type="button" onClick={() => setStep(1)} className="ai-consent-back">
+              ← Quay lại
+            </button>
+          )}
+
+          <p className="eyebrow">AI Experience · Notice</p>
+          <h1 className="mt-3 font-semibold text-primary">Quy định sử dụng AI Studio</h1>
+          <p className="mt-3 text-sm leading-6 text-beige sm:text-[15px]">
+            {step === 1
+              ? "Đọc nhanh 2 quy định đầu, rồi bấm Đọc tiếp để xem phần còn lại và xác nhận."
+              : "Đọc xong các quy định cuối, tick xác nhận rồi bấm Tiếp tục."}
+          </p>
+
+          <div key={step} className="mt-6 space-y-4 sm:mt-7 sm:space-y-5" style={{ animation: "aiConsentFade 0.35s ease-out" }}>
+            {visibleRules.map((rule, idx) => {
+              const num = step === 1 ? idx + 1 : idx + 3;
+              return (
+                <div key={num} className="flex gap-3">
+                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border text-[11px] font-medium text-primary">
+                    {num}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium leading-5 text-foreground">{rule.title}</p>
+                    <p className="mt-1 text-[13px] leading-5 text-silver sm:text-sm sm:leading-6">{rule.text}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {step === 1 ? (
+            <button type="button" onClick={() => setStep(2)} className="mt-7 inline-flex min-h-11 items-center gap-2 text-sm font-medium text-primary transition-opacity hover:opacity-80 sm:mt-8">
+              Đọc tiếp <ArrowRight className="size-4" />
+            </button>
+          ) : (
+            <>
+              <label className="ai-consent-check mt-7 sm:mt-8">
+                <input type="checkbox" checked={checked} onChange={(e) => setChecked(e.target.checked)} />
+                <span>Tôi đã đọc và chấp hành các quy định sử dụng AI Studio.</span>
+              </label>
+              <button type="button" disabled={!checked} onClick={onContinue} className="mt-5 flex h-12 w-full items-center justify-center bg-primary text-xs font-medium uppercase tracking-[0.16em] text-primary-foreground transition-opacity disabled:cursor-not-allowed disabled:opacity-40">
+                Tiếp tục
+              </button>
+            </>
+          )}
+          <p className="mt-5 text-center text-[11px] leading-5 text-silver sm:mt-6">Bạn có thể rời trang này bất cứ lúc nào.</p>
+        </section>
+      </main>
+      <style>{`@keyframes aiConsentFade { from { opacity: 0; transform: translateX(12px); } to { opacity: 1; transform: translateX(0); } }`}</style>
+    </div>
+  );
+}
+
+function ResultFrame({
   image,
   pending,
   emptyLabel,
+  emptyHint,
 }: {
-  image?: string | undefined;
+  image?: string;
   pending: boolean;
   emptyLabel: string;
+  emptyHint?: string;
 }) {
   return (
-    <div className="flex aspect-[3/4] items-center justify-center border border-border bg-card">
+    <div className="flex min-h-[360px] w-full items-center justify-center overflow-hidden bg-background p-4 sm:min-h-[480px] sm:p-8">
       {pending ? (
-        <div className="flex flex-col items-center gap-3 text-silver">
-          <Loader2 className="size-6 animate-spin text-primary" />
-          <span className="text-xs uppercase tracking-[0.2em]">AI đang dựng ảnh…</span>
+        <div className="flex flex-col items-center gap-4 px-6 text-center">
+          <Loader2 className="size-8 animate-spin text-primary" />
+          <div>
+            <p className="text-sm font-medium text-foreground">AI đang tạo hình ảnh</p>
+            <p className="mt-1.5 text-xs leading-5 text-silver">Quá trình có thể mất vài giây đến hơn một phút. Vui lòng đợi.</p>
+          </div>
         </div>
       ) : image ? (
-        <img src={image} alt="Kết quả AI" className="size-full object-cover" />
+        <img src={image} alt="Kết quả AI" className="max-h-[600px] w-full rounded-sm object-contain" />
       ) : (
-        <p className="max-w-xs px-6 text-center text-sm text-silver">{emptyLabel}</p>
+        <div className="max-w-sm px-6 text-center">
+          <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full border border-border bg-card">
+            <Sparkles className="size-5 text-primary" />
+          </div>
+          <p className="text-xs uppercase tracking-[0.16em] text-silver">AI result</p>
+          <p className="mt-3 text-[15px] leading-6 text-beige">{emptyLabel}</p>
+          {emptyHint && <p className="mt-2 text-xs leading-5 text-silver">{emptyHint}</p>}
+        </div>
       )}
     </div>
   );
 }
 
-function ConceptPanel() {
+function ConceptWorkspace() {
   const run = useServerFn(generateConcept);
   const { items } = useCart();
   const [style, setStyle] = useState(STYLES[0]!);
@@ -244,9 +365,7 @@ function ConceptPanel() {
 
   const cartProducts = useMemo(() => {
     const seen = new Set<string>();
-    return items
-      .map((i) => i.product)
-      .filter((p) => (seen.has(p.id) ? false : (seen.add(p.id), true)));
+    return items.map((i) => i.product).filter((p) => (seen.has(p.id) ? false : (seen.add(p.id), true)));
   }, [items]);
 
   const suggestions = useMemo(() => {
@@ -255,10 +374,12 @@ function ConceptPanel() {
     return pool.filter((p) => p.name.toLowerCase().includes(q)).slice(0, 6);
   }, [cartProducts, query]);
 
-  const mentions = useMemo(
-    () => PRODUCTS.filter((p) => prompt.includes(`@${p.name}`)).map((p) => p.id),
-    [prompt],
-  );
+  const mentions = useMemo(() => PRODUCTS.filter((p) => prompt.includes(`@${p.name}`)).map((p) => p.id), [prompt]);
+
+  const mutation = useMutation({
+    mutationFn: () => run({ data: { style, occasion, prompt: prompt || undefined, mentions: mentions.length ? mentions : undefined } }),
+    onError: (e: Error) => toast.error(e.message),
+  });
 
   const onPromptChange = (value: string) => {
     setPrompt(value);
@@ -281,280 +402,125 @@ function ConceptPanel() {
     });
   };
 
-  const mutation = useMutation({
-    mutationFn: () =>
-      run({
-        data: {
-          style,
-          occasion,
-          prompt: prompt || undefined,
-          mentions: mentions.length ? mentions : undefined,
-        },
-      }),
-    onError: (e: Error) => toast.error(e.message),
-  });
-
   return (
-    <div className="grid min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.8fr)]">
-      <div className="min-w-0 space-y-6 border border-border bg-card p-6">
-        <Choices label="1. Phong cách" options={STYLES} value={style} onChange={setStyle} />
-        <Choices label="2. Dịp sử dụng" options={OCCASIONS} value={occasion} onChange={setOccasion} />
-
-        <div>
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-xs uppercase tracking-[0.2em] text-silver">3. Mô tả outfit</span>
-            <span className="text-[0.65rem] text-silver">
-              Gõ <span className="text-primary">@</span> để nhắc sản phẩm trong giỏ
-            </span>
-          </div>
-
-          {cartProducts.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-2">
-              {cartProducts.map((p) => (
-                <button
-                  key={p.id}
-                  type="button"
-                  onClick={() => insertMention(p.name)}
-                  className="flex items-center gap-2 border border-border px-3 py-1.5 text-xs text-beige hover:border-primary"
-                >
-                  <img src={p.image} alt="" className="size-5 object-cover" />
-                  <span className="text-primary">@</span>
-                  {p.name}
-                </button>
-              ))}
-            </div>
-          )}
-
-          <div className="relative">
-            <textarea
-              ref={textRef}
-              rows={4}
-              value={prompt}
-              onChange={(e) => onPromptChange(e.target.value)}
-              onBlur={() => window.setTimeout(() => setQuery(null), 120)}
-              placeholder="Ví dụ: phối @Shadow Hoodie với quần cargo rộng, sneaker trắng…"
-              className="mt-2 w-full resize-none border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary"
-            />
-            {query !== null && suggestions.length > 0 && (
-              <ul className="absolute inset-x-0 top-full z-20 max-h-56 overflow-auto border border-border bg-card">
-                {suggestions.map((p) => (
-                  <li key={p.id}>
-                    <button
-                      type="button"
-                      onMouseDown={(e) => e.preventDefault()}
-                      onClick={() => insertMention(p.name)}
-                      className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm text-beige hover:bg-background"
-                    >
-                      <img src={p.image} alt="" className="size-8 object-cover" />
-                      <span className="flex-1">{p.name}</span>
-                      {cartProducts.some((c) => c.id === p.id) && (
-                        <span className="text-[0.6rem] uppercase tracking-[0.15em] text-primary">
-                          Trong giỏ
-                        </span>
-                      )}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
-          {mentions.length > 0 && (
-            <p className="mt-2 text-xs text-silver">
-              AI sẽ dùng {mentions.length} sản phẩm được nhắc để dựng outfit.
-            </p>
-          )}
+    <>
+      <ResultFrame image={mutation.data?.image} pending={mutation.isPending} emptyLabel="Concept outfit của bạn sẽ hiện ở đây." emptyHint="Chọn phong cách + dịp, viết mô tả ngắn rồi bấm Tạo concept." />
+      <div className="border-t border-border p-4 sm:p-6">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-[10px] uppercase tracking-[0.18em] text-silver">Phong cách</span>
+          {STYLES.map((o) => <ChoiceChip key={o} value={o} active={o === style} onClick={() => setStyle(o)} />)}
+          <span className="ml-2 text-[10px] uppercase tracking-[0.18em] text-silver">Dịp</span>
+          {OCCASIONS.map((o) => <ChoiceChip key={o} value={o} active={o === occasion} onClick={() => setOccasion(o)} />)}
         </div>
 
-        <button
-          type="button"
-          onClick={() => mutation.mutate()}
-          disabled={mutation.isPending}
-          className="w-full bg-primary px-6 py-3 text-xs uppercase tracking-[0.15em] text-primary-foreground disabled:opacity-60"
-        >
-          {mutation.isPending ? "Đang tạo concept…" : "Tạo concept outfit"}
-        </button>
-        {mutation.data?.text && <p className="text-sm text-beige">{mutation.data.text}</p>}
-      </div>
-
-      <ResultPanel
-        image={mutation.data?.image}
-        pending={mutation.isPending}
-        emptyLabel="Concept outfit của bạn sẽ hiện ở đây."
-      />
-    </div>
-  );
-}
-
-function TryOnPanel({ initialProduct }: { initialProduct?: string | undefined }) {
-  const run = useServerFn(generateTryOn);
-  const { add } = useCart();
-  const fileRef = useRef<HTMLInputElement>(null);
-  const [person, setPerson] = useState<string | null>(null);
-  const [productId, setProductId] = useState(
-    (initialProduct && getProduct(initialProduct)?.id) || PRODUCTS[0]!.id,
-  );
-  const [note, setNote] = useState("");
-  const product = getProduct(productId)!;
-
-  const mutation = useMutation({
-    mutationFn: () =>
-      run({
-        data: {
-          personImage: person!,
-          garmentImage: product.image,
-          garmentName: product.name,
-          note: note || undefined,
-        },
-      }),
-    onError: (e: Error) => toast.error(e.message),
-  });
-
-  return (
-    <div className="grid min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.8fr)]">
-      <div className="min-w-0 space-y-6 border border-border bg-card p-6">
-        <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-silver">1. Ảnh của bạn</p>
-          <button
-            type="button"
-            onClick={() => fileRef.current?.click()}
-            className="mt-3 flex w-full items-center justify-center gap-2 border border-dashed border-border py-8 text-sm text-beige hover:border-primary"
-          >
-            <Upload className="size-4" />
-            {person ? "Đổi ảnh khác" : "Tải ảnh toàn thân (JPG/PNG)"}
-          </button>
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (!file) return;
-              if (file.size > 6_000_000) {
-                toast.error("Ảnh tối đa 6MB.");
-                return;
-              }
-              const reader = new FileReader();
-              reader.onload = () => setPerson(reader.result as string);
-              reader.readAsDataURL(file);
-            }}
-          />
-          {person && <img src={person} alt="Ảnh của bạn" className="mt-3 h-40 object-cover" />}
-        </div>
-
-        <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-silver">2. Chọn sản phẩm</p>
+        {cartProducts.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-2">
-            {PRODUCTS.map((p) => (
-              <button
-                key={p.id}
-                type="button"
-                onClick={() => setProductId(p.id)}
-                className={`border px-3 py-2 text-xs ${
-                  p.id === productId
-                    ? "border-primary text-primary"
-                    : "border-border text-beige hover:border-primary"
-                }`}
-              >
-                {p.name}
+            {cartProducts.map((p) => (
+              <button key={p.id} type="button" onClick={() => insertMention(p.name)} className="flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs text-beige hover:border-primary">
+                <img src={p.image} alt="" className="size-5 rounded-full object-cover" />
+                <span className="text-primary">@</span>{p.name}
               </button>
             ))}
           </div>
-        </div>
+        )}
 
-        <label className="block">
-          <span className="text-xs uppercase tracking-[0.2em] text-silver">3. Ghi chú thêm</span>
-          <textarea
-            rows={3}
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            placeholder="Ví dụ: mặc form rộng hơn, phối cùng quần đen…"
-            className="mt-2 w-full resize-none border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary"
-          />
-        </label>
-
-        <button
-          type="button"
-          onClick={() => (person ? mutation.mutate() : toast.error("Hãy tải ảnh của bạn trước."))}
-          disabled={mutation.isPending}
-          className="w-full bg-primary px-6 py-3 text-xs uppercase tracking-[0.15em] text-primary-foreground disabled:opacity-60"
-        >
-          {mutation.isPending ? "Đang thử đồ…" : "Thử đồ ngay"}
-        </button>
-      </div>
-
-      <div className="min-w-0 space-y-4">
-        <ResultPanel
-          image={mutation.data?.image}
-          pending={mutation.isPending}
-          emptyLabel="Tải ảnh và chọn sản phẩm để xem bạn trong bộ đồ này."
-        />
-        <div className="flex flex-wrap items-center justify-between gap-3 border border-border bg-card p-4">
-          <div>
-            <p className="text-sm font-medium">{product.name}</p>
-            <p className="text-xs text-primary">{formatVnd(product.price)}</p>
-          </div>
-          <div className="flex gap-2">
-            <Link
-              to="/product/$id"
-              params={{ id: product.id }}
-              className="border border-border px-3 py-2 text-xs uppercase tracking-[0.15em] text-beige hover:border-primary"
-            >
-              Chi tiết
-            </Link>
-            <button
-              type="button"
-              onClick={() => {
-                add({
-                  productId: product.id,
-                  size: product.sizes[0]!,
-                  color: product.colors[0]!,
-                  qty: 1,
-                });
-                toast.success("Đã thêm vào giỏ");
-              }}
-              className="bg-primary px-3 py-2 text-xs uppercase tracking-[0.15em] text-primary-foreground"
-            >
-              Thêm giỏ
-            </button>
+        <div className="relative mt-3 rounded-2xl border border-border bg-background p-2 focus-within:border-primary">
+          <textarea ref={textRef} rows={3} value={prompt} onChange={(e) => onPromptChange(e.target.value)} placeholder="Mô tả outfit bạn muốn… Ví dụ: style Y2K, tông đen trắng, form rộng, phối @Shadow Hoodie với sneaker trắng." className="w-full resize-none bg-transparent px-3 py-2 text-sm leading-6 text-foreground outline-none placeholder:text-silver" />
+          {query !== null && suggestions.length > 0 && (
+            <ul className="absolute inset-x-2 top-full z-30 mt-2 max-h-56 overflow-auto rounded-xl border border-border bg-card shadow-xl">
+              {suggestions.map((p) => (
+                <li key={p.id}>
+                  <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => insertMention(p.name)} className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm text-beige hover:bg-background">
+                    <img src={p.image} alt="" className="size-8 object-cover" /><span>{p.name}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+          <div className="flex items-center justify-between gap-3 border-t border-border px-2 pt-2">
+            <span className="text-[10px] text-silver">{mentions.length > 0 ? `${mentions.length} sản phẩm được nhắc` : "AI sẽ dựa trên mô tả + mood bạn chọn"}</span>
+            <button type="button" onClick={() => mutation.mutate()} disabled={mutation.isPending} className="min-h-10 rounded-full bg-primary px-5 text-xs font-medium uppercase tracking-[0.14em] text-primary-foreground disabled:opacity-50">{mutation.isPending ? "Đang tạo…" : "Tạo concept"}</button>
           </div>
         </div>
+        {mutation.data?.text && <p className="mt-3 text-sm leading-6 text-beige">{mutation.data.text}</p>}
       </div>
-    </div>
+    </>
   );
 }
 
-function Choices({
-  label,
-  options,
-  value,
-  onChange,
-}: {
-  label: string;
-  options: string[];
-  value: string;
-  onChange: (v: string) => void;
-}) {
+function TryOnWorkspace({ initialProduct }: { initialProduct?: string }) {
+  const run = useServerFn(generateTryOn);
+  const listProducts = useServerFn(listAiProducts);
+  const { add } = useCart();
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [person, setPerson] = useState<string | null>(null);
+  const [productId, setProductId] = useState(initialProduct ?? "");
+  const [note, setNote] = useState("");
+
+  const productsQuery = useQuery({ queryKey: ["ai-products"], queryFn: () => listProducts(), staleTime: 60_000 });
+  const products = (productsQuery.data ?? []) as AiProduct[];
+  const product = products.find((p) => p.id === productId) ?? products[0];
+
+  const mutation = useMutation({
+    mutationFn: () => run({ data: { personImage: person!, productId: product!.id, note: note || undefined } }),
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const onFileChange = (file: File | undefined) => {
+    if (!file) return;
+    const allowed = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowed.includes(file.type)) { toast.error("Chỉ hỗ trợ JPG, PNG hoặc WEBP."); return; }
+    if (file.size > 6 * 1024 * 1024) { toast.error("Ảnh tối đa 6MB."); return; }
+    const reader = new FileReader();
+    reader.onload = () => setPerson(typeof reader.result === "string" ? reader.result : null);
+    reader.onerror = () => toast.error("Không thể đọc ảnh. Vui lòng thử lại.");
+    reader.readAsDataURL(file);
+  };
+
+  if (productsQuery.isLoading) {
+    return <><ResultFrame pending={false} emptyLabel="Đang tải danh sách sản phẩm…" /><div className="border-t border-border p-6 text-sm text-silver">Đang đồng bộ sản phẩm đã xuất bản từ Supabase.</div></>;
+  }
+
+  if (productsQuery.isError || !product) {
+    return <><ResultFrame pending={false} emptyLabel="Chưa có sản phẩm phù hợp để thử đồ." /><div className="border-t border-border p-6 text-sm text-silver">Không thể tải sản phẩm thử đồ hoặc hiện chưa có sản phẩm đã xuất bản có hình ảnh và biến thể.</div></>;
+  }
+
+  const resultReady = Boolean(mutation.data?.image);
+  const addLookToCart = () => {
+    add({ productId: product.id, size: product.defaultVariant.size, color: product.defaultVariant.color, qty: 1 });
+    toast.success("Đã thêm look vào giỏ hàng.");
+  };
+
   return (
-    <div>
-      <p className="text-xs uppercase tracking-[0.2em] text-silver">{label}</p>
-      <div className="mt-3 flex flex-wrap gap-2">
-        {options.map((o) => (
-          <button
-            key={o}
-            type="button"
-            onClick={() => onChange(o)}
-            className={`border px-4 py-2 text-xs ${
-              o === value
-                ? "border-primary bg-primary text-primary-foreground"
-                : "border-border text-beige hover:border-primary"
-            }`}
-          >
-            {o}
+    <>
+      <ResultFrame image={mutation.data?.image} pending={mutation.isPending} emptyLabel="Tải ảnh của bạn và chọn sản phẩm để xem kết quả thử đồ." emptyHint="Ảnh toàn thân sẽ cho kết quả chính xác hơn." />
+      <div className="border-t border-border p-4 sm:p-6">
+        <div className="mb-5">
+          <div className="mb-2 flex items-center justify-between gap-3"><div><p className="text-[10px] uppercase tracking-[0.18em] text-primary">Bước 1 · Ảnh của bạn</p><p className="mt-1 text-xs text-silver">Ảnh toàn thân giúp AI nhận diện form và tỷ lệ tốt hơn.</p></div>{person && <span className="text-[10px] uppercase tracking-[0.14em] text-primary">✓ Đã tải ảnh</span>}</div>
+          <button type="button" onClick={() => fileRef.current?.click()} className="flex min-h-28 w-full items-center justify-center gap-3 rounded-2xl border border-dashed border-border bg-background px-5 py-5 text-left text-sm text-beige transition-colors hover:border-primary hover:bg-primary/5">
+            <Upload className="size-5 shrink-0 text-primary" /><span><strong className="block text-sm text-foreground">{person ? "Đổi ảnh toàn thân" : "TẢI ẢNH TOÀN THÂN"}</strong><span className="mt-1 block text-xs text-silver">JPG, PNG hoặc WebP · tối đa 6MB</span></span>
           </button>
-        ))}
+          <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={(e) => { onFileChange(e.target.files?.[0]); e.currentTarget.value = ""; }} />
+          {person && <div className="mt-3 flex items-center gap-3 rounded-xl border border-border bg-background p-2"><img src={person} alt="Ảnh của bạn" className="size-20 rounded-lg object-cover" /><div className="min-w-0"><p className="text-sm font-medium text-foreground">Ảnh sẵn sàng</p><p className="mt-1 text-xs text-silver">Bạn có thể chọn sản phẩm bên dưới.</p></div></div>}
+        </div>
+
+        <div className="mb-5">
+          <div className="mb-2 flex items-end justify-between gap-3"><div><p className="text-[10px] uppercase tracking-[0.18em] text-primary">Bước 2 · Chọn sản phẩm</p><p className="mt-1 text-xs text-silver">Chọn một sản phẩm để thử.</p></div><span className="text-xs text-silver">{products.length} sản phẩm</span></div>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {products.map((p) => <button key={p.id} type="button" onClick={() => setProductId(p.id)} aria-pressed={p.id === product.id} className={`group overflow-hidden rounded-xl border text-left transition-all ${p.id === product.id ? "border-primary ring-1 ring-primary" : "border-border hover:border-primary/60"}`}><div className="relative aspect-[4/5] overflow-hidden bg-background"><img src={p.image} alt={p.name} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]" />{p.id === product.id && <span className="absolute right-2 top-2 rounded-full bg-primary px-2 py-1 text-[9px] font-semibold uppercase tracking-[0.12em] text-primary-foreground">Đang chọn</span>}</div><div className="p-3"><p className="truncate text-xs font-medium text-foreground">{p.name}</p><p className="mt-1 text-xs text-primary">{formatVnd(p.price)}</p><p className="mt-1 text-[10px] uppercase tracking-[0.12em] text-silver">{p.category}</p></div></button>)}
+          </div>
+        </div>
+
+        <div className="mb-5 rounded-2xl border border-border bg-background p-2 focus-within:border-primary"><textarea rows={2} value={note} onChange={(e) => setNote(e.target.value)} maxLength={400} placeholder="Ghi chú thêm về cách bạn muốn mặc…" className="w-full resize-none bg-transparent px-3 py-2 text-sm leading-6 outline-none placeholder:text-silver" /><div className="border-t border-border px-2 pt-2 text-[10px] text-silver">{note.length}/400</div></div>
+
+        <button type="button" onClick={() => person ? mutation.mutate() : toast.error("Hãy tải ảnh toàn thân trước.")} disabled={mutation.isPending || !person} className="flex min-h-14 w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-semibold uppercase tracking-[0.12em] text-primary-foreground transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"><Sparkles className="size-4" />{mutation.isPending ? "Đang thử đồ…" : "BẮT ĐẦU THỬ ĐỒ ẢO"}</button>
+
+        {resultReady && <div className="mt-5 rounded-2xl border border-primary/40 bg-primary/5 p-4"><div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><div><p className="text-[10px] uppercase tracking-[0.18em] text-primary">Kết quả đã sẵn sàng</p><p className="mt-1 text-sm font-medium text-foreground">{product.name}</p><p className="mt-1 text-xs text-silver">{formatVnd(product.price)} · {product.defaultVariant.size} · {product.defaultVariant.color}</p></div><div className="flex flex-wrap gap-2"><Link to="/product/$id" params={{ id: product.id }} className="border border-border px-3 py-2 text-xs uppercase tracking-[0.12em] text-beige hover:border-primary">Chi tiết</Link><button type="button" onClick={addLookToCart} className="bg-primary px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-primary-foreground">THÊM LOOK VÀO GIỎ</button><Link to="/cart" className="border border-border px-3 py-2 text-xs uppercase tracking-[0.12em] text-beige hover:border-primary">XEM GIỎ</Link></div></div></div>}
       </div>
-    </div>
+    </>
   );
+}
+
+function ChoiceChip({ value, active, onClick }: { value: string; active: boolean; onClick: () => void }) {
+  return <button type="button" onClick={onClick} className={`rounded-full border px-3 py-1.5 text-[11px] transition-colors ${active ? "border-primary bg-primary/10 text-primary" : "border-border text-silver hover:text-foreground"}`}>{value}</button>;
 }
