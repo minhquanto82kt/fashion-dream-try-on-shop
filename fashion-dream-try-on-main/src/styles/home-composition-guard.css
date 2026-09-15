@@ -1,101 +1,68 @@
 /*
-  Homepage composition guard — layout only.
-  Does not change palette tokens or base font families.
+  Homepage composition guard — LAYOUT only (minimal).
+  Colors + fonts: styles.css canonical lock + palette.css
+  Hero composition: home-editorial.css
 */
-.fashion-site .fashion-hero{
-  position:relative;
-  isolation:isolate;
-  overflow:hidden;
-  display:block;
-  min-height:calc(100svh - 74px);
-  height:min(860px, calc(100svh - 74px));
-  padding-top:0;
-  grid-template-columns:none;
-  background:var(--background);
+.fashion-site .fashion-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: block;
+  min-height: calc(100svh - 74px);
+  height: min(860px, calc(100svh - 74px));
+  padding-top: 0;
+  grid-template-columns: none;
 }
-.fashion-site .fashion-hero__copy{
-  position:relative;
-  z-index:8;
-  overflow:visible;
-  min-height:100%;
-  width:min(640px, 52vw);
-  padding:clamp(48px, 7vh, 80px) 0 28px max(24px, calc((100% - 1240px) / 2));
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
+.fashion-site .fashion-hero__copy {
+  position: relative;
+  z-index: 8;
+  overflow: visible;
+  min-height: 100%;
+  width: min(640px, 52vw);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
-.fashion-site .fashion-hero__art{
-  position:absolute;
-  z-index:1;
-  right:-4%;
-  top:0;
-  width:62%;
-  height:100%;
-  min-height:0;
-  border:0;
-  box-shadow:none;
-  overflow:hidden;
-  background:transparent !important;
-  background-color:transparent !important;
-}
-.fashion-site .fashion-intro-section{
-  position:relative;
-  z-index:2;
-  width:100%;
-  min-height:clamp(560px,56vw,700px);
-  margin-top:-1px;
-  padding:clamp(24px,5vw,80px);
-  overflow:hidden;
-  isolation:isolate;
-  display:block;
-  grid-template-columns:none;
-  color:var(--ft-paper);
-  border-bottom:1px solid var(--border);
-  background:var(--ft-ink);
-  background-image:
-    linear-gradient(to top, rgba(1,6,38,.94) 0%, rgba(1,6,38,.58) 42%, rgba(1,6,38,.08) 78%),
-    var(--gradient-pixel-gold, none),
-    url("https://cdn.builder.io/api/v1/image/assets%2Fa8cc818942044ac39bb81f5eaf3b051c%2Ffb7f96c4487844e9af8fec2c7e54bd4c");
-  background-repeat:no-repeat;
-  background-position:center;
-  background-size:auto,cover,cover;
-}
-@media (max-width:800px){
-  .fashion-site .fashion-hero{
-    display:grid;
-    grid-template-columns:1fr;
-    min-height:0;
-    height:auto;
-    padding-top:64px;
-  }
-  .fashion-site .fashion-hero__copy{
-    width:100%;
-    min-height:0;
-    padding:42px 20px 20px;
-    display:block;
-  }
-  .fashion-site .fashion-hero__art{
-    position:relative;
-    right:auto;top:auto;
-    width:calc(100% + 40px);
-    margin-left:-20px;
-    height:min(560px,110vw);
-    order:2;
-  }
-}
-
-/* No solid primary card over hero image */
 .fashion-site .fashion-hero__art {
-  background: transparent !important;
-  background-color: transparent !important;
-  box-shadow: none !important;
-  border: 0 !important;
+  position: absolute;
+  z-index: 1;
+  right: -4%;
+  top: 0;
+  width: 62%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  /* color/shadow locked in styles.css — no extra !important stack here */
+  border: 0;
+  box-shadow: none;
+  background: transparent;
 }
 .fashion-site .fashion-hero__label {
-  background: transparent !important;
-  background-color: transparent !important;
-  color: var(--primary) !important;
-  width: auto !important;
-  height: auto !important;
-  padding: 0 0 0 10px !important;
+  background: transparent;
+  width: auto;
+  height: auto;
+}
+
+@media (max-width: 800px) {
+  .fashion-site .fashion-hero {
+    display: grid;
+    grid-template-columns: 1fr;
+    min-height: 0;
+    height: auto;
+    padding-top: 64px;
+  }
+  .fashion-site .fashion-hero__copy {
+    width: 100%;
+    min-height: 0;
+    display: block;
+  }
+  .fashion-site .fashion-hero__art {
+    position: relative;
+    right: auto;
+    top: auto;
+    width: calc(100% + 40px);
+    margin-left: -20px;
+    height: min(560px, 110vw);
+    order: 2;
+  }
 }
