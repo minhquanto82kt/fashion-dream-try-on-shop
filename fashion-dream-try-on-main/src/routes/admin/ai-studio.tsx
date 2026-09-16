@@ -4,7 +4,7 @@ import { getSession } from "@/lib/upthink-supabase";
 
 export const Route = createFileRoute("/admin/ai-studio")({
   component: AdminAiStudioPage,
-  head: () => ({ meta: [{ title: "AI Studio — Admin — UpThink" }] }),
+  head: () => ({ meta: [{ title: "AI Studio — Admin — WEARO" }] }),
 });
 
 type Environment = "preview" | "production" | "development";
@@ -66,12 +66,12 @@ function AdminAiStudioPage() {
     <>
       <header className="up-admin-topbar">
         <div>
-          <div className="up-admin-kicker">ADMIN / AI STUDIO</div>
+          <div className="up-admin-kicker">WEARO / ADMIN / AI STUDIO</div>
           <h1>AI Studio</h1>
           <p>Điều khiển Virtual Try-On và kiểm tra feature flag trước khi mở cho khách hàng.</p>
         </div>
         <Link to="/ai" className="up-admin-secondary" style={{ textDecoration: "none" }}>
-          Open AI Studio ↗
+          Open WEARO AI Studio ↗
         </Link>
       </header>
       <section className="up-admin-dashboard-section">
