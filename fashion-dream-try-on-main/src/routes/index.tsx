@@ -65,7 +65,7 @@ function Index() {
         <span className="fashion-hero__label">{active.label}</span>
         <div className="fashion-hero__side-note"><span>YOUR</span><span>STYLE</span><span>YOUR</span><span>STORY</span></div>
         <div className="fashion-hero__stories" aria-hidden="true"><span>STORIES</span><i /></div>
-        <div className="fashion-hero__dots" aria-label="Hero slides">{HERO_SLIDES.map((item, index) => <button key={item.label} type="button" aria-label={`Xem ${item.label}`} className={index === slide ? "is-active" : ""} onClick={() => setSlide(index)} />)}</div>
+        <div className="fashion-hero__dots" aria-label="Hero slides">{HERO_SLIDES.map((item, index) => <button key={item.label} type="button" aria-label={`Xem ${item.label}`} className={index === slide ? "is-active" : ""} style={{ width: "44px", height: "28px", padding: "13px 8px", backgroundClip: "content-box" }} onClick={() => setSlide(index)} />)}</div>
       </div>
       <div className="fashion-hero__plus" aria-hidden="true">+</div>
     </header>
