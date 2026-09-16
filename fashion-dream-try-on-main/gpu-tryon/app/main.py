@@ -42,15 +42,14 @@ MAX_IMAGE_BYTES = int(os.getenv("MAX_IMAGE_BYTES", str(12 * 1024 * 1024)))
 pipeline: TryOnPipeline | None = None
 pipeline_lock = asyncio.Lock()
 
+jobs: dict[str, "Job"] = {}
+
 
 @dataclass
 class Job:
     status: Literal["queued", "processing", "completed", "failed"]
     output_path: Path | None = None
     error: str | None = None
-
-
-jobs: dict[str, Job] = {}
 
 
 class TryOnRequest(BaseModel):
@@ -170,6 +169,15 @@ def health() -> dict[str, str | bool]:
         "model_loaded": pipeline is not None,
         "weights_dir": str(WEIGHTS_DIR),
     }
+
+
+@app.get("/ready")
+def ready() -> dict[str, str | bool]:
+    """Report whether the service has the primary VTON weights available."""
+    model_path = WEIGHTS_DIR / "model.safetensors"
+    if not model_path.is_file():
+        raise HTTPException(status_code=503, detail="FASHN VTON model weights are not available")
+    return {"status": "ready", "weights_available": True}
 
 
 @app.post("/v1/try-on", response_model=JobResponse, status_code=202)
