@@ -1,17 +1,56 @@
-/* Homepage bug fixes — keep scope limited to the editorial intro section. */
+/* Homepage background + typography fixes. Keep the intro image as a real DOM layer so CSS background stacks cannot hide it. */
 
-/* Replace the unavailable Builder.io background with the uploaded five-model image stored locally in the repo. */
 .fashion-site .fashion-intro-section {
-  background-image:
-    linear-gradient(90deg, rgba(1,6,38,.78) 0%, rgba(1,6,38,.62) 48%, rgba(1,6,38,.48) 100%),
-    url("/images/fashion-five-background.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  background-color: var(--ft-ink);
+  position: relative;
+  isolation: isolate;
+  background: var(--ft-ink) !important;
+  background-image: none !important;
+  overflow: hidden;
 }
 
-/* Restore readable spacing without changing the typography of other sections. */
+/* Layer 0 — the actual uploaded five-model image. */
+.fashion-site .fashion-intro-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.fashion-site .fashion-intro-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(90deg, rgba(1,6,38,.72) 0%, rgba(1,6,38,.52) 48%, rgba(1,6,38,.36) 100%);
+}
+
+.fashion-site .fashion-intro-bg img {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  opacity: 1;
+}
+
+/* Keep all editorial content above the image layer. */
+.fashion-site .fashion-intro-section > .fashion-section-number,
+.fashion-site .fashion-intro-section > .fashion-intro-content {
+  position: relative;
+  z-index: 3;
+}
+
+/* Existing decorative rules stay above the image but below the content. */
+.fashion-site .fashion-intro-section::before,
+.fashion-site .fashion-intro-section::after {
+  z-index: 2;
+}
+
+/* Restore readable spacing without changing typography elsewhere. */
 .fashion-site .fashion-section-title--statement {
   letter-spacing: -0.02em;
   line-height: 0.92;
@@ -28,8 +67,8 @@
 }
 
 @media (max-width: 700px) {
-  .fashion-site .fashion-intro-section {
-    background-position: center center;
+  .fashion-site .fashion-intro-bg img {
+    object-position: center center;
   }
 
   .fashion-site .fashion-section-title--statement {
