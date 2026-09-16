@@ -16,10 +16,12 @@ from app.services.fashn_provider import FashnProviderError
 from app.services.fashn_vton_provider import FashnVtonProviderError
 from app.services.try_on_job_service import TryOnJobService
 from app.services.try_on_service import TryOnService
+from app.services.try_on_storage_service import TryOnStorageError, TryOnStorageService
 
 router = APIRouter(prefix="/api/try-on", tags=["try-on"])
 job_service = TryOnJobService()
 provider_service = TryOnService()
+storage_service = TryOnStorageService()
 
 
 @router.post("/jobs", response_model=TryOnJob, status_code=202)
@@ -81,7 +83,9 @@ def get_try_on_job(
         )
 
     job = context.job
-    if job.status in {TryOnStatus.COMPLETED, TryOnStatus.FAILED}:
+    if job.status == TryOnStatus.COMPLETED:
+        return _with_signed_result(job)
+    if job.status == TryOnStatus.FAILED:
         return job
 
     prediction_id = context.metadata.get("provider_prediction_id")
@@ -122,7 +126,7 @@ def get_try_on_job(
     if mapped_status is None:
         return job
 
-    result_url = None
+    result_path = None
     if mapped_status == TryOnStatus.COMPLETED:
         output = payload.get("output")
         if isinstance(output, list):
@@ -130,7 +134,10 @@ def get_try_on_job(
         else:
             candidate = output
         if isinstance(candidate, str) and candidate.strip():
-            result_url = candidate.strip()
+            try:
+                result_path = storage_service.persist_provider_result(job_id, candidate.strip())
+            except TryOnStorageError as exc:
+                return _fail_job(job_id, user_id, str(exc))
         else:
             return _fail_job(job_id, user_id, "Try-On provider completed without a valid output image")
 
@@ -142,10 +149,23 @@ def get_try_on_job(
         job_id,
         user_id=user_id,
         status=mapped_status,
-        result_image_path=result_url,
+        result_image_path=result_path,
         error=str(error) if error else None,
     )
-    return updated or job
+    if updated is None:
+        return job
+    return _with_signed_result(updated) if mapped_status == TryOnStatus.COMPLETED else updated
+
+
+def _with_signed_result(job: TryOnJob) -> TryOnJob:
+    """Expose a short-lived signed URL for a private stored result."""
+    if not job.result_image_url:
+        return job
+    try:
+        signed_url = storage_service.create_signed_url(job.result_image_url)
+    except TryOnStorageError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    return job.model_copy(update={"result_image_url": signed_url})
 
 
 def _fail_job(job_id: str, user_id: str, error: str) -> TryOnJob:
