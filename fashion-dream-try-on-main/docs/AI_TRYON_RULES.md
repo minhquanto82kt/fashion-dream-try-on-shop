@@ -31,9 +31,22 @@ Heavy PyTorch/VTON inference must run in a separate GPU service. Do not add PyTo
 
 The main FastAPI service communicates with the GPU service server-to-server and remains responsible for authentication, job ownership, lifecycle orchestration, and persistence.
 
+## Persistent Result Storage Rule
+
+Provider output URLs are temporary execution artifacts and must not become the application's source of truth.
+
+When a provider reports a completed image, the main FastAPI service must:
+
+1. validate the result URL and image response;
+2. persist the image in the private `try-on-assets` Supabase Storage bucket;
+3. store only the durable storage path in `try_on_jobs.result_image_path`;
+4. return a short-lived signed URL to the authenticated frontend when the result is requested.
+
+The GPU service should remain focused on inference and must not expose Supabase service-role credentials to the browser or repository.
+
 ## Secrets
 
-Provider API keys must remain server-side.
+Provider API keys and Supabase service-role keys must remain server-side.
 
 ## Image Input
 
@@ -58,7 +71,7 @@ Handle:
 - invalid result;
 - storage failure.
 
-Do not render a result as successful until the server confirms a valid result.
+Do not render a result as successful until the server confirms a valid result is persisted.
 
 ## Product Compatibility
 
