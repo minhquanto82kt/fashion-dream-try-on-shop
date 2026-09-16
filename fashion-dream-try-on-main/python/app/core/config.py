@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     storage_bucket: str = ""
     try_on_provider: str = "stub"
     fashn_api_key: str = ""
+    local_tryon_api_url: str = ""
+    local_tryon_api_key: str = ""
     gemini_api_key: str = ""
     gemini_product_vision_model: str = "gemini-3.8-flash"
 
