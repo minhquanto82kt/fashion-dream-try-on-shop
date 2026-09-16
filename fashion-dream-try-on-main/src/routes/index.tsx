@@ -80,7 +80,9 @@ function Index() {
     </nav>
 
     <main>
-      <section id="intro" className="fashion-intro-section"><div className="fashion-section-number">02</div><div className="fashion-intro-content">
+      <section id="intro" className="fashion-intro-section">
+        <div className="fashion-intro-bg" aria-hidden="true"><img src="/images/fashion-five-background.svg" alt="" /></div>
+        <div className="fashion-section-number">02</div><div className="fashion-intro-content">
         <p className="fashion-eyebrow">From choosing clothes to owning your style</p>
         <h2 className="fashion-section-title fashion-section-title--statement"><span className="statement-line statement-line--solid">KHÔNG CHỈ</span><span className="statement-line statement-line--solid statement-line--offset">CHỌN ĐỒ.</span><span className="statement-line statement-line--accent-small">CHỌN CÁCH BẠN</span><span className="statement-line statement-line--accent-display">XUẤT HIỆN.</span></h2>
         <p className="fashion-intro-copy">WEARO giải quyết nỗi lo mua online không hợp dáng và việc mất thời gian phối từng món. Từ thử đồ ảo trên ảnh thật đến gợi ý Full-Set theo vóc dáng và bối cảnh, mọi bước đều hướng tới một lựa chọn tự tin hơn.</p>
