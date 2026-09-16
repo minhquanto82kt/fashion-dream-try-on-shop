@@ -6,7 +6,7 @@ import { ProductCard } from "@/components/product-card";
 import { PRODUCTS } from "@/data/products";
 import "@/styles/home-editorial.css";
 
-const INTRO_IMAGE = "https://raw.githubusercontent.com/minhquanto82kt/fashion-dream-try-on-shop/bd90d17eb8c2a6dde72685fb3655bd51c27a943a/fashion-dream-try-on-main/public/images/fashion-five-background.svg";
+const INTRO_IMAGE = "/images/fashion-5-people-bg.png";
 const HERO_SLIDES = [
   { image: "https://images.pexels.com/photos/7271149/pexels-photo-7271149.jpeg?auto=compress&cs=tinysrgb&w=1920", label: "LOOK / 001", title: "WEARO / PERSONAL" },
   { image: "https://images.pexels.com/photos/17037339/pexels-photo-17037339.jpeg?auto=compress&cs=tinysrgb&w=1920", label: "LOOK / 002", title: "AI / VIRTUAL FIT" },
