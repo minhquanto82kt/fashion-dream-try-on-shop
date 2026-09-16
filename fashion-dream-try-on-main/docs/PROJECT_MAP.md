@@ -23,6 +23,21 @@ src/
 └── styles.css        # main stylesheet entry
 ```
 
+## Python AI Areas
+
+```text
+python/
+├── app/api/                  # authenticated AI API endpoints
+├── app/models/               # provider-agnostic domain contracts
+├── app/services/             # orchestration and provider adapters
+│   ├── try_on_service.py     # provider selection/orchestration
+│   ├── fashn_provider.py     # FASHN hosted API adapter
+│   └── fashn_vton_provider.py # self-hosted GPU service HTTP adapter
+└── tests/                    # Python service tests
+```
+
+The self-hosted VTON adapter is only an HTTP client. PyTorch and FASHN VTON model dependencies belong to the separate GPU inference service, not the main application runtime.
+
 ## Route Ownership
 
 ```text
