@@ -8,16 +8,16 @@ import { useCart } from "@/lib/cart";
 export const Route = createFileRoute("/cart")({
   head: () => ({
     meta: [
-      { title: "Giỏ hàng | UpThink" },
+      { title: "Giỏ hàng | WEARO" },
       {
         name: "description",
         content:
-          "Xem lại các món đồ UpThink bạn đã chọn trước khi thanh toán.",
+          "Xem lại các món đồ WEARO bạn đã chọn trước khi thanh toán.",
       },
-      { property: "og:title", content: "Giỏ hàng | UpThink" },
+      { property: "og:title", content: "Giỏ hàng | WEARO" },
       {
         property: "og:description",
-        content: "Xem lại đơn hàng UpThink của bạn.",
+        content: "Xem lại đơn hàng WEARO của bạn.",
       },
     ],
   }),
