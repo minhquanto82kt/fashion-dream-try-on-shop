@@ -1,14 +1,14 @@
 /* Homepage bug fixes — keep scope limited to the editorial intro section. */
 
-/* Use an image already used by the homepage instead of the unavailable Builder.io asset. */
+/* Replace the unavailable Builder.io background with the uploaded five-model image stored locally in the repo. */
 .fashion-site .fashion-intro-section {
   background-image:
-    linear-gradient(to top, rgba(1,6,38,.94) 0%, rgba(1,6,38,.58) 42%, rgba(1,6,38,.08) 78%),
-    var(--gradient-pixel-gold),
-    url("https://images.pexels.com/photos/18698406/pexels-photo-18698406.jpeg?auto=compress&cs=tinysrgb&w=1600");
+    linear-gradient(90deg, rgba(1,6,38,.78) 0%, rgba(1,6,38,.62) 48%, rgba(1,6,38,.48) 100%),
+    url("/images/fashion-five-background.svg");
   background-repeat: no-repeat;
   background-position: center;
-  background-size: auto, cover, cover;
+  background-size: cover;
+  background-color: var(--ft-ink);
 }
 
 /* Restore readable spacing without changing the typography of other sections. */
@@ -28,6 +28,10 @@
 }
 
 @media (max-width: 700px) {
+  .fashion-site .fashion-intro-section {
+    background-position: center center;
+  }
+
   .fashion-site .fashion-section-title--statement {
     letter-spacing: -0.015em;
     line-height: 0.94;
