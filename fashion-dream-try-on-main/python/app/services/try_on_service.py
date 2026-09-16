@@ -43,18 +43,14 @@ class StubTryOnProvider(TryOnProvider):
     name = "stub"
 
     def submit(self, request: TryOnRequest) -> ProviderSubmission:
-        """Create a queued reference without performing inference."""
-
         return ProviderSubmission(provider=self.name)
 
     def get_status(self, prediction_id: str) -> dict[str, Any]:
-        """Return a stable non-inference status for development."""
-
         return {"status": "queued"}
 
 
 class FashnProviderAdapter(TryOnProvider):
-    """Adapt the FASHN provider to the domain-level provider contract."""
+    """Adapt the hosted FASHN provider to the domain contract."""
 
     def __init__(self, provider: FashnTryOnProvider | None = None) -> None:
         self.provider = provider or FashnTryOnProvider()
@@ -62,10 +58,7 @@ class FashnProviderAdapter(TryOnProvider):
 
     def submit(self, request: TryOnRequest) -> ProviderSubmission:
         prediction: FashnPrediction = self.provider.submit(request)
-        return ProviderSubmission(
-            provider=self.name,
-            prediction_id=prediction.id,
-        )
+        return ProviderSubmission(provider=self.name, prediction_id=prediction.id)
 
     def get_status(self, prediction_id: str) -> dict[str, Any]:
         return self.provider.get_status(prediction_id)
@@ -80,10 +73,7 @@ class FashnVtonLocalProvider(TryOnProvider):
 
     def submit(self, request: TryOnRequest) -> ProviderSubmission:
         submission = self.provider.submit(request)
-        return ProviderSubmission(
-            provider=self.name,
-            prediction_id=submission.id,
-        )
+        return ProviderSubmission(provider=self.name, prediction_id=submission.id)
 
     def get_status(self, prediction_id: str) -> dict[str, Any]:
         return self.provider.get_status(prediction_id)
@@ -96,7 +86,20 @@ class TryOnService:
         self.provider = provider or self._configured_provider()
 
     @staticmethod
-    def _configured_provider() -> TryOnProvider:
+    def provider_for_name(provider_name: str) -> TryOnProvider:
+        """Construct a provider from the provider identifier persisted with a job."""
+
+        normalized = provider_name.strip().lower()
+        if normalized == "fashn-v1.6":
+            return FashnProviderAdapter()
+        if normalized == "fashn-vton-1.5":
+            return FashnVtonLocalProvider()
+        if normalized == "stub":
+            return StubTryOnProvider()
+        raise ValueError(f"Unsupported try-on provider: {provider_name}")
+
+    @classmethod
+    def _configured_provider(cls) -> TryOnProvider:
         provider_name = get_settings().try_on_provider.strip().lower()
         if provider_name == "fashn":
             return FashnProviderAdapter()
@@ -105,8 +108,6 @@ class TryOnService:
         return StubTryOnProvider()
 
     def create_job(self, request: TryOnRequest) -> tuple[TryOnJob, ProviderSubmission]:
-        """Submit a request and return a persisted-safe lifecycle state."""
-
         job_id = str(uuid4())
         try:
             submission = self.provider.submit(request)
