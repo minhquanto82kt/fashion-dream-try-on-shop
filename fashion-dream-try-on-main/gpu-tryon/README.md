@@ -6,7 +6,7 @@ Standalone GPU inference service for FASHN VTON v1.5.
 
 The main Fashion Dream FastAPI application remains lightweight and continues to own authentication, job ownership and lifecycle persistence. Heavy PyTorch/VTON inference runs here.
 
-FASHN VTON v1.5 officially provides a `TryOnPipeline` and requires PyTorch, torchvision, ONNX Runtime GPU and the FASHN human parser. The official project documents roughly 2 GB of model weights, with human-parser weights downloaded to the Hugging Face cache on first use. citeturn0search0turn0search2
+FASHN VTON v1.5 provides a `TryOnPipeline` and requires PyTorch, torchvision, ONNX Runtime GPU and the FASHN human parser. The upstream project documents roughly 2 GB of model weights, with human-parser weights downloaded to the Hugging Face cache on first use.
 
 ## Current service contract
 
@@ -35,7 +35,7 @@ Do not commit model weights to Git. Mount a persistent volume at `/models` and r
 python3 scripts/download_weights.py
 ```
 
-The upstream project downloads `model.safetensors` and the two DWPose ONNX models from Hugging Face; the human parser is cached separately. citeturn160file0
+The upstream project downloads `model.safetensors` and the two DWPose ONNX models from Hugging Face; the human parser is cached separately.
 
 ## Required environment
 
@@ -57,4 +57,4 @@ This first GPU service uses an in-memory job registry and local result files. Th
 
 ## Model/license note
 
-The FASHN VTON v1.5 repository is Apache-2.0, but it explicitly lists third-party components, including `fashn-human-parser`, with their own licensing. Review all component licenses before commercial distribution. citeturn0search0turn165file0
+The FASHN VTON v1.5 repository is Apache-2.0, but it explicitly lists third-party components, including `fashn-human-parser`, with their own licensing. Review all component licenses before commercial distribution.
