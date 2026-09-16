@@ -89,7 +89,10 @@ def get_try_on_job(
         return job
 
     try:
-        payload = provider_service.provider.get_status(prediction_id)
+        provider = provider_service.provider_for_name(job.provider)
+        payload = provider.get_status(prediction_id)
+    except ValueError as exc:
+        return _fail_job(job_id, user_id, str(exc))
     except (FashnProviderError, FashnVtonProviderError) as exc:
         failed = job_service.update_status(
             job_id,
@@ -99,18 +102,11 @@ def get_try_on_job(
         )
         if failed is not None:
             return failed
-        raise HTTPException(
-            status_code=status.HTTP_502_BAD_GATEWAY,
-            detail=str(exc),
-        ) from exc
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
 
     provider_status = str(payload.get("status", "")).strip().lower()
     if not provider_status:
-        return _fail_job(
-            job_id,
-            user_id,
-            "Try-On provider returned an invalid status payload",
-        )
+        return _fail_job(job_id, user_id, "Try-On provider returned an invalid status payload")
 
     mapped_status = {
         "starting": TryOnStatus.PROCESSING,
@@ -129,14 +125,14 @@ def get_try_on_job(
     result_url = None
     if mapped_status == TryOnStatus.COMPLETED:
         output = payload.get("output")
-        if isinstance(output, list) and output and isinstance(output[0], str) and output[0].strip():
-            result_url = output[0].strip()
+        if isinstance(output, list):
+            candidate = output[0] if output else None
         else:
-            return _fail_job(
-                job_id,
-                user_id,
-                "Try-On provider completed without a valid output image",
-            )
+            candidate = output
+        if isinstance(candidate, str) and candidate.strip():
+            result_url = candidate.strip()
+        else:
+            return _fail_job(job_id, user_id, "Try-On provider completed without a valid output image")
 
     error = payload.get("error") if mapped_status == TryOnStatus.FAILED else None
     if mapped_status == TryOnStatus.FAILED and not error:
@@ -163,7 +159,4 @@ def _fail_job(job_id: str, user_id: str, error: str) -> TryOnJob:
     )
     if failed is not None:
         return failed
-    raise HTTPException(
-        status_code=status.HTTP_502_BAD_GATEWAY,
-        detail=error,
-    )
+    raise HTTPException(status_code=502, detail=error)
