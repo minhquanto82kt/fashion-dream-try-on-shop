@@ -6,6 +6,7 @@ import { ProductCard } from "@/components/product-card";
 import { PRODUCTS } from "@/data/products";
 import "@/styles/home-editorial.css";
 
+const INTRO_IMAGE = "https://raw.githubusercontent.com/minhquanto82kt/fashion-dream-try-on-shop/bd90d17eb8c2a6dde72685fb3655bd51c27a943a/fashion-dream-try-on-main/public/images/fashion-five-background.svg";
 const HERO_SLIDES = [
   { image: "https://images.pexels.com/photos/7271149/pexels-photo-7271149.jpeg?auto=compress&cs=tinysrgb&w=1920", label: "LOOK / 001", title: "WEARO / PERSONAL" },
   { image: "https://images.pexels.com/photos/17037339/pexels-photo-17037339.jpeg?auto=compress&cs=tinysrgb&w=1920", label: "LOOK / 002", title: "AI / VIRTUAL FIT" },
@@ -81,7 +82,7 @@ function Index() {
 
     <main>
       <section id="intro" className="fashion-intro-section">
-        <div className="fashion-intro-bg" aria-hidden="true"><img src="/images/fashion-five-background.svg" alt="" /></div>
+        <div className="fashion-intro-bg" aria-hidden="true"><img src={INTRO_IMAGE} alt="" /></div>
         <div className="fashion-section-number">02</div><div className="fashion-intro-content">
         <p className="fashion-eyebrow">From choosing clothes to owning your style</p>
         <h2 className="fashion-section-title fashion-section-title--statement"><span className="statement-line statement-line--solid">KHÔNG CHỈ</span><span className="statement-line statement-line--solid statement-line--offset">CHỌN ĐỒ.</span><span className="statement-line statement-line--accent-small">CHỌN CÁCH BẠN</span><span className="statement-line statement-line--accent-display">XUẤT HIỆN.</span></h2>
@@ -101,8 +102,7 @@ function Index() {
       </section>
 
       <section id="experience" className="fashion-flow"><div><p className="fashion-eyebrow">05 / THE EXPERIENCE</p><h2 className="fashion-section-title">See it.<br /><span className="fashion-accent">Try it.</span><br />Own it.</h2><p className="mt-5 max-w-md text-sm leading-6 text-beige">Từ khám phá sản phẩm đến tư vấn stylist, WEARO biến hành trình mua sắm thành một trải nghiệm cá nhân hóa thay vì chỉ bán từng món đồ.</p></div>
-        <div className="fashion-flow__steps"><div><span>01</span><h3>Discover</h3><p>Khám phá thiết kế basic, casual và streetwear phù hợp gu riêng.</p></div><div><span>02</span><h3>Try</h3><p>Tải ảnh toàn thân và hình dung trang phục trực tiếp trên chính mình.</p></div><div><span>03</span><h3>Style</h3><p>AI Personal Stylist phối Full-Set theo vóc dáng và bối cảnh.</p></div><div><span>04</span><h3>Refine</h3><p>Stylist 1:1 hỗ trợ tinh chỉnh outfit, phụ kiện và size khi cần.</p></div></div>
-      </section>
+        <div className="fashion-flow__steps"><div><span>01</span><h3>Discover</h3><p>Khám phá thiết kế basic, casual và streetwear phù hợp gu riêng.</p></div><div><span>02</span><h3>Try</h3><p>Tải ảnh toàn thân và hình dung trang phục trực tiếp trên chính mình.</p></div><div><span>03</span><h3>Style</h3><p>AI Personal Stylist phối Full-Set theo vóc dáng và bối cảnh.</p></div><div><span>04</span><h3>Refine</h3><p>Stylist 1:1 hỗ trợ tinh chỉnh outfit, phụ kiện và size khi cần.</p></div></div></section>
 
       <section className="fashion-editorial"><img src="https://images.pexels.com/photos/18698406/pexels-photo-18698406.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="WEARO streetwear editorial" loading="lazy" /><div><p className="fashion-eyebrow">WEARO / SAIGON</p><h2>Wear is<br /><span className="fashion-accent">your identity.</span></h2><p className="mt-4 max-w-md text-sm leading-6 text-white/80">Own — Original — Open. Mặc theo cách của riêng bạn.</p><Link to="/about" className="fashion-btn fashion-btn--light">Our story ↗</Link></div></section>
     </main><SiteFooter />
