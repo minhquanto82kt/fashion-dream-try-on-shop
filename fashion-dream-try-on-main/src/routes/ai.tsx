@@ -15,10 +15,10 @@ export const Route = createFileRoute("/ai")({
     typeof search["product"] === "string" ? { product: search["product"] } : {},
   head: () => ({
     meta: [
-      { title: "AI Lab — Concept & Virtual Try-On | UpThink" },
-      { name: "description", content: "Tạo concept outfit bằng AI và thử đồ ảo trên ảnh của bạn trước khi mua tại UpThink." },
-      { property: "og:title", content: "UpThink AI Lab" },
-      { property: "og:description", content: "Concept AI và Virtual Try-On cho thời trang cá nhân hóa." },
+      { title: "AI Lab — Concept & Virtual Try-On | WEARO" },
+      { name: "description", content: "Tạo concept outfit bằng AI và thử đồ ảo trên ảnh của bạn trước khi mua tại WEARO." },
+      { property: "og:title", content: "WEARO AI Lab" },
+      { property: "og:description", content: "Concept AI và Virtual Try-On cho thời trang cá nhân hóa tại WEARO." },
     ],
   }),
   component: AiPage,
@@ -50,12 +50,12 @@ function AiPage() {
           {sidebarOpen && <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true">
             <button type="button" aria-label="Đóng AI workspace menu" onClick={() => setSidebarOpen(false)} className="absolute inset-0 bg-background/75 backdrop-blur-[2px]" />
             <aside className="relative h-full w-[min(84vw,320px)] border-r border-border bg-card p-4 shadow-2xl">
-              <div className="mb-5 flex items-center justify-between border-b border-border pb-4"><div><p className="text-xs uppercase tracking-[0.2em] text-primary">AI Workspace</p><p className="mt-1 text-[11px] text-silver">UpThink / AI Lab</p></div><button type="button" aria-label="Đóng menu" onClick={() => setSidebarOpen(false)} className="inline-flex size-9 items-center justify-center border border-border text-silver hover:border-primary hover:text-foreground"><X className="size-4" /></button></div>
+              <div className="mb-5 flex items-center justify-between border-b border-border pb-4"><div><p className="text-xs uppercase tracking-[0.2em] text-primary">AI Workspace</p><p className="mt-1 text-[11px] text-silver">WEARO / AI Lab</p></div><button type="button" aria-label="Đóng menu" onClick={() => setSidebarOpen(false)} className="inline-flex size-9 items-center justify-center border border-border text-silver hover:border-primary hover:text-foreground"><X className="size-4" /></button></div>
               <AiSidebar mode={mode} onSelectMode={selectMode} mobile />
             </aside>
           </div>}
           <section className="min-w-0">
-            <header className="max-w-4xl"><p className="eyebrow hidden lg:block">AI Experience · Beta</p><h1 className="mt-3 text-4xl leading-none sm:text-5xl">Concept + <span className="text-primary">Virtual Try-On</span></h1><h3 className="mt-5 text-xl font-medium uppercase tracking-[0.08em] text-foreground">AI workspace</h3><p className="mt-3 max-w-2xl text-[13px] leading-6 text-beige">Hai luồng trong một workspace: tạo concept outfit theo mood, hoặc thử sản phẩm UpThink ngay trên ảnh của bạn.</p></header>
+            <header className="max-w-4xl"><p className="eyebrow hidden lg:block">AI Experience · Beta</p><h1 className="mt-3 text-4xl leading-none sm:text-5xl">Concept + <span className="text-primary">Virtual Try-On</span></h1><h3 className="mt-5 text-xl font-medium uppercase tracking-[0.08em] text-foreground">AI workspace</h3><p className="mt-3 max-w-2xl text-[13px] leading-6 text-beige">Hai luồng trong một workspace: tạo concept outfit theo mood, hoặc thử sản phẩm WEARO ngay trên ảnh của bạn.</p></header>
             <div className="mt-8 flex gap-2 border-b border-border pb-3">{(["concept", "tryon"] as const).map((m) => <button key={m} type="button" onClick={() => setMode(m)} className={`border px-5 py-2 text-xs uppercase tracking-[0.15em] ${mode === m ? "border-primary bg-primary text-primary-foreground" : "border-border text-beige hover:border-primary"}`}>{m === "concept" ? "Concept AI" : "Virtual Try-On"}</button>)}</div>
             <div className="mt-8 min-w-0">{mode === "concept" ? <ConceptWorkspace /> : <TryOnWorkspace initialProduct={search.product} />}</div>
           </section>
