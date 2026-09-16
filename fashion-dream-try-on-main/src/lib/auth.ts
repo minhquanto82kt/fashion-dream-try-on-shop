@@ -4,6 +4,7 @@ const CUSTOMER_SESSION_KEY = "upthink_customer_session";
 const GUEST_CART_KEY = "upthink-cart";
 const CUSTOMER_CART_PREFIX = "upthink-cart:user:";
 const SIGNUP_COOLDOWN_PREFIX = "upthink_signup_cooldown:";
+const RECOVERY_COOLDOWN_PREFIX = "upthink_recovery_cooldown:";
 type AuthUser = { id: string; email?: string };
 type AuthResponse = Session & { user?: AuthUser; msg?: string; message?: string; error_description?: string; error?: string; error_code?: string; code?: string };
 type CartLine = { productId: string; size: string; color: string; qty: number };
@@ -43,6 +44,21 @@ function setSignupCooldown(email: string, seconds: number) {
   window.sessionStorage.setItem(getSignupCooldownKey(email), String(Date.now() + seconds * 1000));
 }
 
+function getRecoveryCooldownKey(email: string) {
+  return `${RECOVERY_COOLDOWN_PREFIX}${normalizeEmail(email)}`;
+}
+
+function getRecoveryCooldownRemaining(email: string) {
+  if (typeof window === "undefined") return 0;
+  const value = Number(window.sessionStorage.getItem(getRecoveryCooldownKey(email)) || 0);
+  return Math.max(0, Math.ceil((value - Date.now()) / 1000));
+}
+
+function setRecoveryCooldown(email: string, seconds: number) {
+  if (typeof window === "undefined") return;
+  window.sessionStorage.setItem(getRecoveryCooldownKey(email), String(Date.now() + seconds * 1000));
+}
+
 export function getCustomerSession(): Session | null {
   if (typeof window === "undefined") return null;
   try { const raw = window.localStorage.getItem(CUSTOMER_SESSION_KEY); return raw ? (JSON.parse(raw) as Session) : null; } catch { return null; }
@@ -51,7 +67,7 @@ function setCustomerSession(session: Session | null) {
   if (typeof window === "undefined") return;
   if (session) window.localStorage.setItem(CUSTOMER_SESSION_KEY, JSON.stringify(session)); else window.localStorage.removeItem(CUSTOMER_SESSION_KEY);
 }
-function dispatchAuthEvent(type: "login" | "logout") { if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(`upthink:auth:${type}`)); }
+function dispatchAuthEvent(type: "login" | "logout" | "recovery") { if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(`upthink:auth:${type}`)); }
 function dispatchCartChanged() { if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent("upthink:cart:changed")); }
 function dispatchAuthError(message: string) { if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent("upthink:auth:error", { detail: { message } })); }
 function readCart(key: string): CartLine[] {
@@ -117,7 +133,9 @@ async function handleOAuthCallback() {
   const refreshToken = params.get("refresh_token");
   if (!accessToken || !refreshToken) return;
 
-  const provider = params.get("provider") || "OAuth";
+  const authType = params.get("type");
+  const isRecovery = authType === "recovery";
+  const provider = isRecovery ? "Password recovery" : (params.get("provider") || "OAuth");
   const expiresIn = Number(params.get("expires_in") || 3600);
   const expiresAt = Number(params.get("expires_at") || Math.floor(Date.now() / 1000) + expiresIn);
   const session: Session = {
@@ -130,7 +148,9 @@ async function handleOAuthCallback() {
 
   try {
     if (await checkAdminWithCustomerToken(accessToken)) {
-      await rejectAdminCustomerSession(accessToken, `Tài khoản ${provider} này thuộc khu vực quản trị viên và không thể dùng để mua hàng.`);
+      await rejectAdminCustomerSession(accessToken, isRecovery
+        ? "Liên kết khôi phục này thuộc tài khoản quản trị viên và không thể dùng để đổi mật khẩu tài khoản mua hàng."
+        : `Tài khoản ${provider} này thuộc khu vực quản trị viên và không thể dùng để mua hàng.`);
     }
     const userResponse = await fetch(`${supabaseConfig.url}/auth/v1/user`, {
       headers: { apikey: supabaseConfig.key, Authorization: `Bearer ${accessToken}` },
@@ -138,12 +158,12 @@ async function handleOAuthCallback() {
     if (!userResponse.ok) throw new Error(`Không thể xác minh tài khoản ${provider}.`);
     const user = (await userResponse.json()) as AuthUser;
     setCustomerSession({ ...session, user });
-    syncCartForCustomer(user.id);
+    if (!isRecovery) syncCartForCustomer(user.id);
     window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
-    dispatchAuthEvent("login");
+    dispatchAuthEvent(isRecovery ? "recovery" : "login");
   } catch (error) {
     setCustomerSession(null);
-    const message = error instanceof Error ? error.message : `Đăng nhập ${provider} thất bại.`;
+    const message = error instanceof Error ? error.message : `${isRecovery ? "Khôi phục mật khẩu" : `Đăng nhập ${provider}`} thất bại.`;
     window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
     dispatchAuthError(message);
   }
@@ -166,6 +186,40 @@ export async function signUpCustomer(email: string, password: string) {
   }
   return data;
 }
+
+export async function requestPasswordReset(email: string, redirectTo: string) {
+  const normalizedEmail = normalizeEmail(email);
+  if (!normalizedEmail) throw new Error("Vui lòng nhập email tài khoản.");
+  const remaining = getRecoveryCooldownRemaining(normalizedEmail);
+  if (remaining > 0) throw new Error(`Vui lòng chờ ${remaining} giây trước khi gửi lại email khôi phục.`);
+
+  const response = await fetch(`${supabaseConfig.url}/auth/v1/recover?redirect_to=${encodeURIComponent(redirectTo)}`, {
+    method: "POST",
+    headers: { apikey: supabaseConfig.key, "Content-Type": "application/json" },
+    body: JSON.stringify({ email: normalizedEmail }),
+  });
+  const data = await parseAuthResponse(response);
+  setRecoveryCooldown(normalizedEmail, 60);
+  return data;
+}
+
+export async function updateCustomerPassword(password: string) {
+  if (password.length < 6) throw new Error("Mật khẩu mới phải có ít nhất 6 ký tự.");
+  const session = getCustomerSession();
+  if (!session?.access_token) throw new Error("Liên kết khôi phục không còn hợp lệ. Hãy yêu cầu email khôi phục mới.");
+
+  const response = await fetch(`${supabaseConfig.url}/auth/v1/user`, {
+    method: "PUT",
+    headers: { apikey: supabaseConfig.key, Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ password }),
+  });
+  const text = await response.text();
+  let data: AuthResponse;
+  try { data = JSON.parse(text) as AuthResponse; } catch { throw new Error(text || `Không thể cập nhật mật khẩu (${response.status}).`); }
+  if (!response.ok) throw new Error(getAuthErrorMessage(data));
+  return data;
+}
+
 export async function refreshCustomerSession() {
   const session = getCustomerSession(); if (!session?.refresh_token) return null;
   const response = await fetch(`${supabaseConfig.url}/auth/v1/token?grant_type=refresh_token`, { method: "POST", headers: { apikey: supabaseConfig.key, "Content-Type": "application/json" }, body: JSON.stringify({ refresh_token: session.refresh_token }) });
