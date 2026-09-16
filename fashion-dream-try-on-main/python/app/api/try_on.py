@@ -13,8 +13,9 @@ from app.core.rate_limit import (
 )
 from app.models.try_on import TryOnJob, TryOnRequest, TryOnStatus
 from app.services.fashn_provider import FashnProviderError
+from app.services.fashn_vton_provider import FashnVtonProviderError
 from app.services.try_on_job_service import TryOnJobService
-from app.services.try_on_service import FashnProviderAdapter, TryOnService
+from app.services.try_on_service import TryOnService
 
 router = APIRouter(prefix="/api/try-on", tags=["try-on"])
 job_service = TryOnJobService()
@@ -52,7 +53,7 @@ def create_try_on_job(
             error=job.error,
             metadata=metadata,
         )
-    except FashnProviderError as exc:
+    except (FashnProviderError, FashnVtonProviderError) as exc:
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
             detail=str(exc),
@@ -80,17 +81,16 @@ def get_try_on_job(
         )
 
     job = context.job
-    if job.provider != "fashn-v1.6":
+    if job.status in {TryOnStatus.COMPLETED, TryOnStatus.FAILED}:
         return job
 
     prediction_id = context.metadata.get("provider_prediction_id")
-    if not isinstance(prediction_id, str) or not prediction_id:
+    if not isinstance(prediction_id, str) or not prediction_id.strip():
         return job
 
     try:
-        provider = FashnProviderAdapter()
-        payload = provider.get_status(prediction_id)
-    except FashnProviderError as exc:
+        payload = provider_service.provider.get_status(prediction_id)
+    except (FashnProviderError, FashnVtonProviderError) as exc:
         failed = job_service.update_status(
             job_id,
             user_id=user_id,
@@ -106,22 +106,16 @@ def get_try_on_job(
 
     provider_status = str(payload.get("status", "")).strip().lower()
     if not provider_status:
-        failed = job_service.update_status(
+        return _fail_job(
             job_id,
-            user_id=user_id,
-            status=TryOnStatus.FAILED,
-            error="FASHN returned an invalid status payload",
-        )
-        if failed is not None:
-            return failed
-        raise HTTPException(
-            status_code=status.HTTP_502_BAD_GATEWAY,
-            detail="FASHN returned an invalid status payload",
+            user_id,
+            "Try-On provider returned an invalid status payload",
         )
 
     mapped_status = {
         "starting": TryOnStatus.PROCESSING,
         "in_queue": TryOnStatus.PROCESSING,
+        "queued": TryOnStatus.QUEUED,
         "processing": TryOnStatus.PROCESSING,
         "completed": TryOnStatus.COMPLETED,
         "failed": TryOnStatus.FAILED,
@@ -132,28 +126,21 @@ def get_try_on_job(
     if mapped_status is None:
         return job
 
-    output = payload.get("output")
+    result_url = None
     if mapped_status == TryOnStatus.COMPLETED:
-        if not isinstance(output, list) or not output or not isinstance(output[0], str) or not output[0].strip():
-            failed = job_service.update_status(
+        output = payload.get("output")
+        if isinstance(output, list) and output and isinstance(output[0], str) and output[0].strip():
+            result_url = output[0].strip()
+        else:
+            return _fail_job(
                 job_id,
-                user_id=user_id,
-                status=TryOnStatus.FAILED,
-                error="FASHN completed without a valid output image",
+                user_id,
+                "Try-On provider completed without a valid output image",
             )
-            if failed is not None:
-                return failed
-            raise HTTPException(
-                status_code=status.HTTP_502_BAD_GATEWAY,
-                detail="FASHN completed without a valid output image",
-            )
-        result_url = output[0].strip()
-    else:
-        result_url = None
 
     error = payload.get("error") if mapped_status == TryOnStatus.FAILED else None
     if mapped_status == TryOnStatus.FAILED and not error:
-        error = "FASHN prediction failed"
+        error = "Try-On provider prediction failed"
 
     updated = job_service.update_status(
         job_id,
@@ -163,3 +150,20 @@ def get_try_on_job(
         error=str(error) if error else None,
     )
     return updated or job
+
+
+def _fail_job(job_id: str, user_id: str, error: str) -> TryOnJob:
+    """Persist a provider validation failure and return the latest job."""
+
+    failed = job_service.update_status(
+        job_id,
+        user_id=user_id,
+        status=TryOnStatus.FAILED,
+        error=error,
+    )
+    if failed is not None:
+        return failed
+    raise HTTPException(
+        status_code=status.HTTP_502_BAD_GATEWAY,
+        detail=error,
+    )
