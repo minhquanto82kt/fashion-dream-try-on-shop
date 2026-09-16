@@ -1,0 +1,56 @@
+name: Frontend smoke tests
+
+on:
+  push:
+    branches:
+      - main
+      - feature/product-admin
+  pull_request:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: fashion-dream-try-on-main
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: fashion-dream-try-on-main/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Start development server
+        run: |
+          npm run dev -- --host 127.0.0.1 > /tmp/wearo-vite.log 2>&1 &
+          echo $! > /tmp/wearo-vite.pid
+
+      - name: Wait for development server
+        run: |
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:3000/ >/dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/wearo-vite.log
+          exit 1
+
+      - name: Run route smoke tests
+        run: npm run test:smoke
+        env:
+          BASE_URL: http://127.0.0.1:3000
+
+      - name: Show server log on failure
+        if: failure()
+        run: cat /tmp/wearo-vite.log
