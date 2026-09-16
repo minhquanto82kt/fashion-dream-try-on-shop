@@ -8,6 +8,17 @@ export const Route = createFileRoute("/account")({ component: AccountPage });
 type Mode = "login" | "register";
 type AccountUser = { id: string; email?: string; user_metadata?: { full_name?: string; name?: string } };
 
+function getAccountPreviewUser(): AccountUser | null {
+  if (typeof window === "undefined") return null;
+  if (import.meta.env.VITE_ACCOUNT_PREVIEW_BYPASS !== "true") return null;
+  if (new URLSearchParams(window.location.search).get("preview") !== "1") return null;
+  return {
+    id: "preview-account-user",
+    email: "preview@wearo.local",
+    user_metadata: { full_name: "WEARO Preview User", name: "WEARO Preview User" },
+  };
+}
+
 function getFriendlyAuthCallbackError() {
   if (typeof window === "undefined" || !window.location.hash) return "";
   const params = new URLSearchParams(window.location.hash.slice(1));
@@ -45,6 +56,13 @@ function AccountPage() {
   const redirectTo = useMemo(() => typeof window === "undefined" ? "" : `${window.location.origin}/account?verified=1`, []);
 
   const loadUser = async () => {
+    const previewUser = getAccountPreviewUser();
+    if (previewUser) {
+      setUser(previewUser);
+      setCheckingUser(false);
+      return;
+    }
+
     const session = getCustomerSession();
     if (!session?.access_token) { setUser(null); setCheckingUser(false); return; }
     try {
@@ -120,7 +138,17 @@ function AccountPage() {
     finally { setResending(false); }
   };
 
-  const handleLogout = async () => { setLoading(true); await signOutCustomer(); setMessage("Bạn đã đăng xuất."); setLoading(false); };
+  const handleLogout = async () => {
+    if (getAccountPreviewUser()) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("preview");
+      window.history.replaceState({}, document.title, url.pathname + url.search);
+      setUser(null);
+      setMessage("Đã thoát Preview User. Tài khoản thật không bị ảnh hưởng.");
+      return;
+    }
+    setLoading(true); await signOutCustomer(); setMessage("Bạn đã đăng xuất."); setLoading(false);
+  };
 
   if (checkingUser) return <main className="account-page"><div className="account-loading">WEARO / VERIFYING ACCOUNT</div></main>;
 
