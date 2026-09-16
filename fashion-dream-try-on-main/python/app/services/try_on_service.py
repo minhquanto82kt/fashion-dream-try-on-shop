@@ -7,7 +7,10 @@ from uuid import uuid4
 from app.core.config import get_settings
 from app.models.try_on import TryOnJob, TryOnRequest, TryOnStatus
 from app.services.fashn_provider import FashnPrediction, FashnProviderError, FashnTryOnProvider
-from app.services.fashn_vton_provider import FashnVtonLocalProvider, FashnVtonProviderError
+from app.services.fashn_vton_provider import (
+    FashnVtonLocalProvider as FashnVtonClient,
+    FashnVtonProviderError,
+)
 
 
 @dataclass(frozen=True)
@@ -65,16 +68,14 @@ class FashnProviderAdapter(TryOnProvider):
         )
 
     def get_status(self, prediction_id: str) -> dict[str, Any]:
-        """Return the latest provider status for a submitted prediction."""
-
         return self.provider.get_status(prediction_id)
 
 
 class FashnVtonLocalProvider(TryOnProvider):
     """Adapt the self-hosted FASHN VTON GPU service."""
 
-    def __init__(self, provider: FashnVtonLocalProvider | None = None) -> None:
-        self.provider = provider or FashnVtonLocalProvider()
+    def __init__(self, provider: FashnVtonClient | None = None) -> None:
+        self.provider = provider or FashnVtonClient()
         self.name = self.provider.name
 
     def submit(self, request: TryOnRequest) -> ProviderSubmission:
@@ -85,8 +86,6 @@ class FashnVtonLocalProvider(TryOnProvider):
         )
 
     def get_status(self, prediction_id: str) -> dict[str, Any]:
-        """Return the latest state from the GPU service."""
-
         return self.provider.get_status(prediction_id)
 
 
