@@ -93,16 +93,16 @@ export const Route = createFileRoute("/shop")({
   loader: () => getShopProducts(),
   head: () => ({
     meta: [
-      { title: "Cửa hàng — Streetwear cá nhân hóa | UpThink" },
+      { title: "Cửa hàng — Streetwear cá nhân hóa | WEARO" },
       {
         name: "description",
         content:
-          "Hoodie, tee, outerwear và phụ kiện UpThink. Chọn size, thử đồ ảo bằng AI rồi đặt hàng trong vài phút.",
+          "Hoodie, tee, outerwear và phụ kiện WEARO. Chọn size, thử đồ ảo bằng AI rồi đặt hàng trong vài phút.",
       },
-      { property: "og:title", content: "Cửa hàng UpThink" },
+      { property: "og:title", content: "Cửa hàng WEARO" },
       {
         property: "og:description",
-        content: "Bộ sưu tập streetwear UpThink với AI virtual try-on.",
+        content: "Bộ sưu tập streetwear WEARO với AI virtual try-on.",
       },
     ],
   }),
