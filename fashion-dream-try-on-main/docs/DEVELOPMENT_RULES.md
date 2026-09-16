@@ -267,6 +267,14 @@ The homepage is an editorial composition. When modifying one section:
 
 The existing brand label `AI TRY-ON (BETA)` must remain exactly as written unless explicitly changed by the owner.
 
+### 9.3 CSS / UI Regression Guardrail
+
+For detailed CSS, responsive, typography, image-layering, asset-path, cascade, and visual regression rules, follow:
+
+[`docs/CSS_UX_UI_RULES.md`](./CSS_UX_UI_RULES.md)
+
+That document is mandatory before making meaningful CSS/UX/UI changes. It contains project-specific lessons from previous homepage regressions, including background-image failures, recursive SVG references, typography clumping, duplicate stylesheet imports, and unsafe global CSS overrides.
+
 ---
 
 ## 10. Component and CSS Rules
@@ -281,6 +289,8 @@ Rules:
 - avoid broad selectors such as `body`, `main`, generic `h1`, or generic `.container` for a single-route visual change;
 - preserve responsive behavior;
 - test both desktop and mobile layouts after significant UI changes.
+
+For detailed CSS safety requirements, use `docs/CSS_UX_UI_RULES.md` as the companion standard to this document.
 
 ---
 
