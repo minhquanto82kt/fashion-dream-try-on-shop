@@ -39,6 +39,7 @@ function Index() {
 
   return <div className="min-h-screen fashion-site">
     <SiteNav />
+    <style>{`@media (min-width: 801px){.fashion-site .fashion-hero__copy{padding-top:clamp(78px,10vh,110px)}}`}</style>
     <header id="top" className="fashion-hero" onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
       <div className="fashion-hero__beams" aria-hidden="true" />
       <div className="fashion-hero__copy">
@@ -65,7 +66,7 @@ function Index() {
         <span className="fashion-hero__label">{active.label}</span>
         <div className="fashion-hero__side-note"><span>YOUR</span><span>STYLE</span><span>YOUR</span><span>STORY</span></div>
         <div className="fashion-hero__stories" aria-hidden="true"><span>STORIES</span><i /></div>
-        <div className="fashion-hero__dots" aria-label="Hero slides">{HERO_SLIDES.map((item, index) => <button key={item.label} type="button" aria-label={`Xem ${item.label}`} className={index === slide ? "is-active" : ""} style={{ width: "44px", height: "28px", padding: "13px 8px", backgroundClip: "content-box" }} onClick={() => setSlide(index)} />)}</div>
+        <div className="fashion-hero__dots" aria-label="Hero slides">{HERO_SLIDES.map((item, index) => <button key={item.label} type="button" aria-label={`Xem ${item.label}`} className={index === slide ? "is-active" : ""} style={{ width: "44px", height: "28px", padding: "13px 8px", boxSizing: "border-box", backgroundClip: "content-box" }} onClick={() => setSlide(index)} />)}</div>
       </div>
       <div className="fashion-hero__plus" aria-hidden="true">+</div>
     </header>
