@@ -23,6 +23,14 @@ Before adding or replacing an AI provider, evaluate:
 
 Do not add a provider solely because its model is stronger.
 
+The application may use a hosted provider or a self-hosted GPU provider behind the same provider abstraction. The browser must not depend on provider-specific endpoints.
+
+## Self-Hosted GPU Rule
+
+Heavy PyTorch/VTON inference must run in a separate GPU service. Do not add PyTorch model dependencies to the Vercel/frontend runtime or the lightweight application API unless the deployment target explicitly supports the required GPU workload.
+
+The main FastAPI service communicates with the GPU service server-to-server and remains responsible for authentication, job ownership, lifecycle orchestration, and persistence.
+
 ## Secrets
 
 Provider API keys must remain server-side.
