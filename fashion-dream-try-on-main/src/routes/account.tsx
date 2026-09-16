@@ -10,8 +10,12 @@ type AccountUser = { id: string; email?: string; user_metadata?: { full_name?: s
 
 function getAccountPreviewUser(): AccountUser | null {
   if (typeof window === "undefined") return null;
-  if (import.meta.env.VITE_ACCOUNT_PREVIEW_BYPASS !== "true") return null;
   if (new URLSearchParams(window.location.search).get("preview") !== "1") return null;
+
+  const hostname = window.location.hostname;
+  const isPreviewEnvironment = hostname === "localhost" || hostname === "127.0.0.1" || hostname.includes("-git-feature-product-admin-");
+  if (!isPreviewEnvironment) return null;
+
   return {
     id: "preview-account-user",
     email: "preview@wearo.local",
@@ -140,11 +144,9 @@ function AccountPage() {
 
   const handleLogout = async () => {
     if (getAccountPreviewUser()) {
-      const url = new URL(window.location.href);
-      url.searchParams.delete("preview");
-      window.history.replaceState({}, document.title, url.pathname + url.search);
+      window.history.replaceState({}, document.title, window.location.pathname);
       setUser(null);
-      setMessage("Đã thoát Preview User. Tài khoản thật không bị ảnh hưởng.");
+      setMessage("Đã thoát Preview User. Đang hiển thị màn hình đăng nhập.");
       return;
     }
     setLoading(true); await signOutCustomer(); setMessage("Bạn đã đăng xuất."); setLoading(false);
