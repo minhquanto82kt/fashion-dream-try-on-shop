@@ -36,13 +36,13 @@ jobs:
       - name: Commit synchronized lockfile
         shell: bash
         run: |
-          if git diff --quiet -- fashion-dream-try-on-main/package-lock.json; then
+          if git diff --quiet -- package-lock.json; then
             echo "package-lock.json is already synchronized."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add fashion-dream-try-on-main/package-lock.json
+          git add package-lock.json
           git commit -m "chore(deps): sync npm lockfile"
           git push origin HEAD:feature/product-admin
           echo "Synchronized package-lock.json and pushed the update."
