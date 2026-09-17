@@ -49,12 +49,23 @@ export const listAiProducts = createServerFn({ method: "GET" }).handler(async ()
   const products = await supabaseRequest<DbProduct[]>("products?active=eq.true&status=eq.published&select=id,name,category,price,image&order=created_at.desc");
   const result = await Promise.all(products.map(async (product) => {
     const [images, variants] = await Promise.all([
-      supabaseRequest<DbProductImage[]>(`product_images?product_id=eq.${encodeURIComponent(product.id)}&select=image_url,sort_order,is_primary&order=sort_order.asc&limit=20`),
-      supabaseRequest<DbVariant[]>(`product_variants?product_id=eq.${encodeURIComponent(product.id)}&select=size,color,stock&order=size.asc,color.asc&limit=100`),
+      supabaseRequest<DbProductImage[]>(`product_images?product_id=${encodeURIComponent(product.id)}&select=image_url,sort_order,is_primary&order=sort_order.asc&limit=20`),
+      supabaseRequest<DbVariant[]>(`product_variants?product_id=${encodeURIComponent(product.id)}&select=size,color,stock&order=size.asc,color.asc&limit=100`),
     ]);
     const image = images.find((item) => item.is_primary)?.image_url ?? images[0]?.image_url ?? product.image;
-    const variant = variants.find((item) => item.stock > 0) ?? variants[0];
-    return image && variant ? { id: product.id, name: product.name, category: product.category, price: product.price, image, defaultVariant: { size: variant.size, color: variant.color } } : null;
+    const availableVariants = variants.filter((item) => item.stock > 0);
+    const defaultVariant = availableVariants[0] ?? variants[0];
+    return image && defaultVariant
+      ? {
+          id: product.id,
+          name: product.name,
+          category: product.category,
+          price: product.price,
+          image,
+          defaultVariant: { size: defaultVariant.size, color: defaultVariant.color },
+          variants,
+        }
+      : null;
   }));
   return result.filter((product): product is NonNullable<typeof product> => Boolean(product));
 });
