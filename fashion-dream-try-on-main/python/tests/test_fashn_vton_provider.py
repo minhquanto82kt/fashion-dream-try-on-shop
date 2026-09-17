@@ -10,7 +10,7 @@ from app.services.fashn_vton_provider import (
 
 
 @pytest.fixture
-def request() -> TryOnRequest:
+def try_on_request() -> TryOnRequest:
     return TryOnRequest(
         person_image_url="https://example.com/person.jpg",
         garment_image_url="https://example.com/garment.jpg",
@@ -18,7 +18,7 @@ def request() -> TryOnRequest:
     )
 
 
-def test_submit_sends_canonical_payload(request: TryOnRequest) -> None:
+def test_submit_sends_canonical_payload(try_on_request: TryOnRequest) -> None:
     response = Mock(status_code=202)
     response.json.return_value = {"id": "gpu-job-123"}
     provider = FashnVtonLocalProvider(
@@ -27,7 +27,7 @@ def test_submit_sends_canonical_payload(request: TryOnRequest) -> None:
     )
 
     with patch("app.services.fashn_vton_provider.httpx.post", return_value=response) as post:
-        submission = provider.submit(request)
+        submission = provider.submit(try_on_request)
 
     assert submission.id == "gpu-job-123"
     post.assert_called_once_with(
@@ -45,11 +45,11 @@ def test_submit_sends_canonical_payload(request: TryOnRequest) -> None:
     )
 
 
-def test_submit_requires_base_url(request: TryOnRequest) -> None:
+def test_submit_requires_base_url(try_on_request: TryOnRequest) -> None:
     provider = FashnVtonLocalProvider(base_url="")
 
     with pytest.raises(FashnVtonProviderError, match="LOCAL_TRYON_API_URL"):
-        provider.submit(request)
+        provider.submit(try_on_request)
 
 
 def test_get_status_returns_provider_payload() -> None:
