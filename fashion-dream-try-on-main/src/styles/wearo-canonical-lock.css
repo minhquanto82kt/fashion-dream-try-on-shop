@@ -29,7 +29,7 @@
 .fashion-site .fashion-ai-btn {
   font-family: var(--ft-impact), "Oswald", sans-serif !important;
 }
-/* Editorial identity: Vietnamese by default, English when the existing i18n system sets <html lang="en">. */
+/* Editorial identity: two existing WEARO typefaces for clearer hierarchy. */
 .fashion-site .fashion-editorial h2 {
   font-size: 0 !important;
   line-height: 1 !important;
@@ -37,18 +37,21 @@
 .fashion-site .fashion-editorial h2::before,
 .fashion-site .fashion-editorial h2::after {
   display: block;
-  font-family: var(--ft-editorial), "Bodoni Moda", Georgia, serif;
-  font-size: clamp(44px, 5vw, 76px);
-  font-weight: 600;
-  line-height: .92;
-  letter-spacing: -.05em;
+  font-size: clamp(42px, 4.8vw, 72px);
+  line-height: .94;
 }
 .fashion-site .fashion-editorial h2::before {
   content: "Phong cách là";
+  font-family: var(--ft-editorial), "Bodoni Moda", Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -.045em;
   color: var(--foreground);
 }
 .fashion-site .fashion-editorial h2::after {
   content: "bản sắc của bạn.";
+  font-family: var(--ft-sans), "Space Grotesk", system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -.055em;
   color: var(--primary);
 }
 html[lang="en"] .fashion-site .fashion-editorial h2::before {
@@ -66,4 +69,3 @@ html[lang="en"] .fashion-site .fashion-editorial h2::after {
   background: transparent !important;
   background-color: transparent !important;
 }
-/* Keep the Vietnamese handwritten accent light enough for the editorial hero. */
