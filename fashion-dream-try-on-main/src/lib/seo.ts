@@ -13,3 +13,34 @@ export function canonicalLink(path = "/") {
     href: absoluteUrl(path),
   };
 }
+
+export function organizationSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "WEARO",
+    url: SITE_URL,
+  };
+}
+
+export function websiteSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "WEARO",
+    url: SITE_URL,
+    description: "WEARO — cửa hàng thời trang trực tuyến kết hợp AI Virtual Try-On, AI Personal Stylist và Hybrid Stylist 1:1.",
+    publisher: {
+      "@type": "Organization",
+      name: "WEARO",
+      url: SITE_URL,
+    },
+  };
+}
+
+export function jsonLdScript(schema: unknown) {
+  return {
+    type: "application/ld+json",
+    children: JSON.stringify(schema).replace(/</g, "\\u003c"),
+  };
+}
