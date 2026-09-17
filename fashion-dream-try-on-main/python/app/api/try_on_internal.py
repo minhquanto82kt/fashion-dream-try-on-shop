@@ -73,6 +73,12 @@ def create_internal_try_on_job(request: InternalTryOnInput) -> TryOnJob:
             headers={"Retry-After": str(TRY_ON_WINDOW_SECONDS)},
         ) from exc
 
+    if provider_service.provider.name == "stub":
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="AI Try-On provider is not configured. Set TRY_ON_PROVIDER and the provider credentials on the server.",
+        )
+
     raw_data, content_type = _decode_data_url(request.person_image)
     try:
         normalized, _metadata = normalize_image(raw_data, content_type)
