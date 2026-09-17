@@ -107,6 +107,13 @@ class TryOnJobService:
             internal=True,
         )
 
+    def update_metadata_internal(self, job_id: str, metadata: dict[str, Any]) -> TryOnJob | None:
+        """Persist provider polling metadata through the trusted server bridge."""
+        response = self._table().update({"metadata": metadata}).eq("id", job_id).execute()
+        if not response.data:
+            return None
+        return self._to_model(response.data[0])
+
     def _update_status(
         self,
         job_id: str,
