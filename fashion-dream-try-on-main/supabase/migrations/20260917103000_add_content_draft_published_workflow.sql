@@ -54,7 +54,7 @@ begin
     hero_description = coalesce(draft_content->>'hero_description', hero_description),
     hero_cta_label = coalesce(draft_content->>'hero_cta_label', hero_cta_label),
     hero_cta_url = coalesce(draft_content->>'hero_cta_url', hero_cta_url),
-    social_title = coalesce(draft_content->>'social_title', social_description),
+    social_title = coalesce(draft_content->>'social_title', social_title),
     social_description = coalesce(draft_content->>'social_description', social_description),
     favicon_url = nullif(draft_content->>'favicon_url', ''),
     social_image_url = nullif(draft_content->>'social_image_url', ''),
