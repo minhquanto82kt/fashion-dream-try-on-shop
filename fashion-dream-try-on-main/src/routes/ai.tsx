@@ -11,23 +11,21 @@ import { generateConcept, generateTryOn, listAiProducts } from "@/lib/ai.functio
 import { useCart } from "@/lib/cart";
 
 export const Route = createFileRoute("/ai")({
-  validateSearch: (search: Record<string, unknown>): { product?: string } =>
-    typeof search["product"] === "string" ? { product: search["product"] } : {},
-  head: () => ({
-    meta: [
-      { title: "AI Lab — Concept & Virtual Try-On | WEARO" },
-      { name: "description", content: "Tạo concept outfit bằng AI và thử đồ ảo trên ảnh của bạn trước khi mua tại WEARO." },
-      { property: "og:title", content: "WEARO AI Lab" },
-      { property: "og:description", content: "Concept AI và Virtual Try-On cho thời trang cá nhân hóa tại WEARO." },
-    ],
-  }),
+  validateSearch: (search: Record<string, unknown>): { product?: string } => typeof search["product"] === "string" ? { product: search["product"] } : {},
+  head: () => ({ meta: [
+    { title: "AI Lab — Concept & Virtual Try-On | WEARO" },
+    { name: "description", content: "Tạo concept outfit bằng AI và thử đồ ảo trên ảnh của bạn trước khi mua tại WEARO." },
+    { property: "og:title", content: "WEARO AI Lab" },
+    { property: "og:description", content: "Concept AI và Virtual Try-On cho thời trang cá nhân hóa tại WEARO." },
+  ] }),
   component: AiPage,
 });
 
 const STYLES = ["Street", "Minimal", "Smart casual", "Y2K"];
 const OCCASIONS = ["Đi học", "Đi làm", "Hẹn hò", "Đi chơi"];
 
-type AiProduct = { id: string; name: string; category: string; price: number; image: string; defaultVariant: { size: string; color: string } };
+type ProductVariant = { size: string; color: string; stock: number };
+type AiProduct = { id: string; name: string; category: string; price: number; image: string; defaultVariant: { size: string; color: string }; variants: ProductVariant[] };
 type AiMode = "concept" | "tryon";
 
 function AiPage() {
@@ -123,10 +121,25 @@ function TryOnWorkspace({ initialProduct }: { initialProduct?: string }) {
   const [fileName, setFileName] = useState("");
   const [productId, setProductId] = useState(initialProduct ?? "");
   const [note, setNote] = useState("");
+  const [selectedVariants, setSelectedVariants] = useState<Record<string, { size: string; color: string }>>({});
+  const [savedLook, setSavedLook] = useState(false);
 
   const productsQuery = useQuery({ queryKey: ["ai-products"], queryFn: () => listProducts(), staleTime: 60_000 });
   const products = (productsQuery.data ?? []) as AiProduct[];
   const product = products.find((p) => p.id === productId) ?? products[0];
+
+  const currentVariant = product ? (() => {
+    const stored = selectedVariants[product.id];
+    const fallback = product.defaultVariant;
+    const candidate = stored ?? fallback;
+    const valid = product.variants.find((v) => v.size === candidate.size && v.color === candidate.color && v.stock > 0);
+    return valid ? { size: valid.size, color: valid.color } : { size: fallback.size, color: fallback.color };
+  })() : null;
+
+  const availableSizes = useMemo(() => product ? [...new Set(product.variants.filter((v) => v.stock > 0).map((v) => v.size))] : [], [product]);
+  const availableColors = useMemo(() => product ? [...new Set(product.variants.filter((v) => v.stock > 0).filter((v) => v.size === currentVariant?.size).map((v) => v.color))] : [], [product, currentVariant?.size]);
+  const selectedStock = product && currentVariant ? product.variants.find((v) => v.size === currentVariant.size && v.color === currentVariant.color)?.stock ?? 0 : 0;
+
   const mutation = useMutation({ mutationFn: () => run({ data: { personImage: person!, productId: product!.id, note: note || undefined } }), onError: (e: Error) => toast.error(e.message) });
 
   const onFileChange = (file: File | undefined) => {
@@ -135,14 +148,41 @@ function TryOnWorkspace({ initialProduct }: { initialProduct?: string }) {
     if (!allowed.includes(file.type)) { toast.error("Chỉ hỗ trợ JPG, PNG hoặc WEBP."); return; }
     if (file.size > 6 * 1024 * 1024) { toast.error("Ảnh tối đa 6MB."); return; }
     const reader = new FileReader();
-    reader.onload = () => { setPerson(typeof reader.result === "string" ? reader.result : null); setFileName(file.name); mutation.reset(); };
+    reader.onload = () => { setPerson(typeof reader.result === "string" ? reader.result : null); setFileName(file.name); mutation.reset(); setSavedLook(false); };
     reader.onerror = () => toast.error("Không thể đọc ảnh. Vui lòng thử lại.");
     reader.readAsDataURL(file);
   };
 
-  const clearPerson = () => { setPerson(null); setFileName(""); mutation.reset(); if (fileRef.current) fileRef.current.value = ""; };
-  const selectProduct = (id: string) => { setProductId(id); mutation.reset(); };
-  const retry = () => { if (person && product) mutation.mutate(); };
+  const clearPerson = () => { setPerson(null); setFileName(""); mutation.reset(); setSavedLook(false); if (fileRef.current) fileRef.current.value = ""; };
+  const selectProduct = (id: string) => { setProductId(id); mutation.reset(); setSavedLook(false); };
+  const setVariant = (size: string, color?: string) => {
+    if (!product) return;
+    const nextColor = color ?? product.variants.find((v) => v.size === size && v.stock > 0)?.color ?? currentVariant?.color ?? "";
+    const valid = product.variants.find((v) => v.size === size && v.color === nextColor && v.stock > 0);
+    if (!valid) return;
+    setSelectedVariants((prev) => ({ ...prev, [product.id]: { size: valid.size, color: valid.color } }));
+    mutation.reset();
+    setSavedLook(false);
+  };
+  const setColor = (color: string) => { if (product && currentVariant) setVariant(currentVariant.size, color); };
+  const retry = () => { if (person && product && currentVariant && selectedStock > 0) mutation.mutate(); };
+  const changeItem = () => { document.getElementById("tryon-product-title")?.scrollIntoView({ behavior: "smooth", block: "center" }); };
+  const saveLook = () => {
+    if (!mutation.data?.image || !product || !currentVariant) return;
+    try {
+      const key = "wearo.ai.savedLooks";
+      const existing = JSON.parse(localStorage.getItem(key) ?? "[]") as unknown[];
+      existing.unshift({ productId: product.id, productName: product.name, image: mutation.data.image, size: currentVariant.size, color: currentVariant.color, savedAt: new Date().toISOString() });
+      localStorage.setItem(key, JSON.stringify(existing.slice(0, 12)));
+      setSavedLook(true);
+      toast.success("Đã lưu look trên thiết bị này.");
+    } catch { toast.error("Không thể lưu look trên thiết bị này."); }
+  };
+  const addLookToCart = () => {
+    if (!product || !currentVariant || selectedStock <= 0) return;
+    add({ productId: product.id, size: currentVariant.size, color: currentVariant.color, qty: 1 });
+    toast.success("Đã thêm look vào giỏ hàng.");
+  };
 
   if (productsQuery.isLoading) {
     return <div className="overflow-hidden border border-border bg-card"><ResultFrame pending={true} emptyLabel="" /><div className="border-t border-border p-5 text-center text-xs text-silver">Đang đồng bộ sản phẩm đã xuất bản từ Supabase…</div></div>;
@@ -157,12 +197,12 @@ function TryOnWorkspace({ initialProduct }: { initialProduct?: string }) {
   }
 
   const resultReady = Boolean(mutation.data?.image);
-  const addLookToCart = () => { add({ productId: product.id, size: product.defaultVariant.size, color: product.defaultVariant.color, qty: 1 }); toast.success("Đã thêm look vào giỏ hàng."); };
+  const selectedVariantLabel = currentVariant ? `${currentVariant.size} · ${currentVariant.color}` : "Chưa chọn";
 
   return <div className="overflow-hidden border border-border bg-card">
     <ResultFrame image={mutation.data?.image} pending={mutation.isPending} emptyLabel="Tải ảnh của bạn và chọn sản phẩm để xem kết quả thử đồ." emptyHint="Ảnh toàn thân sẽ cho kết quả chính xác hơn." />
 
-    {mutation.isError && <div className="border-t border-border bg-primary/5 px-4 py-3 sm:px-6"><div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><div><p className="text-xs font-medium text-foreground">Không thể tạo kết quả thử đồ.</p><p className="mt-1 text-[11px] leading-5 text-silver">Kiểm tra ảnh, sản phẩm đã chọn hoặc thử lại. Không có dữ liệu đơn hàng nào được thay đổi.</p></div><button type="button" onClick={retry} disabled={!person || mutation.isPending} className="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 border border-primary px-4 text-xs uppercase tracking-[0.12em] text-primary hover:bg-primary hover:text-primary-foreground disabled:opacity-40"><RefreshCw className="size-3.5" />Thử lại</button></div></div>}
+    {mutation.isError && <div className="border-t border-border bg-primary/5 px-4 py-3 sm:px-6"><div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><div><p className="text-xs font-medium text-foreground">Không thể tạo kết quả thử đồ.</p><p className="mt-1 text-[11px] leading-5 text-silver">Kiểm tra ảnh, sản phẩm đã chọn hoặc thử lại. Không có dữ liệu đơn hàng nào được thay đổi.</p></div><button type="button" onClick={retry} disabled={!person || mutation.isPending || selectedStock <= 0} className="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 border border-primary px-4 text-xs uppercase tracking-[0.12em] text-primary hover:bg-primary hover:text-primary-foreground disabled:opacity-40"><RefreshCw className="size-3.5" />Thử lại</button></div></div>}
 
     <div className="border-t border-border p-4 sm:p-6">
       <section className="mb-6" aria-labelledby="tryon-photo-title">
@@ -178,14 +218,32 @@ function TryOnWorkspace({ initialProduct }: { initialProduct?: string }) {
         </div>
       </section>
 
+      <section className="mb-6" aria-labelledby="tryon-variant-title">
+        <div className="mb-3 flex items-end justify-between gap-3"><div><p id="tryon-variant-title" className="text-[10px] font-medium uppercase tracking-[0.18em] text-primary">03 · Chọn biến thể</p><p className="mt-1 text-xs leading-5 text-silver">Chỉ hiển thị size/màu đang còn hàng cho sản phẩm này.</p></div><span className={`text-[10px] uppercase tracking-[0.12em] ${selectedStock > 0 ? "text-primary" : "text-silver"}`}>{selectedStock > 0 ? `${selectedStock} sản phẩm còn hàng` : "Hết hàng"}</span></div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div><p className="mb-2 text-[10px] uppercase tracking-[0.14em] text-silver">Size</p><div className="flex flex-wrap gap-2">{availableSizes.map((size) => <button key={size} type="button" onClick={() => setVariant(size)} className={`min-w-12 rounded-lg border px-3 py-2 text-xs ${currentVariant?.size === size ? "border-primary bg-primary text-primary-foreground" : "border-border text-beige hover:border-primary"}`}>{size}</button>)}</div></div>
+          <div><p className="mb-2 text-[10px] uppercase tracking-[0.14em] text-silver">Color</p><div className="flex flex-wrap gap-2">{availableColors.map((color) => <button key={color} type="button" onClick={() => setColor(color)} className={`rounded-lg border px-3 py-2 text-xs ${currentVariant?.color === color ? "border-primary bg-primary text-primary-foreground" : "border-border text-beige hover:border-primary"}`}>{color}</button>)}</div></div>
+        </div>
+        <div className="mt-3 flex items-center justify-between rounded-xl border border-border bg-background px-3 py-2.5"><span className="text-[10px] uppercase tracking-[0.12em] text-silver">Đã chọn</span><span className="text-xs font-medium text-foreground">{selectedVariantLabel}</span></div>
+      </section>
+
       <section className="mb-5" aria-labelledby="tryon-note-title">
-        <div className="mb-2 flex items-center justify-between gap-3"><label id="tryon-note-title" htmlFor="tryon-note" className="text-[10px] font-medium uppercase tracking-[0.18em] text-silver">03 · Your note</label><span className={`text-[10px] ${note.length >= 360 ? "text-primary" : "text-silver"}`}>{note.length}/400</span></div>
+        <div className="mb-2 flex items-center justify-between gap-3"><label id="tryon-note-title" htmlFor="tryon-note" className="text-[10px] font-medium uppercase tracking-[0.18em] text-silver">04 · Your note</label><span className={`text-[10px] ${note.length >= 360 ? "text-primary" : "text-silver"}`}>{note.length}/400</span></div>
         <div className="rounded-2xl border border-border bg-background p-2 focus-within:border-primary"><textarea id="tryon-note" rows={3} value={note} onChange={(e) => setNote(e.target.value)} maxLength={400} placeholder="Ví dụ: giữ nguyên màu sắc, form hơi rộng, ưu tiên dáng tự nhiên…" className="w-full resize-none bg-transparent px-3 py-2 text-sm leading-6 text-foreground outline-none placeholder:text-silver" /></div>
       </section>
 
-      <button type="button" onClick={() => person ? mutation.mutate() : toast.error("Hãy tải ảnh toàn thân trước.")} disabled={mutation.isPending || !person} className="flex min-h-14 w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-semibold uppercase tracking-[0.12em] text-primary-foreground transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"><Sparkles className="size-4" />{mutation.isPending ? "Đang thử đồ…" : "BẮT ĐẦU THỬ ĐỒ ẢO"}</button>
+      <button type="button" onClick={() => person && selectedStock > 0 ? mutation.mutate() : toast.error(!person ? "Hãy tải ảnh toàn thân trước." : "Vui lòng chọn biến thể còn hàng.")} disabled={mutation.isPending || !person || selectedStock <= 0} className="flex min-h-14 w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-semibold uppercase tracking-[0.12em] text-primary-foreground transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"><Sparkles className="size-4" />{mutation.isPending ? "Đang thử đồ…" : "BẮT ĐẦU THỬ ĐỒ ẢO"}</button>
 
-      {resultReady && <div className="mt-5 rounded-2xl border border-primary/40 bg-primary/5 p-4"><div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><div><p className="text-[10px] uppercase tracking-[0.18em] text-primary">Kết quả đã sẵn sàng</p><p className="mt-1 text-sm font-medium text-foreground">{product.name}</p><p className="mt-1 text-xs text-silver">{formatVnd(product.price)} · {product.defaultVariant.size} · {product.defaultVariant.color}</p></div><div className="flex flex-wrap gap-2"><Link to="/product/$id" params={{ id: product.id }} className="border border-border px-3 py-2 text-xs uppercase tracking-[0.12em] text-beige hover:border-primary">Chi tiết</Link><button type="button" onClick={addLookToCart} className="bg-primary px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-primary-foreground">THÊM LOOK VÀO GIỎ</button><Link to="/cart" className="border border-border px-3 py-2 text-xs uppercase tracking-[0.12em] text-beige hover:border-primary">XEM GIỎ</Link></div></div></div>}
+      {resultReady && <div className="ai-result-actions mt-5 rounded-2xl border border-primary/40 bg-primary/5 p-4">
+        <div className="mb-3 flex items-center justify-between gap-3"><div><p className="text-[10px] uppercase tracking-[0.18em] text-primary">WEARO / AI RESULT</p><p className="mt-1 text-sm font-medium text-foreground">{product.name}</p></div>{savedLook && <span className="text-[10px] uppercase tracking-[0.12em] text-primary">✓ Đã lưu</span>}</div>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <button type="button" onClick={saveLook} className="min-h-10 border border-border px-3 text-[10px] font-medium uppercase tracking-[0.12em] text-beige hover:border-primary">{savedLook ? "ĐÃ LƯU LOOK" : "SAVE LOOK"}</button>
+          <button type="button" onClick={retry} disabled={mutation.isPending || selectedStock <= 0} className="inline-flex min-h-10 items-center justify-center gap-2 border border-border px-3 text-[10px] font-medium uppercase tracking-[0.12em] text-beige hover:border-primary disabled:opacity-40"><RefreshCw className="size-3.5" />TRY AGAIN</button>
+          <button type="button" onClick={changeItem} className="min-h-10 border border-border px-3 text-[10px] font-medium uppercase tracking-[0.12em] text-beige hover:border-primary">CHANGE ITEM</button>
+          <Link to="/cart" className="inline-flex min-h-10 items-center justify-center border border-primary bg-primary px-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-primary-foreground">VIEW CART</Link>
+        </div>
+        <div className="mt-3 flex flex-col gap-2 border-t border-border pt-3 sm:flex-row sm:items-center sm:justify-between"><span className="text-xs text-silver">{formatVnd(product.price)} · {selectedVariantLabel} · {selectedStock} còn hàng</span><div className="flex flex-wrap gap-2"><Link to="/product/$id" params={{ id: product.id }} className="border border-border px-3 py-2 text-[10px] uppercase tracking-[0.12em] text-beige hover:border-primary">CHI TIẾT</Link><button type="button" onClick={addLookToCart} disabled={selectedStock <= 0} className="bg-primary px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-primary-foreground disabled:opacity-40">THÊM LOOK VÀO GIỎ</button></div></div>
+      </div>}
     </div>
   </div>;
 }
