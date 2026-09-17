@@ -8,7 +8,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { ProductCard } from "@/components/product-card";
 import { type Product, formatVnd } from "@/data/products";
 import { useCart } from "@/lib/cart";
-import { absoluteUrl, canonicalLink } from "@/lib/seo";
+import { absoluteUrl, canonicalLink, jsonLdScript } from "@/lib/seo";
 
 type DbProduct = { id: string; name: string; description: string; price: number; category: Product["category"]; image: string | null; active: boolean; status: string; featured: boolean; };
 type DbVariant = { id: string; product_id: string; size: string; color: string; stock: number; };
@@ -39,6 +39,7 @@ export const Route = createFileRoute("/product/$id")({
     const p = loaderData.product;
     const totalStock = loaderData.variants.reduce((sum, variant) => sum + Math.max(0, Number(variant.stock) || 0), 0);
     const productImages = Array.from(new Set([p.image, ...p.gallery].filter(Boolean)));
+    const productUrl = absoluteUrl(`/product/${encodeURIComponent(p.id)}`);
     const productSchema = {
       "@context": "https://schema.org",
       "@type": "Product",
@@ -48,15 +49,25 @@ export const Route = createFileRoute("/product/$id")({
       sku: p.id,
       category: p.category,
       brand: { "@type": "Brand", name: "WEARO" },
-      url: absoluteUrl(`/product/${encodeURIComponent(p.id)}`),
+      url: productUrl,
       offers: {
         "@type": "Offer",
-        url: absoluteUrl(`/product/${encodeURIComponent(p.id)}`),
+        url: productUrl,
         priceCurrency: "VND",
         price: Number(p.price),
         availability: totalStock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
         itemCondition: "https://schema.org/NewCondition",
       },
+    };
+    const breadcrumbSchema = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Trang chủ", item: absoluteUrl("/") },
+        { "@type": "ListItem", position: 2, name: "Shop", item: absoluteUrl("/shop") },
+        { "@type": "ListItem", position: 3, name: p.category, item: absoluteUrl(`/shop?category=${encodeURIComponent(p.category)}`) },
+        { "@type": "ListItem", position: 4, name: p.name, item: productUrl },
+      ],
     };
     return {
       meta: [
@@ -68,12 +79,7 @@ export const Route = createFileRoute("/product/$id")({
         { name: "twitter:image", content: p.image },
       ],
       links: [canonicalLink(`/product/${encodeURIComponent(p.id)}`)],
-      scripts: [
-        {
-          type: "application/ld+json",
-          children: JSON.stringify(productSchema).replace(/</g, "\\u003c"),
-        },
-      ],
+      scripts: [jsonLdScript(productSchema), jsonLdScript(breadcrumbSchema)],
     };
   },
   component: ProductPage,
