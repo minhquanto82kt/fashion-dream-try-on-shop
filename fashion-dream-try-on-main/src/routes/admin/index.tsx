@@ -22,11 +22,7 @@ function AdminDashboardPage() {
           <h1>Dashboard</h1>
           <p>Manage your UpThink commerce operation from one place.</p>
         </div>
-        <Link
-          to="/shop"
-          className="up-admin-secondary"
-          style={{ textDecoration: "none" }}
-        >
+        <Link to="/shop" className="up-admin-secondary" style={{ textDecoration: "none" }}>
           View store ↗
         </Link>
       </header>
@@ -62,7 +58,8 @@ function AdminDashboardPage() {
                 key={label}
                 href="#"
                 onClick={(e) => e.preventDefault()}
-                className="up-admin-dashboard-action"
+                className="up-admin-dashboard-action up-admin-dashboard-action--soon"
+                aria-disabled="true"
               >
                 <div className="up-admin-dashboard-action-title">{label}</div>
                 <div className="up-admin-dashboard-action-desc">{desc}</div>
