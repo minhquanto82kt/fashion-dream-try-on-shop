@@ -12,12 +12,15 @@ from app.api.recommendations import router as recommendations_router
 from app.api.stylist import router as stylist_router
 from app.api.try_on import router as try_on_router
 from app.api.try_on_internal import router as try_on_internal_router
+from app.middleware.request_observability import RequestObservabilityMiddleware
 
 app = FastAPI(
     title="UPTHINK AI Backend",
     version="0.5.0",
     description="AI, data and admin services for UPTHINK Fashion Dream.",
 )
+
+app.add_middleware(RequestObservabilityMiddleware)
 
 app.include_router(health_router)
 app.include_router(products_router)
