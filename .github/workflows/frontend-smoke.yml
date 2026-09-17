@@ -38,7 +38,7 @@ jobs:
       - name: Wait for development server
         run: |
           for i in {1..30}; do
-            if curl -fsS http://127.0.0.1:3000/ >/dev/null; then
+            if curl -fsS http://127.0.0.1:8080/ >/dev/null; then
               exit 0
             fi
             sleep 2
@@ -49,7 +49,7 @@ jobs:
       - name: Run route smoke tests
         run: npm run test:smoke
         env:
-          BASE_URL: http://127.0.0.1:3000
+          BASE_URL: http://127.0.0.1:8080
 
       - name: Show server log on failure
         if: failure()
