@@ -7,12 +7,15 @@ export const Route = createFileRoute("/admin/appearance/")({
 });
 
 type AppearanceTab = "Brand" | "Colors" | "Typography" | "Components";
-
 const tabs: AppearanceTab[] = ["Brand", "Colors", "Typography", "Components"];
 
 function AppearancePage() {
   const [activeTab, setActiveTab] = useState<AppearanceTab>("Brand");
   const [preview, setPreview] = useState<"Desktop" | "Tablet" | "Mobile">("Desktop");
+  const [brandName, setBrandName] = useState("FASHION DREAM");
+  const [monogram, setMonogram] = useState("FD");
+  const [socialTitle, setSocialTitle] = useState("Fashion Dream — AI Try-On");
+  const [socialDescription, setSocialDescription] = useState("Preview fashion looks with AI before you buy.");
 
   return (
     <>
@@ -34,8 +37,9 @@ function AppearancePage() {
         .fd-appearance-fields { display: grid; gap: 14px; }
         .fd-appearance-field { display: grid; gap: 7px; }
         .fd-appearance-field > span { color: #666762; font-size: 9px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
-        .fd-appearance-field input, .fd-appearance-field select { width: 100%; background: #fff; border: 1px solid #dddcd5; padding: 12px 13px; outline: none; }
-        .fd-appearance-field input:focus, .fd-appearance-field select:focus { border-color: #b7b6ae; }
+        .fd-appearance-field input, .fd-appearance-field select, .fd-appearance-field textarea { width: 100%; box-sizing: border-box; background: #fff; border: 1px solid #dddcd5; padding: 12px 13px; outline: none; font: inherit; }
+        .fd-appearance-field textarea { min-height: 78px; resize: vertical; line-height: 1.5; }
+        .fd-appearance-field input:focus, .fd-appearance-field select:focus, .fd-appearance-field textarea:focus { border-color: #b7b6ae; }
         .fd-appearance-assets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
         .fd-appearance-asset { min-height: 92px; display: grid; place-items: center; border: 1px dashed #cbc9c1; background: #fafaf7; color: #777; text-align: center; font-size: 9px; letter-spacing: .1em; text-transform: uppercase; }
         .fd-appearance-asset strong { display: block; margin-bottom: 5px; color: #171717; font-size: 15px; letter-spacing: .02em; text-transform: none; }
@@ -56,13 +60,16 @@ function AppearancePage() {
         .fd-appearance-browser-bar { height: 25px; display: flex; align-items: center; gap: 4px; padding: 0 9px; background: #171717; }
         .fd-appearance-browser-bar i { width: 5px; height: 5px; border-radius: 50%; background: #777; }
         .fd-appearance-site { min-height: 420px; padding: 17px; color: #171717; }
-        .fd-appearance-site-nav { display: flex; align-items: center; justify-content: space-between; font-size: 8px; font-weight: 900; letter-spacing: .13em; }
-        .fd-appearance-site-nav span:last-child { color: #777; font-weight: 700; }
+        .fd-appearance-site-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 8px; font-weight: 900; letter-spacing: .13em; }
+        .fd-appearance-site-nav span:last-child { color: #777; font-weight: 700; text-align: right; }
         .fd-appearance-hero { margin-top: 42px; padding: 24px 17px; background: #1b1a17; color: #f4eee3; }
         .fd-appearance-hero small { color: #f0a500; font-size: 7px; font-weight: 800; letter-spacing: .18em; }
         .fd-appearance-hero h3 { max-width: 300px; margin: 13px 0; font-size: clamp(30px, 5vw, 48px); line-height: .9; letter-spacing: -.06em; }
         .fd-appearance-hero p { max-width: 280px; margin: 0 0 18px; color: rgba(244,238,227,.62); font-size: 9px; line-height: 1.6; }
         .fd-appearance-cta { display: inline-block; padding: 9px 11px; background: #f0a500; color: #171717; font-size: 8px; font-weight: 900; letter-spacing: .08em; }
+        .fd-appearance-social { margin-top: 14px; padding: 10px; border: 1px solid #dddcd5; background: #fff; }
+        .fd-appearance-social strong { display: block; font-size: 9px; }
+        .fd-appearance-social span { display: block; margin-top: 4px; color: #777; font-size: 8px; line-height: 1.4; }
         .fd-appearance-preview-foot { padding: 11px 15px; border-top: 1px solid #e3e2dc; color: #999; font-size: 9px; }
         @media (max-width: 900px) { .fd-appearance-grid { grid-template-columns: 1fr; } .fd-appearance-preview-wrap { position: static; } }
         @media (max-width: 640px) { .fd-appearance-header { align-items: flex-start; flex-direction: column; } .fd-appearance-controls { padding: 16px; } .fd-appearance-assets { grid-template-columns: 1fr; } .fd-appearance-palette { grid-template-columns: 1fr 1fr; } }
@@ -75,7 +82,7 @@ function AppearancePage() {
             <h1>Appearance</h1>
             <p>Điều chỉnh visual system của storefront từ một control center duy nhất.</p>
           </div>
-          <div className="fd-appearance-status">Draft · UI Shell</div>
+          <div className="fd-appearance-status">Draft · Brand Controls</div>
         </header>
 
         <div className="fd-appearance-grid">
@@ -91,11 +98,17 @@ function AppearancePage() {
             {activeTab === "Brand" && (
               <div className="fd-appearance-section">
                 <h2>Brand Assets</h2>
-                <p>Chuẩn bị khu vực quản lý tài sản thương hiệu; upload/persistence sẽ được nối ở slice sau.</p>
-                <div className="fd-appearance-assets">
-                  <div className="fd-appearance-asset"><div><strong>LOGO</strong>Primary mark</div></div>
-                  <div className="fd-appearance-asset"><div><strong>MONOGRAM</strong>Compact mark</div></div>
-                  <div className="fd-appearance-asset"><div><strong>FAVICON</strong>Browser icon</div></div>
+                <p>Chỉnh nội dung thương hiệu và metadata preview. Upload file/persistence sẽ được nối ở slice tiếp theo.</p>
+                <div className="fd-appearance-fields">
+                  <label className="fd-appearance-field"><span>Brand / Logo text</span><input value={brandName} onChange={(event) => setBrandName(event.target.value)} maxLength={40} /></label>
+                  <label className="fd-appearance-field"><span>Monogram</span><input value={monogram} onChange={(event) => setMonogram(event.target.value.toUpperCase())} maxLength={4} /></label>
+                  <label className="fd-appearance-field"><span>Social preview title</span><input value={socialTitle} onChange={(event) => setSocialTitle(event.target.value)} maxLength={80} /></label>
+                  <label className="fd-appearance-field"><span>Social preview description</span><textarea value={socialDescription} onChange={(event) => setSocialDescription(event.target.value)} maxLength={160} /></label>
+                </div>
+                <div className="fd-appearance-assets" style={{ marginTop: 16 }}>
+                  <div className="fd-appearance-asset"><div><strong>{monogram || "—"}</strong>Monogram preview</div></div>
+                  <div className="fd-appearance-asset"><div><strong>FAVICON</strong>Upload later</div></div>
+                  <div className="fd-appearance-asset"><div><strong>SOCIAL</strong>Metadata preview</div></div>
                 </div>
               </div>
             )}
@@ -152,17 +165,21 @@ function AppearancePage() {
               <div className={`fd-appearance-browser ${preview.toLowerCase()}`}>
                 <div className="fd-appearance-browser-bar"><i /><i /><i /></div>
                 <div className="fd-appearance-site">
-                  <div className="fd-appearance-site-nav"><span>FASHION DREAM</span><span>SHOP · AI TRY-ON · CART</span></div>
+                  <div className="fd-appearance-site-nav"><span>{brandName || "FASHION DREAM"}</span><span>SHOP · AI TRY-ON · CART</span></div>
                   <div className="fd-appearance-hero">
                     <small>AI TRY-ON (BETA)</small>
                     <h3>Wear the look. Make it yours.</h3>
                     <p>Preview the visual direction of the storefront before it reaches the live experience.</p>
                     <span className="fd-appearance-cta">START AI TRY-ON</span>
                   </div>
+                  <div className="fd-appearance-social">
+                    <strong>{socialTitle || "Social preview title"}</strong>
+                    <span>{socialDescription || "Social preview description"}</span>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="fd-appearance-preview-foot">Preview only · No theme persistence in this slice.</div>
+            <div className="fd-appearance-preview-foot">Local draft only · Changes are not persisted yet.</div>
           </aside>
         </div>
       </div>
