@@ -1,8 +1,9 @@
-"""Persistent storage for AI Try-On result images."""
+"""Persistent storage for AI Try-On input and result images."""
 
 from __future__ import annotations
 
 from urllib.parse import urlparse
+from uuid import uuid4
 
 import httpx
 
@@ -11,16 +12,43 @@ from app.db.supabase import get_supabase_client
 
 
 class TryOnStorageError(RuntimeError):
-    """Raised when a Try-On result cannot be persisted or signed."""
+    """Raised when a Try-On image cannot be persisted or signed."""
 
 
 class TryOnStorageService:
-    """Move provider output into private Supabase Storage."""
+    """Move Try-On input/output images into private Supabase Storage."""
 
     DEFAULT_BUCKET = "try-on-assets"
+    INPUT_PREFIX = "inputs"
     RESULT_PREFIX = "results"
     MAX_RESULT_BYTES = 10 * 1024 * 1024
     SIGNED_URL_SECONDS = 3600
+
+    def persist_input_image(self, data: bytes, *, user_id: str | None = None) -> tuple[str, str]:
+        """Persist a normalized customer image and return its path plus signed URL."""
+        if not data:
+            raise TryOnStorageError("Try-On input image is empty")
+        if len(data) > 10 * 1024 * 1024:
+            raise TryOnStorageError("Try-On input image exceeds the 10 MB limit")
+
+        owner = user_id or "internal"
+        path = f"{self.INPUT_PREFIX}/{owner}/{uuid4()}.webp"
+        settings = get_settings()
+        bucket = settings.storage_bucket or self.DEFAULT_BUCKET
+
+        try:
+            get_supabase_client().storage.from_(bucket).upload(
+                path,
+                data,
+                file_options={
+                    "content-type": "image/webp",
+                    "upsert": "false",
+                },
+            )
+        except Exception as exc:
+            raise TryOnStorageError("Failed to persist Try-On input in Supabase Storage") from exc
+
+        return path, self.create_signed_url(path)
 
     def persist_provider_result(self, job_id: str, result_url: str) -> str:
         """Download a provider result server-side and persist its storage path."""
@@ -60,7 +88,7 @@ class TryOnStorageService:
         return path
 
     def create_signed_url(self, path: str) -> str:
-        """Create a short-lived browser URL for a private result object."""
+        """Create a short-lived browser/provider URL for a private object."""
         settings = get_settings()
         bucket = settings.storage_bucket or self.DEFAULT_BUCKET
         try:
