@@ -125,6 +125,7 @@ export function AdminShell() {
             <Link to="/admin/appearance" className={location.pathname === "/admin/appearance" ? "active" : ""}>Appearance</Link>
             <Link to="/admin/appearance/workflow" className={location.pathname.startsWith("/admin/appearance/workflow") ? "active" : ""}>Theme Workflow</Link>
             <Link to="/admin/design-system" className={location.pathname.startsWith("/admin/design-system") ? "active" : ""}>Design System</Link>
+            <Link to="/admin/content" className={location.pathname.startsWith("/admin/content") ? "active" : ""}>Content</Link>
             <button type="button" className="up-admin-nav-disabled" disabled>Settings<span>SOON</span></button>
           </nav>
 
