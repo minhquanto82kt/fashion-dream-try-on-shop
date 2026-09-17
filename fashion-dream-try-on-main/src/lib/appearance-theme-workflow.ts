@@ -123,7 +123,7 @@ export async function publishAppearanceTheme(id: string): Promise<AppearanceThem
   const response = await fetch(`${url}/rest/v1/rpc/publish_appearance_theme`, {
     method: "POST",
     headers: headers(true),
-    body: JSON.stringify({ p_theme_id: id }),
+    body: JSON.stringify({ p_draft_id: id }),
   });
   const row = await parse<Record<string, unknown> | Record<string, unknown>[]>(response);
   return mapRow(Array.isArray(row) ? row[0] : row);
