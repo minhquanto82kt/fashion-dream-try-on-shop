@@ -11,6 +11,7 @@ from app.api.products import router as products_router
 from app.api.recommendations import router as recommendations_router
 from app.api.stylist import router as stylist_router
 from app.api.try_on import router as try_on_router
+from app.api.try_on_internal import router as try_on_internal_router
 
 app = FastAPI(
     title="UPTHINK AI Backend",
@@ -24,6 +25,7 @@ app.include_router(admin_tags_router)
 app.include_router(admin_product_tags_router)
 app.include_router(images_router)
 app.include_router(try_on_router)
+app.include_router(try_on_internal_router)
 app.include_router(product_vision_router)
 app.include_router(recommendations_router)
 app.include_router(stylist_router)
