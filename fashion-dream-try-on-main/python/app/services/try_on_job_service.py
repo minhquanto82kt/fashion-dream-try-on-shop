@@ -24,7 +24,7 @@ class TryOnJobService:
         self,
         request: TryOnRequest,
         *,
-        user_id: str,
+        user_id: str | None,
         provider: str,
         job_id: str,
         status: TryOnStatus = TryOnStatus.QUEUED,
@@ -63,12 +63,14 @@ class TryOnJobService:
         )
         if not response.data:
             return None
-        row = response.data[0]
-        metadata = row.get("metadata") or {}
-        return TryOnJobContext(
-            job=self._to_model(row),
-            metadata=metadata if isinstance(metadata, dict) else {},
-        )
+        return self._context_from_row(response.data[0])
+
+    def get_job_context_internal(self, job_id: str) -> TryOnJobContext | None:
+        """Return a job for the trusted server-side integration bridge."""
+        response = self._table().select("*").eq("id", job_id).limit(1).execute()
+        if not response.data:
+            return None
+        return self._context_from_row(response.data[0])
 
     def update_status(
         self,
@@ -80,25 +82,66 @@ class TryOnJobService:
         error: str | None = None,
     ) -> TryOnJob | None:
         """Update job lifecycle state for its owner."""
+        return self._update_status(
+            job_id,
+            status=status,
+            result_image_path=result_image_path,
+            error=error,
+            user_id=user_id,
+        )
+
+    def update_status_internal(
+        self,
+        job_id: str,
+        *,
+        status: TryOnStatus,
+        result_image_path: str | None = None,
+        error: str | None = None,
+    ) -> TryOnJob | None:
+        """Update a job through the trusted server-side integration bridge."""
+        return self._update_status(
+            job_id,
+            status=status,
+            result_image_path=result_image_path,
+            error=error,
+            internal=True,
+        )
+
+    def _update_status(
+        self,
+        job_id: str,
+        *,
+        status: TryOnStatus,
+        result_image_path: str | None,
+        error: str | None,
+        user_id: str | None = None,
+        internal: bool = False,
+    ) -> TryOnJob | None:
         changes: dict[str, Any] = {
             "status": status.value,
             "error": error,
         }
         if result_image_path is not None:
             changes["result_image_path"] = result_image_path
-        response = (
-            self._table()
-            .update(changes)
-            .eq("id", job_id)
-            .eq("user_id", user_id)
-            .execute()
-        )
+
+        query = self._table().update(changes).eq("id", job_id)
+        if not internal:
+            query = query.eq("user_id", user_id)
+        response = query.execute()
         if not response.data:
             return None
         return self._to_model(response.data[0])
 
     def _table(self):
         return get_supabase_client().table(self.TABLE)
+
+    @classmethod
+    def _context_from_row(cls, row: dict[str, Any]) -> TryOnJobContext:
+        metadata = row.get("metadata") or {}
+        return TryOnJobContext(
+            job=cls._to_model(row),
+            metadata=metadata if isinstance(metadata, dict) else {},
+        )
 
     @staticmethod
     def _to_model(row: dict[str, Any]) -> TryOnJob:
