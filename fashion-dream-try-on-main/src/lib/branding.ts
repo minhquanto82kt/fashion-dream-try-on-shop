@@ -8,7 +8,7 @@ export const SUPPORTED_LOGO_TYPES = ["image/png", "image/jpeg", "image/webp", "i
 export const SUPPORTED_FAVICON_TYPES = ["image/png", "image/x-icon", "image/vnd.microsoft.icon", "image/svg+xml"] as const;
 export const MAX_LOGO_SIZE = 2 * 1024 * 1024;
 export const MAX_FAVICON_SIZE = 512 * 1024;
-export type BrandingSettings = { logoUrl: string | null; faviconUrl: string | null };
+export type BrandingSettings = { logoUrl: string | null; faviconUrl?: string | null };
 type AdminSession = { access_token?: string };
 
 function getSupabaseConfig(): { url: string; key: string } | null {
@@ -35,7 +35,7 @@ function applyBrandIdentity(): void {
   document.querySelectorAll<HTMLElement>(".fashion-menu-footer span").forEach((el) => { if (el.textContent?.includes("UPTHINK")) el.textContent = "WEARO / IUH — SAIGON 2026"; });
 }
 
-function applyFavicon(faviconUrl: string | null): void {
+function applyFavicon(faviconUrl: string | null | undefined): void {
   if (typeof document === "undefined") return;
   const url = faviconUrl || "/favicon.ico";
   const links = document.querySelectorAll<HTMLLinkElement>('link[rel="icon"], link[rel="shortcut icon"]');
