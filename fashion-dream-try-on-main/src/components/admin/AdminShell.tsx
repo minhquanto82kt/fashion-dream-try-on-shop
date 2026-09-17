@@ -98,7 +98,7 @@ export function AdminShell() {
   .up-admin-dashboard-action--soon .up-admin-dashboard-action-title { color: #2d3e4d; }
   .up-admin-dashboard-action--soon .up-admin-dashboard-action-desc { color: #6f7f8d; }
   .up-admin-dashboard-action--soon span { color: #58738c; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; }
-  @media (max-width: 900px) { .up-admin-sidebar { width: 190px; } .up-admin-main { margin-left: 190px; width: calc(100% - 190px); padding: 30px 20px; } .up-admin-stats { grid-template-columns: 1fr 1fr; } .up-admin-dashboard-stats { grid-template-columns: 1fr 1fr; } .up-editor-grid { grid-template-columns: 1fr; } .up-admin-dashboard-actions { grid-template-columns: 1fr; } .up-admin-topbar { align-items: flex-start; gap: 15px; flex-direction: column; } }
+  @media (max-width: 900px) { .up-admin-sidebar { width: 190px; } .up-admin-main { margin-left: 190px; width: calc(100% - 190px); padding: 30px 20px; } .up-admin-stats { grid-template-columns: 1fr 1fr; } .up-admin-dashboard-stats { grid-template-columns: 1fr 1fr; } .up-editor-grid { grid-template-columns: 1fr; } .up-admin-dashboard-actions { grid-template-columns: 1fr; } }
   @media (max-width: 640px) { .up-admin-sidebar { display: none; } .up-admin-main { margin: 0; width: 100%; } .up-admin-toolbar { flex-direction: column; } .up-admin-table { min-width: 720px; } .up-admin-table-wrap { overflow: auto; } }
 `}</style>
 
@@ -115,6 +115,7 @@ export function AdminShell() {
 
             <div className="up-admin-nav-section">MANAGE</div>
             <Link to="/admin/products" className={location.pathname.startsWith("/admin/products") ? "active" : ""}>Products</Link>
+            <Link to="/admin/tags" className={location.pathname.startsWith("/admin/tags") ? "active" : ""}>Tags</Link>
             <Link to="/admin/orders" className={location.pathname.startsWith("/admin/orders") ? "active" : ""}>Orders</Link>
             <button type="button" className="up-admin-nav-disabled" disabled>Customers<span>SOON</span></button>
             <Link to="/admin/inventory" className={location.pathname.startsWith("/admin/inventory") ? "active" : ""}>Inventory</Link>
