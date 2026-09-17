@@ -8,7 +8,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { ProductCard } from "@/components/product-card";
 import { type Product, formatVnd } from "@/data/products";
 import { useCart } from "@/lib/cart";
-import { canonicalLink } from "@/lib/seo";
+import { absoluteUrl, canonicalLink } from "@/lib/seo";
 
 type DbProduct = { id: string; name: string; description: string; price: number; category: Product["category"]; image: string | null; active: boolean; status: string; featured: boolean; };
 type DbVariant = { id: string; product_id: string; size: string; color: string; stock: number; };
@@ -37,7 +37,44 @@ export const Route = createFileRoute("/product/$id")({
   head: ({ loaderData }) => {
     if (!loaderData) return { meta: [{ title: "Không tìm thấy sản phẩm | WEARO" }, { name: "robots", content: "noindex" }] };
     const p = loaderData.product;
-    return { meta: [{ title: `${p.name} — ${formatVnd(p.price)} | WEARO` }, { name: "description", content: p.description.slice(0, 155) }, { property: "og:title", content: `${p.name} | WEARO` }, { property: "og:description", content: p.description.slice(0, 155) }, { property: "og:image", content: p.image }, { name: "twitter:image", content: p.image }], links: [canonicalLink(`/product/${encodeURIComponent(p.id)}`)] };
+    const totalStock = loaderData.variants.reduce((sum, variant) => sum + Math.max(0, Number(variant.stock) || 0), 0);
+    const productImages = Array.from(new Set([p.image, ...p.gallery].filter(Boolean)));
+    const productSchema = {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      name: p.name,
+      description: p.description,
+      image: productImages.map((image) => absoluteUrl(image)),
+      sku: p.id,
+      category: p.category,
+      brand: { "@type": "Brand", name: "WEARO" },
+      url: absoluteUrl(`/product/${encodeURIComponent(p.id)}`),
+      offers: {
+        "@type": "Offer",
+        url: absoluteUrl(`/product/${encodeURIComponent(p.id)}`),
+        priceCurrency: "VND",
+        price: Number(p.price),
+        availability: totalStock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+        itemCondition: "https://schema.org/NewCondition",
+      },
+    };
+    return {
+      meta: [
+        { title: `${p.name} — ${formatVnd(p.price)} | WEARO` },
+        { name: "description", content: p.description.slice(0, 155) },
+        { property: "og:title", content: `${p.name} | WEARO` },
+        { property: "og:description", content: p.description.slice(0, 155) },
+        { property: "og:image", content: p.image },
+        { name: "twitter:image", content: p.image },
+      ],
+      links: [canonicalLink(`/product/${encodeURIComponent(p.id)}`)],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(productSchema).replace(/</g, "\\u003c"),
+        },
+      ],
+    };
   },
   component: ProductPage,
 });
