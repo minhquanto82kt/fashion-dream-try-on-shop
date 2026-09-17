@@ -1,0 +1,40 @@
+enabled: true
+mode: detect-only
+auto_fix: false
+auto_pr: false
+auto_merge: false
+
+schedule:
+  # Weekly maintenance scan. The workflow owns the exact cron expression.
+  enabled: true
+
+allowed_categories:
+  - lint-hygiene
+  - dead-code-with-evidence
+  - documentation-drift
+  - dependency-drift-report
+  - security-hygiene-report
+  - test-build-hygiene
+
+manual_review_required_categories:
+  - database
+  - rls
+  - auth
+  - orders
+  - payments
+  - checkout
+  - ai-provider
+  - api-contract
+  - architecture
+  - production-config
+  - secrets
+  - destructive-change
+
+policy:
+  smallest_safe_change: true
+  require_evidence: true
+  preserve_existing_architecture: true
+  preserve_business_rules: true
+  never_disable_rls: true
+  never_expose_secrets: true
+  never_auto_merge: true
