@@ -7,6 +7,7 @@ export const Route = createFileRoute("/admin/")({
 
 const cards = [
   ["Products", "Manage catalog, pricing and publishing", "/admin/products"],
+  ["Tags", "Manage catalog labels and product relationships", "/admin/tags"],
   ["Orders", "Review and manage customer orders", "/admin/orders"],
   ["Customers", "View customer accounts and activity", "#"],
   ["Inventory", "Track stock and availability", "/admin/inventory"],
@@ -18,55 +19,36 @@ function AdminDashboardPage() {
     <>
       <header className="up-admin-topbar">
         <div>
-          <div className="up-admin-kicker">ADMIN / OVERVIEW</div>
+          <div className="up-admin-kicker">UPTHINK / COMMERCE ADMIN</div>
           <h1>Dashboard</h1>
-          <p>Manage your UpThink commerce operation from one place.</p>
+          <p>Quản lý catalog, đơn hàng, giao diện và các dịch vụ vận hành của cửa hàng.</p>
         </div>
-        <Link to="/shop" className="up-admin-secondary" style={{ textDecoration: "none" }}>
-          View store ↗
-        </Link>
       </header>
 
       <section className="up-admin-dashboard-stats">
-        {[
-          ["Products", "Catalog", "10"],
-          ["Orders", "Pending review", "0"],
-          ["Customers", "Registered", "0"],
-          ["Revenue", "Store total", "0 ₫"],
-        ].map(([name, label, value]) => (
-          <div key={name} className="up-admin-dashboard-card">
-            <div className="up-admin-dashboard-label">{name}</div>
-            <div className="up-admin-dashboard-value">{value}</div>
-            <div className="up-admin-dashboard-muted">{label}</div>
-          </div>
-        ))}
+        <div className="up-admin-dashboard-card"><div className="up-admin-dashboard-label">Products</div><div className="up-admin-dashboard-value">CATALOG</div><div className="up-admin-dashboard-muted">Sản phẩm & variants</div></div>
+        <div className="up-admin-dashboard-card"><div className="up-admin-dashboard-label">Tags</div><div className="up-admin-dashboard-value">CRUDL</div><div className="up-admin-dashboard-muted">Python Admin API</div></div>
+        <div className="up-admin-dashboard-card"><div className="up-admin-dashboard-label">Orders</div><div className="up-admin-dashboard-value">ORDERS</div><div className="up-admin-dashboard-muted">Order lifecycle</div></div>
+        <div className="up-admin-dashboard-card"><div className="up-admin-dashboard-label">AI</div><div className="up-admin-dashboard-value">STUDIO</div><div className="up-admin-dashboard-muted">Try-On controls</div></div>
       </section>
 
       <section className="up-admin-dashboard-section">
-        <h2>Quick actions</h2>
-        <p>Start with the area you want to manage.</p>
+        <h2>Quick Actions</h2>
+        <p>Truy cập nhanh các khu vực quản trị đang hoạt động.</p>
         <div className="up-admin-dashboard-actions">
-          {cards.map(([label, desc, href]) =>
-            href.startsWith("/admin/") ? (
-              <Link key={label} to={href} className="up-admin-dashboard-action">
-                <div className="up-admin-dashboard-action-title">{label}</div>
-                <div className="up-admin-dashboard-action-desc">{desc}</div>
-                <span>Open manager →</span>
-              </Link>
-            ) : (
-              <a
-                key={label}
-                href="#"
-                onClick={(e) => e.preventDefault()}
-                className="up-admin-dashboard-action up-admin-dashboard-action--soon"
-                aria-disabled="true"
-              >
-                <div className="up-admin-dashboard-action-title">{label}</div>
-                <div className="up-admin-dashboard-action-desc">{desc}</div>
-                <span>Coming soon</span>
-              </a>
-            ),
-          )}
+          {cards.map(([title, description, href]) => href === "#" ? (
+            <div key={title} className="up-admin-dashboard-action up-admin-dashboard-action--soon" aria-disabled="true">
+              <div className="up-admin-dashboard-action-title">{title}</div>
+              <div className="up-admin-dashboard-action-desc">{description}</div>
+              <span>Coming soon</span>
+            </div>
+          ) : (
+            <Link key={title} className="up-admin-dashboard-action" to={href}>
+              <div className="up-admin-dashboard-action-title">{title}</div>
+              <div className="up-admin-dashboard-action-desc">{description}</div>
+              <span>Open →</span>
+            </Link>
+          ))}
         </div>
       </section>
     </>
