@@ -18,8 +18,8 @@ export function AdminShell() {
   .up-admin-sidebar nav a { padding: 11px 13px; color: #9b9c98; font-size: 13px; }
   .up-admin-sidebar nav a.active { background: #242727; color: #fff; border-left: 2px solid #f2a900; }
   .up-admin-nav-section { font-size: 9px; letter-spacing: 0.18em; color: #626461; margin: 17px 13px 5px; }
-  .up-admin-nav-disabled { width: 100%; display: flex; align-items: center; justify-content: space-between; border: 0; background: none; color: #4f504d; padding: 11px 13px; font-size: 13px; text-align: left; cursor: not-allowed; opacity: 0.65; }
-  .up-admin-nav-disabled span { font-size: 8px; letter-spacing: 0.12em; color: #626461; }
+  .up-admin-nav-disabled { width: 100%; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(117,145,172,.18); border-radius: 7px; background: rgba(76,101,126,.10); color: #718297; padding: 11px 13px; font-size: 13px; text-align: left; cursor: not-allowed; opacity: 1; }
+  .up-admin-nav-disabled span { font-size: 8px; letter-spacing: 0.12em; color: #9bb2ca; background: #1c2936; border: 1px solid rgba(155,178,202,.18); border-radius: 4px; padding: 3px 5px; }
   .up-admin-logout { margin-top: auto; background: none; border: 0; color: #8d8e8b; text-align: left; padding: 12px; cursor: pointer; }
   .up-admin-main { margin-left: 240px; width: calc(100% - 240px); padding: 44px 52px 80px; }
   .up-admin-topbar { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 28px; }
@@ -94,6 +94,10 @@ export function AdminShell() {
   .up-admin-dashboard-action-title { font-weight: 800; font-size: 17px; }
   .up-admin-dashboard-action-desc { color: #777; font-size: 13px; margin: 7px 0 14px; }
   .up-admin-dashboard-action span { font-size: 13px; font-weight: 700; }
+  .up-admin-dashboard-action--soon { background: #eef3f7; border-color: #d6e0e8; color: #334452; cursor: not-allowed; }
+  .up-admin-dashboard-action--soon .up-admin-dashboard-action-title { color: #2d3e4d; }
+  .up-admin-dashboard-action--soon .up-admin-dashboard-action-desc { color: #6f7f8d; }
+  .up-admin-dashboard-action--soon span { color: #58738c; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; }
   @media (max-width: 900px) { .up-admin-sidebar { width: 190px; } .up-admin-main { margin-left: 190px; width: calc(100% - 190px); padding: 30px 20px; } .up-admin-stats { grid-template-columns: 1fr 1fr; } .up-admin-dashboard-stats { grid-template-columns: 1fr 1fr; } .up-editor-grid { grid-template-columns: 1fr; } .up-admin-dashboard-actions { grid-template-columns: 1fr; } .up-admin-topbar { align-items: flex-start; gap: 15px; flex-direction: column; } }
   @media (max-width: 640px) { .up-admin-sidebar { display: none; } .up-admin-main { margin: 0; width: 100%; } .up-admin-toolbar { flex-direction: column; } .up-admin-table { min-width: 720px; } .up-admin-table-wrap { overflow: auto; } }
 `}</style>
@@ -117,6 +121,7 @@ export function AdminShell() {
 
             <div className="up-admin-nav-section">SYSTEM</div>
             <Link to="/admin/ai-studio" className={location.pathname.startsWith("/admin/ai-studio") ? "active" : ""}>AI Studio</Link>
+            <Link to="/admin/appearance" className={location.pathname.startsWith("/admin/appearance") ? "active" : ""}>Appearance</Link>
             <button type="button" className="up-admin-nav-disabled" disabled>Settings<span>SOON</span></button>
           </nav>
 
