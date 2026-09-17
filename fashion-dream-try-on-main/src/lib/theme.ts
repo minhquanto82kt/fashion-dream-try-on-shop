@@ -84,10 +84,20 @@ export async function loadRemoteTheme(): Promise<ThemeColors | null> {
   if (!config || typeof window === "undefined") return null;
   try {
     const isAdminAppearance = window.location.pathname.startsWith("/admin/appearance");
-    const isPreview = new URLSearchParams(window.location.search).get("theme_preview") === "1";
+    const params = new URLSearchParams(window.location.search);
+    const isPreview = params.get("theme_preview") === "1";
     if (isPreview) {
+      const encodedPreview = params.get("theme_data");
+      if (encodedPreview) {
+        try {
+          const preview = sanitizeThemeColors(JSON.parse(encodedPreview));
+          cacheTheme(preview); applyTheme(preview);
+          window.dispatchEvent(new CustomEvent("upthink:theme:preview", { detail: preview }));
+          return preview;
+        } catch { /* fall through to session preview */ }
+      }
       const preview = window.sessionStorage.getItem(THEME_PREVIEW_STORAGE_KEY);
-      if (preview) { const theme = sanitizeThemeColors(JSON.parse(preview)); cacheTheme(theme); applyTheme(theme); return theme; }
+      if (preview) { const theme = sanitizeThemeColors(JSON.parse(preview)); cacheTheme(theme); applyTheme(theme); window.dispatchEvent(new CustomEvent("upthink:theme:preview", { detail: theme })); return theme; }
     }
     if (isAdminAppearance) {
       const adminToken = getAdminAccessToken();
@@ -145,15 +155,21 @@ export async function discardThemeDraft(): Promise<void> {
   const { config, token } = requireAdminConfig();
   const response = await fetch(`${config.url}${THEME_ENDPOINT}?scope=eq.global&status=eq.draft`, { method: "DELETE", headers: authHeaders(config, token) });
   if (!response.ok) throw new Error(`Theme draft discard failed (${response.status}). ${((await response.text()) || "").slice(0, 180)}`);
+  const publishedResponse = await fetch(`${config.url}${THEME_ENDPOINT}?scope=eq.global&status=eq.published&select=theme_data&order=updated_at.desc&limit=1`, { headers: { apikey: config.key } });
+  if (publishedResponse.ok) {
+    const rows = await publishedResponse.json() as Record<string, unknown>[];
+    if (rows[0]) { const theme = sanitizeThemeColors(rows[0].theme_data); cacheTheme(theme); applyTheme(theme); window.dispatchEvent(new CustomEvent("upthink:theme:discarded", { detail: theme })); }
+  }
 }
 
-export async function resetTheme(): Promise<ThemeColors> { return saveThemeToDatabase(DEFAULT_THEME_COLORS); }
+export async function resetTheme(): Promise<ThemeColors> { return saveThemeToDatabase(DEFAULT_THEME_COLORS, "WEARO 2026 Draft"); }
 
 export async function openThemePreview(colors?: ThemeColors): Promise<void> {
   const preview = sanitizeThemeColors(colors ?? getStoredTheme());
   if (typeof window === "undefined") return;
   window.sessionStorage.setItem(THEME_PREVIEW_STORAGE_KEY, JSON.stringify(preview));
-  window.open("/?theme_preview=1", "_blank", "noopener,noreferrer");
+  const params = new URLSearchParams({ theme_preview: "1", theme_data: JSON.stringify(preview) });
+  window.open(`/?${params.toString()}`, "_blank", "noopener,noreferrer");
 }
 
 if (typeof window !== "undefined") applyTheme(getStoredTheme());
