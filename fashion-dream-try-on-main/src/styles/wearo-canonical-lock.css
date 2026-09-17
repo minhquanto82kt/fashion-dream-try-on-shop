@@ -12,7 +12,8 @@
   font-family: var(--ft-editorial), "Bodoni Moda", Georgia, serif !important;
 }
 .fashion-site .fashion-display__brush {
-  font-family: "Caveat", var(--ft-impact), cursive !important;
+  font-family: "Dancing Script", var(--ft-impact), cursive !important;
+  font-weight: 700 !important;
   color: var(--primary) !important;
 }
 .fashion-site .fashion-eyebrow,
@@ -27,6 +28,34 @@
 .fashion-site .fashion-btn,
 .fashion-site .fashion-ai-btn {
   font-family: var(--ft-impact), "Oswald", sans-serif !important;
+}
+/* Editorial identity: Vietnamese by default, English when the existing i18n system sets <html lang="en">. */
+.fashion-site .fashion-editorial h2 {
+  font-size: 0 !important;
+  line-height: 1 !important;
+}
+.fashion-site .fashion-editorial h2::before,
+.fashion-site .fashion-editorial h2::after {
+  display: block;
+  font-family: var(--ft-editorial), "Bodoni Moda", Georgia, serif;
+  font-size: clamp(44px, 5vw, 76px);
+  font-weight: 600;
+  line-height: .92;
+  letter-spacing: -.05em;
+}
+.fashion-site .fashion-editorial h2::before {
+  content: "Phong cách là";
+  color: var(--foreground);
+}
+.fashion-site .fashion-editorial h2::after {
+  content: "bản sắc của bạn.";
+  color: var(--primary);
+}
+html[lang="en"] .fashion-site .fashion-editorial h2::before {
+  content: "Wear is";
+}
+html[lang="en"] .fashion-site .fashion-editorial h2::after {
+  content: "your identity.";
 }
 /* Hero art: never a solid primary plaque (layout still from home-editorial) */
 .fashion-site .fashion-hero__art {
