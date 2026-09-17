@@ -7,15 +7,35 @@ export const Route = createFileRoute("/admin/appearance/")({
 });
 
 type AppearanceTab = "Brand" | "Colors" | "Typography" | "Components";
+type PreviewDevice = "Desktop" | "Tablet" | "Mobile";
+
+type Palette = {
+  ink: string;
+  accent: string;
+  signal: string;
+  paper: string;
+};
+
 const tabs: AppearanceTab[] = ["Brand", "Colors", "Typography", "Components"];
+const initialPalette: Palette = {
+  ink: "#1B1A17",
+  accent: "#F0A500",
+  signal: "#E45826",
+  paper: "#E6D5B8",
+};
 
 function AppearancePage() {
   const [activeTab, setActiveTab] = useState<AppearanceTab>("Brand");
-  const [preview, setPreview] = useState<"Desktop" | "Tablet" | "Mobile">("Desktop");
+  const [preview, setPreview] = useState<PreviewDevice>("Desktop");
   const [brandName, setBrandName] = useState("FASHION DREAM");
   const [monogram, setMonogram] = useState("FD");
   const [socialTitle, setSocialTitle] = useState("Fashion Dream — AI Try-On");
   const [socialDescription, setSocialDescription] = useState("Preview fashion looks with AI before you buy.");
+  const [palette, setPalette] = useState<Palette>(initialPalette);
+
+  const updateColor = (key: keyof Palette, value: string) => {
+    setPalette((current) => ({ ...current, [key]: value.toUpperCase() }));
+  };
 
   return (
     <>
@@ -43,10 +63,12 @@ function AppearancePage() {
         .fd-appearance-assets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
         .fd-appearance-asset { min-height: 92px; display: grid; place-items: center; border: 1px dashed #cbc9c1; background: #fafaf7; color: #777; text-align: center; font-size: 9px; letter-spacing: .1em; text-transform: uppercase; }
         .fd-appearance-asset strong { display: block; margin-bottom: 5px; color: #171717; font-size: 15px; letter-spacing: .02em; text-transform: none; }
-        .fd-appearance-palette { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; }
-        .fd-appearance-swatch { min-height: 76px; display: flex; flex-direction: column; justify-content: flex-end; padding: 9px; border: 1px solid rgba(0,0,0,.08); }
-        .fd-appearance-swatch span { font-size: 9px; font-weight: 800; }
-        .fd-appearance-swatch small { margin-top: 3px; font-size: 8px; opacity: .7; }
+        .fd-appearance-palette { display: grid; gap: 12px; }
+        .fd-appearance-color-row { display: grid; grid-template-columns: 1fr 72px; gap: 8px; align-items: end; }
+        .fd-appearance-color-input { display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 8px; align-items: center; }
+        .fd-appearance-color-input input[type="color"] { width: 46px; height: 44px; padding: 3px; border: 1px solid #dddcd5; background: #fff; cursor: pointer; }
+        .fd-appearance-color-input input[type="text"] { min-width: 0; width: 100%; box-sizing: border-box; background: #fff; border: 1px solid #dddcd5; padding: 12px 13px; outline: none; font: inherit; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; text-transform: uppercase; }
+        .fd-appearance-color-preview { height: 44px; border: 1px solid rgba(0,0,0,.08); }
         .fd-appearance-preview-wrap { position: sticky; top: 24px; }
         .fd-appearance-preview-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 15px 17px; border-bottom: 1px solid #e3e2dc; }
         .fd-appearance-preview-head strong { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
@@ -54,25 +76,25 @@ function AppearancePage() {
         .fd-appearance-device { border: 1px solid #dddcd5; background: #fff; padding: 6px 8px; color: #777; font-size: 8px; font-weight: 800; cursor: pointer; }
         .fd-appearance-device.active { background: #171717; color: #fff; border-color: #171717; }
         .fd-appearance-preview { padding: 20px; background: #eeece6; }
-        .fd-appearance-browser { margin: 0 auto; width: 100%; max-width: 560px; overflow: hidden; border: 1px solid #d8d5cc; background: #f8f6f0; box-shadow: 0 14px 35px rgba(0,0,0,.08); }
+        .fd-appearance-browser { margin: 0 auto; width: 100%; max-width: 560px; overflow: hidden; border: 1px solid #d8d5cc; background: var(--fd-paper); box-shadow: 0 14px 35px rgba(0,0,0,.08); }
         .fd-appearance-browser.tablet { max-width: 410px; }
         .fd-appearance-browser.mobile { max-width: 280px; }
-        .fd-appearance-browser-bar { height: 25px; display: flex; align-items: center; gap: 4px; padding: 0 9px; background: #171717; }
+        .fd-appearance-browser-bar { height: 25px; display: flex; align-items: center; gap: 4px; padding: 0 9px; background: var(--fd-ink); }
         .fd-appearance-browser-bar i { width: 5px; height: 5px; border-radius: 50%; background: #777; }
-        .fd-appearance-site { min-height: 420px; padding: 17px; color: #171717; }
+        .fd-appearance-site { min-height: 420px; padding: 17px; color: var(--fd-ink); }
         .fd-appearance-site-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 8px; font-weight: 900; letter-spacing: .13em; }
         .fd-appearance-site-nav span:last-child { color: #777; font-weight: 700; text-align: right; }
-        .fd-appearance-hero { margin-top: 42px; padding: 24px 17px; background: #1b1a17; color: #f4eee3; }
-        .fd-appearance-hero small { color: #f0a500; font-size: 7px; font-weight: 800; letter-spacing: .18em; }
+        .fd-appearance-hero { margin-top: 42px; padding: 24px 17px; background: var(--fd-ink); color: var(--fd-paper); }
+        .fd-appearance-hero small { color: var(--fd-accent); font-size: 7px; font-weight: 800; letter-spacing: .18em; }
         .fd-appearance-hero h3 { max-width: 300px; margin: 13px 0; font-size: clamp(30px, 5vw, 48px); line-height: .9; letter-spacing: -.06em; }
-        .fd-appearance-hero p { max-width: 280px; margin: 0 0 18px; color: rgba(244,238,227,.62); font-size: 9px; line-height: 1.6; }
-        .fd-appearance-cta { display: inline-block; padding: 9px 11px; background: #f0a500; color: #171717; font-size: 8px; font-weight: 900; letter-spacing: .08em; }
+        .fd-appearance-hero p { max-width: 280px; margin: 0 0 18px; color: color-mix(in srgb, var(--fd-paper) 62%, transparent); font-size: 9px; line-height: 1.6; }
+        .fd-appearance-cta { display: inline-block; padding: 9px 11px; background: var(--fd-accent); color: var(--fd-ink); font-size: 8px; font-weight: 900; letter-spacing: .08em; }
         .fd-appearance-social { margin-top: 14px; padding: 10px; border: 1px solid #dddcd5; background: #fff; }
         .fd-appearance-social strong { display: block; font-size: 9px; }
         .fd-appearance-social span { display: block; margin-top: 4px; color: #777; font-size: 8px; line-height: 1.4; }
         .fd-appearance-preview-foot { padding: 11px 15px; border-top: 1px solid #e3e2dc; color: #999; font-size: 9px; }
         @media (max-width: 900px) { .fd-appearance-grid { grid-template-columns: 1fr; } .fd-appearance-preview-wrap { position: static; } }
-        @media (max-width: 640px) { .fd-appearance-header { align-items: flex-start; flex-direction: column; } .fd-appearance-controls { padding: 16px; } .fd-appearance-assets { grid-template-columns: 1fr; } .fd-appearance-palette { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 640px) { .fd-appearance-header { align-items: flex-start; flex-direction: column; } .fd-appearance-controls { padding: 16px; } .fd-appearance-assets { grid-template-columns: 1fr; } .fd-appearance-color-row { grid-template-columns: 1fr; } }
       `}</style>
 
       <div className="fd-appearance">
@@ -82,7 +104,7 @@ function AppearancePage() {
             <h1>Appearance</h1>
             <p>Điều chỉnh visual system của storefront từ một control center duy nhất.</p>
           </div>
-          <div className="fd-appearance-status">Draft · Brand Controls</div>
+          <div className="fd-appearance-status">Draft · Color Controls</div>
         </header>
 
         <div className="fd-appearance-grid">
@@ -115,13 +137,21 @@ function AppearancePage() {
 
             {activeTab === "Colors" && (
               <div className="fd-appearance-section">
-                <h2>Palette</h2>
-                <p>Semantic palette preview dựa trên visual direction hiện tại của storefront.</p>
+                <h2>Semantic Palette</h2>
+                <p>Chỉnh màu trực tiếp và xem thay đổi ngay trong Live Preview. Chưa ghi vào Supabase.</p>
                 <div className="fd-appearance-palette">
-                  <div className="fd-appearance-swatch" style={{ background: "#1b1a17", color: "#fff" }}><span>Ink</span><small>#1B1A17</small></div>
-                  <div className="fd-appearance-swatch" style={{ background: "#f0a500", color: "#171717" }}><span>Accent</span><small>#F0A500</small></div>
-                  <div className="fd-appearance-swatch" style={{ background: "#e45826", color: "#fff" }}><span>Signal</span><small>#E45826</small></div>
-                  <div className="fd-appearance-swatch" style={{ background: "#e6d5b8", color: "#171717" }}><span>Paper</span><small>#E6D5B8</small></div>
+                  {(["ink", "accent", "signal", "paper"] as const).map((key) => (
+                    <div className="fd-appearance-color-row" key={key}>
+                      <label className="fd-appearance-field">
+                        <span>{key}</span>
+                        <div className="fd-appearance-color-input">
+                          <input aria-label={`${key} color picker`} type="color" value={/^#[0-9A-F]{6}$/i.test(palette[key]) ? palette[key] : "#000000"} onChange={(event) => updateColor(key, event.target.value)} />
+                          <input aria-label={`${key} hex value`} type="text" value={palette[key]} onChange={(event) => updateColor(key, event.target.value)} maxLength={7} spellCheck={false} />
+                        </div>
+                      </label>
+                      <div className="fd-appearance-color-preview" style={{ background: /^#[0-9A-F]{6}$/i.test(palette[key]) ? palette[key] : "transparent" }} aria-label={`${key} preview`} />
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
@@ -162,7 +192,15 @@ function AppearancePage() {
               </div>
             </div>
             <div className="fd-appearance-preview">
-              <div className={`fd-appearance-browser ${preview.toLowerCase()}`}>
+              <div
+                className={`fd-appearance-browser ${preview.toLowerCase()}`}
+                style={{
+                  "--fd-ink": palette.ink,
+                  "--fd-accent": palette.accent,
+                  "--fd-signal": palette.signal,
+                  "--fd-paper": palette.paper,
+                } as React.CSSProperties}
+              >
                 <div className="fd-appearance-browser-bar"><i /><i /><i /></div>
                 <div className="fd-appearance-site">
                   <div className="fd-appearance-site-nav"><span>{brandName || "FASHION DREAM"}</span><span>SHOP · AI TRY-ON · CART</span></div>
