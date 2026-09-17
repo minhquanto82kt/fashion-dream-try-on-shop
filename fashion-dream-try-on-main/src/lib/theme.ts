@@ -16,6 +16,7 @@ export const DEFAULT_THEME_COLORS: ThemeColors = {
 export const THEME_STORAGE_KEY = "upthink-theme-colors";
 const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
 const THEME_ENDPOINT = "/rest/v1/site_theme_settings";
+const PUBLISHED_THEME_ENDPOINT = "/rest/v1/appearance_themes";
 const ADMIN_SESSION_KEY = "upthink_admin_session";
 
 type AdminSession = { access_token?: string };
@@ -54,6 +55,10 @@ function fromDatabaseRow(row: Record<string, unknown>): ThemeColors {
   return sanitizeThemeColors({ primary: row.primary_color, secondary: row.secondary_color, background: row.background_color, surface: row.surface_color, accent: row.accent_color, foreground: row.foreground_color });
 }
 
+function fromWorkflowRow(row: Record<string, unknown>): ThemeColors {
+  return sanitizeThemeColors(row.theme_data);
+}
+
 export function getStoredTheme(): ThemeColors {
   if (typeof window === "undefined") return DEFAULT_THEME_COLORS;
   try {
@@ -77,6 +82,19 @@ export async function loadRemoteTheme(): Promise<ThemeColors | null> {
   const config = getSupabaseConfig();
   if (!config || typeof window === "undefined") return null;
   try {
+    const publishedResponse = await fetch(`${config.url}${PUBLISHED_THEME_ENDPOINT}?scope=eq.global&status=eq.published&select=theme_data&limit=1`, { headers: { apikey: config.key } });
+    if (publishedResponse.ok) {
+      const publishedRows = await publishedResponse.json() as Record<string, unknown>[];
+      if (publishedRows[0]) {
+        const theme = fromWorkflowRow(publishedRows[0]);
+        cacheTheme(theme);
+        applyTheme(theme);
+        window.dispatchEvent(new CustomEvent("upthink:theme:changed", { detail: theme }));
+        return theme;
+      }
+    }
+
+    // Backward-compatible fallback for environments where the workflow table is not yet populated.
     const response = await fetch(`${config.url}${THEME_ENDPOINT}?id=eq.global&select=primary_color,secondary_color,background_color,surface_color,accent_color,foreground_color`, { headers: { apikey: config.key } });
     if (!response.ok) return null;
     const rows = await response.json() as Record<string, unknown>[];
