@@ -15,6 +15,9 @@ def test_normalize_text_collapses_whitespace():
 
 def test_unique_slug_check_raises_for_existing_tag(monkeypatch):
     class FakeQuery:
+        def select(self, *_args):
+            return self
+
         def eq(self, *_args):
             return self
 
