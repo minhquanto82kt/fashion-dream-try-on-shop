@@ -13,7 +13,7 @@
 }
 .fashion-site .fashion-display__brush {
   font-family: "Dancing Script", var(--ft-impact), cursive !important;
-  font-weight: 700 !important;
+  font-weight: 600 !important;
   color: var(--primary) !important;
 }
 .fashion-site .fashion-eyebrow,
@@ -66,3 +66,4 @@ html[lang="en"] .fashion-site .fashion-editorial h2::after {
   background: transparent !important;
   background-color: transparent !important;
 }
+/* Keep the Vietnamese handwritten accent light enough for the editorial hero. */
