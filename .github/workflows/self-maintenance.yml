@@ -1,0 +1,72 @@
+name: Self Maintenance
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 2 * * 1"
+  push:
+    paths:
+      - ".github/maintenance.yml"
+      - ".github/workflows/self-maintenance.yml"
+      - ".github/agents/self-maintenance-engineer.md"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: self-maintenance-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  detect:
+    name: Detect maintenance findings
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: fashion-dream-try-on-main
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: fashion-dream-try-on-main/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Read maintenance mode
+        id: config
+        shell: bash
+        run: |
+          MODE=$(awk -F': ' '/^mode:/ {print $2; exit}' ../.github/maintenance.yml)
+          AUTO_FIX=$(awk -F': ' '/^auto_fix:/ {print $2; exit}' ../.github/maintenance.yml)
+          echo "mode=${MODE:-unknown}" >> "$GITHUB_OUTPUT"
+          echo "auto_fix=${AUTO_FIX:-unknown}" >> "$GITHUB_OUTPUT"
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Smoke test
+        run: npm run test:smoke
+
+      - name: Maintenance summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Self-Maintenance"
+            echo ""
+            echo "Mode: ${{ steps.config.outputs.mode }}"
+            echo "Auto-fix: ${{ steps.config.outputs.auto_fix }}"
+            echo ""
+            echo "This first phase is detect-only: no source files, dependencies, database, secrets, or production configuration are modified."
+            echo ""
+            echo "Verification commands: npm run lint, npm run build, npm run test:smoke"
+          } >> "$GITHUB_STEP_SUMMARY"
