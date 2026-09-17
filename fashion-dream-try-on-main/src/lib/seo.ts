@@ -3,6 +3,7 @@ const DEFAULT_SITE_URL = "https://fashion-dream-try-on-main-l56ej9gpx-up-think.v
 export const SITE_URL = (import.meta.env.VITE_SITE_URL || DEFAULT_SITE_URL).replace(/\/$/, "");
 
 export function absoluteUrl(path = "/") {
+  if (/^https?:\/\//i.test(path)) return path;
   return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
