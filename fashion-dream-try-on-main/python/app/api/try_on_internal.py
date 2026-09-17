@@ -1,6 +1,7 @@
 """Internal Try-On bridge for the same-origin TanStack server functions."""
 
 from base64 import b64decode, binascii
+from datetime import datetime, timezone
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, Header, HTTPException, status
@@ -20,6 +21,9 @@ router = APIRouter(prefix="/api/try-on/internal", tags=["try-on-internal"])
 job_service = TryOnJobService()
 provider_service = TryOnService()
 storage_service = TryOnStorageService()
+
+MAX_POLL_ATTEMPTS = 60
+MAX_POLL_AGE_SECONDS = 5 * 60
 
 
 class InternalTryOnInput(BaseModel):
@@ -60,6 +64,43 @@ def _decode_data_url(data_url: str) -> tuple[bytes, str]:
         raise HTTPException(status_code=400, detail="Dữ liệu ảnh không hợp lệ") from exc
 
 
+def _utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def _poll_metadata(metadata: dict[str, Any]) -> tuple[dict[str, Any], int]:
+    """Increment bounded polling metadata and reject stalled jobs."""
+
+    updated = dict(metadata)
+    attempts = int(updated.get("poll_attempts", 0)) + 1
+    updated["poll_attempts"] = attempts
+    updated["last_polled_at"] = _utc_now()
+    started_at = updated.get("poll_started_at")
+    if not isinstance(started_at, str) or not started_at.strip():
+        started_at = _utc_now()
+        updated["poll_started_at"] = started_at
+    try:
+        age = (datetime.now(timezone.utc) - datetime.fromisoformat(started_at.replace("Z", "+00:00"))).total_seconds()
+    except ValueError:
+        age = MAX_POLL_AGE_SECONDS + 1
+    if attempts > MAX_POLL_ATTEMPTS or age > MAX_POLL_AGE_SECONDS:
+        raise TimeoutError("Try-On job exceeded the polling reliability limit")
+    return updated, attempts
+
+
+def _map_provider_status(provider_status: str) -> TryOnStatus | None:
+    return {
+        "starting": TryOnStatus.PROCESSING,
+        "in_queue": TryOnStatus.PROCESSING,
+        "queued": TryOnStatus.QUEUED,
+        "processing": TryOnStatus.PROCESSING,
+        "completed": TryOnStatus.COMPLETED,
+        "failed": TryOnStatus.FAILED,
+        "canceled": TryOnStatus.FAILED,
+        "cancelled": TryOnStatus.FAILED,
+    }.get(provider_status)
+
+
 @router.post("/jobs", response_model=TryOnJob, status_code=202, dependencies=[Depends(_require_internal_secret)])
 def create_internal_try_on_job(request: InternalTryOnInput) -> TryOnJob:
     """Persist the customer input, submit the provider job and return its initial state."""
@@ -97,6 +138,8 @@ def create_internal_try_on_job(request: InternalTryOnInput) -> TryOnJob:
         metadata: dict[str, Any] = {
             "person_image_path": person_path,
             "garment_image_url": request.garment_image_url,
+            "poll_attempts": 0,
+            "poll_started_at": _utc_now(),
         }
         if request.note:
             metadata["note"] = request.note
@@ -132,32 +175,32 @@ def get_internal_try_on_job(job_id: str) -> TryOnJob:
             return _with_signed_result(job)
         return job
 
-    prediction_id = context.metadata.get("provider_prediction_id")
+    metadata, _attempts = _poll_metadata(context.metadata)
+    prediction_id = metadata.get("provider_prediction_id")
     if not isinstance(prediction_id, str) or not prediction_id.strip():
-        return job
+        failed = _fail_internal_job(job_id, "Try-On job is missing the provider prediction ID")
+        return failed
+    job_service.update_metadata_internal(job_id, metadata)
 
     try:
         provider = provider_service.provider_for_name(job.provider)
         payload = provider.get_status(prediction_id)
+    except TimeoutError as exc:
+        return _fail_internal_job(job_id, str(exc))
     except ValueError as exc:
         return _fail_internal_job(job_id, str(exc))
     except (FashnProviderError, FashnVtonProviderError) as exc:
         failed = job_service.update_status_internal(job_id, status=TryOnStatus.FAILED, error=str(exc))
         return failed or job
+    except Exception as exc:
+        return _fail_internal_job(job_id, f"Try-On provider request failed: {exc}")
 
     provider_status = str(payload.get("status", "")).strip().lower()
-    mapped_status = {
-        "starting": TryOnStatus.PROCESSING,
-        "in_queue": TryOnStatus.PROCESSING,
-        "queued": TryOnStatus.QUEUED,
-        "processing": TryOnStatus.PROCESSING,
-        "completed": TryOnStatus.COMPLETED,
-        "failed": TryOnStatus.FAILED,
-        "canceled": TryOnStatus.FAILED,
-        "cancelled": TryOnStatus.FAILED,
-    }.get(provider_status)
+    metadata["provider_status"] = provider_status
+    job_service.update_metadata_internal(job_id, metadata)
+    mapped_status = _map_provider_status(provider_status)
     if mapped_status is None:
-        return _fail_internal_job(job_id, "Try-On provider returned an invalid status") if not provider_status else job
+        return _fail_internal_job(job_id, "Try-On provider returned an invalid status")
 
     result_path = None
     if mapped_status == TryOnStatus.COMPLETED:
