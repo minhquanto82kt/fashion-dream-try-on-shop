@@ -175,25 +175,26 @@ def get_internal_try_on_job(job_id: str) -> TryOnJob:
             return _with_signed_result(job)
         return job
 
-    metadata, _attempts = _poll_metadata(context.metadata)
+    try:
+        metadata, _attempts = _poll_metadata(context.metadata)
+    except TimeoutError as exc:
+        return _fail_internal_job(job_id, str(exc))
+
     prediction_id = metadata.get("provider_prediction_id")
     if not isinstance(prediction_id, str) or not prediction_id.strip():
-        failed = _fail_internal_job(job_id, "Try-On job is missing the provider prediction ID")
-        return failed
+        return _fail_internal_job(job_id, "Try-On job is missing the provider prediction ID")
     job_service.update_metadata_internal(job_id, metadata)
 
     try:
         provider = provider_service.provider_for_name(job.provider)
         payload = provider.get_status(prediction_id)
-    except TimeoutError as exc:
-        return _fail_internal_job(job_id, str(exc))
     except ValueError as exc:
         return _fail_internal_job(job_id, str(exc))
     except (FashnProviderError, FashnVtonProviderError) as exc:
         failed = job_service.update_status_internal(job_id, status=TryOnStatus.FAILED, error=str(exc))
         return failed or job
-    except Exception as exc:
-        return _fail_internal_job(job_id, f"Try-On provider request failed: {exc}")
+    except Exception:
+        return _fail_internal_job(job_id, "Try-On provider request failed")
 
     provider_status = str(payload.get("status", "")).strip().lower()
     metadata["provider_status"] = provider_status
