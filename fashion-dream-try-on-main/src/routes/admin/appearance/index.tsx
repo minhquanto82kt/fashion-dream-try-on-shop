@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 
 export const Route = createFileRoute("/admin/appearance/")({
   component: AppearancePage,
@@ -9,7 +9,18 @@ export const Route = createFileRoute("/admin/appearance/")({
 type AppearanceTab = "Brand" | "Colors" | "Typography" | "Components";
 type PreviewDevice = "Desktop" | "Tablet" | "Mobile";
 type TypographyRole = "Display" | "Editorial" | "Body / UI" | "Meta";
+type WorkflowState = "Draft" | "Preview" | "Published";
 type Palette = { ink: string; accent: string; signal: string; paper: string };
+type AppearanceSnapshot = {
+  brandName: string;
+  monogram: string;
+  socialTitle: string;
+  socialDescription: string;
+  palette: Palette;
+  typographyRole: TypographyRole;
+  buttonRadius: string;
+  cardRadius: string;
+};
 
 const tabs: AppearanceTab[] = ["Brand", "Colors", "Typography", "Components"];
 const devices: Record<PreviewDevice, { width: number; label: string }> = {
@@ -18,6 +29,18 @@ const devices: Record<PreviewDevice, { width: number; label: string }> = {
   Mobile: { width: 280, label: "390 × 844" },
 };
 const initialPalette: Palette = { ink: "#1B1A17", accent: "#F0A500", signal: "#E45826", paper: "#E6D5B8" };
+const initialSnapshot: AppearanceSnapshot = {
+  brandName: "FASHION DREAM",
+  monogram: "FD",
+  socialTitle: "Fashion Dream — AI Try-On",
+  socialDescription: "Preview fashion looks with AI before you buy.",
+  palette: initialPalette,
+  typographyRole: "Display",
+  buttonRadius: "0px",
+  cardRadius: "16px",
+};
+const DRAFT_STORAGE_KEY = "fd-appearance-draft-v1";
+const PUBLISHED_STORAGE_KEY = "fd-appearance-published-v1";
 
 const typographyRoles: Record<TypographyRole, { font: string; fallback: string; usage: string; className: string }> = {
   Display: { font: "Anton", fallback: "Impact, sans-serif", usage: "Hero accents, strong headings, buttons, brand marks, prices, numeric emphasis", className: "type-display" },
@@ -26,19 +49,57 @@ const typographyRoles: Record<TypographyRole, { font: string; fallback: string; 
   Meta: { font: "Oswald", fallback: "Arial, sans-serif", usage: "Eyebrows, labels, product metadata, technical HUD text", className: "type-meta" },
 };
 
+function readStoredSnapshot(key: string): AppearanceSnapshot {
+  if (typeof window === "undefined") return initialSnapshot;
+  try {
+    const stored = window.localStorage.getItem(key);
+    if (!stored) return initialSnapshot;
+    const parsed = JSON.parse(stored) as AppearanceSnapshot;
+    return { ...initialSnapshot, ...parsed, palette: { ...initialPalette, ...parsed.palette } };
+  } catch {
+    return initialSnapshot;
+  }
+}
+
+function cloneSnapshot(snapshot: AppearanceSnapshot): AppearanceSnapshot {
+  return { ...snapshot, palette: { ...snapshot.palette } };
+}
+
 function AppearancePage() {
   const [activeTab, setActiveTab] = useState<AppearanceTab>("Brand");
   const [preview, setPreview] = useState<PreviewDevice>("Desktop");
-  const [brandName, setBrandName] = useState("FASHION DREAM");
-  const [monogram, setMonogram] = useState("FD");
-  const [socialTitle, setSocialTitle] = useState("Fashion Dream — AI Try-On");
-  const [socialDescription, setSocialDescription] = useState("Preview fashion looks with AI before you buy.");
-  const [palette, setPalette] = useState<Palette>(initialPalette);
-  const [typographyRole, setTypographyRole] = useState<TypographyRole>("Display");
-  const [buttonRadius, setButtonRadius] = useState("0px");
-  const [cardRadius, setCardRadius] = useState("16px");
+  const [workflowState, setWorkflowState] = useState<WorkflowState>("Draft");
+  const [savedSnapshot, setSavedSnapshot] = useState<AppearanceSnapshot>(() => readStoredSnapshot(PUBLISHED_STORAGE_KEY));
+  const [draftSnapshot, setDraftSnapshot] = useState<AppearanceSnapshot>(() => readStoredSnapshot(DRAFT_STORAGE_KEY));
+  const [brandName, setBrandName] = useState(() => draftSnapshot.brandName);
+  const [monogram, setMonogram] = useState(() => draftSnapshot.monogram);
+  const [socialTitle, setSocialTitle] = useState(() => draftSnapshot.socialTitle);
+  const [socialDescription, setSocialDescription] = useState(() => draftSnapshot.socialDescription);
+  const [palette, setPalette] = useState<Palette>(() => draftSnapshot.palette);
+  const [typographyRole, setTypographyRole] = useState<TypographyRole>(() => draftSnapshot.typographyRole);
+  const [buttonRadius, setButtonRadius] = useState(() => draftSnapshot.buttonRadius);
+  const [cardRadius, setCardRadius] = useState(() => draftSnapshot.cardRadius);
+  const [feedback, setFeedback] = useState("Ready to edit");
   const selectedTypography = typographyRoles[typographyRole];
   const device = devices[preview];
+
+  const currentSnapshot = useMemo<AppearanceSnapshot>(() => ({
+    brandName,
+    monogram,
+    socialTitle,
+    socialDescription,
+    palette: { ...palette },
+    typographyRole,
+    buttonRadius,
+    cardRadius,
+  }), [brandName, monogram, socialTitle, socialDescription, palette, typographyRole, buttonRadius, cardRadius]);
+
+  const isUnsaved = JSON.stringify(currentSnapshot) !== JSON.stringify(draftSnapshot);
+  const isPublished = JSON.stringify(currentSnapshot) === JSON.stringify(savedSnapshot);
+
+  useEffect(() => {
+    if (isUnsaved && workflowState === "Published") setWorkflowState("Draft");
+  }, [isUnsaved, workflowState]);
 
   const updateColor = (key: keyof Palette, value: string) => setPalette((current) => ({ ...current, [key]: value.toUpperCase() }));
   const previewStyle = {
@@ -48,15 +109,77 @@ function AppearancePage() {
     "--fd-paper": palette.paper,
     "--fd-button-radius": buttonRadius,
     "--fd-card-radius": cardRadius,
+    "--fd-preview-width": `${device.width}px`,
   } as CSSProperties;
+
+  const saveDraft = () => {
+    const next = cloneSnapshot(currentSnapshot);
+    window.localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(next));
+    setDraftSnapshot(next);
+    setWorkflowState("Draft");
+    setFeedback("Draft saved locally");
+  };
+
+  const enterPreview = () => {
+    setWorkflowState("Preview");
+    setFeedback("Preview mode · changes are not published");
+  };
+
+  const publish = () => {
+    const next = cloneSnapshot(currentSnapshot);
+    window.localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(next));
+    window.localStorage.setItem(PUBLISHED_STORAGE_KEY, JSON.stringify(next));
+    setDraftSnapshot(next);
+    setSavedSnapshot(next);
+    setWorkflowState("Published");
+    setFeedback("Published locally · Supabase persistence comes later");
+  };
+
+  const discard = () => {
+    const next = cloneSnapshot(draftSnapshot);
+    setBrandName(next.brandName);
+    setMonogram(next.monogram);
+    setSocialTitle(next.socialTitle);
+    setSocialDescription(next.socialDescription);
+    setPalette(next.palette);
+    setTypographyRole(next.typographyRole);
+    setButtonRadius(next.buttonRadius);
+    setCardRadius(next.cardRadius);
+    setWorkflowState("Draft");
+    setFeedback("Unsaved changes discarded");
+  };
+
+  const reset = () => {
+    const next = cloneSnapshot(initialSnapshot);
+    setBrandName(next.brandName);
+    setMonogram(next.monogram);
+    setSocialTitle(next.socialTitle);
+    setSocialDescription(next.socialDescription);
+    setPalette(next.palette);
+    setTypographyRole(next.typographyRole);
+    setButtonRadius(next.buttonRadius);
+    setCardRadius(next.cardRadius);
+    setWorkflowState("Draft");
+    setFeedback("Reset to project defaults · not saved");
+  };
 
   return (
     <>
       <style>{`
-        .fd-appearance{display:grid;gap:22px}.fd-appearance-header{display:flex;align-items:flex-end;justify-content:space-between;gap:24px}.fd-appearance-header h1{margin:7px 0 5px;font-size:34px;letter-spacing:-.04em}.fd-appearance-header p{margin:0;color:#777;font-size:13px}.fd-appearance-status{padding:8px 11px;border:1px solid #e3e2dc;background:#fff;color:#777;font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}.fd-appearance-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(360px,.85fr);gap:18px;align-items:start}.fd-appearance-panel{background:#fff;border:1px solid #e3e2dc}.fd-appearance-controls{padding:22px}.fd-appearance-tabs{display:flex;gap:4px;border-bottom:1px solid #e7e6e0;overflow-x:auto}.fd-appearance-tab{border:0;border-bottom:2px solid transparent;background:transparent;padding:12px 14px;color:#888;cursor:pointer;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}.fd-appearance-tab.active{border-bottom-color:#f2a900;color:#171717}.fd-appearance-section{padding-top:24px}.fd-appearance-section h2{margin:0 0 6px;font-size:18px}.fd-appearance-section>p{margin:0 0 18px;color:#858681;font-size:12px;line-height:1.6}.fd-appearance-fields{display:grid;gap:14px}.fd-appearance-field{display:grid;gap:7px}.fd-appearance-field>span{color:#666762;font-size:9px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}.fd-appearance-field input,.fd-appearance-field select,.fd-appearance-field textarea{width:100%;box-sizing:border-box;background:#fff;border:1px solid #dddcd5;padding:12px 13px;outline:none;font:inherit}.fd-appearance-field textarea{min-height:78px;resize:vertical;line-height:1.5}.fd-appearance-assets{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.fd-appearance-asset{min-height:92px;display:grid;place-items:center;border:1px dashed #cbc9c1;background:#fafaf7;color:#777;text-align:center;font-size:9px;letter-spacing:.1em;text-transform:uppercase}.fd-appearance-asset strong{display:block;margin-bottom:5px;color:#171717;font-size:15px;letter-spacing:.02em;text-transform:none}.fd-appearance-palette{display:grid;gap:12px}.fd-appearance-color-row{display:grid;grid-template-columns:1fr 72px;gap:8px;align-items:end}.fd-appearance-color-input{display:grid;grid-template-columns:46px minmax(0,1fr);gap:8px;align-items:center}.fd-appearance-color-input input[type=color]{width:46px;height:44px;padding:3px}.fd-appearance-color-input input[type=text]{min-width:0;width:100%;box-sizing:border-box;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;text-transform:uppercase}.fd-appearance-color-preview{height:44px;border:1px solid rgba(0,0,0,.08)}.fd-appearance-type-list{display:grid;gap:8px;margin-bottom:16px}.fd-appearance-type-card{display:grid;grid-template-columns:1fr auto;gap:12px;padding:13px;border:1px solid #e1e0d9;background:#fafaf7;cursor:pointer;text-align:left}.fd-appearance-type-card.active{border-color:#171717;background:#fff}.fd-appearance-type-name{display:block;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.fd-appearance-type-font{display:block;margin-top:4px;color:#777;font-size:11px}.fd-appearance-type-preview{font-size:24px;line-height:1}.fd-appearance-type-detail{padding:14px;border:1px solid #e1e0d9;background:#fff}.fd-appearance-type-detail strong{display:block;margin-bottom:5px;font-size:10px;letter-spacing:.1em;text-transform:uppercase}.fd-appearance-type-detail p{margin:0;color:#777;font-size:11px;line-height:1.55}.fd-appearance-preview-wrap{position:sticky;top:24px}.fd-appearance-preview-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 17px;border-bottom:1px solid #e3e2dc}.fd-appearance-preview-head strong{font-size:11px;letter-spacing:.1em;text-transform:uppercase}.fd-appearance-devices{display:flex;gap:4px}.fd-appearance-device{border:1px solid #dddcd5;background:#fff;padding:6px 8px;color:#777;font-size:8px;font-weight:800;cursor:pointer}.fd-appearance-device.active{background:#171717;color:#fff;border-color:#171717}.fd-appearance-viewport-meta{display:flex;justify-content:space-between;gap:10px;padding:8px 15px;background:#fafaf7;border-bottom:1px solid #e3e2dc;color:#888;font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}.fd-appearance-preview{padding:20px;background:#eeece6;overflow:auto}.fd-appearance-browser{margin:0 auto;width:100%;max-width:var(--fd-preview-width,560px);overflow:hidden;border:1px solid #d8d5cc;background:var(--fd-paper);box-shadow:0 14px 35px rgba(0,0,0,.08);transition:max-width .2s ease}.fd-appearance-browser-bar{height:25px;display:flex;align-items:center;gap:4px;padding:0 9px;background:var(--fd-ink)}.fd-appearance-browser-bar i{width:5px;height:5px;border-radius:50%;background:#777}.fd-appearance-site{min-height:500px;padding:17px;color:var(--fd-ink);font-family:"Space Grotesk",sans-serif}.fd-appearance-site-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:8px;font-weight:900;letter-spacing:.13em}.fd-appearance-site-nav span:last-child{color:var(--fd-signal);font-weight:700;text-align:right}.fd-appearance-hero{margin-top:42px;padding:24px 17px;background:var(--fd-ink);color:var(--fd-paper);border-radius:var(--fd-card-radius)}.fd-appearance-hero small{color:var(--fd-accent);font-family:"Oswald",Arial,sans-serif;font-size:7px;font-weight:800;letter-spacing:.18em}.fd-appearance-hero h3{max-width:300px;margin:13px 0;font-family:"Anton",Impact,sans-serif;font-size:clamp(30px,5vw,48px);font-weight:400;line-height:.9;letter-spacing:.01em}.fd-appearance-hero p{max-width:280px;margin:0 0 18px;color:var(--fd-paper);opacity:.68;font-family:"Space Grotesk",sans-serif;font-size:9px;line-height:1.6}.fd-appearance-cta{display:inline-block;padding:9px 11px;background:var(--fd-accent);color:var(--fd-ink);border-radius:var(--fd-button-radius);font-family:"Anton",Impact,sans-serif;font-size:8px;letter-spacing:.08em}.fd-appearance-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}.fd-appearance-card{min-height:72px;padding:10px;background:var(--fd-paper);border:1px solid rgba(27,26,23,.12);border-radius:var(--fd-card-radius)}.fd-appearance-card b{display:block;font-family:"Anton",Impact,sans-serif;font-size:12px;font-weight:400}.fd-appearance-card span{display:block;margin-top:5px;font-family:"Space Grotesk",sans-serif;font-size:7px;line-height:1.45;opacity:.7}.fd-appearance-social{margin-top:14px;padding:10px;border:1px solid #dddcd5;background:#fff;border-radius:var(--fd-card-radius)}.fd-appearance-social strong{display:block;font-size:9px}.fd-appearance-social span{display:block;margin-top:4px;color:#777;font-size:8px;line-height:1.4}.fd-appearance-preview-foot{padding:11px 15px;border-top:1px solid #e3e2dc;color:#999;font-size:9px}@media(max-width:900px){.fd-appearance-grid{grid-template-columns:1fr}.fd-appearance-preview-wrap{position:static}}@media(max-width:640px){.fd-appearance-header{align-items:flex-start;flex-direction:column}.fd-appearance-controls{padding:16px}.fd-appearance-assets{grid-template-columns:1fr}.fd-appearance-color-row{grid-template-columns:1fr}.fd-appearance-preview{padding:12px}.fd-appearance-viewport-meta{font-size:7px}}
+        .fd-appearance{display:grid;gap:22px}.fd-appearance-header{display:flex;align-items:flex-end;justify-content:space-between;gap:24px}.fd-appearance-header h1{margin:7px 0 5px;font-size:34px;letter-spacing:-.04em}.fd-appearance-header p{margin:0;color:#777;font-size:13px}.fd-appearance-status{padding:8px 11px;border:1px solid #e3e2dc;background:#fff;color:#777;font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}.fd-appearance-workflow{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border:1px solid #e3e2dc;background:#fff}.fd-appearance-workflow-left{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.fd-appearance-state{padding:6px 8px;background:#171717;color:#fff;font-size:8px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.fd-appearance-state.unsaved{background:#f0a500;color:#171717}.fd-appearance-state.preview{background:#e45826;color:#fff}.fd-appearance-state.published{background:#1b1a17;color:#fff}.fd-appearance-feedback{color:#777;font-size:9px}.fd-appearance-actions{display:flex;gap:6px;flex-wrap:wrap}.fd-appearance-action{border:1px solid #d8d7d0;background:#fff;padding:8px 10px;color:#555;cursor:pointer;font-size:8px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}.fd-appearance-action.primary{border-color:#171717;background:#171717;color:#fff}.fd-appearance-action.publish{border-color:#f0a500;background:#f0a500;color:#171717}.fd-appearance-action:disabled{cursor:not-allowed;opacity:.4}.fd-appearance-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(360px,.85fr);gap:18px;align-items:start}.fd-appearance-panel{background:#fff;border:1px solid #e3e2dc}.fd-appearance-controls{padding:22px}.fd-appearance-tabs{display:flex;gap:4px;border-bottom:1px solid #e7e6e0;overflow-x:auto}.fd-appearance-tab{border:0;border-bottom:2px solid transparent;background:transparent;padding:12px 14px;color:#888;cursor:pointer;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}.fd-appearance-tab.active{border-bottom-color:#f2a900;color:#171717}.fd-appearance-section{padding-top:24px}.fd-appearance-section h2{margin:0 0 6px;font-size:18px}.fd-appearance-section>p{margin:0 0 18px;color:#858681;font-size:12px;line-height:1.6}.fd-appearance-fields{display:grid;gap:14px}.fd-appearance-field{display:grid;gap:7px}.fd-appearance-field>span{color:#666762;font-size:9px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}.fd-appearance-field input,.fd-appearance-field textarea{width:100%;box-sizing:border-box;background:#fff;border:1px solid #dddcd5;padding:12px 13px;outline:none;font:inherit}.fd-appearance-field textarea{min-height:78px;resize:vertical;line-height:1.5}.fd-appearance-assets{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.fd-appearance-asset{min-height:92px;display:grid;place-items:center;border:1px dashed #cbc9c1;background:#fafaf7;color:#777;text-align:center;font-size:9px;letter-spacing:.1em;text-transform:uppercase}.fd-appearance-asset strong{display:block;margin-bottom:5px;color:#171717;font-size:15px;letter-spacing:.02em;text-transform:none}.fd-appearance-palette{display:grid;gap:12px}.fd-appearance-color-row{display:grid;grid-template-columns:1fr 72px;gap:8px;align-items:end}.fd-appearance-color-input{display:grid;grid-template-columns:46px minmax(0,1fr);gap:8px;align-items:center}.fd-appearance-color-input input[type=color]{width:46px;height:44px;padding:3px}.fd-appearance-color-input input[type=text]{min-width:0;width:100%;box-sizing:border-box;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;text-transform:uppercase}.fd-appearance-color-preview{height:44px;border:1px solid rgba(0,0,0,.08)}.fd-appearance-type-list{display:grid;gap:8px;margin-bottom:16px}.fd-appearance-type-card{display:grid;grid-template-columns:1fr auto;gap:12px;padding:13px;border:1px solid #e1e0d9;background:#fafaf7;cursor:pointer;text-align:left}.fd-appearance-type-card.active{border-color:#171717;background:#fff}.fd-appearance-type-name{display:block;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.fd-appearance-type-font{display:block;margin-top:4px;color:#777;font-size:11px}.fd-appearance-type-preview{font-size:24px;line-height:1}.fd-appearance-type-detail{padding:14px;border:1px solid #e1e0d9;background:#fff}.fd-appearance-type-detail strong{display:block;margin-bottom:5px;font-size:10px;letter-spacing:.1em;text-transform:uppercase}.fd-appearance-type-detail p{margin:0;color:#777;font-size:11px;line-height:1.55}.fd-appearance-preview-wrap{position:sticky;top:24px}.fd-appearance-preview-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 17px;border-bottom:1px solid #e3e2dc}.fd-appearance-preview-head strong{font-size:11px;letter-spacing:.1em;text-transform:uppercase}.fd-appearance-devices{display:flex;gap:4px}.fd-appearance-device{border:1px solid #dddcd5;background:#fff;padding:6px 8px;color:#777;font-size:8px;font-weight:800;cursor:pointer}.fd-appearance-device.active{background:#171717;color:#fff;border-color:#171717}.fd-appearance-viewport-meta{display:flex;justify-content:space-between;gap:10px;padding:8px 15px;background:#fafaf7;border-bottom:1px solid #e3e2dc;color:#888;font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}.fd-appearance-preview{padding:20px;background:#eeece6;overflow:auto}.fd-appearance-browser{margin:0 auto;width:100%;max-width:var(--fd-preview-width,560px);overflow:hidden;border:1px solid #d8d5cc;background:var(--fd-paper);box-shadow:0 14px 35px rgba(0,0,0,.08);transition:max-width .2s ease}.fd-appearance-browser-bar{height:25px;display:flex;align-items:center;gap:4px;padding:0 9px;background:var(--fd-ink)}.fd-appearance-browser-bar i{width:5px;height:5px;border-radius:50%;background:#777}.fd-appearance-site{min-height:500px;padding:17px;color:var(--fd-ink);font-family:"Space Grotesk",sans-serif}.fd-appearance-site-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:8px;font-weight:900;letter-spacing:.13em}.fd-appearance-site-nav span:last-child{color:var(--fd-signal);font-weight:700;text-align:right}.fd-appearance-hero{margin-top:42px;padding:24px 17px;background:var(--fd-ink);color:var(--fd-paper);border-radius:var(--fd-card-radius)}.fd-appearance-hero small{color:var(--fd-accent);font-family:"Oswald",Arial,sans-serif;font-size:7px;font-weight:800;letter-spacing:.18em}.fd-appearance-hero h3{max-width:300px;margin:13px 0;font-family:"Anton",Impact,sans-serif;font-size:clamp(30px,5vw,48px);font-weight:400;line-height:.9;letter-spacing:.01em}.fd-appearance-hero p{max-width:280px;margin:0 0 18px;color:var(--fd-paper);opacity:.68;font-family:"Space Grotesk",sans-serif;font-size:9px;line-height:1.6}.fd-appearance-cta{display:inline-block;padding:9px 11px;background:var(--fd-accent);color:var(--fd-ink);border-radius:var(--fd-button-radius);font-family:"Anton",Impact,sans-serif;font-size:8px;letter-spacing:.08em}.fd-appearance-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}.fd-appearance-card{min-height:72px;padding:10px;background:var(--fd-paper);border:1px solid rgba(27,26,23,.12);border-radius:var(--fd-card-radius)}.fd-appearance-card b{display:block;font-family:"Anton",Impact,sans-serif;font-size:12px;font-weight:400}.fd-appearance-card span{display:block;margin-top:5px;font-family:"Space Grotesk",sans-serif;font-size:7px;line-height:1.45;opacity:.7}.fd-appearance-social{margin-top:14px;padding:10px;border:1px solid #dddcd5;background:#fff;border-radius:var(--fd-card-radius)}.fd-appearance-social strong{display:block;font-size:9px}.fd-appearance-social span{display:block;margin-top:4px;color:#777;font-size:8px;line-height:1.4}.fd-appearance-preview-foot{padding:11px 15px;border-top:1px solid #e3e2dc;color:#999;font-size:9px}@media(max-width:900px){.fd-appearance-grid{grid-template-columns:1fr}.fd-appearance-preview-wrap{position:static}}@media(max-width:640px){.fd-appearance-header{align-items:flex-start;flex-direction:column}.fd-appearance-controls{padding:16px}.fd-appearance-assets{grid-template-columns:1fr}.fd-appearance-color-row{grid-template-columns:1fr}.fd-appearance-preview{padding:12px}.fd-appearance-viewport-meta{font-size:7px}.fd-appearance-workflow{align-items:flex-start}.fd-appearance-workflow-left,.fd-appearance-actions{width:100%}}
       `}</style>
       <div className="fd-appearance">
-        <header className="fd-appearance-header"><div><div className="up-admin-kicker">SYSTEM / VISUAL CONTROL</div><h1>Appearance</h1><p>Điều chỉnh visual system của storefront từ một control center duy nhất.</p></div><div className="fd-appearance-status">Draft · Live Preview Connected</div></header>
+        <header className="fd-appearance-header"><div><div className="up-admin-kicker">SYSTEM / VISUAL CONTROL</div><h1>Appearance</h1><p>Điều chỉnh visual system của storefront từ một control center duy nhất.</p></div><div className="fd-appearance-status">{workflowState}{isUnsaved ? " · Unsaved" : isPublished ? " · Synced" : ""}</div></header>
+        <div className="fd-appearance-workflow" aria-label="Theme workflow">
+          <div className="fd-appearance-workflow-left"><span className={`fd-appearance-state${isUnsaved ? " unsaved" : workflowState === "Preview" ? " preview" : workflowState === "Published" ? " published" : ""}`}>{isUnsaved ? "Unsaved" : workflowState}</span><span className="fd-appearance-feedback">{feedback}</span></div>
+          <div className="fd-appearance-actions">
+            <button type="button" className="fd-appearance-action" onClick={discard} disabled={!isUnsaved}>Discard</button>
+            <button type="button" className="fd-appearance-action" onClick={reset}>Reset</button>
+            <button type="button" className="fd-appearance-action" onClick={saveDraft} disabled={!isUnsaved}>Save Draft</button>
+            <button type="button" className="fd-appearance-action" onClick={enterPreview}>Preview</button>
+            <button type="button" className="fd-appearance-action publish" onClick={publish} disabled={!isUnsaved && isPublished}>Publish</button>
+          </div>
+        </div>
         <div className="fd-appearance-grid">
           <section className="fd-appearance-panel fd-appearance-controls">
             <nav className="fd-appearance-tabs" aria-label="Appearance sections">{tabs.map((tab)=><button key={tab} type="button" className={`fd-appearance-tab${activeTab===tab?" active":""}`} onClick={()=>setActiveTab(tab)}>{tab}</button>)}</nav>
@@ -68,8 +191,8 @@ function AppearancePage() {
           <aside className="fd-appearance-panel fd-appearance-preview-wrap">
             <div className="fd-appearance-preview-head"><strong>Live Preview</strong><div className="fd-appearance-devices" aria-label="Preview size">{(Object.keys(devices) as PreviewDevice[]).map((item)=><button key={item} type="button" className={`fd-appearance-device${preview===item?" active":""}`} onClick={()=>setPreview(item)}>{item}</button>)}</div></div>
             <div className="fd-appearance-viewport-meta"><span>{preview} viewport</span><span>{device.label} · {device.width}px canvas</span></div>
-            <div className="fd-appearance-preview"><div className="fd-appearance-browser" style={{...previewStyle,"--fd-preview-width":`${device.width}px`} as CSSProperties}><div className="fd-appearance-browser-bar"><i/><i/><i/></div><div className="fd-appearance-site"><div className="fd-appearance-site-nav"><span>{brandName||"FASHION DREAM"}</span><span>SHOP · AI TRY-ON (BETA)</span></div><div className="fd-appearance-hero"><small>UPTHINK/IUH — SAIGON-2026 — SYS 02// ONLINE</small><h3>WEAR YOUR<br/>OWN STORY.</h3><p>{socialDescription||"Preview fashion looks with AI before you buy."}</p><span className="fd-appearance-cta">START AI TRY-ON</span><div className="fd-appearance-cards"><div className="fd-appearance-card"><b>{monogram||"FD"}</b><span>PERSONAL STYLE / AI ASSISTED</span></div><div className="fd-appearance-card"><b>LOOK / 001</b><span>EXPLORE COLLECTION</span></div></div></div><div className="fd-appearance-social"><strong>{socialTitle||"Fashion Dream — AI Try-On"}</strong><span>{socialDescription||"Preview fashion looks with AI before you buy."}</span></div></div></div></div>
-            <div className="fd-appearance-preview-foot">Preview only · Changes are local to this control center and are not persisted yet.</div>
+            <div className="fd-appearance-preview"><div className="fd-appearance-browser" style={previewStyle}><div className="fd-appearance-browser-bar"><i/><i/><i/></div><div className="fd-appearance-site"><div className="fd-appearance-site-nav"><span>{brandName||"FASHION DREAM"}</span><span>SHOP · AI TRY-ON (BETA)</span></div><div className="fd-appearance-hero"><small>UPTHINK/IUH — SAIGON-2026 — SYS 02// ONLINE</small><h3>WEAR YOUR<br/>OWN STORY.</h3><p>{socialDescription||"Preview fashion looks with AI before you buy."}</p><span className="fd-appearance-cta">START AI TRY-ON</span><div className="fd-appearance-cards"><div className="fd-appearance-card"><b>{monogram||"FD"}</b><span>PERSONAL STYLE / AI ASSISTED</span></div><div className="fd-appearance-card"><b>LOOK / 001</b><span>EXPLORE COLLECTION</span></div></div></div><div className="fd-appearance-social"><strong>{socialTitle||"Fashion Dream — AI Try-On"}</strong><span>{socialDescription||"Preview fashion looks with AI before you buy."}</span></div></div></div></div>
+            <div className="fd-appearance-preview-foot">{workflowState === "Preview" ? "Preview mode · changes are not published." : "Preview only · save draft or publish when ready."}</div>
           </aside>
         </div>
       </div>
