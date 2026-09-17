@@ -9,6 +9,7 @@ on:
       - ".github/maintenance.yml"
       - ".github/workflows/self-maintenance.yml"
       - ".github/agents/self-maintenance-engineer.md"
+      - "fashion-dream-try-on-main/package-lock.json"
 
 permissions:
   contents: read
