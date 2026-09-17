@@ -17,7 +17,7 @@ import { getCustomerUser, getSafeReturnPath, startCustomerSessionWatcher } from 
 import { applyTheme, getStoredTheme, loadRemoteTheme } from "@/lib/theme";
 import { I18nProvider } from "@/lib/i18n";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { canonicalLink } from "@/lib/seo";
+import { canonicalLink, jsonLdScript, organizationSchema, websiteSchema } from "@/lib/seo";
 
 const CUSTOMER_PROTECTED_PREFIXES = ["/account/profile", "/account/orders", "/account/wishlist"];
 function isCustomerProtectedPath(pathname: string) { return CUSTOMER_PROTECTED_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)); }
@@ -28,6 +28,8 @@ function CustomerAuthGuard() { const router = useRouter(); const pathname = rout
 function NotFoundComponent() { return <div className="flex min-h-screen items-center justify-center bg-background px-4"><div className="max-w-md text-center"><h1 className="text-7xl font-bold text-foreground">404</h1><h2 className="mt-4 text-xl font-semibold text-foreground">Không tìm thấy trang</h2><p className="mt-2 text-sm text-muted-foreground">Trang bạn đang tìm kiếm không tồn tại hoặc đã được chuyển.</p><div className="mt-6"><Link to="/" className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">Về trang chủ WEARO</Link></div></div></div>; }
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) { console.error(error); const router = useRouter(); useEffect(() => { reportLovableError(error, { boundary: "tanstack_root_error_component" }); }, [error]); return <div className="flex min-h-screen items-center justify-center bg-background px-4"><div className="max-w-md text-center"><h1 className="text-xl font-semibold tracking-tight text-foreground">Không thể tải trang</h1><p className="mt-2 text-sm text-muted-foreground">Đã xảy ra lỗi. Bạn có thể tải lại hoặc quay về WEARO.</p><div className="mt-6 flex flex-wrap justify-center gap-2"><button onClick={() => { router.invalidate(); reset(); }} className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">Thử lại</button><a href="/" className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground">Về trang chủ</a></div></div></div>; }
 
+const siteStructuredData = [organizationSchema(), websiteSchema()];
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({ meta: [
     { charSet: "utf-8" }, { name: "viewport", content: "width=device-width, initial-scale=1" }, { title: "WEARO — Mặc theo cách của riêng bạn" },
@@ -35,7 +37,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   ], links: [
     canonicalLink("/"), { rel: "stylesheet", href: appCss }, { rel: "stylesheet", href: uiStabilizationCss }, { rel: "stylesheet", href: topbarCss }, { rel: "stylesheet", href: navHotfixCss }, { rel: "stylesheet", href: adminUiCss }, { rel: "stylesheet", href: adminComfortCss }, { rel: "stylesheet", href: paletteCss }, { rel: "stylesheet", href: uxFoundationCss }, { rel: "stylesheet", href: homeCompositionGuardCss }, { rel: "stylesheet", href: wearoCanonicalLockCss }, { rel: "icon", href: "/favicon.ico", type: "image/x-icon" }, { rel: "preconnect", href: "https://fonts.googleapis.com" }, { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
     { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Anton&family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Bodoni+Moda:opsz,wght@6..96,400..700&family=Dancing+Script:wght@600;700&family=Oswald:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600&display=swap" }
-  ] }), shellComponent: RootShell, component: RootComponent, notFoundComponent: NotFoundComponent, errorComponent: ErrorComponent,
+  ], scripts: siteStructuredData.map(jsonLdScript) }), shellComponent: RootShell, component: RootComponent, notFoundComponent: NotFoundComponent, errorComponent: ErrorComponent,
 });
 function RootShell({ children }: { children: ReactNode }) { return <html lang="vi"><head><HeadContent /></head><body>{children}<Scripts /></body></html>; }
 function RootComponent() { const { queryClient } = Route.useRouteContext(); return <QueryClientProvider client={queryClient}><I18nProvider><CartProvider><ThemeRuntime /><CustomerAuthGuard /><Outlet /><Toaster /></CartProvider></I18nProvider></QueryClientProvider>; }
