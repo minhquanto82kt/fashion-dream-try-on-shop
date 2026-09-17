@@ -1,6 +1,6 @@
 import type { ThemeColors } from "@/lib/theme";
 
-export type ThemeWorkflowStatus = "draft" | "published";
+export type ThemeWorkflowStatus = "draft" | "published" | "archived";
 
 export type AppearanceTheme = {
   id: string;
@@ -56,7 +56,7 @@ function mapRow(row: Record<string, unknown>): AppearanceTheme {
     id: String(row.id),
     name: String(row.name),
     scope: "global",
-    status: row.status === "published" ? "published" : "draft",
+    status: row.status === "published" ? "published" : row.status === "archived" ? "archived" : "draft",
     theme_data: {
       primary: String(data.primary ?? "#F0A500"),
       secondary: String(data.secondary ?? "#E6D5B8"),
