@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Eye, RotateCcw, Save, Send, Trash2 } from "lucide-react";
+import { Eye, Pencil, RefreshCw, RotateCcw, Save, Send, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { discardThemeDraft, getStoredTheme, getThemeWorkflow, openThemePreview, publishTheme, resetTheme, saveThemeToDatabase, type ThemeWorkflowRecord } from "@/lib/theme";
 
@@ -10,7 +10,8 @@ export const Route = createFileRoute("/admin/appearance/workflow")({
 
 function formatDate(value: string | null) {
   if (!value) return "—";
-  return new Intl.DateTimeFormat("vi-VN", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "—" : new Intl.DateTimeFormat("vi-VN", { dateStyle: "medium", timeStyle: "short" }).format(date);
 }
 
 function ThemeCard({ title, record, muted }: { title: string; record: ThemeWorkflowRecord | null; muted?: boolean }) {
@@ -25,7 +26,9 @@ function ThemeCard({ title, record, muted }: { title: string; record: ThemeWorkf
           <div className="up-theme-workflow-swatches">
             {Object.entries(record.theme_data).map(([key, value]) => <span key={key} title={`${key}: ${value}`} style={{ background: value }} />)}
           </div>
-          <div className="up-theme-workflow-meta">Updated {formatDate(record.updated_at)}{record.published_at ? ` · Published ${formatDate(record.published_at)}` : ""}</div>
+          <div className="up-theme-workflow-meta">
+            Updated {formatDate(record.updated_at)}{record.published_at ? ` · Published ${formatDate(record.published_at)}` : ""}
+          </div>
         </>
       ) : <div className="up-theme-workflow-empty">The workflow has no saved {title.toLowerCase()} yet.</div>}
     </article>
@@ -36,16 +39,25 @@ function AppearanceWorkflowPage() {
   const [published, setPublished] = useState<ThemeWorkflowRecord | null>(null);
   const [draft, setDraft] = useState<ThemeWorkflowRecord | null>(null);
   const [busy, setBusy] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
-    const state = await getThemeWorkflow();
-    setPublished(state.published);
-    setDraft(state.draft);
+    setLoading(true);
+    try {
+      const state = await getThemeWorkflow();
+      setPublished(state.published);
+      setDraft(state.draft);
+      setError(null);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  useEffect(() => { void refresh().catch((cause) => setError(cause instanceof Error ? cause.message : "Unable to read theme workflow.")); }, [refresh]);
+  useEffect(() => {
+    void refresh().catch((cause) => setError(cause instanceof Error ? cause.message : "Unable to read theme workflow."));
+  }, [refresh]);
 
   async function run(action: () => Promise<unknown>, success: string) {
     setBusy(true); setMessage(null); setError(null);
@@ -79,9 +91,8 @@ function AppearanceWorkflowPage() {
         .up-theme-workflow-swatches { display:grid; grid-template-columns:repeat(6,1fr); gap:4px; margin:18px 0 12px; }
         .up-theme-workflow-swatches span { height:30px; border:1px solid rgba(0,0,0,.1); }
         .up-theme-workflow-meta,.up-theme-workflow-empty { color:#8b8c87; font-size:10px; line-height:1.5; }
-        .up-theme-workflow-actions { background:#fff; border:1px solid #e3e2dc; padding:18px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
-        .up-theme-workflow-actions button { display:inline-flex; align-items:center; gap:7px; border:1px solid #dddcd5; background:#fff; padding:11px 14px; font-size:9px; font-weight:900; letter-spacing:.06em; text-transform:uppercase; cursor:pointer; }
-        .up-theme-workflow-actions button.primary { background:#1b1a17; color:#fff; border-color:#1b1a17; }
+        .up-theme-workflow-actions { background:#fff; border:1px solid #e3e2dc; padding:16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+        .up-theme-workflow-actions button,.up-theme-workflow-actions a { display:inline-flex; align-items:center; gap:7px; border:1px solid #dddcd5; background:#fff; color:#333; padding:11px 14px; font-size:9px; font-weight:900; letter-spacing:.06em; text-transform:uppercase; cursor:pointer; text-decoration:none; }
         .up-theme-workflow-actions button.accent { background:#f2a900; color:#111; border-color:#f2a900; }
         .up-theme-workflow-actions button.danger { color:#a32727; }
         .up-theme-workflow-actions button:disabled { opacity:.45; cursor:not-allowed; }
@@ -92,11 +103,20 @@ function AppearanceWorkflowPage() {
       `}</style>
 
       <header className="up-theme-workflow-header">
-        <div><div className="up-theme-workflow-kicker">APPEARANCE / WORKFLOW</div><h1>Theme Workflow</h1><p>Draft, preview and publish safely. Editing the theme never changes the public website until Publish.</p></div>
+        <div>
+          <div className="up-theme-workflow-kicker">APPEARANCE / WORKFLOW</div>
+          <h1>Theme Workflow</h1>
+          <p>Draft, preview and publish safely. Editing the theme never changes the public website until Publish.</p>
+        </div>
         <Link to="/admin/appearance" className="up-theme-workflow-back">← Back to Appearance</Link>
       </header>
 
-      <div className="up-theme-workflow-statusbar"><span className="up-theme-workflow-dot" /><strong>{draft ? "Draft changes ready" : "Published theme is current"}</strong><span>{draft ? "Review the draft before publishing." : "No pending theme changes."}</span></div>
+      <div className="up-theme-workflow-statusbar">
+        <span className="up-theme-workflow-dot" />
+        <strong>{draft ? "Draft changes ready" : "Published theme is current"}</strong>
+        <span>{draft ? "Review the draft before publishing." : "No pending theme changes."}</span>
+        <button type="button" onClick={() => void refresh()} disabled={loading || busy} aria-label="Refresh theme workflow"><RefreshCw size={13} /></button>
+      </div>
 
       <section className="up-theme-workflow-grid">
         <ThemeCard title="Published" record={published} />
@@ -104,6 +124,7 @@ function AppearanceWorkflowPage() {
       </section>
 
       <section className="up-theme-workflow-actions">
+        <Link to="/admin/appearance"><Pencil size={13} /> Edit Theme</Link>
         <button type="button" onClick={() => void run(() => saveThemeToDatabase(getStoredTheme()), "Current editor state saved as draft.")} disabled={busy}><Save size={13} /> Save Draft</button>
         <button type="button" onClick={() => void openThemePreview(draft?.theme_data ?? getStoredTheme())} disabled={busy}><Eye size={13} /> Preview</button>
         <button type="button" className="accent" onClick={() => void run(() => publishTheme(), "Draft published. Public website now uses the new theme.")} disabled={busy || !draft}><Send size={13} /> Publish</button>
