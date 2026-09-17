@@ -1,0 +1,160 @@
+/* Appearance / Palette Studio layout guardrails.
+   The studio is intentionally fluid so the editor never collapses into a narrow column. */
+.up-theme-page {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+.up-theme-layout {
+  grid-template-columns: minmax(0, 1.4fr) minmax(300px, .6fr) !important;
+}
+
+.up-theme-main,
+.up-theme-panel,
+.up-palette-studio,
+.up-palette-studio-body,
+.up-palette-editor {
+  min-width: 0 !important;
+  max-width: 100%;
+}
+
+.up-palette-studio-head {
+  align-items: flex-start !important;
+}
+
+.up-palette-studio-head > div:first-child {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.up-palette-studio-head .up-palette-flow {
+  flex: 0 1 300px;
+  min-width: 190px;
+}
+
+.up-palette-studio-body {
+  grid-template-columns: minmax(220px, 260px) minmax(0, 1fr) !important;
+  min-height: 0 !important;
+}
+
+.up-palette-list {
+  min-height: 0;
+}
+
+.up-palette-items {
+  max-height: 420px !important;
+}
+
+.up-palette-editor {
+  overflow: hidden;
+}
+
+.up-palette-editor-head,
+.up-palette-editor-form {
+  min-width: 0;
+}
+
+.up-palette-name-row {
+  grid-template-columns: minmax(0, 1fr) auto !important;
+}
+
+.up-palette-color-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+.up-palette-color {
+  grid-template-columns: 36px minmax(0, 1fr) 78px !important;
+  gap: 6px !important;
+  padding: 8px !important;
+}
+
+.up-palette-color input[type="text"] {
+  width: 78px !important;
+}
+
+.up-palette-editor-footer {
+  align-items: flex-start !important;
+}
+
+.up-palette-readout {
+  max-width: 260px;
+}
+
+.up-palette-save-actions {
+  min-width: 0;
+}
+
+.up-theme-preview-panel {
+  min-width: 0 !important;
+}
+
+@media (max-width: 1180px) {
+  .up-theme-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .up-theme-preview-panel {
+    position: relative !important;
+    top: auto !important;
+  }
+
+  .up-theme-preview-shell {
+    min-height: 360px;
+  }
+}
+
+@media (max-width: 900px) {
+  .up-palette-studio-body {
+    grid-template-columns: 220px minmax(0, 1fr) !important;
+  }
+
+  .up-palette-color-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .up-palette-color {
+    grid-template-columns: 40px minmax(0, 1fr) 84px !important;
+  }
+
+  .up-palette-color input[type="text"] {
+    width: 84px !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .up-palette-studio-head {
+    flex-direction: column !important;
+  }
+
+  .up-palette-studio-head .up-palette-flow {
+    width: 100%;
+    min-width: 0;
+    justify-content: flex-start !important;
+  }
+
+  .up-palette-studio-body {
+    grid-template-columns: 1fr !important;
+  }
+
+  .up-palette-list {
+    border-right: 0 !important;
+    border-bottom: 1px solid #e3e2dc;
+  }
+
+  .up-palette-items {
+    max-height: 260px !important;
+  }
+
+  .up-palette-editor-footer {
+    flex-direction: column !important;
+  }
+
+  .up-palette-readout {
+    max-width: none;
+  }
+
+  .up-palette-save-actions {
+    width: 100%;
+  }
+}
