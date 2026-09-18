@@ -12,7 +12,7 @@ const files = {
   migration: new URL("supabase/migrations/20260919030000_phase_b_c_commerce_hardening.sql", root),
   fulfillment: new URL("supabase/migrations/20260919031000_phase_c_fulfillment_hardening.sql", root),
   cancelMigration: new URL("supabase/migrations/20260919032000_phase_c_customer_cancel_order.sql", root),
-  rbacFinal: new URL("supabase/migrations/20260919032000_phase_b_rbac_completion.sql", root),
+  rbacFinal: new URL("supabase/migrations/20260919032500_phase_b_rbac_completion.sql", root),
   securityFinal: new URL("supabase/migrations/20260919033000_phase_b_c_security_and_commerce_final.sql", root),
 };
 
