@@ -164,13 +164,13 @@ function ProductDetailPage() {
 
   async function handleProductDelete() {
     if (!product) return;
-    if (!window.confirm(`Bạn có chắc muốn xóa sản phẩm "${product.name}"?\n\nSupabase có thể từ chối nếu dữ liệu liên quan không cho phép xóa.`)) return;
+    if (!window.confirm(`Bạn có chắc muốn ẩn sản phẩm "${product.name}"?\n\nSản phẩm sẽ được chuyển sang trạng thái Đã ẩn và không bị xóa khỏi lịch sử dữ liệu.`)) return;
     setDeleting(true); setMessage(""); setError("");
     try {
       await deleteProduct(product.id);
       await navigate({ to: "/admin/products" });
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Không thể xóa sản phẩm.");
+      setError(cause instanceof Error ? cause.message : "Không thể ẩn sản phẩm.");
     } finally { setDeleting(false); }
   }
 
@@ -261,7 +261,7 @@ function ProductDetailPage() {
             <div className="up-editor-actions">
               <Link className="up-secondary" to="/admin/products">HỦY</Link>
               <button className="up-admin-primary" type="submit" disabled={saving || deleting}>{saving ? "ĐANG LƯU…" : "LƯU THAY ĐỔI"}</button>
-              <button className="up-row-action up-row-action-danger" type="button" onClick={() => void handleProductDelete()} disabled={saving || deleting}>{deleting ? "ĐANG XÓA…" : "XÓA SẢN PHẨM"}</button>
+              <button className="up-row-action up-row-action-danger" type="button" onClick={() => void handleProductDelete()} disabled={saving || deleting}>{deleting ? "ĐANG ẨN…" : "ẨN SẢN PHẨM"}</button>
             </div>
           </form>
         </div>
