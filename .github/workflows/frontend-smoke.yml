@@ -33,9 +33,13 @@ jobs:
           node --version
           npm --version
 
-      - name: Bootstrap missing lockfile
-        if: github.event_name == 'push' && !hashFiles('fashion-dream-try-on-main/package-lock.json')
-        run: npm install --package-lock-only --legacy-peer-deps --no-audit --no-fund
+      - name: Install dependencies from lockfile
+        if: hashFiles('fashion-dream-try-on-main/package-lock.json')
+        run: npm ci --no-audit --no-fund
+
+      - name: Bootstrap dependencies and lockfile
+        if: ${{ !hashFiles('fashion-dream-try-on-main/package-lock.json') }}
+        run: npm install --legacy-peer-deps --no-audit --no-fund
 
       - name: Persist generated lockfile
         if: github.event_name == 'push' && hashFiles('fashion-dream-try-on-main/package-lock.json')
@@ -48,20 +52,17 @@ jobs:
             git push origin HEAD:${GITHUB_REF_NAME}
           fi
 
-      - name: Install dependencies
-        run: npm ci --no-audit --no-fund
-
       - name: Dependency audit
         run: npm run audit:dependencies
 
       - name: Secret exposure gate
         run: npm run security:secrets
 
-      - name: Typecheck
-        run: npm run typecheck
-
       - name: Build
         run: npm run build
+
+      - name: Typecheck generated route tree
+        run: npm run typecheck
 
       - name: Start development server
         run: |
