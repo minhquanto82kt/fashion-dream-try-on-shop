@@ -55,13 +55,13 @@ async function storageRequest(path: string, init: RequestInit) {
   }, { timeoutMs: 15_000, maxRetries: 1 });
 }
 
-async function uploadResult(path: string, bytes: Uint8Array, mediaType: string) {
+async function uploadObject(path: string, bytes: Uint8Array, mediaType: string) {
   const response = await storageRequest(`object/${BUCKET}/${path}`, {
     method: "POST",
     headers: { "Content-Type": mediaType, "x-upsert": "true" },
     body: bytes as unknown as BodyInit,
   });
-  if (!response.ok) throw new Error(`AI result storage failed (${response.status}).`);
+  if (!response.ok) throw new Error(`AI storage failed (${response.status}).`);
 }
 
 async function createSignedUrl(path: string) {
@@ -82,6 +82,12 @@ function base64ToBytes(base64: string) {
   const bytes = new Uint8Array(binary.length);
   for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
   return bytes;
+}
+
+function parseDataUrl(dataUrl: string) {
+  const match = /^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/=]+)$/.exec(dataUrl);
+  if (!match) throw new Error("Invalid input image data URL.");
+  return { mediaType: match[1], bytes: base64ToBytes(match[2]) };
 }
 
 function extension(mediaType: string) {
@@ -129,7 +135,7 @@ export async function createTryOnJob(input: {
       status: "queued",
       provider: "openai-gateway",
       category: input.category,
-      person_image_path: "inline:data-url",
+      person_image_path: "pending",
       garment_image_path: input.garmentImageUrl,
       metadata: { note: input.note ?? "", quota_remaining: quota.remaining },
       idempotency_key: crypto.randomUUID(),
@@ -141,7 +147,19 @@ export async function createTryOnJob(input: {
   });
   const job = rows[0];
   if (!job) throw new Error("Không thể tạo AI job.");
-  return { job, personImage: input.personImage, garmentImageUrl: input.garmentImageUrl, note: input.note };
+
+  const inputImage = parseDataUrl(input.personImage);
+  const inputPath = `try-on-input/${job.id}.${extension(inputImage.mediaType)}`;
+  try {
+    await uploadObject(inputPath, inputImage.bytes, inputImage.mediaType);
+    await updateJob(job.id, { person_image_path: inputPath });
+  } catch (error) {
+    await updateJob(job.id, { status: "failed", error: "INPUT_STORAGE_FAILED", provider_error: safeLogError(error), completed_at: new Date().toISOString() });
+    await recordUsage(input.clientKey, false);
+    throw new Error("Không thể lưu ảnh đầu vào AI. Vui lòng thử lại.");
+  }
+
+  return { job: { ...job, person_image_path: inputPath }, personImage: input.personImage, garmentImageUrl: input.garmentImageUrl, note: input.note };
 }
 
 export async function processTryOnJob(job: TryOnJobRow, input: { personImage: string; garmentImageUrl: string; note?: string; clientKey: string }) {
@@ -171,7 +189,7 @@ export async function processTryOnJob(job: TryOnJobRow, input: { personImage: st
       ].filter(Boolean).join(" ");
       const result = await provider.generateImage({ prompt, images: [input.personImage, input.garmentImageUrl] });
       const path = `try-on/${job.id}.${extension(result.mediaType)}`;
-      await uploadResult(path, base64ToBytes(result.base64), result.mediaType);
+      await uploadObject(path, base64ToBytes(result.base64), result.mediaType);
       await updateJob(job.id, {
         status: "completed",
         provider: provider.name,
