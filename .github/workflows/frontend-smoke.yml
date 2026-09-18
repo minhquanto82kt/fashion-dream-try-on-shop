@@ -1,19 +1,17 @@
-name: Frontend smoke tests
+name: Frontend foundation + smoke tests
 
 on:
   push:
     branches:
       - main
       - feature/product-admin
+      - foundation/phase-1-city-modernization
   pull_request:
 
 jobs:
-  smoke:
+  foundation-and-smoke:
     runs-on: ubuntu-latest
     env:
-      # These values are only used so browser-safe Supabase helpers can be imported
-      # during the CI smoke server. The publishable key is intentionally a CI-only
-      # placeholder because the smoke suite does not exercise Supabase mutations.
       VITE_SUPABASE_URL: https://oazipcrbutizdncctkcg.supabase.co
       VITE_SUPABASE_PUBLISHABLE_KEY: ci-smoke-test-placeholder
     defaults:
@@ -33,8 +31,14 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
+      - name: Lint
+        run: npm run lint
+
       - name: Build
         run: npm run build
+
+      - name: Foundation architecture gate
+        run: npm run test:foundation
 
       - name: Start development server
         run: |
