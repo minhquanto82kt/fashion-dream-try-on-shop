@@ -29,13 +29,13 @@ export function ProductCard({ product }: { product: Product }) {
     void sync();
     const onChanged = () => void sync();
     window.addEventListener("wearo:wishlist:changed", onChanged);
-    window.addEventListener("upthink:auth:login", onChanged);
-    window.addEventListener("upthink:auth:logout", onChanged);
+    window.addEventListener("wearo:auth:login", onChanged);
+    window.addEventListener("wearo:auth:logout", onChanged);
     return () => {
       mounted = false;
       window.removeEventListener("wearo:wishlist:changed", onChanged);
-      window.removeEventListener("upthink:auth:login", onChanged);
-      window.removeEventListener("upthink:auth:logout", onChanged);
+      window.removeEventListener("wearo:auth:login", onChanged);
+      window.removeEventListener("wearo:auth:logout", onChanged);
     };
   }, [product.id]);
 
