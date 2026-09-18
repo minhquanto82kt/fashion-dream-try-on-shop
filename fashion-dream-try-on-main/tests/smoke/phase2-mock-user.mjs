@@ -9,6 +9,7 @@ const mockUser = await read("src/lib/mock-user.ts");
 const cart = await read("src/lib/cart.tsx");
 const orders = await read("src/lib/order.functions.ts");
 const checkout = await read("src/routes/checkout.tsx");
+const auth = await read("src/lib/auth.ts");
 
 assert.match(mockUser, /preview-account-user/);
 assert.match(mockUser, /wearo:mock-user-mode/);
@@ -19,7 +20,16 @@ assert.match(orders, /mockUser/);
 assert.match(orders, /MOCK-/);
 assert.match(checkout, /isMockUserMode/);
 assert.match(checkout, /Mock User/);
-assert.match(checkout, /mockUser:mockMode/);
+assert.match(checkout, /mockUser:\s*mockMode/);
+assert.match(checkout, /getCustomerSession/);
+assert.match(checkout, /accessToken:\s*session\?\.access_token/);
+assert.match(checkout, /getCustomerUser/);
+assert.match(orders, /accessToken/);
+assert.match(orders, /auth\/v1\/user/);
+assert.match(orders, /verifiedUserId/);
+assert.match(orders, /p_user_id/);
+assert.match(auth, /getCustomerSession/);
+assert.match(auth, /getCustomerUser/);
 assert.match(checkout, /wearo_pending_invoice/);
 assert.doesNotMatch(checkout, /mockMode\)\{[^}]*fetch\(["']\/api\/momo\/create/s);
 
