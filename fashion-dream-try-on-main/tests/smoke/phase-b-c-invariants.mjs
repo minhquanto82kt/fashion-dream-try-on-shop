@@ -1,3 +1,4 @@
+import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const root = new URL("../../", import.meta.url);
@@ -11,6 +12,8 @@ const files = {
   migration: new URL("supabase/migrations/20260919030000_phase_b_c_commerce_hardening.sql", root),
   fulfillment: new URL("supabase/migrations/20260919031000_phase_c_fulfillment_hardening.sql", root),
   cancelMigration: new URL("supabase/migrations/20260919032000_phase_c_customer_cancel_order.sql", root),
+  rbacFinal: new URL("supabase/migrations/20260919032000_phase_b_rbac_completion.sql", root),
+  securityFinal: new URL("supabase/migrations/20260919033000_phase_b_c_security_and_commerce_final.sql", root),
 };
 
 let failed = false;
@@ -22,10 +25,11 @@ async function source(path, label) {
 }
 function mustContain(text, needle, label) { if (text.includes(needle)) pass(label); else fail(`${label} (missing ${needle})`); }
 
-const [cart, cartServer, order, checkout, cancel, migration, fulfillment, cancelMigration] = await Promise.all([
+const [cart, cartServer, order, checkout, cancel, migration, fulfillment, cancelMigration, rbacFinal, securityFinal] = await Promise.all([
   source(files.cart, "cart.tsx"), source(files.cartServer, "cart.server.functions.ts"), source(files.order, "order.functions.ts"),
   source(files.checkout, "checkout.tsx"), source(files.cancel, "order-cancel.functions.ts"), source(files.migration, "Phase B/C migration"),
   source(files.fulfillment, "fulfillment migration"), source(files.cancelMigration, "customer cancel migration"),
+  source(files.rbacFinal, "RBAC completion migration"), source(files.securityFinal, "security completion migration"),
 ]);
 
 mustContain(cart, "getServerCart", "authenticated cart loads from server");
@@ -43,6 +47,11 @@ mustContain(migration, "orders_idempotency_key_uidx", "Phase C protects duplicat
 mustContain(fulfillment, "trg_orders_enforce_transition", "Phase C enforces fulfillment transitions");
 mustContain(fulfillment, "stock=stock+v_item.quantity", "cancelled orders restore inventory");
 mustContain(cancelMigration, "cancel_my_order", "customer cancellation RPC is deployed");
+mustContain(rbacFinal, "handle_new_user_role", "new users receive customer role");
+mustContain(rbacFinal, "update_order_status_as_manager", "manager order operations are scoped to status transitions");
+mustContain(securityFinal, "REVOKE ALL ON FUNCTION public.create_order_atomic_v2", "direct checkout RPC is not publicly executable");
+mustContain(securityFinal, "GRANT EXECUTE ON FUNCTION public.create_order_atomic_v2", "service role can execute atomic checkout");
+mustContain(securityFinal, "v_requested_variants", "checkout rejects missing variants instead of partial orders");
 
 try {
   const response = await fetch(`${baseUrl}/api/health`, { redirect: "manual" });
