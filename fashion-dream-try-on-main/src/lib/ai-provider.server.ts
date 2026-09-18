@@ -29,12 +29,7 @@ const openAiGatewayProvider: AiProvider = {
     let lastError: unknown;
     for (let attempt = 1; attempt <= MAX_PROVIDER_ATTEMPTS; attempt += 1) {
       try {
-        const prompt = input.images?.length
-          ? [
-              { type: "text" as const, text: input.prompt },
-              ...input.images.map((image) => ({ type: "image" as const, image })),
-            ]
-          : input.prompt;
+        const prompt = input.images?.length ? { text: input.prompt, images: input.images } : input.prompt;
         const result = await generateImage({
           model: OPENAI_IMAGE_MODEL,
           prompt,
