@@ -25,13 +25,12 @@ const getCartProducts = createServerFn({ method: "GET" }).validator((productIds:
     const productImages = images.filter((image) => image.product_id === product.id).sort((a, b) => a.sort_order - b.sort_order);
     const gallery = productImages.map((image) => image.image_url);
     const primaryImage = productImages.find((image) => image.is_primary)?.image_url ?? gallery[0] ?? product.image ?? "";
-    return { id: product.id, name: product.name, image: primaryImage, gallery: gallery.length > 0 ? gallery : [primaryImage], sizes: [], colors: [], badge: product.featured ? "Featured" : undefined, description: product.description, price: Number(product.price), category: product.category, variants: variants.filter((variant) => variant.product_id === product.id), active: product.active, status: product.status as "draft" | "published" | "archived", featured: product.featured };
+    return { id: product.id, name: product.name, price: Number(product.price), category: product.category, image: primaryImage, gallery: gallery.length > 0 ? gallery : [primaryImage], sizes: [], colors: [], badge: product.featured ? "Featured" : undefined, description: product.description, variants: variants.filter((variant) => variant.product_id === product.id) };
   });
 });
 
 type CartItem = CartLine & { product: CartProduct; variant: CartVariant | null; stock: number };
 type CartContextValue = { lines: CartLine[]; items: CartItem[]; count: number; subtotal: number; loading: boolean; hasStockIssues: boolean; add: (line: CartLine) => void; setQty: (index: number, qty: number) => void; remove: (index: number) => void; clear: () => void };
-
 const GUEST_STORAGE_KEY = "wearo-cart";
 const LEGACY_GUEST_STORAGE_KEY = "upthink-cart";
 const MOCK_STORAGE_KEY = "wearo-mock-cart";
@@ -45,12 +44,7 @@ function readGuestCart() { return mergeLines(readLocalCart(GUEST_STORAGE_KEY), r
 function serverCartToLines(cart: ServerCart): CartLine[] { return cart.items.flatMap((item) => item.variant ? [{ productId: item.variant.product_id, size: item.variant.size, color: item.variant.color, qty: item.quantity, variantId: item.variant.id, cartItemId: item.id }] : []); }
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [mockMode, setMockMode] = useState(false);
-  const [authenticated, setAuthenticated] = useState(false);
-  const [lines, setLines] = useState<CartLine[]>([]);
-  const [products, setProducts] = useState<CartProduct[]>([]);
-  const [hydrated, setHydrated] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [mockMode, setMockMode] = useState(false), [authenticated, setAuthenticated] = useState(false), [lines, setLines] = useState<CartLine[]>([]), [products, setProducts] = useState<CartProduct[]>([]), [hydrated, setHydrated] = useState(false), [loading, setLoading] = useState(false);
   useEffect(() => { const sync = () => { setMockMode(isMockUserMode()); setAuthenticated(Boolean(getCustomerSession()?.access_token)); }; sync(); const onAuth = () => sync(); window.addEventListener("wearo:mock-user:changed", sync); window.addEventListener("upthink:auth:login", onAuth); window.addEventListener("upthink:auth:logout", onAuth); window.addEventListener("upthink:auth:recovery", onAuth); return () => { window.removeEventListener("wearo:mock-user:changed", sync); window.removeEventListener("upthink:auth:login", onAuth); window.removeEventListener("upthink:auth:logout", onAuth); window.removeEventListener("upthink:auth:recovery", onAuth); }; }, []);
   useEffect(() => { let cancelled = false; async function load() { setHydrated(false); if (mockMode || !authenticated) { setLines(mockMode ? readLocalCart(MOCK_STORAGE_KEY) : readGuestCart()); setHydrated(true); return; } const session = getCustomerSession(); if (!session?.access_token) { setAuthenticated(false); setLines([]); setHydrated(true); return; } setLoading(true); try { const guestLines = readGuestCart(); let serverCart = await getServerCart({ data: { accessToken: session.access_token } }); if (guestLines.length > 0) { const guestProducts = await getCartProducts({ data: Array.from(new Set(guestLines.map((line) => line.productId))) }); const variantByKey = new Map(guestProducts.flatMap((product) => product.variants.map((variant) => [`${variant.product_id}|${variant.size}|${variant.color}`, variant] as const))); for (const line of guestLines) { const variant = variantByKey.get(`${line.productId}|${line.size}|${line.color}`); if (!variant) continue; try { serverCart = await addServerCartItem({ data: { accessToken: session.access_token, variantId: variant.id, quantity: line.qty } }); } catch (error) { console.warn("Không thể nhập một dòng guest cart vào tài khoản:", error); } } localStorage.removeItem(GUEST_STORAGE_KEY); localStorage.removeItem(LEGACY_GUEST_STORAGE_KEY); } if (!cancelled) setLines(serverCartToLines(serverCart)); } catch (error) { console.error("Không thể tải giỏ hàng tài khoản:", error); if (!cancelled) setLines([]); } finally { if (!cancelled) { setLoading(false); setHydrated(true); } } } void load(); return () => { cancelled = true; }; }, [mockMode, authenticated]);
   useEffect(() => { if (!hydrated || authenticated) return; const key = mockMode ? MOCK_STORAGE_KEY : GUEST_STORAGE_KEY; localStorage.setItem(key, JSON.stringify(lines)); if (!mockMode) localStorage.removeItem(LEGACY_GUEST_STORAGE_KEY); window.dispatchEvent(new Event(mockMode ? MOCK_EVENT : REAL_EVENT)); }, [lines, hydrated, authenticated, mockMode]);
