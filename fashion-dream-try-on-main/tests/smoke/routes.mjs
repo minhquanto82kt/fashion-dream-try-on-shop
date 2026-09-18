@@ -34,4 +34,4 @@ for (const route of routes) {
 }
 
 if (failed) process.exit(1);
-console.log(`\nSmoke test passed: ${routes.length} public/preview routes checked against ${baseUrl}`);
+console.log(`\nPublic & Preview Route Validation: PASS (${routes.length} routes checked against ${baseUrl})`);
