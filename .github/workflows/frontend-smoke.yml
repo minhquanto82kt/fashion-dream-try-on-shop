@@ -33,16 +33,13 @@ jobs:
           node --version
           npm --version
 
-      - name: Install dependencies from lockfile
-        if: hashFiles('fashion-dream-try-on-main/package-lock.json')
+      - name: Refresh lockfile from package.json
+        run: npm install --package-lock-only --legacy-peer-deps --no-audit --no-fund
+
+      - name: Install dependencies from refreshed lockfile
         run: npm ci --no-audit --no-fund
 
-      - name: Bootstrap dependencies and lockfile
-        if: ${{ hashFiles('fashion-dream-try-on-main/package-lock.json') == '' }}
-        run: npm install --legacy-peer-deps --no-audit --no-fund
-
-      - name: Upload generated lockfile for bootstrap recovery
-        if: ${{ hashFiles('fashion-dream-try-on-main/package-lock.json') != '' }}
+      - name: Upload generated lockfile for recovery
         uses: actions/upload-artifact@v4
         with:
           name: generated-package-lock
@@ -50,7 +47,7 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
-      - name: Repair known TypeScript baseline and persist lockfile
+      - name: Persist refreshed lockfile on feature/product-admin
         if: ${{ github.event_name == 'push' && github.ref_name == 'feature/product-admin' }}
         run: node scripts/ci/repair-baseline.mjs
 
@@ -108,4 +105,4 @@ jobs:
         if: failure()
         run: cat /tmp/wearo-vite.log
 
-# Roadmap verification is intentionally kept on feature/product-admin; no side branch is used.
+# Roadmap verification stays on feature/product-admin; no side branch is used.
