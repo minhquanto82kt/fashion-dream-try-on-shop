@@ -20,7 +20,7 @@ export function SiteNav() {
   const { count } = useCart();
   const { language, toggleLanguage, t } = useI18n();
   const [open, setOpen] = useState(false), [shopOpen, setShopOpen] = useState(false), [notificationOpen, setNotificationOpen] = useState(false), [notificationTab, setNotificationTab] = useState<"notifications" | "history">("notifications"), [searchOpen, setSearchOpen] = useState(false), [query, setQuery] = useState(""), [customerEmail, setCustomerEmail] = useState<string | null>(null), [brandTapCount, setBrandTapCount] = useState(0), [easterEggOpen, setEasterEggOpen] = useState(false);
-  const brandTapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const brandTapTimer = useRef<ReturnType<typeof window.setTimeout> | null>(null);
   useEffect(() => { let mounted = true; const sync = async () => { const user = await getCustomerUser(); if (mounted) setCustomerEmail(user?.email ?? null); }; void sync(); const onLogin = () => void sync(); const onLogout = () => { setCustomerEmail(null); setNotificationOpen(false); }; window.addEventListener("upthink:auth:login", onLogin); window.addEventListener("upthink:auth:logout", onLogout); return () => { mounted = false; window.removeEventListener("upthink:auth:login", onLogin); window.removeEventListener("upthink:auth:logout", onLogout); }; }, []);
   useEffect(() => { if (!easterEggOpen) return; const timer = window.setTimeout(() => setEasterEggOpen(false), 6500); return () => window.clearTimeout(timer); }, [easterEggOpen]);
   useEffect(() => () => { if (brandTapTimer.current) window.clearTimeout(brandTapTimer.current); }, []);
@@ -59,7 +59,7 @@ export function SiteNav() {
             </div>}
           </div>}
         </div>
-        {PRIMARY_LINKS.map(link => link.beta ? <Link key={link.to} to={link.to} className="fashion-ai-nav" activeProps={{ className: "fashion-ai-nav is-active" }} aria-label="AI Studio — Beta"><span className="fashion-ai-nav__label">AI Studio</span><span className="fashion-ai-nav__beta">BETA</span></Link> : <Link key={link.to} to={link.to} activeProps={{ className: "is-active" }} style={TOPBAR_TEXT_STYLE}>{link.label === "About" ? t("Giới thiệu", "About") : link.label}</Link>)}
+        {PRIMARY_LINKS.map(link => "beta" in link && link.beta ? <Link key={link.to} to={link.to} className="fashion-ai-nav" activeProps={{ className: "fashion-ai-nav is-active" }} aria-label="AI Studio — Beta"><span className="fashion-ai-nav__label">AI Studio</span><span className="fashion-ai-nav__beta">BETA</span></Link> : <Link key={link.to} to={link.to} activeProps={{ className: "is-active" }} style={TOPBAR_TEXT_STYLE}>{link.label === "About" ? t("Giới thiệu", "About") : link.label}</Link>)}
       </div>
       <div className="fashion-nav__actions">
         <button type="button" className={`fashion-icon-btn fashion-search-toggle ${searchOpen ? "is-active" : ""}`} aria-label={searchOpen ? t("Đóng tìm kiếm", "Close search") : t("Tìm kiếm sản phẩm", "Search products")} aria-expanded={searchOpen} onClick={() => { setSearchOpen(v => !v); setOpen(false); setShopOpen(false); setNotificationOpen(false); }}>{searchOpen ? <X size={21} strokeWidth={2} /> : <Search size={21} strokeWidth={2} />}</button>
