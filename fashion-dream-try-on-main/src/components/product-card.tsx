@@ -62,7 +62,13 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <article className="fashion-product-card">
       <Link to="/product/$id" params={{ id: product.id }} className="fashion-product-image">
-        <img src={product.image} alt={product.name} loading="lazy" />
+        <img
+          src={product.image}
+          alt={product.name}
+          loading="lazy"
+          decoding="async"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        />
         {product.badge && <span className="fashion-product-badge">{product.badge}</span>}
         <span className="fashion-product-index">/{product.id.toUpperCase()}</span>
         <span className="fashion-product-arrow"><ArrowUpRight size={16} /></span>
