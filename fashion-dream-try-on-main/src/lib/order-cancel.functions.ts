@@ -1,5 +1,4 @@
 import { createServerFn } from "@tanstack/react-start";
-import { supabaseRequest } from "./supabase.server";
 import { supabaseUserRequest } from "./supabase-user.server";
 
 export const cancelCustomerOrder = createServerFn({ method: "POST" })
