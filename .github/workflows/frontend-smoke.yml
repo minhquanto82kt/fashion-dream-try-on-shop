@@ -11,9 +11,6 @@ jobs:
   smoke:
     runs-on: ubuntu-latest
     env:
-      # These values are only used so browser-safe Supabase helpers can be imported
-      # during the CI smoke server. The publishable key is intentionally a CI-only
-      # placeholder because the smoke suite does not exercise Supabase mutations.
       VITE_SUPABASE_URL: https://oazipcrbutizdncctkcg.supabase.co
       VITE_SUPABASE_PUBLISHABLE_KEY: ci-smoke-test-placeholder
     defaults:
@@ -23,13 +20,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node
+      - name: Set up Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
+          cache: npm
+          cache-dependency-path: fashion-dream-try-on-main/package-lock.json
 
-      - name: Install dependencies
-        run: npm install --no-audit --no-fund
+      - name: Verify npm runtime
+        run: |
+          node --version
+          npm --version
+          npm config get package-lock
+
+      - name: Install dependencies from lockfile
+        run: npm ci --no-audit --no-fund
 
       - name: Build
         run: npm run build
