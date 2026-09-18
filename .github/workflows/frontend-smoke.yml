@@ -56,10 +56,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b ci/lockfile-recovery
+          git checkout -B ci/lockfile-recovery
           git add fashion-dream-try-on-main/package-lock.json
-          git commit -m "chore(ci): add generated npm lockfile"
-          git push origin HEAD:ci/lockfile-recovery
+          git commit -m "chore(ci): add generated npm lockfile" || true
+          git push --force origin HEAD:ci/lockfile-recovery
 
       - name: Dependency audit
         run: npm run audit:dependencies
@@ -68,7 +68,23 @@ jobs:
         run: npm run security:secrets
 
       - name: Build
-        run: npm run build
+        id: build
+        continue-on-error: true
+        run: npm run build 2>&1 | tee /tmp/wearo-build.log
+        shell: bash
+
+      - name: Upload build diagnostic
+        if: ${{ steps.build.outcome == 'failure' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-diagnostic
+          path: /tmp/wearo-build.log
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Fail if build failed
+        if: ${{ steps.build.outcome == 'failure' }}
+        run: exit 1
 
       - name: Typecheck generated route tree
         run: npm run typecheck
