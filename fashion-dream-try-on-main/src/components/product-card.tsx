@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight, Heart } from "lucide-react";
 import { useEffect, useState, type MouseEvent } from "react";
-import type { Product } from "@/data/products";
+import type { Product } from "@/lib/product-domain";
 import { formatPrice, useI18n } from "@/lib/i18n";
 import { getCustomerSession } from "@/lib/auth";
 import { toggleWishlist, isWishlisted } from "@/lib/wishlist";
