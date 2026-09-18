@@ -22,23 +22,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Set up Node 24
         uses: actions/setup-node@v4
         with:
           node-version: 24
-
       - name: Verify npm runtime
         run: |
           node --version
           npm --version
-
       - name: Refresh lockfile from package.json
         run: npm install --package-lock-only --legacy-peer-deps --no-audit --no-fund
-
       - name: Install dependencies from refreshed lockfile
-        run: npm ci --no-audit --no-fund
-
+        run: npm ci --legacy-peer-deps --no-audit --no-fund
       - name: Upload generated lockfile for recovery
         uses: actions/upload-artifact@v4
         with:
@@ -46,26 +41,20 @@ jobs:
           path: fashion-dream-try-on-main/package-lock.json
           if-no-files-found: error
           retention-days: 1
-
       - name: Persist refreshed lockfile on feature/product-admin
         if: ${{ github.event_name == 'push' && github.ref_name == 'feature/product-admin' }}
         run: node scripts/ci/repair-baseline.mjs
-
       - name: Dependency audit
         run: npm run audit:dependencies
-
       - name: Secret exposure gate
         run: npm run security:secrets
-
       - name: Build
         run: npm run build
-
       - name: Typecheck generated route tree
         id: typecheck
         continue-on-error: true
         run: npm run typecheck 2>&1 | tee /tmp/wearo-typecheck.log
         shell: bash
-
       - name: Upload typecheck diagnostic
         if: ${{ steps.typecheck.outcome == 'failure' }}
         uses: actions/upload-artifact@v4
@@ -74,16 +63,13 @@ jobs:
           path: /tmp/wearo-typecheck.log
           if-no-files-found: error
           retention-days: 1
-
       - name: Fail if typecheck failed
         if: ${{ steps.typecheck.outcome == 'failure' }}
         run: exit 1
-
       - name: Start development server
         run: |
           npm run dev -- --host 127.0.0.1 --port 8080 > /tmp/wearo-vite.log 2>&1 &
           echo $! > /tmp/wearo-vite.pid
-
       - name: Wait for development server
         run: |
           for i in {1..60}; do
@@ -92,15 +78,12 @@ jobs:
           done
           cat /tmp/wearo-vite.log
           exit 1
-
       - name: Run customer experience validation
         run: npm run test:customer-experience
         env:
           BASE_URL: http://127.0.0.1:8080
-
       - name: Run lint
         run: npm run lint
-
       - name: Show server log on failure
         if: failure()
         run: cat /tmp/wearo-vite.log
