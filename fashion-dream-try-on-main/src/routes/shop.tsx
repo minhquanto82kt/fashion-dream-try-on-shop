@@ -8,78 +8,43 @@ import { ProductCard } from "@/components/product-card";
 import { CATEGORIES, type Product } from "@/data/products";
 import { canonicalLink } from "@/lib/seo";
 
-type DbProduct = {
+type DbCatalogProduct = {
   id: string;
   name: string;
   description: string;
   price: number;
   category: Product["category"];
   image: string | null;
-  active: boolean;
-  status: string;
   featured: boolean;
+  sizes: string[];
+  colors: string[];
+  gallery: string[];
+  total_stock: number;
 };
 
-type DbVariant = {
-  id: string;
-  product_id: string;
-  size: string;
-  color: string;
-  stock: number;
-};
-
-type DbImage = {
-  id: string;
-  product_id: string;
-  image_url: string;
-  sort_order: number;
-  is_primary: boolean;
-};
-
-const getShopProducts = createServerFn({ method: "GET" }).handler(
-  async () => {
-    const { supabaseRequest } = await import("@/lib/supabase.server");
-
-    const [products, variants, images] = await Promise.all([
-      supabaseRequest<DbProduct[]>(
-        "products?active=eq.true&status=eq.published&select=id,name,description,price,category,image,active,status,featured&order=created_at.desc",
-      ),
-      supabaseRequest<DbVariant[]>(
-        "product_variants?select=id,product_id,size,color,stock&order=size.asc",
-      ),
-      supabaseRequest<DbImage[]>(
-        "product_images?select=id,product_id,image_url,sort_order,is_primary&order=sort_order.asc",
-      ),
-    ]);
-
-    return products.map((product): Product => {
-      const productVariants = variants.filter(
-        (variant) => variant.product_id === product.id,
-      );
-      const productImages = images
-        .filter((image) => image.product_id === product.id)
-        .sort((a, b) => a.sort_order - b.sort_order);
-      const sizes = Array.from(new Set(productVariants.map((variant) => variant.size)));
-      const colors = Array.from(new Set(productVariants.map((variant) => variant.color)));
-      const gallery = productImages.map((image) => image.image_url);
-      const primaryImage = productImages.find((image) => image.is_primary)?.image_url ?? gallery[0] ?? product.image ?? "";
-      return {
-        id: product.id,
-        name: product.name,
-        price: Number(product.price),
-        category: product.category,
-        image: primaryImage,
-        gallery: gallery.length > 0 ? gallery : [primaryImage],
-        sizes,
-        colors,
-        badge: product.featured ? "Featured" : undefined,
-        description: product.description,
-      };
-    });
-  },
-);
+const getShopProducts = createServerFn({ method: "GET" }).handler(async () => {
+  const { supabaseRequest } = await import("@/lib/supabase.server");
+  const rows = await supabaseRequest<DbCatalogProduct[]>("rpc/get_published_catalog", { method: "POST", body: "{}" });
+  return rows.map((product): Product => {
+    const gallery = product.gallery ?? [];
+    const primaryImage = gallery[0] ?? product.image ?? "";
+    return {
+      id: product.id,
+      name: product.name,
+      price: Number(product.price),
+      category: product.category,
+      image: primaryImage,
+      gallery: gallery.length > 0 ? gallery : [primaryImage],
+      sizes: product.sizes ?? [],
+      colors: product.colors ?? [],
+      badge: product.featured ? "Featured" : undefined,
+      description: product.description,
+    };
+  });
+});
 
 export const Route = createFileRoute("/shop")({
+  staleTime: 30_000,
   loader: () => getShopProducts(),
   head: () => ({
     meta: [
