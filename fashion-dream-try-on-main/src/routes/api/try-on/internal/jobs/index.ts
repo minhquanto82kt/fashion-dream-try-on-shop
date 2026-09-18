@@ -44,7 +44,7 @@ export const Route = createFileRoute("/api/try-on/internal/jobs/")({
             note: created.note,
             clientKey: key,
           });
-          const result = processed.status === "completed" ? await getTryOnResult(processed.id, key) : processed;
+          const result = processed.status === "completed" ? await getTryOnResult(processed.id) : processed;
           return Response.json({
             id: processed.id,
             status: processed.status,
