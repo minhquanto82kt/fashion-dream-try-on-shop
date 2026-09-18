@@ -36,19 +36,13 @@ async function resolveCustomerFromToken(accessToken: string): Promise<AuthUser> 
   return user;
 }
 
-function normalizeEmail(email: string | undefined | null) {
-  return (email ?? "").trim().toLowerCase();
-}
-
 export async function listCustomerOrdersByToken(accessToken: string, options?: { limit?: number; offset?: number }) {
   const user = await resolveCustomerFromToken(accessToken);
   const limit = Math.min(Math.max(options?.limit ?? 50, 1), 100);
   const offset = Math.max(options?.offset ?? 0, 0);
   const select = "id,order_code,customer_name,phone,email,address,city,district,payment_method,payment_status,order_status,subtotal,shipping_fee,total,note,created_at,user_id";
   const byUserId = await supabaseRequest<CustomerOrder[]>(`orders?user_id=eq.${encodeURIComponent(user.id)}&select=${select}&order=created_at.desc&limit=${limit}&offset=${offset}`);
-  const map = new Map<string, CustomerOrder>();
-  for (const row of byUserId) if (row?.id) map.set(row.id, row);
-  return Array.from(map.values());
+  return byUserId.filter((row) => Boolean(row?.id));
 }
 
 export async function getCustomerOrderByToken(accessToken: string, orderIdOrCode: string): Promise<CustomerOrderDetail | null> {
@@ -95,10 +89,7 @@ export const createOrder = createServerFn({ method: "POST" }).validator((data: C
     p_idempotency_key: idempotencyKey ?? null,
   };
   try {
-    const result = await supabaseRequest<{ order_id: string; order_code: string; total: number }[]>("rpc/create_order_atomic_v2", {
-      method: "POST",
-      body: JSON.stringify(body),
-    });
+    const result = await supabaseRequest<{ order_id: string; order_code: string; total: number }[]>("rpc/create_order_atomic_v2", { method: "POST", body: JSON.stringify(body) });
     const order = result[0];
     if (!order) throw new Error("Không thể tạo đơn hàng.");
     return { orderId: order.order_id, orderCode: order.order_code, total: order.total, mock: false };
