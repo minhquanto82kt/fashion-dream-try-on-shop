@@ -1,0 +1,62 @@
+import { readFile } from "node:fs/promises";
+
+const root = new URL("../../", import.meta.url);
+const baseUrl = (process.env.BASE_URL || "http://127.0.0.1:8080").replace(/\/$/, "");
+const files = {
+  cart: new URL("src/lib/cart.tsx", root),
+  cartServer: new URL("src/lib/cart.server.functions.ts", root),
+  order: new URL("src/lib/order.functions.ts", root),
+  checkout: new URL("src/routes/checkout.tsx", root),
+  cancel: new URL("src/lib/order-cancel.functions.ts", root),
+  migration: new URL("supabase/migrations/20260919030000_phase_b_c_commerce_hardening.sql", root),
+  fulfillment: new URL("supabase/migrations/20260919031000_phase_c_fulfillment_hardening.sql", root),
+  cancelMigration: new URL("supabase/migrations/20260919032000_phase_c_customer_cancel_order.sql", root),
+};
+
+let failed = false;
+function pass(message) { console.log(`PASS ${message}`); }
+function fail(message) { failed = true; console.error(`FAIL ${message}`); }
+async function source(path, label) {
+  try { return await readFile(path, "utf8"); }
+  catch (error) { fail(`${label}: ${error instanceof Error ? error.message : String(error)}`); return ""; }
+}
+function mustContain(text, needle, label) { if (text.includes(needle)) pass(label); else fail(`${label} (missing ${needle})`); }
+
+const [cart, cartServer, order, checkout, cancel, migration, fulfillment, cancelMigration] = await Promise.all([
+  source(files.cart, "cart.tsx"), source(files.cartServer, "cart.server.functions.ts"), source(files.order, "order.functions.ts"),
+  source(files.checkout, "checkout.tsx"), source(files.cancel, "order-cancel.functions.ts"), source(files.migration, "Phase B/C migration"),
+  source(files.fulfillment, "fulfillment migration"), source(files.cancelMigration, "customer cancel migration"),
+]);
+
+mustContain(cart, "getServerCart", "authenticated cart loads from server");
+mustContain(cart, "addServerCartItem", "authenticated cart writes to server");
+mustContain(cart, "LEGACY_GUEST_STORAGE_KEY", "legacy guest cart migration exists");
+mustContain(cartServer, "supabaseUserRequest", "customer cart uses RLS-enforced Supabase requests");
+mustContain(order, "p_idempotency_key", "checkout forwards idempotency key");
+mustContain(order, "rpc/create_order_atomic_v2", "checkout uses atomic database transaction");
+mustContain(checkout, "wearo_checkout_idempotency_key", "checkout persists idempotency key across retries");
+mustContain(checkout, "cancelCustomerOrder", "payment initialization failure releases reservation");
+mustContain(cancel, "rpc/cancel_my_order", "customer cancellation is server-side");
+mustContain(migration, "ENABLE ROW LEVEL SECURITY", "Phase B enables RLS");
+mustContain(migration, "has_backoffice_role", "Phase B defines role hierarchy");
+mustContain(migration, "orders_idempotency_key_uidx", "Phase C protects duplicate orders");
+mustContain(fulfillment, "trg_orders_enforce_transition", "Phase C enforces fulfillment transitions");
+mustContain(fulfillment, "stock=stock+v_item.quantity", "cancelled orders restore inventory");
+mustContain(cancelMigration, "cancel_my_order", "customer cancellation RPC is deployed");
+
+try {
+  const response = await fetch(`${baseUrl}/api/health`, { redirect: "manual" });
+  if (response.status === 200 || response.status === 503) pass(`health endpoint responds (${response.status})`);
+  else fail(`health endpoint returned ${response.status}`);
+} catch (error) { fail(`health endpoint unavailable: ${error instanceof Error ? error.message : String(error)}`); }
+
+for (const route of ["/", "/shop", "/cart", "/checkout", "/account"]) {
+  try {
+    const response = await fetch(`${baseUrl}${route}`, { redirect: "manual" });
+    if (response.status >= 200 && response.status < 400) pass(`route ${route} (${response.status})`);
+    else fail(`route ${route} returned ${response.status}`);
+  } catch (error) { fail(`route ${route}: ${error instanceof Error ? error.message : String(error)}`); }
+}
+
+if (failed) process.exit(1);
+console.log("\nPhase B/C Integration Guards: PASS");
