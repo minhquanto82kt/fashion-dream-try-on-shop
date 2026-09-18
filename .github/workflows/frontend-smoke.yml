@@ -57,6 +57,9 @@ jobs:
         env:
           BASE_URL: http://127.0.0.1:8080
 
+      - name: Run Phase B static security gate
+        run: node tests/smoke/phase-b-security.mjs
+
       - name: Run lint
         run: npm run lint
 
