@@ -18,6 +18,26 @@ export type AdminProduct = {
   updated_at: string;
 };
 
+export type AdminProductVariant = {
+  id: string;
+  product_id: string;
+  size: string;
+  color: string;
+  sku: string | null;
+  stock: number;
+  created_at: string;
+};
+
+export type AdminProductImage = {
+  id: string;
+  product_id: string;
+  image_url: string;
+  alt_text: string | null;
+  sort_order: number;
+  is_primary: boolean;
+  created_at?: string;
+};
+
 type AdminContext = { accessToken: string };
 
 function getServerConfig() {
@@ -80,7 +100,6 @@ export const createAdminProduct = createServerFn({ method: "POST" })
     if (!name || !slug) throw new Error("Tên sản phẩm và slug là bắt buộc.");
     if (!Number.isFinite(price) || price < 0) throw new Error("Giá sản phẩm không hợp lệ.");
 
-    const randomId = crypto.randomUUID();
     const rows = await supabaseRequest<AdminProduct[]>(
       "products",
       {
@@ -90,7 +109,7 @@ export const createAdminProduct = createServerFn({ method: "POST" })
           name,
           slug,
           price,
-          id: `product-${randomId}`,
+          id: `product-${crypto.randomUUID()}`,
           active: data.product.status === "published",
         }),
       },
@@ -124,6 +143,135 @@ export const archiveAdminProduct = createServerFn({ method: "POST" })
     const rows = await supabaseRequest<AdminProduct[]>(
       `products?id=eq.${encodeURIComponent(data.id)}`,
       { method: "PATCH", body: JSON.stringify({ status: "archived", active: false }) },
+    );
+    return rows[0];
+  });
+
+export const listAdminProductVariants = createServerFn({ method: "POST" })
+  .validator((data: AdminContext & { productId: string }) => data)
+  .handler(async ({ data }) => {
+    await requireAdmin(data.accessToken);
+    return supabaseRequest<AdminProductVariant[]>(
+      `product_variants?select=*&product_id=eq.${encodeURIComponent(data.productId)}&order=size.asc,color.asc`,
+      { method: "GET" },
+    );
+  });
+
+export const createAdminProductVariant = createServerFn({ method: "POST" })
+  .validator((data: AdminContext & { productId: string; size: string; color: string; sku?: string | null; stock?: number }) => data)
+  .handler(async ({ data }) => {
+    await requireAdmin(data.accessToken);
+    const size = data.size.trim();
+    const color = data.color.trim();
+    const stock = Number(data.stock ?? 0);
+    if (!size || !color) throw new Error("Size và Color là bắt buộc.");
+    if (!Number.isInteger(stock) || stock < 0) throw new Error("Stock phải là số nguyên từ 0 trở lên.");
+    const rows = await supabaseRequest<AdminProductVariant[]>(
+      "product_variants",
+      {
+        method: "POST",
+        body: JSON.stringify({ product_id: data.productId, size, color, sku: data.sku?.trim() || null, stock }),
+      },
+    );
+    return rows[0];
+  });
+
+export const updateAdminProductVariant = createServerFn({ method: "POST" })
+  .validator((data: AdminContext & { id: string; size?: string; color?: string; sku?: string | null; stock?: number }) => data)
+  .handler(async ({ data }) => {
+    await requireAdmin(data.accessToken);
+    const patch: Record<string, unknown> = {};
+    if (data.size !== undefined) patch.size = data.size.trim();
+    if (data.color !== undefined) patch.color = data.color.trim();
+    if (data.sku !== undefined) patch.sku = data.sku?.trim() || null;
+    if (data.stock !== undefined) {
+      const stock = Number(data.stock);
+      if (!Number.isInteger(stock) || stock < 0) throw new Error("Stock phải là số nguyên từ 0 trở lên.");
+      patch.stock = stock;
+    }
+    if (typeof patch.size === "string" && !patch.size) throw new Error("Size không được để trống.");
+    if (typeof patch.color === "string" && !patch.color) throw new Error("Color không được để trống.");
+    const rows = await supabaseRequest<AdminProductVariant[]>(
+      `product_variants?id=eq.${encodeURIComponent(data.id)}`,
+      { method: "PATCH", body: JSON.stringify(patch) },
+    );
+    return rows[0];
+  });
+
+export const deleteAdminProductVariant = createServerFn({ method: "POST" })
+  .validator((data: AdminContext & { id: string }) => data)
+  .handler(async ({ data }) => {
+    await requireAdmin(data.accessToken);
+    await supabaseRequest<unknown>(
+      `product_variants?id=eq.${encodeURIComponent(data.id)}`,
+      { method: "DELETE" },
+    );
+    return { ok: true };
+  });
+
+export const listAdminProductImages = createServerFn({ method: "POST" })
+  .validator((data: AdminContext & { productId: string }) => data)
+  .handler(async ({ data }) => {
+    await requireAdmin(data.accessToken);
+    return supabaseRequest<AdminProductImage[]>(
+      `product_images?select=*&product_id=eq.${encodeURIComponent(data.productId)}&order=sort_order.asc,created_at.asc`,
+      { method: "GET" },
+    );
+  });
+
+export const createAdminProductImage = createServerFn({ method: "POST" })
+  .validator((data: AdminContext & { productId: string; imageUrl: string; altText?: string | null; sortOrder?: number; isPrimary?: boolean }) => data)
+  .handler(async ({ data }) => {
+    await requireAdmin(data.accessToken);
+    const imageUrl = data.imageUrl.trim();
+    if (!imageUrl) throw new Error("Image URL là bắt buộc.");
+    const rows = await supabaseRequest<AdminProductImage[]>(
+      "product_images",
+      {
+        method: "POST",
+        body: JSON.stringify({ product_id: data.productId, image_url: imageUrl, alt_text: data.altText?.trim() || null, sort_order: Number(data.sortOrder ?? 0), is_primary: Boolean(data.isPrimary) }),
+      },
+    );
+    return rows[0];
+  });
+
+export const updateAdminProductImage = createServerFn({ method: "POST" })
+  .validator((data: AdminContext & { id: string; altText?: string | null; sortOrder?: number; isPrimary?: boolean }) => data)
+  .handler(async ({ data }) => {
+    await requireAdmin(data.accessToken);
+    const patch: Record<string, unknown> = {};
+    if (data.altText !== undefined) patch.alt_text = data.altText?.trim() || null;
+    if (data.sortOrder !== undefined) patch.sort_order = Number(data.sortOrder);
+    if (data.isPrimary !== undefined) patch.is_primary = Boolean(data.isPrimary);
+    const rows = await supabaseRequest<AdminProductImage[]>(
+      `product_images?id=eq.${encodeURIComponent(data.id)}`,
+      { method: "PATCH", body: JSON.stringify(patch) },
+    );
+    return rows[0];
+  });
+
+export const deleteAdminProductImage = createServerFn({ method: "POST" })
+  .validator((data: AdminContext & { id: string }) => data)
+  .handler(async ({ data }) => {
+    await requireAdmin(data.accessToken);
+    await supabaseRequest<unknown>(
+      `product_images?id=eq.${encodeURIComponent(data.id)}`,
+      { method: "DELETE" },
+    );
+    return { ok: true };
+  });
+
+export const setPrimaryAdminProductImage = createServerFn({ method: "POST" })
+  .validator((data: AdminContext & { productId: string; imageId: string }) => data)
+  .handler(async ({ data }) => {
+    await requireAdmin(data.accessToken);
+    await supabaseRequest<unknown>(
+      `product_images?product_id=eq.${encodeURIComponent(data.productId)}`,
+      { method: "PATCH", body: JSON.stringify({ is_primary: false }) },
+    );
+    const rows = await supabaseRequest<AdminProductImage[]>(
+      `product_images?id=eq.${encodeURIComponent(data.imageId)}`,
+      { method: "PATCH", body: JSON.stringify({ is_primary: true }) },
     );
     return rows[0];
   });
