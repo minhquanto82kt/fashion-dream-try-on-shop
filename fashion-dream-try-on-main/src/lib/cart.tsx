@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { createServerFn } from "@tanstack/react-start";
 import { type Product } from "@/data/products";
+import { isMockUserMode } from "@/lib/mock-user";
 
 export type CartLine = { productId: string; size: string; color: string; qty: number };
 type CartVariant = { id: string; product_id: string; size: string; color: string; stock: number };
@@ -23,70 +24,69 @@ const getCartProducts = createServerFn({ method: "GET" })
       const productImages = images.filter((image) => image.product_id === product.id).sort((a, b) => a.sort_order - b.sort_order);
       const gallery = productImages.map((image) => image.image_url);
       const primaryImage = productImages.find((image) => image.is_primary)?.image_url ?? gallery[0] ?? product.image ?? "";
-      return {
-        id: product.id,
-        name: product.name,
-        price: Number(product.price),
-        category: product.category,
-        image: primaryImage,
-        gallery: gallery.length > 0 ? gallery : [primaryImage],
-        sizes: [],
-        colors: [],
-        badge: product.featured ? "Featured" : undefined,
-        description: product.description,
-        variants: variants.filter((variant) => variant.product_id === product.id),
-      };
+      return { id: product.id, name: product.name, price: Number(product.price), category: product.category, image: primaryImage, gallery: gallery.length > 0 ? gallery : [primaryImage], sizes: [], colors: [], badge: product.featured ? "Featured" : undefined, description: product.description, variants: variants.filter((variant) => variant.product_id === product.id) };
     });
   });
 
 type CartItem = CartLine & { product: CartProduct; variant: CartVariant | null; stock: number };
-type CartContextValue = {
-  lines: CartLine[]; items: CartItem[]; count: number; subtotal: number; loading: boolean; hasStockIssues: boolean;
-  add: (line: CartLine) => void; setQty: (index: number, qty: number) => void; remove: (index: number) => void; clear: () => void;
-};
+type CartContextValue = { lines: CartLine[]; items: CartItem[]; count: number; subtotal: number; loading: boolean; hasStockIssues: boolean; add: (line: CartLine) => void; setQty: (index: number, qty: number) => void; remove: (index: number) => void; clear: () => void };
 
-const STORAGE_KEY = "upthink-cart";
+const REAL_STORAGE_KEY = "wearo-cart";
+const MOCK_STORAGE_KEY = "wearo-mock-cart";
+const REAL_EVENT = "wearo:cart:changed";
+const MOCK_EVENT = "wearo:mock-cart:changed";
 const CartContext = createContext<CartContextValue | null>(null);
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  const [mockMode, setMockMode] = useState(false);
   const [lines, setLines] = useState<CartLine[]>([]);
   const [products, setProducts] = useState<CartProduct[]>([]);
   const [hydrated, setHydrated] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    const syncMode = () => setMockMode(isMockUserMode());
+    syncMode();
+    window.addEventListener("wearo:mock-user:changed", syncMode);
+    return () => window.removeEventListener("wearo:mock-user:changed", syncMode);
+  }, []);
+
+  const storageKey = mockMode ? MOCK_STORAGE_KEY : REAL_STORAGE_KEY;
+  const changeEvent = mockMode ? MOCK_EVENT : REAL_EVENT;
+
+  useEffect(() => {
+    setHydrated(false);
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed)) setLines(parsed);
-      }
+      const raw = localStorage.getItem(storageKey);
+      const parsed = raw ? JSON.parse(raw) : [];
+      setLines(Array.isArray(parsed) ? parsed : []);
     } catch { setLines([]); }
     finally { setHydrated(true); }
-  }, []);
+  }, [storageKey]);
 
   useEffect(() => {
     if (!hydrated) return;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(lines));
-  }, [lines, hydrated]);
+    localStorage.setItem(storageKey, JSON.stringify(lines));
+    window.dispatchEvent(new Event(changeEvent));
+  }, [lines, hydrated, storageKey, changeEvent]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     const sync = () => {
       try {
-        const raw = window.localStorage.getItem(STORAGE_KEY);
+        const raw = window.localStorage.getItem(storageKey);
         const parsed = raw ? JSON.parse(raw) : [];
         if (Array.isArray(parsed)) setLines(parsed);
       } catch { /* keep current cart */ }
     };
-    const onStorage = (event: StorageEvent) => { if (event.key === STORAGE_KEY) sync(); };
+    const onStorage = (event: StorageEvent) => { if (event.key === storageKey) sync(); };
     window.addEventListener("storage", onStorage);
-    window.addEventListener("upthink:cart:changed", sync);
+    window.addEventListener(changeEvent, sync);
     return () => {
       window.removeEventListener("storage", onStorage);
-      window.removeEventListener("upthink:cart:changed", sync);
+      window.removeEventListener(changeEvent, sync);
     };
-  }, []);
+  }, [storageKey, changeEvent]);
 
   useEffect(() => {
     let cancelled = false;
@@ -100,9 +100,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       } catch (error) {
         console.error("Không thể tải sản phẩm trong giỏ hàng:", error);
         if (!cancelled) setProducts([]);
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
+      } finally { if (!cancelled) setLoading(false); }
     }
     loadProducts();
     return () => { cancelled = true; };
@@ -114,7 +112,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const variant = product.variants.find((item) => item.size === line.size && item.color === line.color) ?? null;
     return { ...line, product, variant, stock: variant?.stock ?? 0 };
   }).filter((item): item is CartItem => item !== null), [lines, products]);
-
   const hasStockIssues = useMemo(() => items.some((item) => !item.variant || item.stock <= 0 || item.qty > item.stock), [items]);
   const count = useMemo(() => lines.reduce((sum, line) => sum + line.qty, 0), [lines]);
   const subtotal = useMemo(() => items.reduce((sum, item) => sum + item.product.price * item.qty, 0), [items]);
@@ -130,12 +127,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
       return current.map((item, itemIndex) => itemIndex === index ? { ...item, qty: stock !== undefined ? Math.min(99, stock, item.qty + line.qty) : Math.min(99, item.qty + line.qty) } : item);
     });
   }
-
   function setQty(index: number, qty: number) {
     const stock = items[index]?.variant?.stock;
     setLines((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, qty: stock !== undefined && stock > 0 ? Math.max(1, Math.min(99, stock, qty)) : Math.max(1, Math.min(99, qty)) } : item));
   }
-
   function remove(index: number) { setLines((current) => current.filter((_, itemIndex) => itemIndex !== index)); }
   function clear() { setLines([]); setProducts([]); }
 
