@@ -31,10 +31,9 @@ jobs:
         run: |
           node --version
           npm --version
-          npm config get package-lock
 
-      - name: Install dependencies from lockfile
-        run: npm ci --no-audit --no-fund
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
 
       - name: Build
         run: npm run build
