@@ -1,3 +1,4 @@
+import { createClientOnlyFn } from "@tanstack/react-start";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { SiteNav } from "@/components/site-nav";
@@ -13,10 +14,10 @@ type PaymentMethod = "cod" | "vietqr" | "momo";
 type PaymentInfo = { orderCode: string; total: number; qrUrl: string; phone: string };
 type PendingInvoice = { orderCode: string; phone: string; createdAt: number };
 
-async function openInvoicePdfClient(invoice: InvoiceData) {
+const openInvoicePdfClient = createClientOnlyFn(async (invoice: InvoiceData) => {
   const module = await import("@/lib/invoice.client");
   module.openInvoicePdf(invoice);
-}
+});
 
 function CheckoutPage() {
   const { items, subtotal, clear } = useCart();
