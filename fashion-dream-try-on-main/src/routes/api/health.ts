@@ -1,3 +1,4 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { supabaseRequest } from "@/lib/supabase.server";
 
 export const Route = createFileRoute("/api/health")({
