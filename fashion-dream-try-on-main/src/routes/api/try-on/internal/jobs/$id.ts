@@ -12,9 +12,8 @@ export const Route = createFileRoute("/api/try-on/internal/jobs/$id")({
     handlers: {
       GET: async ({ request, params }) => {
         if (!authorized(request)) return Response.json({ error: "UNAUTHORIZED" }, { status: 401 });
-        const clientKey = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? request.headers.get("x-real-ip") ?? "unknown";
         try {
-          const result = await getTryOnResult(params.id, clientKey);
+          const result = await getTryOnResult(params.id);
           if (!result) return Response.json({ error: "JOB_NOT_FOUND" }, { status: 404 });
           return Response.json({
             id: result.id,
