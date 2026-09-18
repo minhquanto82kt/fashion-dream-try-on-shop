@@ -1,0 +1,74 @@
+<mxfile host="app.diagrams.net" modified="2026-09-18T00:00:00.000Z" agent="ChatGPT" version="24.7.17">
+  <diagram id="task05" name="Task 5 - Order Payment Invoice">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="WEARO — ORDER → PAYMENT → INVOICE" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=26;fontStyle=1;fontColor=#171717;" vertex="1" parent="1">
+          <mxGeometry x="60" y="35" width="700" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="subtitle" value="Task 5 · E-commerce Core · Source of truth: Supabase" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=14;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="62" y="78" width="600" height="28" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="checkout" value="CHECKOUT&#xa;Customer + cart + payment method" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF4D6;strokeColor=#F59E0B;strokeWidth=2;fontStyle=1;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="650" y="135" width="300" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="createorder" value="CREATE ORDER&#xa;createOrder → server → create_order_atomic" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#444444;strokeWidth=2;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="650" y="245" width="300" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="order" value="ORDER&#xa;order_status + payment_status" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF4D6;strokeColor=#F59E0B;strokeWidth=2;fontStyle=1;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="650" y="360" width="300" height="75" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="cod" value="COD&#xa;Order accepted&#xa;Payment collected on delivery" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF7EE;strokeColor=#22A06B;strokeWidth=2;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="170" y="500" width="270" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="vietqr" value="VIETQR&#xa;Payment pending&#xa;SePay webhook → verify" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EEF5FF;strokeColor=#3B82F6;strokeWidth=2;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="665" y="500" width="270" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="momo" value="MOMO&#xa;Payment pending&#xa;MoMo IPN → verify" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5EEFF;strokeColor=#8B5CF6;strokeWidth=2;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="500" width="270" height="100" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="codconfirm" value="COD CONFIRMED" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF7EE;strokeColor=#22A06B;strokeWidth=2;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="170" y="665" width="270" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="paid" value="PAYMENT = PAID&#xa;payment_events recorded" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF7EE;strokeColor=#22A06B;strokeWidth=2;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="665" y="665" width="270" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="paid2" value="PAYMENT = PAID&#xa;payment_events recorded" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF7EE;strokeColor=#22A06B;strokeWidth=2;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="665" width="270" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="confirmed" value="ORDER CONFIRMED" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF4D6;strokeColor=#F59E0B;strokeWidth=2;fontStyle=1;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="665" y="790" width="270" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="invoice" value="PDF INVOICE&#xa;Order + Order Items snapshot&#xa;View / Print" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#171717;strokeColor=#F59E0B;strokeWidth=2;fontColor=#FFFFFF;fontStyle=1;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="665" y="905" width="270" height="85" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="codnote" value="COD: invoice can be shown after successful order creation, before delivery payment." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="115" y="740" width="380" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="onlinenote" value="VietQR / MoMo: invoice is eligible only after server-side payment verification." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="1030" y="740" width="560" height="45" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;" edge="1" parent="1" source="checkout" target="createorder"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;" edge="1" parent="1" source="createorder" target="order"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e3" value="COD" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;" edge="1" parent="1" source="order" target="cod"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e4" value="VIETQR" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;" edge="1" parent="1" source="order" target="vietqr"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e5" value="MOMO" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;" edge="1" parent="1" source="order" target="momo"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;" edge="1" parent="1" source="cod" target="codconfirm"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e7" value="verified" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;" edge="1" parent="1" source="vietqr" target="paid"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e8" value="verified" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;" edge="1" parent="1" source="momo" target="paid2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;" edge="1" parent="1" source="codconfirm" target="confirmed"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;" edge="1" parent="1" source="paid" target="confirmed"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;" edge="1" parent="1" source="paid2" target="confirmed"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e12" value="eligible → generate" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;" edge="1" parent="1" source="confirmed" target="invoice"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
