@@ -107,3 +107,5 @@ jobs:
       - name: Show server log on failure
         if: failure()
         run: cat /tmp/wearo-vite.log
+
+# Roadmap verification is intentionally kept on feature/product-admin; no side branch is used.
