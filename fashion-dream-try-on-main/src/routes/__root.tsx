@@ -18,6 +18,7 @@ import { applyTheme, getStoredTheme, loadRemoteTheme } from "@/lib/theme";
 import { I18nProvider } from "@/lib/i18n";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { canonicalLink, jsonLdScript, organizationSchema, websiteSchema } from "@/lib/seo";
+import { MockUserBanner } from "@/components/mock-user-banner";
 
 const CUSTOMER_PROTECTED_PREFIXES = ["/account/profile", "/account/orders", "/account/wishlist"];
 function isCustomerProtectedPath(pathname: string) { return CUSTOMER_PROTECTED_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)); }
@@ -36,8 +37,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     { name: "description", content: "WEARO — cửa hàng thời trang trực tuyến kết hợp AI Virtual Try-On, AI Personal Stylist và Hybrid Stylist 1:1." }, { name: "author", content: "WEARO" }, { property: "og:title", content: "WEARO — Mặc theo cách của riêng bạn" }, { property: "og:description", content: "Thử đồ ảo trên ảnh thật, phối Full-Set theo vóc dáng và nhận tư vấn stylist 1:1." }, { property: "og:type", content: "website" }
   ], links: [
     canonicalLink("/"), { rel: "stylesheet", href: appCss }, { rel: "stylesheet", href: uiStabilizationCss }, { rel: "stylesheet", href: topbarCss }, { rel: "stylesheet", href: navHotfixCss }, { rel: "stylesheet", href: adminUiCss }, { rel: "stylesheet", href: adminComfortCss }, { rel: "stylesheet", href: paletteCss }, { rel: "stylesheet", href: uxFoundationCss }, { rel: "stylesheet", href: homeCompositionGuardCss }, { rel: "stylesheet", href: wearoCanonicalLockCss }, { rel: "icon", href: "/favicon.ico", type: "image/x-icon" }, { rel: "preconnect", href: "https://fonts.googleapis.com" }, { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-    { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Anton&family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Bodoni+Moda:opsz,wght@6..96,400..700&family=Dancing+Script:wght@600;700&family=Oswald:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600&display=swap" }
+    { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Anton&family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Bodoni+Moda:opsz,wght@6..96,400..700&Dancing+Script:wght@600;700&family=Oswald:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600&display=swap" }
   ], scripts: siteStructuredData.map(jsonLdScript) }), shellComponent: RootShell, component: RootComponent, notFoundComponent: NotFoundComponent, errorComponent: ErrorComponent,
 });
 function RootShell({ children }: { children: ReactNode }) { return <html lang="vi"><head><HeadContent /></head><body>{children}<Scripts /></body></html>; }
-function RootComponent() { const { queryClient } = Route.useRouteContext(); return <QueryClientProvider client={queryClient}><I18nProvider><CartProvider><ThemeRuntime /><CustomerAuthGuard /><Outlet /><Toaster /></CartProvider></I18nProvider></QueryClientProvider>; }
+function RootComponent() { const { queryClient } = Route.useRouteContext(); return <QueryClientProvider client={queryClient}><I18nProvider><CartProvider><ThemeRuntime /><CustomerAuthGuard /><MockUserBanner /><Outlet /><Toaster /></CartProvider></I18nProvider></QueryClientProvider>; }
