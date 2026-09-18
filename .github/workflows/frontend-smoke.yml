@@ -16,6 +16,8 @@ jobs:
     env:
       VITE_SUPABASE_URL: https://oazipcrbutizdncctkcg.supabase.co
       VITE_SUPABASE_PUBLISHABLE_KEY: ci-smoke-test-placeholder
+      SUPABASE_URL: https://oazipcrbutizdncctkcg.supabase.co
+      SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY || 'ci-smoke-test-placeholder' }}
     defaults:
       run:
         working-directory: fashion-dream-try-on-main
