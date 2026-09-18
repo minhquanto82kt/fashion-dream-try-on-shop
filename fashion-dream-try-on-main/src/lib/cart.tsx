@@ -8,7 +8,7 @@ import { addServerCartItem, clearServerCart, getServerCart, removeServerCartItem
 export type CartLine = { productId: string; size: string; color: string; qty: number; variantId?: string; cartItemId?: string };
 type CartVariant = { id: string; product_id: string; size: string; color: string; stock: number };
 type CartProduct = Product & { variants: CartVariant[] };
-type DbProduct = { id: string; name: string; description: string; price: number; category: Product["category"]; image: string | null; active: boolean; status: string; featured: boolean };
+type DbProduct = { id: string; name: string; slug: string; description: string; price: number; category: Product["category"]; image: string | null; active: boolean; status: string; featured: boolean };
 type DbImage = { id: string; product_id: string; image_url: string; sort_order: number; is_primary: boolean };
 type ServerCart = Awaited<ReturnType<typeof getServerCart>>;
 
@@ -17,7 +17,7 @@ const getCartProducts = createServerFn({ method: "GET" }).validator((productIds:
   const { supabaseRequest } = await import("@/lib/supabase.server");
   const encodedIds = productIds.map((id) => `"${id.replace(/"/g, '\\"')}"`).join(",");
   const [products, images, variants] = await Promise.all([
-    supabaseRequest<DbProduct[]>(`products?id=in.(${encodedIds})&active=eq.true&status=eq.published&select=id,name,description,price,category,image,active,status,featured`),
+    supabaseRequest<DbProduct[]>(`products?id=in.(${encodedIds})&active=eq.true&status=eq.published&select=id,name,slug,description,price,category,image,active,status,featured`),
     supabaseRequest<DbImage[]>(`product_images?product_id=in.(${encodedIds})&select=id,product_id,image_url,sort_order,is_primary&order=sort_order.asc`),
     supabaseRequest<CartVariant[]>(`product_variants?product_id=in.(${encodedIds})&select=id,product_id,size,color,stock`),
   ]);
@@ -25,7 +25,7 @@ const getCartProducts = createServerFn({ method: "GET" }).validator((productIds:
     const productImages = images.filter((image) => image.product_id === product.id).sort((a, b) => a.sort_order - b.sort_order);
     const gallery = productImages.map((image) => image.image_url);
     const primaryImage = productImages.find((image) => image.is_primary)?.image_url ?? gallery[0] ?? product.image ?? "";
-    return { id: product.id, name: product.name, slug: product.id, short_description: null, long_description: null, created_at: "", updated_at: "", image: primaryImage, gallery: gallery.length > 0 ? gallery : [primaryImage], sizes: [], colors: [], badge: product.featured ? "Featured" : undefined, description: product.description, price: Number(product.price), category: product.category, variants: variants.filter((variant) => variant.product_id === product.id), active: product.active, status: product.status as "draft" | "published" | "archived", featured: product.featured };
+    return { id: product.id, name: product.name, slug: product.slug, short_description: null, long_description: null, created_at: "", updated_at: "", image: primaryImage, gallery: gallery.length > 0 ? gallery : [primaryImage], sizes: [], colors: [], badge: product.featured ? "Featured" : undefined, description: product.description, price: Number(product.price), category: product.category, variants: variants.filter((variant) => variant.product_id === product.id), active: product.active, status: product.status as "draft" | "published" | "archived", featured: product.featured };
   });
 });
 
