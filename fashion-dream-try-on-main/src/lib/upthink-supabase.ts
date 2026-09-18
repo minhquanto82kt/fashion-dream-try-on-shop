@@ -1,14 +1,24 @@
 /**
  * UpThink Supabase helpers
  *
- * Browser-safe REST client for the Product Admin page.
- * Required Vercel Preview environment variables:
- *   VITE_SUPABASE_URL
- *   VITE_SUPABASE_PUBLISHABLE_KEY
- *
- * IMPORTANT:
- * Never put a Supabase secret/service_role key in frontend code.
+ * Browser-safe helpers for catalog/auth and the admin product UI.
+ * Admin mutations are delegated to server functions so the browser never performs privileged writes.
  */
+
+import {
+  archiveAdminProduct,
+  createAdminProduct,
+  createAdminProductImage,
+  createAdminProductVariant,
+  deleteAdminProductImage,
+  deleteAdminProductVariant,
+  listAdminProductImages,
+  listAdminProductVariants,
+  setPrimaryAdminProductImage,
+  updateAdminProduct,
+  updateAdminProductImage,
+  updateAdminProductVariant,
+} from "@/lib/product-admin.functions";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL?.trim() as string | undefined;
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY?.trim() as string | undefined;
@@ -44,6 +54,12 @@ async function parseResponse<T>(response: Response): Promise<T> {
   try { return JSON.parse(text) as T; } catch { return text as T; }
 }
 
+function requireAccessToken() {
+  const token = getSession()?.access_token?.trim();
+  if (!token) throw new Error("Phiên admin đã hết hạn. Vui lòng đăng nhập lại.");
+  return token;
+}
+
 export async function signIn(email: string, password: string) {
   const response = await fetch(`${supabaseConfig.url}/auth/v1/token?grant_type=password`, { method: "POST", headers: { apikey: supabaseConfig.key, "Content-Type": "application/json" }, body: JSON.stringify({ email, password }) });
   const data = await parseResponse<Session>(response); setSession(data); return data;
@@ -64,32 +80,29 @@ export type ProductImage = { id?: string; product_id: string; image_url: string;
 export type ProductVariant = { id: string; product_id: string; size: string; color: string; sku: string | null; stock: number; created_at: string };
 
 export async function listProductVariants(productId: string) {
-  const url = `${supabaseConfig.url}/rest/v1/product_variants?select=*&product_id=eq.${encodeURIComponent(productId)}&order=size.asc,color.asc`;
-  return parseResponse<ProductVariant[]>(await fetch(url, { headers: headers() }));
+  return listAdminProductVariants({ data: { accessToken: requireAccessToken(), productId } });
 }
 export async function createProductVariant(payload: { product_id: string; size: string; color: string; sku?: string | null; stock?: number }) {
-  const response = await fetch(`${supabaseConfig.url}/rest/v1/product_variants`, { method: "POST", headers: headers({ Prefer: "return=representation" }), body: JSON.stringify({ product_id: payload.product_id, size: payload.size.trim(), color: payload.color.trim(), sku: payload.sku?.trim() || null, stock: payload.stock ?? 0 }) });
-  const data = await parseResponse<ProductVariant[]>(response); return data[0];
+  return createAdminProductVariant({ data: { accessToken: requireAccessToken(), productId: payload.product_id, size: payload.size, color: payload.color, sku: payload.sku, stock: payload.stock } });
 }
 export async function updateProductVariant(id: string, payload: { size?: string; color?: string; sku?: string | null; stock?: number }) {
-  const response = await fetch(`${supabaseConfig.url}/rest/v1/product_variants?id=eq.${encodeURIComponent(id)}`, { method: "PATCH", headers: headers({ Prefer: "return=representation" }), body: JSON.stringify({ ...(payload.size !== undefined ? { size: payload.size.trim() } : {}), ...(payload.color !== undefined ? { color: payload.color.trim() } : {}), ...(payload.sku !== undefined ? { sku: payload.sku?.trim() || null } : {}), ...(payload.stock !== undefined ? { stock: payload.stock } : {}) }) });
-  const data = await parseResponse<ProductVariant[]>(response); return data[0];
+  return updateAdminProductVariant({ data: { accessToken: requireAccessToken(), id, ...payload } });
 }
-export async function deleteProductVariant(id: string) { await parseResponse<unknown>(await fetch(`${supabaseConfig.url}/rest/v1/product_variants?id=eq.${encodeURIComponent(id)}`, { method: "DELETE", headers: headers() })); }
+export async function deleteProductVariant(id: string) {
+  await deleteAdminProductVariant({ data: { accessToken: requireAccessToken(), id } });
+}
 
 export async function listProductImages(productId: string) {
-  const url = `${supabaseConfig.url}/rest/v1/product_images?select=*&product_id=eq.${encodeURIComponent(productId)}&order=sort_order.asc,created_at.asc`;
-  return parseResponse<ProductImage[]>(await fetch(url, { headers: headers() }));
+  return listAdminProductImages({ data: { accessToken: requireAccessToken(), productId } });
 }
 export async function updateProductImage(id: string, payload: Partial<Pick<ProductImage, "alt_text" | "sort_order" | "is_primary">>) {
-  const response = await fetch(`${supabaseConfig.url}/rest/v1/product_images?id=eq.${encodeURIComponent(id)}`, { method: "PATCH", headers: headers({ Prefer: "return=representation" }), body: JSON.stringify(payload) });
-  const data = await parseResponse<ProductImage[]>(response); return data[0];
+  return updateAdminProductImage({ data: { accessToken: requireAccessToken(), id, altText: payload.alt_text, sortOrder: payload.sort_order, isPrimary: payload.is_primary } });
 }
-export async function deleteProductImage(id: string) { await parseResponse<unknown>(await fetch(`${supabaseConfig.url}/rest/v1/product_images?id=eq.${encodeURIComponent(id)}`, { method: "DELETE", headers: headers() })); }
+export async function deleteProductImage(id: string) {
+  await deleteAdminProductImage({ data: { accessToken: requireAccessToken(), id } });
+}
 export async function setPrimaryProductImage(productId: string, imageId: string) {
-  const response = await fetch(`${supabaseConfig.url}/rest/v1/product_images?product_id=eq.${encodeURIComponent(productId)}`, { method: "PATCH", headers: headers({ Prefer: "return=representation" }), body: JSON.stringify({ is_primary: false }) });
-  await parseResponse<unknown>(response);
-  return updateProductImage(imageId, { is_primary: true });
+  return setPrimaryAdminProductImage({ data: { accessToken: requireAccessToken(), productId, imageId } });
 }
 
 export async function getProduct(id: string) {
@@ -101,25 +114,27 @@ export async function listProducts() {
   return parseResponse<Product[]>(await fetch(url, { headers: headers() }));
 }
 export async function createProduct(payload: Partial<Product> & { name: string; slug: string; price: number; category: string }) {
-  const randomId = typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
-  const response = await fetch(`${supabaseConfig.url}/rest/v1/products`, { method: "POST", headers: headers({ Prefer: "return=representation" }), body: JSON.stringify({ ...payload, id: `product-${randomId}` }) });
-  const data = await parseResponse<Product[]>(response); return data[0];
+  return createAdminProduct({ data: { accessToken: requireAccessToken(), product: payload } });
 }
 export async function updateProduct(id: string, payload: Partial<Product>) {
-  const response = await fetch(`${supabaseConfig.url}/rest/v1/products?id=eq.${encodeURIComponent(id)}`, { method: "PATCH", headers: headers({ Prefer: "return=representation" }), body: JSON.stringify(payload) });
-  const data = await parseResponse<Product[]>(response); return data[0];
+  return updateAdminProduct({ data: { accessToken: requireAccessToken(), id, product: payload } });
 }
-export async function deleteProduct(id: string) { await parseResponse<unknown>(await fetch(`${supabaseConfig.url}/rest/v1/products?id=eq.${encodeURIComponent(id)}`, { method: "DELETE", headers: headers() })); }
+/**
+ * Kept for compatibility with existing admin detail code.
+ * Product removal is now an archive operation; transaction history must not be destroyed.
+ */
+export async function deleteProduct(id: string) {
+  return archiveAdminProduct({ data: { accessToken: requireAccessToken(), id } });
+}
 
 export async function uploadProductImage(productId: string, file: File) {
   const extension = file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
   const randomId = typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
   const path = `${productId}/${Date.now()}-${randomId}.${extension}`;
-  const response = await fetch(`${supabaseConfig.url}/storage/v1/object/product-images/${path}`, { method: "POST", headers: { apikey: supabaseConfig.key, Authorization: `Bearer ${getSession()?.access_token ?? ""}`, "Content-Type": file.type || "application/octet-stream", "x-upsert": "false" }, body: file });
+  const response = await fetch(`${supabaseConfig.url}/storage/v1/object/product-images/${path}`, { method: "POST", headers: { apikey: supabaseConfig.key, Authorization: `Bearer ${requireAccessToken()}`, "Content-Type": file.type || "application/octet-stream", "x-upsert": "false" }, body: file });
   await parseResponse<unknown>(response);
   return `${supabaseConfig.url}/storage/v1/object/public/product-images/${path}`;
 }
 export async function addProductImage(productId: string, imageUrl: string, isPrimary: boolean, sortOrder = 0) {
-  const response = await fetch(`${supabaseConfig.url}/rest/v1/product_images`, { method: "POST", headers: headers({ Prefer: "return=representation" }), body: JSON.stringify({ product_id: productId, image_url: imageUrl, sort_order: sortOrder, is_primary: isPrimary }) });
-  const data = await parseResponse<ProductImage[]>(response); return data[0];
+  return createAdminProductImage({ data: { accessToken: requireAccessToken(), productId, imageUrl, isPrimary, sortOrder } });
 }
