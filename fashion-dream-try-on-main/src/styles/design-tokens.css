@@ -1,0 +1,23 @@
+:root {
+  /* WEARO foundation tokens: keep page CSS dependent on these primitives. */
+  --wearo-space-1: 0.25rem;
+  --wearo-space-2: 0.5rem;
+  --wearo-space-3: 0.75rem;
+  --wearo-space-4: 1rem;
+  --wearo-space-6: 1.5rem;
+  --wearo-space-8: 2rem;
+  --wearo-space-12: 3rem;
+  --wearo-space-16: 4rem;
+  --wearo-radius-sm: 0.25rem;
+  --wearo-radius-md: 0.5rem;
+  --wearo-radius-lg: 0.75rem;
+  --wearo-motion-fast: 120ms;
+  --wearo-motion-base: 180ms;
+  --wearo-motion-slow: 280ms;
+  --wearo-focus-ring: 0 0 0 2px var(--primary);
+}
+
+:where(button, a, input, select, textarea):focus-visible {
+  outline: none;
+  box-shadow: var(--wearo-focus-ring);
+}
