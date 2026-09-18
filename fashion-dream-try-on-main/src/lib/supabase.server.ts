@@ -1,4 +1,6 @@
 import { PRODUCTS, type Product } from "@/data/products";
+import { fetchWithRetry, normalizeServerError } from "./http.server";
+import { logServer } from "./observability.server";
 
 type SupabaseConfig = {
   url: string;
@@ -112,22 +114,61 @@ export async function supabaseRequest<T>(
   }
 
   const { url, secretKey } = getConfig();
+  const method = (options.method ?? "GET").toUpperCase();
+  const endpoint = `${url}/rest/v1/${path}`;
 
-  const response = await fetch(`${url}/rest/v1/${path}`, {
-    ...options,
-    headers: {
-      apikey: secretKey,
-      Authorization: `Bearer ${secretKey}`,
-      "Content-Type": "application/json",
-      Prefer: "return=representation",
-      ...(options.headers ?? {}),
-    },
-  });
+  try {
+    const response = await fetchWithRetry(endpoint, {
+      ...options,
+      headers: {
+        apikey: secretKey,
+        Authorization: `Bearer ${secretKey}`,
+        "Content-Type": "application/json",
+        Prefer: "return=representation",
+        ...(options.headers ?? {}),
+      },
+    }, {
+      timeoutMs: 12_000,
+      retries: 2,
+    });
 
-  if (!response.ok) {
-    const message = await response.text();
-    throw new Error(`Supabase error ${response.status}: ${message}`);
+    if (!response.ok) {
+      const detail = await response.text().catch(() => "");
+      const status = response.status;
+      const message = status >= 500
+        ? "Supabase tạm thời không phản hồi. Vui lòng thử lại sau."
+        : status === 401 || status === 403
+          ? "Không được phép truy cập dữ liệu Supabase."
+          : status === 404
+            ? "Không tìm thấy tài nguyên Supabase."
+            : status === 409
+              ? "Dữ liệu bị xung đột. Vui lòng tải lại và thử lại."
+              : status === 429
+                ? "Supabase đang giới hạn yêu cầu. Vui lòng thử lại sau."
+                : "Yêu cầu Supabase không hợp lệ.";
+
+      logServer(status >= 500 ? "error" : "warn", "supabase.request_failed", {
+        method,
+        path: path.split("?")[0],
+        status,
+        detail: status >= 500 ? undefined : detail.slice(0, 500),
+      });
+
+      throw new Error(message);
+    }
+
+    if (response.status === 204) return undefined as T;
+    const text = await response.text();
+    if (!text) return undefined as T;
+    return JSON.parse(text) as T;
+  } catch (error) {
+    const normalized = normalizeServerError(error, "Dịch vụ dữ liệu đang tạm thời không khả dụng.");
+    logServer("error", "supabase.request_error", {
+      method,
+      path: path.split("?")[0],
+      status: normalized.status,
+      message: normalized.message,
+    });
+    throw error instanceof Error ? error : new Error(normalized.message);
   }
-
-  return response.json() as Promise<T>;
 }
