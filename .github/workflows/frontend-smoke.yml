@@ -25,15 +25,21 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: fashion-dream-try-on-main/package-lock.json
 
       - name: Verify npm runtime
         run: |
           node --version
           npm --version
 
-      - name: Install dependencies
+      - name: Install dependencies and regenerate lockfile
         run: npm install --no-audit --no-fund
+
+      - name: Upload regenerated npm lockfile
+        uses: actions/upload-artifact@v4
+        with:
+          name: regenerated-package-lock
+          path: fashion-dream-try-on-main/package-lock.json
+          if-no-files-found: error
 
       - name: Build
         run: npm run build
