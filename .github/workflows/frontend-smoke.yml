@@ -42,7 +42,7 @@ jobs:
         run: npm install --legacy-peer-deps --no-audit --no-fund
 
       - name: Upload generated lockfile for bootstrap recovery
-        if: ${{ hashFiles('fashion-dream-try-on-main/package-lock.json') != '' }}
+        if: ${{ !hashFiles('fashion-dream-try-on-main/package-lock.json') == false }}
         uses: actions/upload-artifact@v4
         with:
           name: generated-package-lock
@@ -50,16 +50,19 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
-      - name: Publish generated lockfile to recovery branch
+      - name: Publish generated lockfile to feature/product-admin
         if: ${{ github.event_name == 'push' && github.ref_name == 'feature/product-admin' && hashFiles('fashion-dream-try-on-main/package-lock.json') != '' }}
         continue-on-error: true
         run: |
+          if git ls-files --error-unmatch fashion-dream-try-on-main/package-lock.json >/dev/null 2>&1; then
+            echo "Lockfile already tracked; no recovery commit needed."
+            exit 0
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -B ci/lockfile-recovery
           git add fashion-dream-try-on-main/package-lock.json
           git commit -m "chore(ci): add generated npm lockfile" || true
-          git push --force origin HEAD:ci/lockfile-recovery
+          git push origin HEAD:feature/product-admin
 
       - name: Dependency audit
         run: npm run audit:dependencies
