@@ -52,7 +52,7 @@ async function storageRequest(path: string, init: RequestInit) {
   return fetchWithTimeoutAndRetry(`${url}/storage/v1/${path}`, {
     ...init,
     headers: { apikey: secret, Authorization: `Bearer ${secret}`, ...(init.headers ?? {}) },
-  }, { timeoutMs: 15_000, maxRetries: 1 });
+  }, { timeoutMs: 15_000, retries: 1 });
 }
 
 async function uploadObject(path: string, bytes: Uint8Array, mediaType: string) {
@@ -119,57 +119,22 @@ function isExpired(job: TryOnJobRow) {
   return Date.now() - Date.parse(job.created_at) > JOB_TTL_HOURS * 60 * 60 * 1000;
 }
 
-export async function createTryOnJob(input: {
-  personImage: string;
-  garmentImageUrl: string;
-  category: string;
-  note?: string;
-  clientKey: string;
-}) {
+export async function createTryOnJob(input: { personImage: string; garmentImageUrl: string; category: string; note?: string; clientKey: string }) {
   const quota = await consumeQuota(input.clientKey);
   if (!quota.allowed) throw new Error(`Bạn đã dùng hết ${quota.limit} lượt AI hôm nay. Vui lòng thử lại vào ngày mai.`);
-
-  const rows = await supabaseRequest<TryOnJobRow[]>("try_on_jobs", {
-    method: "POST",
-    body: JSON.stringify({
-      status: "queued",
-      provider: "openai-gateway",
-      category: input.category,
-      person_image_path: "pending",
-      garment_image_path: input.garmentImageUrl,
-      metadata: { note: input.note ?? "", quota_remaining: quota.remaining },
-      idempotency_key: crypto.randomUUID(),
-      client_key: await hashClientKey(input.clientKey),
-      max_attempts: 2,
-      next_attempt_at: new Date().toISOString(),
-      expires_at: new Date(Date.now() + JOB_TTL_HOURS * 60 * 60 * 1000).toISOString(),
-    }),
-  });
+  const rows = await supabaseRequest<TryOnJobRow[]>("try_on_jobs", { method: "POST", body: JSON.stringify({ status: "queued", provider: "openai-gateway", category: input.category, person_image_path: "pending", garment_image_path: input.garmentImageUrl, metadata: { note: input.note ?? "", quota_remaining: quota.remaining }, idempotency_key: crypto.randomUUID(), client_key: await hashClientKey(input.clientKey), max_attempts: 2, next_attempt_at: new Date().toISOString(), expires_at: new Date(Date.now() + JOB_TTL_HOURS * 60 * 60 * 1000).toISOString() }) });
   const job = rows[0];
   if (!job) throw new Error("Không thể tạo AI job.");
-
   const inputImage = parseDataUrl(input.personImage);
   const inputPath = `try-on-input/${job.id}.${extension(inputImage.mediaType)}`;
-  try {
-    await uploadObject(inputPath, inputImage.bytes, inputImage.mediaType);
-    await updateJob(job.id, { person_image_path: inputPath });
-  } catch (error) {
-    await updateJob(job.id, { status: "failed", error: "INPUT_STORAGE_FAILED", provider_error: safeLogError(error), completed_at: new Date().toISOString() });
-    await recordUsage(input.clientKey, false);
-    throw new Error("Không thể lưu ảnh đầu vào AI. Vui lòng thử lại.");
-  }
-
+  try { await uploadObject(inputPath, inputImage.bytes, inputImage.mediaType); await updateJob(job.id, { person_image_path: inputPath }); }
+  catch (error) { await updateJob(job.id, { status: "failed", error: "INPUT_STORAGE_FAILED", provider_error: safeLogError(error), completed_at: new Date().toISOString() }); await recordUsage(input.clientKey, false); throw new Error("Không thể lưu ảnh đầu vào AI. Vui lòng thử lại."); }
   return { job: { ...job, person_image_path: inputPath }, personImage: input.personImage, garmentImageUrl: input.garmentImageUrl, note: input.note };
 }
 
 export async function processTryOnJob(job: TryOnJobRow, input: { personImage: string; garmentImageUrl: string; note?: string; clientKey: string }) {
   if (job.status === "completed" || job.status === "failed") return job;
-  if (isExpired(job)) {
-    await updateJob(job.id, { status: "failed", error: "JOB_EXPIRED", provider_error: "AI job exceeded its lifetime.", completed_at: new Date().toISOString() });
-    await recordUsage(input.clientKey, false);
-    return (await getJob(job.id)) ?? job;
-  }
-
+  if (isExpired(job)) { await updateJob(job.id, { status: "failed", error: "JOB_EXPIRED", provider_error: "AI job exceeded its lifetime.", completed_at: new Date().toISOString() }); await recordUsage(input.clientKey, false); return (await getJob(job.id)) ?? job; }
   let current = job;
   for (let attempt = Math.max(1, job.attempts + 1); attempt <= job.max_attempts; attempt += 1) {
     const claimed = await claimJob(job.id, attempt);
@@ -178,39 +143,16 @@ export async function processTryOnJob(job: TryOnJobRow, input: { personImage: st
     const started = Date.now();
     try {
       const provider = getAiImageProvider();
-      const prompt = [
-        "Perform a realistic virtual try-on edit for WEARO.",
-        "Preserve the person's face, body proportions, pose, skin tone, hair and background as faithfully as possible.",
-        "Replace or layer the clothing on the person with the supplied garment reference.",
-        `Garment category: ${job.status === "processing" ? "fashion garment" : "fashion garment"}.`,
-        input.note ? `Styling note: ${input.note}.` : "",
-        "Preserve garment color, silhouette, fabric texture, stitching and construction.",
-        "Natural photographic lighting, realistic shadows, no text, no watermark.",
-      ].filter(Boolean).join(" ");
+      const prompt = ["Perform a realistic virtual try-on edit for WEARO.", "Preserve the person's face, body proportions, pose, skin tone, hair and background as faithfully as possible.", "Replace or layer the clothing on the person with the supplied garment reference.", "Garment category: fashion garment.", input.note ? `Styling note: ${input.note}.` : "", "Preserve garment color, silhouette, fabric texture, stitching and construction.", "Natural photographic lighting, realistic shadows, no text, no watermark."].filter(Boolean).join(" ");
       const result = await provider.generateImage({ prompt, images: [input.personImage, input.garmentImageUrl] });
       const path = `try-on/${job.id}.${extension(result.mediaType)}`;
       await uploadObject(path, base64ToBytes(result.base64), result.mediaType);
-      await updateJob(job.id, {
-        status: "completed",
-        provider: provider.name,
-        result_image_path: path,
-        completed_at: new Date().toISOString(),
-        provider_error: null,
-        error: null,
-        metadata: { duration_ms: Date.now() - started },
-      });
+      await updateJob(job.id, { status: "completed", provider: provider.name, result_image_path: path, completed_at: new Date().toISOString(), provider_error: null, error: null, metadata: { duration_ms: Date.now() - started } });
       await recordUsage(input.clientKey, true);
       return (await getJob(job.id)) ?? current;
     } catch (error) {
       const retryable = attempt < job.max_attempts;
-      await updateJob(job.id, {
-        status: retryable ? "queued" : "failed",
-        attempts: attempt,
-        next_attempt_at: retryable ? new Date(Date.now() + 1500).toISOString() : null,
-        error: retryable ? "PROVIDER_RETRY" : "PROVIDER_FAILED",
-        provider_error: safeLogError(error),
-        completed_at: retryable ? null : new Date().toISOString(),
-      });
+      await updateJob(job.id, { status: retryable ? "queued" : "failed", attempts: attempt, next_attempt_at: retryable ? new Date(Date.now() + 1500).toISOString() : null, error: retryable ? "PROVIDER_RETRY" : "PROVIDER_FAILED", provider_error: safeLogError(error), completed_at: retryable ? null : new Date().toISOString() });
       if (!retryable) await recordUsage(input.clientKey, false);
       if (retryable) await new Promise((resolve) => setTimeout(resolve, 1500));
     }
