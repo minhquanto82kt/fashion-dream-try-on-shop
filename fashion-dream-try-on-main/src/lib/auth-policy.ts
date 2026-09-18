@@ -35,7 +35,7 @@ const ROLE_PERMISSIONS: Record<AppRole, readonly Permission[]> = {
     PERMISSIONS.aiRead,
     PERMISSIONS.aiGenerate,
   ],
-  admin: Object.values(PERMISSIONS),
+  admin: Object.values(PERMISSIONS) as Permission[],
 };
 
 export function roleHasPermission(role: AppRole, permission: Permission) {
