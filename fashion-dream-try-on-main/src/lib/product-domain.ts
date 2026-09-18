@@ -30,7 +30,7 @@ export type Product = {
 export type ProductRow = {
   id: string;
   name: string;
-  description: string;
+  description: string | null;
   price: number;
   category: ProductCategory;
   image: string | null;
@@ -90,7 +90,7 @@ export function mapProduct(
     sizes: Array.from(new Set(productVariants.map((variant) => variant.size))),
     colors: Array.from(new Set(productVariants.map((variant) => variant.color))),
     badge: row.featured ? "Featured" : undefined,
-    description: row.description,
+    description: row.description ?? "",
   };
 }
 
