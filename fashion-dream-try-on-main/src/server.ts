@@ -2,6 +2,7 @@ import "./lib/error-capture";
 
 import { consumeLastCapturedError, describeError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
+import { applySecurityHeaders } from "./lib/security-headers";
 import {
   REQUEST_ID_HEADER,
   createRequestId,
@@ -33,18 +34,20 @@ function withRequestId(response: Response, requestId: string): Response {
   });
 }
 
-// h3 swallows in-handler throws into a normal 500 Response with body
-// {"unhandled":true,"message":"HTTPError"} — try/catch alone never fires for those.
+function hardenResponse(response: Response, requestId: string): Response {
+  return applySecurityHeaders(withRequestId(response, requestId));
+}
+
 async function normalizeCatastrophicSsrResponse(
   response: Response,
   requestId: string,
 ): Promise<Response> {
-  if (response.status < 500) return response;
+  if (response.status < 500) return hardenResponse(response, requestId);
   const contentType = response.headers.get("content-type") ?? "";
-  if (!contentType.includes("application/json")) return withRequestId(response, requestId);
+  if (!contentType.includes("application/json")) return hardenResponse(response, requestId);
 
   const body = await response.clone().text();
-  if (!isH3SwallowedErrorBody(body)) return withRequestId(response, requestId);
+  if (!isH3SwallowedErrorBody(body)) return hardenResponse(response, requestId);
 
   const captured = consumeLastCapturedError();
   logServerEvent("error", "ssr.request.swallowed_error", {
@@ -52,7 +55,7 @@ async function normalizeCatastrophicSsrResponse(
     status: response.status,
     error: captured instanceof Error ? describeError(captured) : body.slice(0, 500),
   });
-  return withRequestId(
+  return hardenResponse(
     new Response(renderErrorPage(), {
       status: 500,
       headers: { "content-type": "text/html; charset=utf-8" },
@@ -80,8 +83,7 @@ export default {
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      const normalized = await normalizeCatastrophicSsrResponse(response, requestId);
-      const finalResponse = withRequestId(normalized, requestId);
+      const finalResponse = await normalizeCatastrophicSsrResponse(response, requestId);
 
       logServerEvent("info", "http.request.completed", {
         requestId,
@@ -100,7 +102,7 @@ export default {
         durationMs: Date.now() - startedAt,
         error: error instanceof Error ? describeError(error) : String(error),
       });
-      return withRequestId(
+      return hardenResponse(
         new Response(renderErrorPage(), {
           status: 500,
           headers: { "content-type": "text/html; charset=utf-8" },
