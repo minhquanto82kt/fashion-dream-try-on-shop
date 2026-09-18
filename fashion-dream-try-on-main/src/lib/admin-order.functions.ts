@@ -4,7 +4,8 @@ import { supabaseUserRequest } from "./supabase-user.server";
 import { fetchWithTimeoutAndRetry } from "./server-reliability";
 
 type AdminInput = { accessToken: string };
-type Order = Record<string, unknown>;
+type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
+type Order = { [key: string]: JsonValue };
 
 async function requireAdmin(accessToken: string) {
   const token = accessToken.trim();
