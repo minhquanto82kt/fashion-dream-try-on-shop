@@ -41,8 +41,18 @@ jobs:
         if: ${{ !hashFiles('fashion-dream-try-on-main/package-lock.json') }}
         run: npm install --legacy-peer-deps --no-audit --no-fund
 
+      - name: Upload generated lockfile for bootstrap recovery
+        if: ${{ !hashFiles('fashion-dream-try-on-main/package-lock.json') == false }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-package-lock
+          path: fashion-dream-try-on-main/package-lock.json
+          if-no-files-found: error
+          retention-days: 1
+
       - name: Persist generated lockfile
-        if: github.event_name == 'push' && hashFiles('fashion-dream-try-on-main/package-lock.json')
+        if: github.event_name == 'push' && !hashFiles('fashion-dream-try-on-main/package-lock.json') == false
+        continue-on-error: true
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
