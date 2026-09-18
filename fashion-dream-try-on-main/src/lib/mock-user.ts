@@ -1,3 +1,5 @@
+export type MockUserRole = "customer";
+
 export const MOCK_USER = {
   id: "mock-user",
   role: "customer" as const,
@@ -6,6 +8,7 @@ export const MOCK_USER = {
 } as const;
 
 const STORAGE_KEY = "wearo:mock-user-mode";
+const PREVIEW_PARAM = "preview";
 
 export function isMockUserMode(): boolean {
   if (typeof window === "undefined") return false;
@@ -26,4 +29,14 @@ export function exitMockUserMode(): void {
 
 export function getMockUser() {
   return isMockUserMode() ? MOCK_USER : null;
+}
+
+/** URL flag is a routing hint only; sessionStorage is the authority. */
+export function isMockUserPreviewUrl(): boolean {
+  if (typeof window === "undefined") return false;
+  return new URLSearchParams(window.location.search).get(PREVIEW_PARAM) === "1";
+}
+
+export function isMockUserPreviewActive(): boolean {
+  return isMockUserMode() && isMockUserPreviewUrl();
 }
