@@ -9,7 +9,8 @@ const files = [
   "src/lib/supabase.server.ts",
   "src/routes/shop.tsx",
   "src/routes/__root.tsx",
-  ".github/workflows/frontend-smoke.yml",
+  "src/components/product-card.tsx",
+  "../.github/workflows/frontend-smoke.yml",
 ];
 
 const contents = new Map(files.map((file) => [file, fs.readFileSync(path.join(root, file), "utf8")]));
@@ -30,8 +31,8 @@ assert("AI MIME validation", contents.get("src/lib/ai.functions.ts").includes("A
 assert("shop uses server catalog RPC", contents.get("src/routes/shop.tsx").includes("get_published_catalog"));
 assert("shop route cache configured", contents.get("src/routes/shop.tsx").includes("staleTime: 30_000"));
 assert("lazy image loading", all.includes("loading=\"lazy\""));
-assert("security audit script exists", contents.get(".github/workflows/frontend-smoke.yml").includes("npm run audit:dependencies"));
-assert("secret gate exists", contents.get(".github/workflows/frontend-smoke.yml").includes("npm run security:secrets"));
-assert("typecheck gate exists", contents.get(".github/workflows/frontend-smoke.yml").includes("npm run typecheck"));
+assert("security audit script exists", contents.get("../.github/workflows/frontend-smoke.yml").includes("npm run audit:dependencies"));
+assert("secret gate exists", contents.get("../.github/workflows/frontend-smoke.yml").includes("npm run security:secrets"));
+assert("typecheck gate exists", contents.get("../.github/workflows/frontend-smoke.yml").includes("npm run typecheck"));
 
 console.log("Phase E/F static security-performance gate: PASS");
