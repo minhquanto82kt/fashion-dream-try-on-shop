@@ -1,11 +1,11 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { createServerFn } from "@tanstack/react-start";
-import { type Product } from "@/data/products";
+import { type Product } from "@/lib/product-domain";
 
 export type CartLine = { productId: string; size: string; color: string; qty: number };
 type CartVariant = { id: string; product_id: string; size: string; color: string; stock: number };
 type CartProduct = Product & { variants: CartVariant[] };
-type DbProduct = { id: string; name: string; description: string; price: number; category: Product["category"]; image: string | null; active: boolean; status: string; featured: boolean };
+type DbProduct = { id: string; name: string; description: string | null; price: number; category: Product["category"]; image: string | null; active: boolean; status: string; featured: boolean };
 type DbImage = { id: string; product_id: string; image_url: string; sort_order: number; is_primary: boolean };
 
 const getCartProducts = createServerFn({ method: "GET" })
@@ -23,6 +23,7 @@ const getCartProducts = createServerFn({ method: "GET" })
       const productImages = images.filter((image) => image.product_id === product.id).sort((a, b) => a.sort_order - b.sort_order);
       const gallery = productImages.map((image) => image.image_url);
       const primaryImage = productImages.find((image) => image.is_primary)?.image_url ?? gallery[0] ?? product.image ?? "";
+      const productVariants = variants.filter((variant) => variant.product_id === product.id);
       return {
         id: product.id,
         name: product.name,
@@ -30,11 +31,11 @@ const getCartProducts = createServerFn({ method: "GET" })
         category: product.category,
         image: primaryImage,
         gallery: gallery.length > 0 ? gallery : [primaryImage],
-        sizes: [],
-        colors: [],
+        sizes: Array.from(new Set(productVariants.map((variant) => variant.size))),
+        colors: Array.from(new Set(productVariants.map((variant) => variant.color))),
         badge: product.featured ? "Featured" : undefined,
-        description: product.description,
-        variants: variants.filter((variant) => variant.product_id === product.id),
+        description: product.description ?? "",
+        variants: productVariants,
       };
     });
   });
@@ -45,7 +46,10 @@ type CartContextValue = {
   add: (line: CartLine) => void; setQty: (index: number, qty: number) => void; remove: (index: number) => void; clear: () => void;
 };
 
-const STORAGE_KEY = "upthink-cart";
+const STORAGE_KEY = "wearo-cart";
+const LEGACY_STORAGE_KEY = "upthink-cart";
+const CART_CHANGED_EVENT = "wearo:cart:changed";
+const LEGACY_CART_CHANGED_EVENT = "upthink:cart:changed";
 const CartContext = createContext<CartContextValue | null>(null);
 
 export function CartProvider({ children }: { children: ReactNode }) {
@@ -56,10 +60,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
+      const raw = localStorage.getItem(STORAGE_KEY) ?? localStorage.getItem(LEGACY_STORAGE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed)) setLines(parsed);
+        if (Array.isArray(parsed)) {
+          setLines(parsed);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+          localStorage.removeItem(LEGACY_STORAGE_KEY);
+        }
       }
     } catch { setLines([]); }
     finally { setHydrated(true); }
@@ -68,23 +76,26 @@ export function CartProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!hydrated) return;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(lines));
+    window.dispatchEvent(new Event(CART_CHANGED_EVENT));
   }, [lines, hydrated]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     const sync = () => {
       try {
-        const raw = window.localStorage.getItem(STORAGE_KEY);
+        const raw = window.localStorage.getItem(STORAGE_KEY) ?? window.localStorage.getItem(LEGACY_STORAGE_KEY);
         const parsed = raw ? JSON.parse(raw) : [];
         if (Array.isArray(parsed)) setLines(parsed);
       } catch { /* keep current cart */ }
     };
-    const onStorage = (event: StorageEvent) => { if (event.key === STORAGE_KEY) sync(); };
+    const onStorage = (event: StorageEvent) => { if (event.key === STORAGE_KEY || event.key === LEGACY_STORAGE_KEY) sync(); };
     window.addEventListener("storage", onStorage);
-    window.addEventListener("upthink:cart:changed", sync);
+    window.addEventListener(CART_CHANGED_EVENT, sync);
+    window.addEventListener(LEGACY_CART_CHANGED_EVENT, sync);
     return () => {
       window.removeEventListener("storage", onStorage);
-      window.removeEventListener("upthink:cart:changed", sync);
+      window.removeEventListener(CART_CHANGED_EVENT, sync);
+      window.removeEventListener(LEGACY_CART_CHANGED_EVENT, sync);
     };
   }, []);
 
