@@ -25,7 +25,7 @@ const getCartProducts = createServerFn({ method: "GET" }).validator((productIds:
     const productImages = images.filter((image) => image.product_id === product.id).sort((a, b) => a.sort_order - b.sort_order);
     const gallery = productImages.map((image) => image.image_url);
     const primaryImage = productImages.find((image) => image.is_primary)?.image_url ?? gallery[0] ?? product.image ?? "";
-    return { id: product.id, name: product.name, short_description: null, long_description: null, image: primaryImage, gallery: gallery.length > 0 ? gallery : [primaryImage], sizes: [], colors: [], badge: product.featured ? "Featured" : undefined, description: product.description, price: Number(product.price), category: product.category, variants: variants.filter((variant) => variant.product_id === product.id), active: product.active, status: product.status as "draft" | "published" | "archived", featured: product.featured };
+    return { id: product.id, name: product.name, image: primaryImage, gallery: gallery.length > 0 ? gallery : [primaryImage], sizes: [], colors: [], badge: product.featured ? "Featured" : undefined, description: product.description, price: Number(product.price), category: product.category, variants: variants.filter((variant) => variant.product_id === product.id), active: product.active, status: product.status as "draft" | "published" | "archived", featured: product.featured };
   });
 });
 
