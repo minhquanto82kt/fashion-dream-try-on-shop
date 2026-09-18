@@ -75,8 +75,24 @@ jobs:
         env:
           BASE_URL: http://127.0.0.1:8080
 
-      - name: Run lint
-        run: npm run lint
+      - name: Run lint and capture diagnostics
+        id: lint
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          npm run lint 2>&1 | tee /tmp/eslint.log
+
+      - name: Upload lint diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eslint-diagnostics
+          path: /tmp/eslint.log
+          if-no-files-found: warn
+
+      - name: Fail if lint failed
+        if: steps.lint.outcome == 'failure'
+        run: exit 1
 
       - name: Show server log on failure
         if: failure()
