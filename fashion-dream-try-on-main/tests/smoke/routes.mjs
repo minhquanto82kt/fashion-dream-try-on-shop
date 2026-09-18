@@ -9,6 +9,7 @@ const routes = [
   "/checkout",
   "/about",
   "/account",
+  "/account?preview=1",
 ];
 
 let failed = false;
@@ -32,8 +33,5 @@ for (const route of routes) {
   }
 }
 
-if (failed) {
-  process.exit(1);
-}
-
-console.log(`\nSmoke test passed: ${routes.length} public routes checked against ${baseUrl}`);
+if (failed) process.exit(1);
+console.log(`\nSmoke test passed: ${routes.length} public/preview routes checked against ${baseUrl}`);
