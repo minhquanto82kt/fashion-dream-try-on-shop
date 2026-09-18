@@ -22,7 +22,7 @@ function CartPage() {
   const shipping = subtotal === 0 || subtotal >= 1000000 ? 0 : 30000;
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen fashion-site">
       <SiteNav />
       <main className="mx-auto max-w-5xl px-6 pb-24 pt-28 sm:px-12">
         <h1 className="text-4xl leading-none">Giỏ hàng</h1>
@@ -53,14 +53,26 @@ function CartPage() {
                       {item.size} · {item.color}
                     </p>
                     <div className="mt-3 flex items-center gap-3">
-                      <button onClick={() => setQty(i, item.qty - 1)} className="border border-border p-1">
+                      <button
+                        onClick={() => setQty(i, item.qty - 1)}
+                        aria-label={`Giảm số lượng ${item.product.name}`}
+                        className="border border-border p-1.5"
+                      >
                         <Minus className="size-3" />
                       </button>
                       <span className="text-sm">{item.qty}</span>
-                      <button onClick={() => setQty(i, item.qty + 1)} className="border border-border p-1">
+                      <button
+                        onClick={() => setQty(i, item.qty + 1)}
+                        aria-label={`Tăng số lượng ${item.product.name}`}
+                        className="border border-border p-1.5"
+                      >
                         <Plus className="size-3" />
                       </button>
-                      <button onClick={() => remove(i)} className="ml-2 text-silver hover:text-destructive">
+                      <button
+                        onClick={() => remove(i)}
+                        aria-label={`Xóa ${item.product.name} khỏi giỏ`}
+                        className="ml-2 text-silver hover:text-destructive"
+                      >
                         <Trash2 className="size-4" />
                       </button>
                     </div>
