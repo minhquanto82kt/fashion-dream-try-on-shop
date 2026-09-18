@@ -50,17 +50,16 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
-      - name: Persist generated lockfile
-        if: ${{ github.event_name == 'push' && hashFiles('fashion-dream-try-on-main/package-lock.json') != '' }}
+      - name: Publish generated lockfile to recovery branch
+        if: ${{ github.event_name == 'push' && github.ref_name == 'feature/product-admin' && hashFiles('fashion-dream-try-on-main/package-lock.json') != '' }}
         continue-on-error: true
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b ci/lockfile-recovery
           git add fashion-dream-try-on-main/package-lock.json
-          if ! git diff --cached --quiet; then
-            git commit -m "chore(ci): persist npm lockfile"
-            git push origin HEAD:${GITHUB_REF_NAME}
-          fi
+          git commit -m "chore(ci): add generated npm lockfile"
+          git push origin HEAD:ci/lockfile-recovery
 
       - name: Dependency audit
         run: npm run audit:dependencies
