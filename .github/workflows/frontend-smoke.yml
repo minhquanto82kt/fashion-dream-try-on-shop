@@ -38,11 +38,11 @@ jobs:
         run: npm ci --no-audit --no-fund
 
       - name: Bootstrap dependencies and lockfile
-        if: ${{ !hashFiles('fashion-dream-try-on-main/package-lock.json') }}
+        if: ${{ hashFiles('fashion-dream-try-on-main/package-lock.json') == '' }}
         run: npm install --legacy-peer-deps --no-audit --no-fund
 
       - name: Upload generated lockfile for bootstrap recovery
-        if: ${{ !hashFiles('fashion-dream-try-on-main/package-lock.json') == false }}
+        if: ${{ hashFiles('fashion-dream-try-on-main/package-lock.json') != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: generated-package-lock
