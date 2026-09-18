@@ -8,7 +8,6 @@ import {
   type ChatModelAdapter,
 } from "@assistant-ui/react";
 import { ArrowUp, Sparkles } from "lucide-react";
-import { useServerFn } from "@tanstack/react-start";
 import { generateWearoAiReply } from "@/lib/wearo-ai-chat.functions";
 
 const modelAdapter: ChatModelAdapter = {
@@ -37,10 +36,8 @@ function WearoMessage() {
       <div className="min-w-0 max-w-[85%] text-sm leading-7 text-foreground">
         <MessagePrimitive.Parts>
           {({ part }) => {
-            if (part.type === "text") {
-              return <MessagePartPrimitive.Text />;
-            }
-            return part.toolUI ?? null;
+            if (part.type === "text") return <MessagePartPrimitive.Text />;
+            return null;
           }}
         </MessagePrimitive.Parts>
       </div>
