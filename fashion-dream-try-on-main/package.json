@@ -19,7 +19,6 @@
   "dependencies": {
     "@ai-sdk/react": "^4.0.100",
     "@assistant-ui/ai-sdk": "^0.0.4",
-    "@assistant-ui/react": "^0.0.4",
     "@assistant-ui/react": "^0.15.18",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-accordion": "^1.2.12",
@@ -47,6 +46,7 @@
     "@tailwindcss/vite": "^4.2.1",
     "@tanstack/react-query": "^5.101.1",
     "@tanstack/react-router": "1.170.18",
+    "@tanstack/react-router": "1.170.18",
     "@tanstack/react-start": "1.168.32",
     "@tanstack/router-plugin": "1.168.23",
     "@vercel/flags-core": "^1.8.1",
@@ -68,7 +68,6 @@
     "vaul": "^1.1.2",
     "vite-tsconfig-paths": "^6.0.0",
     "recharts": "^2.15.4",
-    "date-fns": "^4.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
