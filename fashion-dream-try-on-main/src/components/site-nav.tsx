@@ -9,7 +9,16 @@ import "@/styles/brand-easter-egg.css";
 import "@/styles/header-enhancements.css";
 
 const PRIMARY_LINKS = [{ to: "/ai", label: "AI Studio", beta: true }, { to: "/about", label: "About" }] as const;
-const DISCOVERY_LINKS = [{ label: "New Arrivals", to: "/shop" }, { label: "Collections", to: "/shop" }, { label: "Best Sellers", to: "/shop" }, { label: "Sale / Offers", to: "/shop" }] as const;
+const UTILITY_LINKS = [
+  { to: "/ai", vi: "Thử đồ AI", en: "AI Try-On" },
+  { to: "/account/wishlist", vi: "Đã lưu", en: "Saved Looks" },
+  { to: "/track-order", vi: "Tra cứu đơn", en: "Track Order" },
+] as const;
+const DISCOVERY_LINKS = [
+  { label: "New Arrivals", vi: "Hàng mới về", to: "/shop" },
+  { label: "Collections", vi: "Bộ sưu tập", to: "/shop" },
+  { label: "Best Sellers", vi: "Bán chạy", to: "/shop" },
+] as const;
 const TOPBAR_TEXT_STYLE = { height: "72px", minHeight: "72px", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "13px", lineHeight: 1, fontWeight: 600, letterSpacing: ".13em" } as const;
 
 export function SiteNav() {
@@ -32,11 +41,37 @@ export function SiteNav() {
     <div className="fashion-nav__inner">
       <Link to="/" className="fashion-brand" aria-label="WEARO home" onClick={handleBrandClick}><span className="fashion-brand__mark">W</span><span className="fashion-brand__copy"><span className="fashion-brand__name">WEARO<span>.</span></span><span className="fashion-brand__meta">AI FASHION / 2026</span></span></Link>
       <div className="fashion-nav__links" aria-label={t("Điều hướng trang chính", "Primary navigation")}>
-        <div className={`fashion-shop-nav ${shopOpen ? "is-open" : ""}`} style={{ height: "72px", display: "flex", alignItems: "center", position: "relative", zIndex: 103 }}>
-          <button type="button" className="fashion-nav-link fashion-shop-trigger" aria-expanded={shopOpen} aria-haspopup="true" onClick={() => { setShopOpen(v => !v); setSearchOpen(false); setOpen(false); }} style={{ ...TOPBAR_TEXT_STYLE, position: "relative", zIndex: 104, color: "var(--foreground)", opacity: 1, visibility: "visible" }}><span>{t("Cửa hàng", "Shop")}</span><ChevronDown size={16} strokeWidth={2} aria-hidden="true" /></button>
-          {shopOpen && <div className="fashion-shop-mega" role="dialog" aria-label={t("Danh mục sản phẩm", "Shop categories")} style={{ position: "fixed", top: "96px", left: "50%", right: "auto", width: "min(860px, calc(100vw - 48px))", maxWidth: "860px", maxHeight: "calc(100vh - 120px)", overflow: "auto", transform: "translateX(-50%)", boxSizing: "border-box", zIndex: 100 }}><div className="fashion-shop-mega__intro"><span className="fashion-menu-kicker">COLLECTION / 2026</span><h2>{t("Mua theo danh mục", "Shop by category")}</h2><Link to="/shop" onClick={closeMenus} className="fashion-shop-all">{t("Xem tất cả sản phẩm", "View all products")} <ChevronRight size={15} aria-hidden="true" /></Link></div><div className="fashion-shop-category-grid">{CATEGORIES.map(category => <Link key={category.slug} to="/shop" search={{ category: category.slug }} onClick={closeMenus} className="fashion-shop-category"><span className="fashion-shop-category__image"><img src={category.image} alt="" loading="lazy" /></span><span className="fashion-shop-category__meta"><strong>{category.name}</strong><span>{t("Khám phá danh mục", "Explore category")}</span></span><ChevronRight size={15} aria-hidden="true" /></Link>)}</div></div>}
+        <div
+          className={`fashion-shop-nav ${shopOpen ? "is-open" : ""}`}
+          style={{ height: "72px", display: "flex", alignItems: "center", position: "relative", zIndex: 103 }}
+          onMouseEnter={() => setShopOpen(true)}
+          onMouseLeave={() => setShopOpen(false)}
+          onFocusCapture={() => setShopOpen(true)}
+        >
+          <Link
+            to="/shop"
+            className="fashion-nav-link fashion-shop-trigger"
+            aria-expanded={shopOpen}
+            aria-haspopup="true"
+            onClick={() => { setSearchOpen(false); setOpen(false); }}
+            style={{ ...TOPBAR_TEXT_STYLE, position: "relative", zIndex: 104, color: "var(--foreground)", opacity: 1, visibility: "visible" }}
+            activeProps={{ className: "fashion-nav-link fashion-shop-trigger is-active" }}
+          >
+            <span>{t("Cửa hàng", "Shop")}</span><ChevronDown size={16} strokeWidth={2} aria-hidden="true" />
+          </Link>
+          {shopOpen && <div className="fashion-shop-mega" role="dialog" aria-label={t("Danh mục sản phẩm", "Shop categories")} style={{ position: "fixed", top: "96px", left: "50%", right: "auto", width: "min(980px, calc(100vw - 48px))", maxWidth: "980px", maxHeight: "calc(100vh - 120px)", overflow: "auto", transform: "translateX(-50%)", boxSizing: "border-box", zIndex: 100 }}>
+            <div className="fashion-shop-mega__intro">
+              <span className="fashion-menu-kicker">COLLECTION / 2026</span>
+              <h2>{t("Mua theo danh mục", "Shop by category")}</h2>
+              <Link to="/shop" onClick={closeMenus} className="fashion-shop-all">{t("Xem tất cả sản phẩm", "View all products")} <ChevronRight size={15} aria-hidden="true" /></Link>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "8px", marginBottom: "18px" }}>
+              {DISCOVERY_LINKS.map((link) => <Link key={link.label} to={link.to} onClick={closeMenus} className="fashion-shop-all" style={{ justifyContent: "space-between", border: "1px solid var(--border)", padding: "12px 14px" }}><span>{t(link.vi, link.label)}</span><ChevronRight size={15} aria-hidden="true" /></Link>)}
+            </div>
+            <div className="fashion-shop-category-grid">{CATEGORIES.map(category => <Link key={category.slug} to="/shop" search={{ category: category.slug }} onClick={closeMenus} className="fashion-shop-category"><span className="fashion-shop-category__image"><img src={category.image} alt="" loading="lazy" /></span><span className="fashion-shop-category__meta"><strong>{category.name}</strong><span>{t("Khám phá danh mục", "Explore category")}</span></span><ChevronRight size={15} aria-hidden="true" /></Link>)}</div>
+          </div>}
         </div>
-        {DISCOVERY_LINKS.map(link => <Link key={link.label} to={link.to} onClick={closeMenus} className="fashion-discovery-link" activeProps={{ className: "fashion-discovery-link is-active" }}>{link.label === "New Arrivals" ? t("Hàng mới về", link.label) : link.label === "Collections" ? t("Bộ sưu tập", link.label) : link.label === "Best Sellers" ? t("Bán chạy", link.label) : t("Ưu đãi", link.label)}</Link>)}
+        {UTILITY_LINKS.map(link => <Link key={link.to} to={link.to} onClick={closeMenus} className="fashion-discovery-link" activeProps={{ className: "fashion-discovery-link is-active" }}>{t(link.vi, link.en)}</Link>)}
         {PRIMARY_LINKS.map(link => link.beta ? <Link key={link.to} to={link.to} className="fashion-ai-nav" activeProps={{ className: "fashion-ai-nav is-active" }} aria-label="AI Studio — Beta"><span className="fashion-ai-nav__label">AI Studio</span><span className="fashion-ai-nav__beta">BETA</span></Link> : <Link key={link.to} to={link.to} activeProps={{ className: "is-active" }} style={TOPBAR_TEXT_STYLE}>{link.label === "About" ? t("Giới thiệu", "About") : link.label}</Link>)}
       </div>
       <div className="fashion-nav__actions">
