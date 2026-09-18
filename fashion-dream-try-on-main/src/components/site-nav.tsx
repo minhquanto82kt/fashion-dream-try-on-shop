@@ -12,7 +12,7 @@ const PRIMARY_LINKS = [{ to: "/ai", label: "AI Studio", beta: true }, { to: "/ab
 const UTILITY_LINKS = [
   { to: "/ai", vi: "Thử đồ AI", en: "AI Try-On" },
   { to: "/account/wishlist", vi: "Đã lưu", en: "Saved Looks" },
-  { to: "/track-order", vi: "Tra cứu đơn", en: "Track Order" },
+  { to: "/account/orders", vi: "Đơn hàng", en: "My Orders" },
 ] as const;
 const DISCOVERY_LINKS = [
   { label: "New Arrivals", vi: "Hàng mới về", to: "/shop" },
@@ -41,30 +41,12 @@ export function SiteNav() {
     <div className="fashion-nav__inner">
       <Link to="/" className="fashion-brand" aria-label="WEARO home" onClick={handleBrandClick}><span className="fashion-brand__mark">W</span><span className="fashion-brand__copy"><span className="fashion-brand__name">WEARO<span>.</span></span><span className="fashion-brand__meta">AI FASHION / 2026</span></span></Link>
       <div className="fashion-nav__links" aria-label={t("Điều hướng trang chính", "Primary navigation")}>
-        <div
-          className={`fashion-shop-nav ${shopOpen ? "is-open" : ""}`}
-          style={{ height: "72px", display: "flex", alignItems: "center", position: "relative", zIndex: 103 }}
-          onMouseEnter={() => setShopOpen(true)}
-          onMouseLeave={() => setShopOpen(false)}
-          onFocusCapture={() => setShopOpen(true)}
-        >
-          <Link
-            to="/shop"
-            className="fashion-nav-link fashion-shop-trigger"
-            aria-expanded={shopOpen}
-            aria-haspopup="true"
-            onClick={() => { setSearchOpen(false); setOpen(false); }}
-            style={{ ...TOPBAR_TEXT_STYLE, position: "relative", zIndex: 104, color: "var(--foreground)", opacity: 1, visibility: "visible" }}
-            activeProps={{ className: "fashion-nav-link fashion-shop-trigger is-active" }}
-          >
+        <div className={`fashion-shop-nav ${shopOpen ? "is-open" : ""}`} style={{ height: "72px", display: "flex", alignItems: "center", position: "relative", zIndex: 103 }} onMouseEnter={() => setShopOpen(true)} onMouseLeave={() => setShopOpen(false)} onFocusCapture={() => setShopOpen(true)}>
+          <Link to="/shop" className="fashion-nav-link fashion-shop-trigger" aria-expanded={shopOpen} aria-haspopup="true" onClick={() => { setSearchOpen(false); setOpen(false); }} style={{ ...TOPBAR_TEXT_STYLE, position: "relative", zIndex: 104, color: "var(--foreground)", opacity: 1, visibility: "visible" }} activeProps={{ className: "fashion-nav-link fashion-shop-trigger is-active" }}>
             <span>{t("Cửa hàng", "Shop")}</span><ChevronDown size={16} strokeWidth={2} aria-hidden="true" />
           </Link>
           {shopOpen && <div className="fashion-shop-mega" role="dialog" aria-label={t("Danh mục sản phẩm", "Shop categories")} style={{ position: "fixed", top: "96px", left: "50%", right: "auto", width: "min(980px, calc(100vw - 48px))", maxWidth: "980px", maxHeight: "calc(100vh - 120px)", overflow: "auto", transform: "translateX(-50%)", boxSizing: "border-box", zIndex: 100 }}>
-            <div className="fashion-shop-mega__intro">
-              <span className="fashion-menu-kicker">COLLECTION / 2026</span>
-              <h2>{t("Mua theo danh mục", "Shop by category")}</h2>
-              <Link to="/shop" onClick={closeMenus} className="fashion-shop-all">{t("Xem tất cả sản phẩm", "View all products")} <ChevronRight size={15} aria-hidden="true" /></Link>
-            </div>
+            <div className="fashion-shop-mega__intro"><span className="fashion-menu-kicker">COLLECTION / 2026</span><h2>{t("Mua theo danh mục", "Shop by category")}</h2><Link to="/shop" onClick={closeMenus} className="fashion-shop-all">{t("Xem tất cả sản phẩm", "View all products")} <ChevronRight size={15} aria-hidden="true" /></Link></div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "8px", marginBottom: "18px" }}>
               {DISCOVERY_LINKS.map((link) => <Link key={link.label} to={link.to} onClick={closeMenus} className="fashion-shop-all" style={{ justifyContent: "space-between", border: "1px solid var(--border)", padding: "12px 14px" }}><span>{t(link.vi, link.label)}</span><ChevronRight size={15} aria-hidden="true" /></Link>)}
             </div>
