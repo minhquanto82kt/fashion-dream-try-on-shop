@@ -1,4 +1,10 @@
 import { PRODUCTS, type Product } from "@/data/products";
+import {
+  createRequestId,
+  fetchWithTimeoutAndRetry,
+  logServerEvent,
+  safeLogError,
+} from "@/lib/server-reliability";
 
 type SupabaseConfig = {
   url: string;
@@ -103,6 +109,22 @@ function smokeCatalogResponse<T>(path: string): T {
   throw new Error(`CI smoke catalog does not support Supabase resource: ${resource}`);
 }
 
+function resourceName(path: string): string {
+  return path.split("?", 1)[0]?.split("/", 1)[0] ?? "unknown";
+}
+
+export class SupabaseRequestError extends Error {
+  readonly status: number;
+  readonly requestId: string;
+
+  constructor(message: string, status: number, requestId: string) {
+    super(message);
+    this.name = "SupabaseRequestError";
+    this.status = status;
+    this.requestId = requestId;
+  }
+}
+
 export async function supabaseRequest<T>(
   path: string,
   options: RequestInit = {},
@@ -112,22 +134,61 @@ export async function supabaseRequest<T>(
   }
 
   const { url, secretKey } = getConfig();
+  const requestId = createRequestId();
+  const method = (options.method ?? "GET").toUpperCase();
+  const resource = resourceName(path);
+  const startedAt = Date.now();
 
-  const response = await fetch(`${url}/rest/v1/${path}`, {
-    ...options,
-    headers: {
-      apikey: secretKey,
-      Authorization: `Bearer ${secretKey}`,
-      "Content-Type": "application/json",
-      Prefer: "return=representation",
-      ...(options.headers ?? {}),
-    },
-  });
+  try {
+    const response = await fetchWithTimeoutAndRetry(
+      `${url}/rest/v1/${path}`,
+      {
+        ...options,
+        headers: {
+          apikey: secretKey,
+          Authorization: `Bearer ${secretKey}`,
+          "Content-Type": "application/json",
+          Prefer: "return=representation",
+          ...(options.headers ?? {}),
+        },
+      },
+      { requestId },
+    );
 
-  if (!response.ok) {
-    const message = await response.text();
-    throw new Error(`Supabase error ${response.status}: ${message}`);
+    const durationMs = Date.now() - startedAt;
+    if (!response.ok) {
+      const detail = (await response.text()).slice(0, 1_000);
+      logServerEvent("error", "supabase.request.failed", {
+        requestId,
+        resource,
+        method,
+        status: response.status,
+        durationMs,
+        detail,
+      });
+      throw new SupabaseRequestError("SUPABASE_REQUEST_FAILED", response.status, requestId);
+    }
+
+    logServerEvent("info", "supabase.request.completed", {
+      requestId,
+      resource,
+      method,
+      status: response.status,
+      durationMs,
+    });
+
+    if (response.status === 204) return undefined as T;
+    return response.json() as Promise<T>;
+  } catch (error) {
+    if (error instanceof SupabaseRequestError) throw error;
+
+    logServerEvent("error", "supabase.request.error", {
+      requestId,
+      resource,
+      method,
+      durationMs: Date.now() - startedAt,
+      error: safeLogError(error),
+    });
+    throw new SupabaseRequestError("SUPABASE_UNAVAILABLE", 503, requestId);
   }
-
-  return response.json() as Promise<T>;
 }
