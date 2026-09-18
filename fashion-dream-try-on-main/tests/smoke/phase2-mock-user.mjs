@@ -21,4 +21,4 @@ assert.match(checkout, /Mock User/);
 assert.match(checkout, /wearo_pending_invoice/);
 assert.doesNotMatch(checkout, /if\s*\(mockMode\).*fetch\([\"']\/api\/momo\/create/);
 
-console.log("Phase 2 Customer Experience Validation: PASS");
+console.log("Customer Experience Validation: PASS");
