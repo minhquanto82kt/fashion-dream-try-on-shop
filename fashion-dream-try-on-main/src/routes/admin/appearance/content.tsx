@@ -23,27 +23,13 @@ function AppearanceContentPage() {
 
   function update<K extends keyof AppearanceContent>(key: K, value: AppearanceContent[K]) {
     setContent((current) => current ? { ...current, [key]: value } : current);
-    setMessage(null); setError(null);
   }
 
   async function save() {
     if (!content) return;
     setSaving(true); setMessage(null); setError(null);
-    try {
-      const next = await saveAppearanceContent({
-        dark_logo_url: content.dark_logo_url,
-        monogram_url: content.monogram_url,
-        social_image_url: content.social_image_url,
-        announcement_enabled: content.announcement_enabled,
-        announcement_text: content.announcement_text,
-        hero_eyebrow: content.hero_eyebrow,
-        hero_title: content.hero_title,
-        hero_description: content.hero_description,
-        hero_primary_cta: content.hero_primary_cta,
-        hero_secondary_cta: content.hero_secondary_cta,
-      });
-      setContent(next); setMessage("Appearance content saved to Supabase.");
-    } catch (cause) { setError(cause instanceof Error ? cause.message : "Unable to save appearance content."); }
+    try { const next = await saveAppearanceContent(content); setContent(next); setMessage("Appearance content saved to Supabase."); }
+    catch (cause) { setError(cause instanceof Error ? cause.message : "Unable to save appearance content."); }
     finally { setSaving(false); }
   }
 
@@ -57,7 +43,8 @@ function AppearanceContentPage() {
 
   if (!content) return <div style={{ padding: 24 }}>{error ?? "Loading appearance content…"}</div>;
 
-  const assets: Array<[string, keyof AppearanceContent, "dark-logo" | "monogram" | "social-preview", RefObject<HTMLInputElement>]> = [
+  type AssetKey = "dark_logo_url" | "monogram_url" | "social_image_url";
+  const assets: Array<[string, AssetKey, "dark-logo" | "monogram" | "social-preview", RefObject<HTMLInputElement | null>]> = [
     ["Dark Logo", "dark_logo_url", "dark-logo", darkLogoInput],
     ["Monogram", "monogram_url", "monogram", monogramInput],
     ["Social Preview", "social_image_url", "social-preview", socialInput],
@@ -78,12 +65,12 @@ function AppearanceContentPage() {
       <input style={{ width: "100%", boxSizing: "border-box", padding: 11, border: "1px solid #ddd" }} value={content.announcement_text} onChange={(e) => update("announcement_text", e.target.value)} maxLength={160} />
     </section>
     <section style={{ background: "#fff", border: "1px solid #e3e2dc", padding: 20 }}>
-      <h2 style={{ margin: "0 0 5px", fontSize: 17 }}>Hero Content</h2><p style={{ margin: "0 0 16px", color: "#888", fontSize: 11 }}>Copy điều khiển trực tiếp hero: eyebrow, title, description và CTA.</p>
-      <div style={{ display: "grid", gap: 11 }}>
-        {([["hero_eyebrow", "Eyebrow"], ["hero_title", "Title"], ["hero_primary_cta", "Primary CTA"], ["hero_secondary_cta", "Secondary CTA"]] as const).map(([key, label]) => <label key={key} style={{ display: "grid", gap: 6, fontSize: 9, fontWeight: 800, letterSpacing: ".1em", textTransform: "uppercase" }}>{label}<input style={{ padding: 11, border: "1px solid #ddd", fontSize: 13 }} value={content[key]} onChange={(e) => update(key, e.target.value)} maxLength={180} /></label>)}
-        <label style={{ display: "grid", gap: 6, fontSize: 9, fontWeight: 800, letterSpacing: ".1em", textTransform: "uppercase" }}>Description<textarea style={{ minHeight: 90, padding: 11, border: "1px solid #ddd", font: "inherit" }} value={content.hero_description} onChange={(e) => update("hero_description", e.target.value)} maxLength={400} /></label>
+      <h2 style={{ margin: "0 0 5px", fontSize: 17 }}>Hero Content</h2><p style={{ margin: "0 0 16px", color: "#888", fontSize: 11 }}>Nội dung hero được quản lý từ Supabase.</p>
+      <div style={{ display: "grid", gap: 10 }}>
+        <input style={{ padding: 11, border: "1px solid #ddd" }} value={content.hero_title} onChange={(e) => update("hero_title", e.target.value)} />
+        <textarea style={{ minHeight: 100, padding: 11, border: "1px solid #ddd" }} value={content.hero_description} onChange={(e) => update("hero_description", e.target.value)} />
       </div>
     </section>
-    <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}><button type="button" onClick={() => void save()} disabled={saving} style={{ background: "#1b1a17", color: "#fff", border: 0, padding: "11px 16px", fontWeight: 800 }}>{saving ? "Saving…" : "Save Content"}</button></div>
+    <div style={{ display: "flex", justifyContent: "flex-end" }}><button type="button" onClick={() => void save()} disabled={saving}>{saving ? "Saving…" : "Save changes"}</button></div>
   </div>;
 }
