@@ -1,7 +1,8 @@
 // Admin products route
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { listProducts, updateProduct, type Product } from "@/lib/upthink-supabase";
+import { getSession } from "@/lib/upthink-supabase";
+import { archiveAdminProduct, listAdminProducts, updateAdminProduct, type AdminProduct } from "@/lib/product-admin.functions";
 
 export const Route = createFileRoute("/admin/products/")({
   component: ProductAdminPage,
@@ -13,24 +14,42 @@ const PRODUCTS_PER_PAGE = 8;
 function money(value: number) { return new Intl.NumberFormat("vi-VN").format(value) + " ₫"; }
 
 function ProductAdminPage() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<AdminProduct[]>([]);
   const [query, setQuery] = useState(""); const [statusFilter, setStatusFilter] = useState("all"); const [categoryFilter, setCategoryFilter] = useState("all");
   const [message, setMessage] = useState(""); const [loading, setLoading] = useState(true); const [archivingId, setArchivingId] = useState<string | null>(null); const [currentPage, setCurrentPage] = useState(1);
 
-  async function loadProducts() { setLoading(true); setMessage(""); try { setProducts(await listProducts()); } catch (error) { setMessage(error instanceof Error ? error.message : "Không thể tải danh sách sản phẩm."); } finally { setLoading(false); } }
-  useEffect(() => { let cancelled = false; void listProducts().then((data) => { if (!cancelled) setProducts(data); }).catch((error) => { if (!cancelled) setMessage(error instanceof Error ? error.message : "Không thể tải danh sách sản phẩm."); }).finally(() => { if (!cancelled) setLoading(false); }); return () => { cancelled = true; }; }, []);
+  async function loadProducts() {
+    setLoading(true); setMessage("");
+    try {
+      const accessToken = getSession()?.access_token;
+      if (!accessToken) throw new Error("Phiên admin đã hết hạn. Vui lòng đăng nhập lại.");
+      setProducts(await listAdminProducts({ data: { accessToken } }));
+    } catch (error) { setMessage(error instanceof Error ? error.message : "Không thể tải danh sách sản phẩm."); }
+    finally { setLoading(false); }
+  }
+  useEffect(() => { void loadProducts(); }, []);
 
   const filtered = useMemo(() => products.filter((product) => { const text = `${product.name} ${product.slug}`.toLowerCase(); return (!query || text.includes(query.toLowerCase())) && (statusFilter === "all" || product.status === statusFilter) && (categoryFilter === "all" || product.category === categoryFilter); }), [products, query, statusFilter, categoryFilter]);
   const totalPages = Math.max(1, Math.ceil(filtered.length / PRODUCTS_PER_PAGE)); const safeCurrentPage = Math.min(currentPage, totalPages);
   const paginatedProducts = useMemo(() => filtered.slice((safeCurrentPage - 1) * PRODUCTS_PER_PAGE, safeCurrentPage * PRODUCTS_PER_PAGE), [filtered, safeCurrentPage]);
   useEffect(() => { if (currentPage > totalPages) setCurrentPage(totalPages); }, [currentPage, totalPages]);
 
-  async function handleArchive(product: Product) {
-    if (product.status === "archived") { if (!window.confirm(`Khôi phục sản phẩm "${product.name}" về bản nháp?`)) return; }
-    else if (!window.confirm(`Ẩn sản phẩm "${product.name}"?\n\nSản phẩm sẽ được archive/deactivate thay vì xóa dữ liệu liên quan đến đơn hàng.`)) return;
+  async function handleArchive(product: AdminProduct) {
+    const action = product.status === "archived" ? "khôi phục về bản nháp" : "ẩn sản phẩm";
+    if (!window.confirm(`Bạn có chắc muốn ${action} "${product.name}"?`)) return;
     setArchivingId(product.id); setMessage("");
-    try { await updateProduct(product.id, { status: product.status === "archived" ? "draft" : "archived", active: false }); setProducts(await listProducts()); setMessage(product.status === "archived" ? `Đã đưa "${product.name}" về bản nháp.` : `Đã ẩn "${product.name}". Không xóa dữ liệu commerce.`); }
-    catch (error) { setMessage(error instanceof Error ? error.message : "Không thể cập nhật trạng thái sản phẩm."); }
+    try {
+      const accessToken = getSession()?.access_token;
+      if (!accessToken) throw new Error("Phiên admin đã hết hạn. Vui lòng đăng nhập lại.");
+      if (product.status === "archived") {
+        await updateAdminProduct({ data: { accessToken, id: product.id, product: { status: "draft" } } });
+        setMessage(`Đã đưa "${product.name}" về bản nháp.`);
+      } else {
+        await archiveAdminProduct({ data: { accessToken, id: product.id } });
+        setMessage(`Đã ẩn "${product.name}".`);
+      }
+      await loadProducts();
+    } catch (error) { setMessage(error instanceof Error ? error.message : "Không thể cập nhật trạng thái sản phẩm."); }
     finally { setArchivingId(null); }
   }
 
