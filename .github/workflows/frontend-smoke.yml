@@ -27,8 +27,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-          cache-dependency-path: fashion-dream-try-on-main/package-lock.json
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
@@ -52,10 +50,13 @@ jobs:
           cat /tmp/wearo-vite.log
           exit 1
 
-      - name: Run route smoke tests
-        run: npm run test:smoke
+      - name: Run customer experience validation
+        run: npm run test:customer-experience
         env:
           BASE_URL: http://127.0.0.1:8080
+
+      - name: Run lint
+        run: npm run lint
 
       - name: Show server log on failure
         if: failure()
