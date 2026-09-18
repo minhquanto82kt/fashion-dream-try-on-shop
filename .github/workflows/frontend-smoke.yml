@@ -7,6 +7,9 @@ on:
       - feature/product-admin
   pull_request:
 
+permissions:
+  contents: write
+
 jobs:
   quality:
     runs-on: ubuntu-latest
@@ -24,13 +27,26 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: npm
-          cache-dependency-path: fashion-dream-try-on-main/package-lock.json
 
       - name: Verify npm runtime
         run: |
           node --version
           npm --version
+
+      - name: Bootstrap missing lockfile
+        if: github.event_name == 'push' && !hashFiles('fashion-dream-try-on-main/package-lock.json')
+        run: npm install --package-lock-only --legacy-peer-deps --no-audit --no-fund
+
+      - name: Persist generated lockfile
+        if: github.event_name == 'push' && hashFiles('fashion-dream-try-on-main/package-lock.json')
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add fashion-dream-try-on-main/package-lock.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(ci): persist npm lockfile"
+            git push origin HEAD:${GITHUB_REF_NAME}
+          fi
 
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
