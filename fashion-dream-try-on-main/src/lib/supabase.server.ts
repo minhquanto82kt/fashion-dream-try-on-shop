@@ -1,5 +1,3 @@
-import { PRODUCTS, type Product } from "@/data/products";
-
 type SupabaseConfig = {
   url: string;
   secretKey: string;
@@ -22,48 +20,15 @@ function getConfig(): SupabaseConfig {
   return { url, secretKey };
 }
 
-function toDbProduct(product: Product) {
-  return {
-    id: product.id,
-    name: product.name,
-    description: product.description,
-    price: product.price,
-    category: product.category,
-    image: product.image,
-    active: true,
-    status: "published",
-    featured: Boolean(product.badge),
-  };
-}
-
-function smokeVariants(product: Product) {
-  return product.sizes.flatMap((size) =>
-    product.colors.map((color) => ({
-      id: `${product.id}-${size}-${color}`.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-      product_id: product.id,
-      size,
-      color,
-      stock: 12,
-    })),
+async function smokeCatalogResponse<T>(path: string): Promise<T> {
+  const { SMOKE_PRODUCTS, SMOKE_VARIANTS, SMOKE_IMAGES } = await import(
+    "../../tests/fixtures/supabase-catalog"
   );
-}
-
-function smokeImages(product: Product) {
-  return product.gallery.map((image, index) => ({
-    id: `${product.id}-image-${index + 1}`,
-    product_id: product.id,
-    image_url: image,
-    sort_order: index,
-    is_primary: index === 0,
-  }));
-}
-
-function smokeCatalogResponse<T>(path: string): T {
   const [resource, query = ""] = path.split("?");
   const params = new URLSearchParams(query);
 
   if (resource === "products") {
-    let products = PRODUCTS.map(toDbProduct);
+    let products = [...SMOKE_PRODUCTS];
     const idFilter = params.get("id");
 
     if (idFilter?.startsWith("eq.")) {
@@ -84,20 +49,18 @@ function smokeCatalogResponse<T>(path: string): T {
 
   if (resource === "product_variants") {
     const productFilter = params.get("product_id");
-    const products = productFilter?.startsWith("eq.")
-      ? PRODUCTS.filter((product) => product.id === productFilter.slice(3))
-      : PRODUCTS;
-
-    return products.flatMap(smokeVariants) as T;
+    const variants = productFilter?.startsWith("eq.")
+      ? SMOKE_VARIANTS.filter((variant) => variant.product_id === productFilter.slice(3))
+      : SMOKE_VARIANTS;
+    return variants as T;
   }
 
   if (resource === "product_images") {
     const productFilter = params.get("product_id");
-    const products = productFilter?.startsWith("eq.")
-      ? PRODUCTS.filter((product) => product.id === productFilter.slice(3))
-      : PRODUCTS;
-
-    return products.flatMap(smokeImages) as T;
+    const images = productFilter?.startsWith("eq.")
+      ? SMOKE_IMAGES.filter((image) => image.product_id === productFilter.slice(3))
+      : SMOKE_IMAGES;
+    return images as T;
   }
 
   throw new Error(`CI smoke catalog does not support Supabase resource: ${resource}`);
