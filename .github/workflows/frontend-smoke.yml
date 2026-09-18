@@ -40,6 +40,9 @@ jobs:
       - name: Foundation architecture gate
         run: npm run test:foundation
 
+      - name: Visual preservation gate
+        run: node tests/foundation/visual-preservation.mjs
+
       - name: Start development server
         run: |
           npm run dev -- --host 127.0.0.1 --port 8080 > /tmp/wearo-vite.log 2>&1 &
