@@ -68,26 +68,26 @@ jobs:
         run: npm run security:secrets
 
       - name: Build
-        id: build
+        run: npm run build
+
+      - name: Typecheck generated route tree
+        id: typecheck
         continue-on-error: true
-        run: npm run build 2>&1 | tee /tmp/wearo-build.log
+        run: npm run typecheck 2>&1 | tee /tmp/wearo-typecheck.log
         shell: bash
 
-      - name: Upload build diagnostic
-        if: ${{ steps.build.outcome == 'failure' }}
+      - name: Upload typecheck diagnostic
+        if: ${{ steps.typecheck.outcome == 'failure' }}
         uses: actions/upload-artifact@v4
         with:
-          name: build-diagnostic
-          path: /tmp/wearo-build.log
+          name: typecheck-diagnostic
+          path: /tmp/wearo-typecheck.log
           if-no-files-found: error
           retention-days: 1
 
-      - name: Fail if build failed
-        if: ${{ steps.build.outcome == 'failure' }}
+      - name: Fail if typecheck failed
+        if: ${{ steps.typecheck.outcome == 'failure' }}
         run: exit 1
-
-      - name: Typecheck generated route tree
-        run: npm run typecheck
 
       - name: Start development server
         run: |
