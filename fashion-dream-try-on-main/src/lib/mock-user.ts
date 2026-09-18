@@ -1,10 +1,10 @@
 export type MockUserRole = "customer";
 
 export const MOCK_USER = {
-  id: "mock-user",
+  id: "preview-account-user",
   role: "customer" as const,
-  email: "mock-user@wearo.local",
-  name: "Mock User",
+  email: "preview@wearo.local",
+  name: "WEARO Preview User",
 } as const;
 
 const STORAGE_KEY = "wearo:mock-user-mode";
@@ -31,7 +31,7 @@ export function getMockUser() {
   return isMockUserMode() ? MOCK_USER : null;
 }
 
-/** URL flag is a routing hint only; sessionStorage is the authority. */
+/** URL flag is only a routing hint; the Admin-launched session remains authoritative. */
 export function isMockUserPreviewUrl(): boolean {
   if (typeof window === "undefined") return false;
   return new URLSearchParams(window.location.search).get(PREVIEW_PARAM) === "1";
