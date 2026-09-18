@@ -29,14 +29,20 @@ const openAiGatewayProvider: AiProvider = {
     let lastError: unknown;
     for (let attempt = 1; attempt <= MAX_PROVIDER_ATTEMPTS; attempt += 1) {
       try {
+        const prompt = input.images?.length
+          ? [
+              { type: "text" as const, text: input.prompt },
+              ...input.images.map((image) => ({ type: "image" as const, image })),
+            ]
+          : input.prompt;
         const result = await generateImage({
           model: OPENAI_IMAGE_MODEL,
-          prompt: input.prompt,
-          images: input.images?.length ? input.images : undefined,
+          prompt,
           n: 1,
         });
-        if (!result.image?.base64) throw new Error("AI provider returned no image.");
-        return { base64: result.image.base64, mediaType: result.image.mediaType };
+        const image = result.image;
+        if (!image?.base64) throw new Error("AI provider returned no image.");
+        return { base64: image.base64, mediaType: image.mediaType };
       } catch (error) {
         lastError = error;
         if (attempt >= MAX_PROVIDER_ATTEMPTS || !isRetryable(error)) break;
