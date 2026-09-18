@@ -8,7 +8,7 @@ on:
   pull_request:
 
 jobs:
-  smoke:
+  quality:
     runs-on: ubuntu-latest
     env:
       VITE_SUPABASE_URL: https://oazipcrbutizdncctkcg.supabase.co
@@ -24,6 +24,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache: npm
+          cache-dependency-path: fashion-dream-try-on-main/package-lock.json
 
       - name: Verify npm runtime
         run: |
@@ -31,7 +33,13 @@ jobs:
           npm --version
 
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
+
+      - name: Dependency audit
+        run: npm run audit:dependencies
+
+      - name: Secret exposure gate
+        run: npm run security:secrets
 
       - name: Typecheck
         run: npm run typecheck
@@ -47,9 +55,7 @@ jobs:
       - name: Wait for development server
         run: |
           for i in {1..60}; do
-            if curl -fsS http://127.0.0.1:8080/ >/dev/null; then
-              exit 0
-            fi
+            if curl -fsS http://127.0.0.1:8080/ >/dev/null; then exit 0; fi
             sleep 2
           done
           cat /tmp/wearo-vite.log
