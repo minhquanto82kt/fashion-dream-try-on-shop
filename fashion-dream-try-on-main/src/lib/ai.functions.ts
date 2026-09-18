@@ -16,10 +16,15 @@ type DbVariant = { size: string; color: string; stock: number };
 
 async function generateFashionImage(prompt: string, images: string[] = []): Promise<GeneratedImage> {
   try {
+    const imagePrompt = images.length
+      ? [
+          { type: "text" as const, text: prompt },
+          ...images.map((image) => ({ type: "image" as const, image })),
+        ]
+      : prompt;
     const result = await generateImage({
       model: CONCEPT_IMAGE_MODEL,
-      prompt,
-      images: images.length > 0 ? images : undefined,
+      prompt: imagePrompt,
       n: 1,
     });
     const image = result.image;
