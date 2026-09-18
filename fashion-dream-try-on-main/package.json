@@ -17,7 +17,8 @@
     "format": "prettier --write .",
     "test:smoke": "node tests/smoke/routes.mjs",
     "test:phase-b-c": "node tests/smoke/phase-b-c-invariants.mjs",
-    "test:customer-experience": "node tests/smoke/phase2-mock-user.mjs && node tests/smoke/routes.mjs && node tests/smoke/phase-b-c-invariants.mjs"
+    "test:phase-d-e": "node tests/smoke/phase-d-e-invariants.mjs",
+    "test:customer-experience": "node tests/smoke/phase2-mock-user.mjs && node tests/smoke/routes.mjs && node tests/smoke/phase-b-c-invariants.mjs && node tests/smoke/phase-d-e-invariants.mjs"
   },
   "overrides": {"rolldown": "1.2.1"},
   "dependencies": {
