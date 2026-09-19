@@ -15,6 +15,7 @@ from app.models.try_on import TryOnJob, TryOnRequest, TryOnStatus
 from app.services.fashn_provider import FashnProviderError
 from app.services.fashn_vton_provider import FashnVtonProviderError
 from app.services.try_on_job_service import TryOnJobService
+from app.services.try_on_reconciliation_service import TryOnReconciliationService
 from app.services.try_on_service import TryOnService
 from app.services.try_on_storage_service import TryOnStorageError, TryOnStorageService
 
@@ -22,6 +23,11 @@ router = APIRouter(prefix="/api/try-on", tags=["try-on"])
 job_service = TryOnJobService()
 provider_service = TryOnService()
 storage_service = TryOnStorageService()
+reconciliation_service = TryOnReconciliationService(
+    job_service,
+    provider_service,
+    storage_service,
+)
 
 
 @router.post("/jobs", response_model=TryOnJob, status_code=202)
@@ -72,7 +78,11 @@ def get_try_on_job(
     job_id: str,
     user: Annotated[dict[str, Any], Depends(get_current_user)],
 ) -> TryOnJob:
-    """Return the latest provider-backed state of a user's try-on job."""
+    """Return the latest state of a user's try-on job.
+
+    Provider reconciliation lives in a dedicated service so the same state
+    transition can later be invoked by a worker without moving HTTP logic.
+    """
 
     user_id = str(user["id"])
     context = job_service.get_job_context(job_id, user_id=user_id)
@@ -83,78 +93,11 @@ def get_try_on_job(
         )
 
     job = context.job
-    if job.status == TryOnStatus.COMPLETED:
-        return _with_signed_result(job)
-    if job.status == TryOnStatus.FAILED:
-        return job
+    if job.status in (TryOnStatus.COMPLETED, TryOnStatus.FAILED):
+        return _with_signed_result(job) if job.status == TryOnStatus.COMPLETED else job
 
-    prediction_id = context.metadata.get("provider_prediction_id")
-    if not isinstance(prediction_id, str) or not prediction_id.strip():
-        return job
-
-    try:
-        provider = provider_service.provider_for_name(job.provider)
-        payload = provider.get_status(prediction_id)
-    except ValueError as exc:
-        return _fail_job(job_id, user_id, str(exc))
-    except (FashnProviderError, FashnVtonProviderError) as exc:
-        failed = job_service.update_status(
-            job_id,
-            user_id=user_id,
-            status=TryOnStatus.FAILED,
-            error=str(exc),
-        )
-        if failed is not None:
-            return failed
-        raise HTTPException(status_code=502, detail=str(exc)) from exc
-
-    provider_status = str(payload.get("status", "")).strip().lower()
-    if not provider_status:
-        return _fail_job(job_id, user_id, "Try-On provider returned an invalid status payload")
-
-    mapped_status = {
-        "starting": TryOnStatus.PROCESSING,
-        "in_queue": TryOnStatus.PROCESSING,
-        "queued": TryOnStatus.QUEUED,
-        "processing": TryOnStatus.PROCESSING,
-        "completed": TryOnStatus.COMPLETED,
-        "failed": TryOnStatus.FAILED,
-        "canceled": TryOnStatus.FAILED,
-        "cancelled": TryOnStatus.FAILED,
-    }.get(provider_status)
-
-    if mapped_status is None:
-        return job
-
-    result_path = None
-    if mapped_status == TryOnStatus.COMPLETED:
-        output = payload.get("output")
-        if isinstance(output, list):
-            candidate = output[0] if output else None
-        else:
-            candidate = output
-        if isinstance(candidate, str) and candidate.strip():
-            try:
-                result_path = storage_service.persist_provider_result(job_id, candidate.strip())
-            except TryOnStorageError as exc:
-                return _fail_job(job_id, user_id, str(exc))
-        else:
-            return _fail_job(job_id, user_id, "Try-On provider completed without a valid output image")
-
-    error = payload.get("error") if mapped_status == TryOnStatus.FAILED else None
-    if mapped_status == TryOnStatus.FAILED and not error:
-        error = "Try-On provider prediction failed"
-
-    updated = job_service.update_status(
-        job_id,
-        user_id=user_id,
-        status=mapped_status,
-        result_image_path=result_path,
-        error=str(error) if error else None,
-    )
-    if updated is None:
-        return job
-    return _with_signed_result(updated) if mapped_status == TryOnStatus.COMPLETED else updated
+    job = reconciliation_service.refresh(context, user_id=user_id)
+    return _with_signed_result(job) if job.status == TryOnStatus.COMPLETED else job
 
 
 def _with_signed_result(job: TryOnJob) -> TryOnJob:
@@ -166,17 +109,3 @@ def _with_signed_result(job: TryOnJob) -> TryOnJob:
     except TryOnStorageError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
     return job.model_copy(update={"result_image_url": signed_url})
-
-
-def _fail_job(job_id: str, user_id: str, error: str) -> TryOnJob:
-    """Persist a provider validation failure and return the latest job."""
-
-    failed = job_service.update_status(
-        job_id,
-        user_id=user_id,
-        status=TryOnStatus.FAILED,
-        error=error,
-    )
-    if failed is not None:
-        return failed
-    raise HTTPException(status_code=502, detail=error)
