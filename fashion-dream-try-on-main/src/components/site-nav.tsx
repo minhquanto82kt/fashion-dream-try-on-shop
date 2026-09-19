@@ -1,77 +1,159 @@
 import { Link } from "@tanstack/react-router";
 import { Bell, ChevronDown, ChevronRight, CircleHelp, LogOut, Menu, Search, ShoppingBag, UserRound, X } from "lucide-react";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { CATEGORIES } from "@/data/products";
 import { useCart } from "@/lib/cart";
 import { getCustomerUser, signOutCustomer } from "@/lib/auth";
 import { useI18n } from "@/lib/i18n";
-import "@/styles/brand-easter-egg.css";
 import "@/styles/header-enhancements.css";
 
-const PRIMARY_LINKS = [{ to: "/ai", label: "AI Studio", beta: true }, { to: "/about", label: "About" }] as const;
 const DISCOVERY_LINKS = [
   { label: "New Arrivals", vi: "Hàng mới về", to: "/shop" },
   { label: "Collections", vi: "Bộ sưu tập", to: "/shop" },
   { label: "Best Sellers", vi: "Bán chạy", to: "/shop" },
 ] as const;
-const TOPBAR_TEXT_STYLE = { height: "72px", minHeight: "72px", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "13px", lineHeight: 1, fontWeight: 600, letterSpacing: ".13em" } as const;
+
+const TOPBAR_TEXT_STYLE = { height: "64px", minHeight: "64px", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "12px", lineHeight: 1, fontWeight: 650, letterSpacing: ".09em" } as const;
 
 export function SiteNav() {
   const { count } = useCart();
   const { language, toggleLanguage, t } = useI18n();
-  const [open, setOpen] = useState(false), [shopOpen, setShopOpen] = useState(false), [notificationOpen, setNotificationOpen] = useState(false), [notificationTab, setNotificationTab] = useState<"notifications" | "history">("notifications"), [searchOpen, setSearchOpen] = useState(false), [query, setQuery] = useState(""), [customerEmail, setCustomerEmail] = useState<string | null>(null), [brandTapCount, setBrandTapCount] = useState(0), [easterEggOpen, setEasterEggOpen] = useState(false);
-  const brandTapTimer = useRef<number | null>(null);
-  useEffect(() => { let mounted = true; const sync = async () => { const user = await getCustomerUser(); if (mounted) setCustomerEmail(user?.email ?? null); }; void sync(); const onLogin = () => void sync(); const onLogout = () => { setCustomerEmail(null); setNotificationOpen(false); }; window.addEventListener("upthink:auth:login", onLogin); window.addEventListener("upthink:auth:logout", onLogout); return () => { mounted = false; window.removeEventListener("upthink:auth:login", onLogin); window.removeEventListener("upthink:auth:logout", onLogout); }; }, []);
-  useEffect(() => { if (!easterEggOpen) return; const timer = window.setTimeout(() => setEasterEggOpen(false), 6500); return () => window.clearTimeout(timer); }, [easterEggOpen]);
-  useEffect(() => () => { if (brandTapTimer.current !== null) window.clearTimeout(brandTapTimer.current); }, []);
-  useEffect(() => { if (!searchOpen) return; const onKeyDown = (event: KeyboardEvent) => { if (event.key === "Escape") { setSearchOpen(false); setQuery(""); } }; window.addEventListener("keydown", onKeyDown); return () => window.removeEventListener("keydown", onKeyDown); }, [searchOpen]);
-  const handleBrandClick = (event: { preventDefault: () => void }) => { const next = brandTapCount + 1; if (brandTapTimer.current !== null) window.clearTimeout(brandTapTimer.current); if (next >= 5) { event.preventDefault(); setEasterEggOpen(true); setBrandTapCount(0); return; } setBrandTapCount(next); brandTapTimer.current = window.setTimeout(() => setBrandTapCount(0), 1200); };
-  const submitSearch = (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); const value = query.trim(); if (!value) return; window.location.href = `/shop?search=${encodeURIComponent(value)}`; setSearchOpen(false); setOpen(false); setShopOpen(false); setNotificationOpen(false); };
-  const closeMenus = () => { setOpen(false); setSearchOpen(false); setShopOpen(false); setNotificationOpen(false); };
-  const handleLogout = async () => { await signOutCustomer(); closeMenus(); };
-  const switchLanguage = () => { toggleLanguage(); window.setTimeout(() => window.location.reload(), 0); };
+  const [open, setOpen] = useState(false);
+  const [shopOpen, setShopOpen] = useState(false);
+  const [notificationOpen, setNotificationOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [notificationTab, setNotificationTab] = useState<"notifications" | "history">("notifications");
+  const [query, setQuery] = useState("");
+  const [customerEmail, setCustomerEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    const sync = async () => {
+      const user = await getCustomerUser();
+      if (mounted) setCustomerEmail(user?.email ?? null);
+    };
+    void sync();
+    const onLogin = () => void sync();
+    const onLogout = () => { setCustomerEmail(null); setNotificationOpen(false); };
+    window.addEventListener("upthink:auth:login", onLogin);
+    window.addEventListener("upthink:auth:logout", onLogout);
+    return () => {
+      mounted = false;
+      window.removeEventListener("upthink:auth:login", onLogin);
+      window.removeEventListener("upthink:auth:logout", onLogout);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!searchOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") { setSearchOpen(false); setQuery(""); }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [searchOpen]);
+
+  const closeMenus = () => {
+    setOpen(false);
+    setSearchOpen(false);
+    setShopOpen(false);
+    setNotificationOpen(false);
+  };
+
+  const submitSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const value = query.trim();
+    if (!value) return;
+    window.location.href = `/shop?search=${encodeURIComponent(value)}`;
+    closeMenus();
+  };
+
+  const handleLogout = async () => {
+    await signOutCustomer();
+    closeMenus();
+  };
+
+  const switchLanguage = () => {
+    toggleLanguage();
+    window.setTimeout(() => window.location.reload(), 0);
+  };
+
+  const toggleSearch = () => {
+    setSearchOpen((value) => !value);
+    setOpen(false);
+    setShopOpen(false);
+    setNotificationOpen(false);
+  };
 
   return <nav className="fashion-nav" aria-label={t("Điều hướng chính", "Main navigation")}>
-    <div className="fashion-nav__announcement" role="status"><span>WEARO / 2026</span><span>{t("MIỄN PHÍ VẬN CHUYỂN — ĐƠN TỪ 700K", "FREE SHIPPING — ORDERS FROM 700K")}</span><span>AI VIRTUAL TRY-ON / BETA</span></div>
+    <div className="fashion-nav__announcement" role="status">
+      <span>WEARO / 2026</span>
+      <span>{t("MIỄN PHÍ VẬN CHUYỂN — ĐƠN TỪ 700K", "FREE SHIPPING — ORDERS FROM 700K")}</span>
+      <span>AI VIRTUAL TRY-ON / BETA</span>
+    </div>
+
     <div className="fashion-nav__inner">
-      <Link to="/" className="fashion-brand" aria-label="WEARO home" onClick={handleBrandClick}><span className="fashion-brand__mark">W</span><span className="fashion-brand__copy"><span className="fashion-brand__name">WEARO<span>.</span></span><span className="fashion-brand__meta">AI FASHION / 2026</span></span></Link>
+      <Link to="/" className="fashion-brand" aria-label="WEARO home" onClick={closeMenus}>
+        <span className="fashion-brand__mark" aria-hidden="true">W</span>
+        <span className="fashion-brand__copy">
+          <span className="fashion-brand__name">WEARO<span>.</span></span>
+          <span className="fashion-brand__meta">MODERN EVERYDAY / 2026</span>
+        </span>
+      </Link>
+
       <div className="fashion-nav__links" aria-label={t("Điều hướng trang chính", "Primary navigation")}>
-        <div className={`fashion-shop-nav ${shopOpen ? "is-open" : ""}`} style={{ height: "72px", display: "flex", alignItems: "center", position: "relative", zIndex: 103 }} onMouseEnter={() => setShopOpen(true)} onMouseLeave={() => setShopOpen(false)} onFocusCapture={() => setShopOpen(true)}>
-          <Link to="/shop" className="fashion-nav-link fashion-shop-trigger" aria-expanded={shopOpen} aria-haspopup="true" onClick={() => { setSearchOpen(false); setOpen(false); setNotificationOpen(false); }} style={{ ...TOPBAR_TEXT_STYLE, position: "relative", zIndex: 104, color: "var(--foreground)", opacity: 1, visibility: "visible" }} activeProps={{ className: "fashion-nav-link fashion-shop-trigger is-active" }}>
-            <span>{t("Cửa hàng", "Shop")}</span><ChevronDown size={16} strokeWidth={2} aria-hidden="true" />
+        <div className={`fashion-shop-nav ${shopOpen ? "is-open" : ""}`} onMouseEnter={() => setShopOpen(true)} onMouseLeave={() => setShopOpen(false)}>
+          <Link to="/shop" className="fashion-nav-link fashion-shop-trigger" aria-expanded={shopOpen} aria-haspopup="true" onClick={() => { setSearchOpen(false); setOpen(false); setNotificationOpen(false); }} style={TOPBAR_TEXT_STYLE} activeProps={{ className: "fashion-nav-link fashion-shop-trigger is-active" }}>
+            <span>{t("Cửa hàng", "Shop")}</span><ChevronDown size={15} strokeWidth={2} aria-hidden="true" />
           </Link>
-          {shopOpen && <div className="fashion-shop-mega" role="dialog" aria-label={t("Danh mục sản phẩm", "Shop categories")} style={{ position: "fixed", top: "96px", left: "50%", right: "auto", width: "min(980px, calc(100vw - 48px))", maxWidth: "980px", maxHeight: "calc(100vh - 120px)", overflow: "auto", transform: "translateX(-50%)", boxSizing: "border-box", zIndex: 100 }}>
-            <div className="fashion-shop-mega__intro"><span className="fashion-menu-kicker">COLLECTION / 2026</span><h2>{t("Mua theo danh mục", "Shop by category")}</h2><Link to="/shop" onClick={closeMenus} className="fashion-shop-all">{t("Xem tất cả sản phẩm", "View all products")} <ChevronRight size={15} aria-hidden="true" /></Link></div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "8px", marginBottom: "18px" }}>{DISCOVERY_LINKS.map((link) => <Link key={link.label} to={link.to} onClick={closeMenus} className="fashion-shop-all" style={{ justifyContent: "space-between", border: "1px solid var(--border)", padding: "12px 14px" }}><span>{t(link.vi, link.label)}</span><ChevronRight size={15} aria-hidden="true" /></Link>)}</div>
-            <div className="fashion-shop-category-grid">{CATEGORIES.map(category => <Link key={category.slug} to="/shop" search={{ category: category.slug }} onClick={closeMenus} className="fashion-shop-category"><span className="fashion-shop-category__image"><img src={category.image} alt="" loading="lazy" /></span><span className="fashion-shop-category__meta"><strong>{category.name}</strong><span>{t("Khám phá danh mục", "Explore category")}</span></span><ChevronRight size={15} aria-hidden="true" /></Link>)}</div>
+          {shopOpen && <div className="fashion-shop-mega" role="dialog" aria-label={t("Danh mục sản phẩm", "Shop categories")}>
+            <div className="fashion-shop-mega__intro">
+              <span className="fashion-menu-kicker">WEARO / COLLECTIONS</span>
+              <h2>{t("Mua theo phong cách", "Shop your style")}</h2>
+              <Link to="/shop" onClick={closeMenus} className="fashion-shop-all">{t("Xem tất cả sản phẩm", "View all products")} <ChevronRight size={15} /></Link>
+            </div>
+            <div className="fashion-shop-discovery-grid">
+              {DISCOVERY_LINKS.map((link) => <Link key={link.label} to={link.to} onClick={closeMenus} className="fashion-shop-all"><span>{t(link.vi, link.label)}</span><ChevronRight size={15} /></Link>)}
+            </div>
+            <div className="fashion-shop-category-grid">
+              {CATEGORIES.map((category) => <Link key={category.slug} to="/shop" search={{ category: category.slug }} onClick={closeMenus} className="fashion-shop-category"><span className="fashion-shop-category__image"><img src={category.image} alt="" loading="lazy" /></span><span className="fashion-shop-category__meta"><strong>{category.name}</strong><span>{t("Khám phá danh mục", "Explore category")}</span></span><ChevronRight size={15} aria-hidden="true" /></Link>)}
+            </div>
           </div>}
         </div>
-        <div className={`fashion-notification-nav ${notificationOpen ? "is-open" : ""}`} style={{ height: "72px", display: "flex", alignItems: "center", position: "relative", zIndex: 102 }} onMouseEnter={() => setNotificationOpen(true)} onMouseLeave={() => setNotificationOpen(false)} onFocusCapture={() => setNotificationOpen(true)}>
-          <button type="button" className="fashion-discovery-link" aria-haspopup="dialog" aria-expanded={notificationOpen} onClick={() => { setNotificationOpen((value) => !value); setShopOpen(false); setSearchOpen(false); setOpen(false); }}>{t("Thông báo", "Notifications")}</button>
-          {notificationOpen && <div role="dialog" aria-label={t("Trung tâm thông báo", "Notification center")} style={{ position: "fixed", top: "96px", left: "50%", transform: "translateX(-50%)", width: "min(620px, calc(100vw - 32px))", zIndex: 100, border: "1px solid var(--border)", background: "var(--card)", boxShadow: "0 24px 60px rgba(0,0,0,.32)" }}>
-            {!customerEmail ? <div style={{ padding: "30px" }}><span className="fashion-menu-kicker">MEMBER / ACCESS</span><h2 style={{ marginTop: "8px", fontSize: "28px" }}>{t("Đăng nhập để sử dụng", "Sign in to continue")}</h2><p style={{ marginTop: "10px", color: "var(--muted-foreground)", lineHeight: 1.7, fontSize: "13px" }}>{t("Thông báo và lịch sử mua hàng là không gian riêng của thành viên WEARO. Hãy đăng ký hoặc đăng nhập để xem.", "Notifications and purchase history are available to signed-in WEARO members.")}</p><Link to="/account" onClick={closeMenus} style={{ marginTop: "20px", display: "inline-flex", minHeight: "44px", alignItems: "center", background: "var(--primary)", color: "var(--primary-foreground)", padding: "0 20px", fontSize: "11px", textTransform: "uppercase", letterSpacing: ".14em" }}>{t("Đăng nhập / Đăng ký", "Sign in / Register")}</Link></div> : <div style={{ padding: "18px" }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px", padding: "4px 4px 14px" }}><div><span className="fashion-menu-kicker">WEARO / MEMBER CENTER</span><h2 style={{ marginTop: "6px", fontSize: "24px" }}>{t("Trung tâm cá nhân", "Member center")}</h2></div><Bell size={21} aria-hidden="true" /></div>
-              <div role="tablist" aria-label={t("Thông báo và lịch sử mua hàng", "Notifications and purchase history")} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
-                <button type="button" role="tab" aria-selected={notificationTab === "notifications"} onClick={() => setNotificationTab("notifications")} style={{ position: "relative", padding: "13px 10px", border: 0, background: "transparent", color: notificationTab === "notifications" ? "var(--foreground)" : "var(--muted-foreground)", fontSize: "10px", fontWeight: 800, letterSpacing: ".14em", textTransform: "uppercase", cursor: "pointer" }}>{t("Thông báo", "Notifications")}{notificationTab === "notifications" && <span style={{ position: "absolute", left: 0, right: 0, bottom: -1, height: "2px", background: "var(--primary)" }} />}</button>
-                <button type="button" role="tab" aria-selected={notificationTab === "history"} onClick={() => setNotificationTab("history")} style={{ position: "relative", padding: "13px 10px", border: 0, background: "transparent", color: notificationTab === "history" ? "var(--foreground)" : "var(--muted-foreground)", fontSize: "10px", fontWeight: 800, letterSpacing: ".14em", textTransform: "uppercase", cursor: "pointer" }}>{t("Lịch sử mua hàng", "Purchase history")}{notificationTab === "history" && <span style={{ position: "absolute", left: 0, right: 0, bottom: -1, height: "2px", background: "var(--primary)" }} />}</button>
-              </div>
-              {notificationTab === "notifications" ? <div style={{ padding: "22px 4px 10px" }}><div style={{ display: "grid", gridTemplateColumns: "72px minmax(0,1fr)", gap: "14px", alignItems: "center", padding: "12px", border: "1px solid var(--border)", background: "var(--background)" }}><div style={{ width: "72px", height: "72px", display: "grid", placeItems: "center", border: "1px solid var(--border)", background: "var(--card)" }}><Bell size={22} /></div><div><span className="fashion-menu-kicker">WEARO / ACCOUNT</span><strong style={{ display: "block", marginTop: "5px", fontSize: "14px" }}>{t("Chào mừng bạn trở lại", "Welcome back")}</strong><p style={{ marginTop: "5px", fontSize: "12px", lineHeight: 1.6, color: "var(--muted-foreground)" }}>{t("Thông báo cập nhật đơn hàng và các hoạt động tài khoản sẽ xuất hiện tại đây.", "Order updates and account activity will appear here.")}</p></div></div><Link to="/account" onClick={closeMenus} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "12px", padding: "12px 4px", color: "var(--primary)", fontSize: "10px", textTransform: "uppercase", letterSpacing: ".13em" }}>{t("Quản lý tài khoản", "Manage account")}<ChevronRight size={15} /></Link></div> : <div style={{ padding: "22px 4px 10px" }}><div style={{ display: "grid", gridTemplateColumns: "72px minmax(0,1fr)", gap: "14px", alignItems: "center", padding: "12px", border: "1px solid var(--border)", background: "var(--background)" }}><div style={{ width: "72px", height: "72px", display: "grid", placeItems: "center", border: "1px solid var(--border)", background: "var(--card)" }}><ShoppingBag size={22} /></div><div><span className="fashion-menu-kicker">WEARO / PURCHASES</span><strong style={{ display: "block", marginTop: "5px", fontSize: "14px" }}>{t("Lịch sử đơn hàng", "Order history")}</strong><p style={{ marginTop: "5px", fontSize: "12px", lineHeight: 1.6, color: "var(--muted-foreground)" }}>{t("Xem toàn bộ đơn hàng trong không gian tài khoản của bạn.", "View your orders in your account space.")}</p></div></div><Link to="/account" onClick={closeMenus} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "12px", padding: "12px 4px", color: "var(--primary)", fontSize: "10px", textTransform: "uppercase", letterSpacing: ".13em" }}>{t("Mở tài khoản / lịch sử", "Open account / history")}<ChevronRight size={15} /></Link></div>}
-            </div>}
-          </div>}
-        </div>
-        {PRIMARY_LINKS.map(link => "beta" in link && link.beta ? <Link key={link.to} to={link.to} className="fashion-ai-nav" activeProps={{ className: "fashion-ai-nav is-active" }} aria-label="AI Studio — Beta"><span className="fashion-ai-nav__label">AI Studio</span><span className="fashion-ai-nav__beta">BETA</span></Link> : <Link key={link.to} to={link.to} activeProps={{ className: "is-active" }} style={TOPBAR_TEXT_STYLE}>{link.label === "About" ? t("Giới thiệu", "About") : link.label}</Link>)}
+        <Link to="/ai" className="fashion-ai-nav" activeProps={{ className: "fashion-ai-nav is-active" }} aria-label="AI Studio — Beta" style={TOPBAR_TEXT_STYLE}><span className="fashion-ai-nav__label">AI Studio</span><span className="fashion-ai-nav__beta">BETA</span></Link>
+        <Link to="/about" className="fashion-nav-link" activeProps={{ className: "fashion-nav-link is-active" }} style={TOPBAR_TEXT_STYLE}>{t("Giới thiệu", "About")}</Link>
       </div>
+
       <div className="fashion-nav__actions">
-        <button type="button" className={`fashion-icon-btn fashion-search-toggle ${searchOpen ? "is-active" : ""}`} aria-label={searchOpen ? t("Đóng tìm kiếm", "Close search") : t("Tìm kiếm sản phẩm", "Search products")} aria-expanded={searchOpen} onClick={() => { setSearchOpen(v => !v); setOpen(false); setShopOpen(false); setNotificationOpen(false); }}>{searchOpen ? <X size={21} strokeWidth={2} /> : <Search size={21} strokeWidth={2} />}</button>
-        <Link to="/account" className="fashion-icon-btn fashion-account-btn" aria-label={customerEmail ? `${t("Tài khoản", "Account")} ${customerEmail}` : t("Tài khoản", "Account")} title={customerEmail ?? t("Tài khoản", "Account")}><UserRound size={21} strokeWidth={2} /></Link>
-        <Link to="/cart" className="fashion-cart-btn" aria-label={t("Giỏ hàng", "Cart")}><ShoppingBag size={21} strokeWidth={2} />{count > 0 && <span>{count}</span>}</Link>
-        {customerEmail && <button type="button" className="fashion-icon-btn fashion-logout-btn" aria-label={t("Đăng xuất", "Log out")} title={t("Đăng xuất", "Log out")} onClick={() => void handleLogout()}><LogOut size={20} strokeWidth={2} /></button>}
+        <button type="button" className={`fashion-icon-btn fashion-search-toggle ${searchOpen ? "is-active" : ""}`} aria-label={searchOpen ? t("Đóng tìm kiếm", "Close search") : t("Tìm kiếm sản phẩm", "Search products")} aria-expanded={searchOpen} onClick={toggleSearch}>{searchOpen ? <X size={20} /> : <Search size={20} />}</button>
+        <button type="button" className={`fashion-icon-btn ${notificationOpen ? "is-active" : ""}`} aria-label={t("Thông báo", "Notifications")} aria-expanded={notificationOpen} onClick={() => { setNotificationOpen((value) => !value); setSearchOpen(false); setShopOpen(false); setOpen(false); }}><Bell size={20} /></button>
+        <Link to="/account" className="fashion-icon-btn fashion-account-btn" aria-label={customerEmail ? `${t("Tài khoản", "Account")} ${customerEmail}` : t("Tài khoản", "Account")}><UserRound size={20} /></Link>
+        <Link to="/cart" className="fashion-cart-btn" aria-label={t("Giỏ hàng", "Cart")}><ShoppingBag size={20} />{count > 0 && <span>{count}</span>}</Link>
+        {customerEmail && <button type="button" className="fashion-icon-btn fashion-logout-btn" aria-label={t("Đăng xuất", "Log out")} onClick={() => void handleLogout()}><LogOut size={19} /></button>}
         <button type="button" className="fashion-language-switcher" aria-label={t("Chuyển sang tiếng Anh", "Switch to Vietnamese")} onClick={switchLanguage}><span className={language === "vi" ? "is-active" : ""}>VI</span><span aria-hidden="true">|</span><span className={language === "en" ? "is-active" : ""}>EN</span></button>
-        <button type="button" className={`fashion-mobile-btn ${open ? "is-active" : ""}`} aria-label={open ? t("Đóng menu", "Close menu") : t("Mở menu", "Open menu")} aria-expanded={open} onClick={() => { setOpen(v => !v); setSearchOpen(false); setShopOpen(false); setNotificationOpen(false); }}>{open ? <X size={23} strokeWidth={2} /> : <Menu size={23} strokeWidth={2} />}</button>
+        <button type="button" className={`fashion-mobile-btn ${open ? "is-active" : ""}`} aria-label={open ? t("Đóng menu", "Close menu") : t("Mở menu", "Open menu")} aria-expanded={open} onClick={() => { setOpen((value) => !value); setSearchOpen(false); setShopOpen(false); setNotificationOpen(false); }}>{open ? <X size={22} /> : <Menu size={22} />}</button>
       </div>
     </div>
-    {easterEggOpen && <button type="button" className="wearo-easter-egg" aria-label={t("Đóng system signature", "Close system signature")} onClick={() => setEasterEggOpen(false)}><span className="wearo-easter-egg__grid" aria-hidden="true" /><span className="wearo-easter-egg__panel"><span className="wearo-easter-egg__eyebrow">WEARO / SYSTEM 02</span><strong>UPTHINK</strong><span className="wearo-easter-egg__rule" /><span>ORIGINAL SYSTEM</span><span>IUH — SAIGON / 2026</span><span className="wearo-easter-egg__status">SYS 02 // ONLINE</span></span></button>}
-    {searchOpen && <div className="fashion-search-panel" role="dialog" aria-label={t("Tìm kiếm nhanh", "Quick search")}><div className="fashion-search-panel__header"><div><span className="fashion-menu-kicker">SEARCH / 2026</span><h2>{t("Tìm kiếm", "Search")}</h2></div><button type="button" className="fashion-icon-btn" onClick={() => { setSearchOpen(false); setQuery(""); }} aria-label={t("Đóng tìm kiếm", "Close search")}><X size={18} /></button></div><form onSubmit={submitSearch} className="fashion-search-form"><label htmlFor="site-search" className="sr-only">{t("Tìm kiếm sản phẩm", "Search products")}</label><Search size={18} aria-hidden="true" /><input id="site-search" type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder={t("Tìm sản phẩm, phong cách...", "Search products, styles...")} autoFocus /><button type="submit" disabled={!query.trim()}>{t("Tìm", "Search")}</button></form><div className="fashion-search-panel__body"><div><span className="fashion-menu-label">01 / QUICK ACCESS</span><div className="fashion-search-links"><Link to="/shop" onClick={closeMenus}><span>{t("Tất cả sản phẩm", "All products")}</span><ChevronRight size={15} /></Link><Link to="/ai" onClick={closeMenus}><span>AI Studio</span><ChevronRight size={15} /></Link><Link to="/account" onClick={closeMenus}><span>{t("Tài khoản", "My Account")}</span><ChevronRight size={15} /></Link></div></div><div><span className="fashion-menu-label">02 / CATEGORIES</span><div className="fashion-search-tags">{CATEGORIES.map(category => <Link key={category.slug} to="/shop" search={{ category: category.slug }} onClick={closeMenus}>{category.name}</Link>)}</div></div></div><div className="fashion-search-hint"><span>{t("Enter để tìm · Esc để đóng", "Enter to search · Esc to close")}</span><span>WEARO / SEARCH</span></div></div>}
-    {open && <div className="fashion-mobile-menu" role="dialog" aria-label="WEARO menu"><div className="fashion-menu-header"><div><span className="fashion-menu-kicker">WEARO / NAVIGATION</span><h2>{t("Khám phá", "Discover")}</h2></div><span className="fashion-menu-status">SYS 02 // ONLINE</span></div><div className="fashion-menu-grid"><section className="fashion-menu-section"><span className="fashion-menu-label">01 / EXPLORE</span><Link to="/shop" onClick={closeMenus}><span><strong>{t("Cửa hàng", "Shop")}</strong><small>{t("Xem bộ sưu tập", "Browse the collection")}</small></span><ChevronRight size={17} /></Link><Link to="/ai" onClick={closeMenus}><span><strong>AI Studio</strong><small>{t("Thử đồ AI và thử nghiệm phong cách", "AI try-on and style experimentation")}</small></span><ChevronRight size={17} /></Link><button type="button" onClick={() => { if (!customerEmail) { setOpen(false); window.location.assign("/account"); return; } setOpen(false); setNotificationOpen(true); }}><span><strong>{t("Thông báo", "Notifications")}</strong><small>{t("Thông báo và lịch sử mua hàng", "Notifications and purchase history")}</small></span><Bell size={17} /></button></section><section className="fashion-menu-section"><span className="fashion-menu-label">02 / YOUR SPACE</span><Link to="/account" onClick={closeMenus}><span><strong>{t("Tài khoản", "My Account")}</strong><small>{t("Hồ sơ, wishlist và tùy chọn", "Profile, wishlist and preferences")}</small></span><ChevronRight size={17} /></Link><Link to="/cart" onClick={closeMenus}><span><strong>{t("Giỏ hàng", "Cart")}</strong><small>{t("Cart / Checkout", "Cart / Checkout")}</small></span><ChevronRight size={17} /></Link></section><section className="fashion-menu-section fashion-menu-section--info"><span className="fashion-menu-label">03 / INFORMATION</span><Link to="/about" onClick={closeMenus}><span><strong>{t("Về WEARO", "About WEARO")}</strong></span><ChevronRight size={17} /></Link><Link to="/about" onClick={closeMenus}><span><strong>{t("Cách hoạt động", "How It Works")}</strong></span><ChevronRight size={17} /></Link><button type="button" onClick={() => { setOpen(false); setSearchOpen(true); }}><span><Search size={15} /><strong>{t("Tìm kiếm", "Search")}</strong></span><ChevronRight size={17} /></button><Link to="/about" onClick={closeMenus}><span><CircleHelp size={15} /><strong>FAQ / Support</strong></span><ChevronRight size={17} /></Link></section></div><div className="fashion-menu-footer"><span>WEARO / AI FASHION — 2026</span><span>SYS 02 // ONLINE</span></div></div>}
+
+    {notificationOpen && <div className="wearo-nav-popover" role="dialog" aria-label={t("Trung tâm thông báo", "Notification center")}>
+      {!customerEmail ? <div className="wearo-nav-popover__empty"><span className="fashion-menu-kicker">WEARO / MEMBER</span><h2>{t("Không gian cá nhân của bạn", "Your personal space")}</h2><p>{t("Đăng nhập để xem thông báo, đơn hàng và các hoạt động tài khoản.", "Sign in to view notifications, orders and account activity.")}</p><Link to="/account" onClick={closeMenus} className="fashion-btn">{t("Đăng nhập / Đăng ký", "Sign in / Register")}</Link></div> : <div className="wearo-nav-popover__member"><div className="wearo-nav-popover__header"><div><span className="fashion-menu-kicker">WEARO / MEMBER CENTER</span><h2>{t("Trung tâm cá nhân", "Member center")}</h2></div><Bell size={20} /></div><div className="wearo-nav-tabs"><button type="button" className={notificationTab === "notifications" ? "is-active" : ""} onClick={() => setNotificationTab("notifications")}>{t("Thông báo", "Notifications")}</button><button type="button" className={notificationTab === "history" ? "is-active" : ""} onClick={() => setNotificationTab("history")}>{t("Đơn hàng", "Orders")}</button></div><div className="wearo-nav-popover__card">{notificationTab === "notifications" ? <><strong>{t("Chào mừng bạn trở lại", "Welcome back")}</strong><p>{t("Cập nhật đơn hàng và hoạt động tài khoản sẽ xuất hiện tại đây.", "Order updates and account activity will appear here.")}</p></> : <><strong>{t("Lịch sử đơn hàng", "Order history")}</strong><p>{t("Xem và quản lý đơn hàng trong tài khoản WEARO.", "View and manage your orders in your WEARO account.")}</p></>}</div><Link to="/account" onClick={closeMenus} className="wearo-nav-popover__link">{t("Mở tài khoản", "Open account")} <ChevronRight size={15} /></Link></div>}
+    </div>}
+
+    {searchOpen && <div className="fashion-search-panel" role="dialog" aria-label={t("Tìm kiếm nhanh", "Quick search")}>
+      <div className="fashion-search-panel__header"><div><span className="fashion-menu-kicker">WEARO / SEARCH</span><h2>{t("Tìm sản phẩm", "Find your style")}</h2></div><button type="button" className="fashion-icon-btn" onClick={() => { setSearchOpen(false); setQuery(""); }} aria-label={t("Đóng tìm kiếm", "Close search")}><X size={18} /></button></div>
+      <form onSubmit={submitSearch} className="fashion-search-form"><label htmlFor="site-search" className="sr-only">{t("Tìm kiếm sản phẩm", "Search products")}</label><Search size={18} aria-hidden="true" /><input id="site-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t("Tìm sản phẩm, phong cách...", "Search products, styles...")} autoFocus /><button type="submit" disabled={!query.trim()}>{t("Tìm", "Search")}</button></form>
+      <div className="fashion-search-panel__body"><div><span className="fashion-menu-label">01 / QUICK ACCESS</span><div className="fashion-search-links"><Link to="/shop" onClick={closeMenus}><span>{t("Tất cả sản phẩm", "All products")}</span><ChevronRight size={15} /></Link><Link to="/ai" onClick={closeMenus}><span>AI Studio</span><ChevronRight size={15} /></Link><Link to="/account" onClick={closeMenus}><span>{t("Tài khoản", "My Account")}</span><ChevronRight size={15} /></Link></div></div><div><span className="fashion-menu-label">02 / CATEGORIES</span><div className="fashion-search-tags">{CATEGORIES.map((category) => <Link key={category.slug} to="/shop" search={{ category: category.slug }} onClick={closeMenus}>{category.name}</Link>)}</div></div></div>
+      <div className="fashion-search-hint"><span>{t("Enter để tìm · Esc để đóng", "Enter to search · Esc to close")}</span><span>WEARO / SEARCH</span></div>
+    </div>}
+
+    {open && <div className="fashion-mobile-menu" role="dialog" aria-label="WEARO menu">
+      <div className="fashion-menu-header"><div><span className="fashion-menu-kicker">WEARO / NAVIGATION</span><h2>{t("Khám phá", "Discover")}</h2></div><span className="fashion-menu-status">MODERN EVERYDAY</span></div>
+      <div className="fashion-menu-grid">
+        <section className="fashion-menu-section"><span className="fashion-menu-label">01 / SHOP</span><Link to="/shop" onClick={closeMenus}><span><strong>{t("Cửa hàng", "Shop")}</strong><small>{t("Khám phá bộ sưu tập", "Browse the collection")}</small></span><ChevronRight size={17} /></Link><Link to="/ai" onClick={closeMenus}><span><strong>AI Studio</strong><small>{t("Thử đồ ảo và khám phá phong cách", "Virtual try-on and style discovery")}</small></span><ChevronRight size={17} /></Link></section>
+        <section className="fashion-menu-section"><span className="fashion-menu-label">02 / YOUR SPACE</span><Link to="/account" onClick={closeMenus}><span><strong>{t("Tài khoản", "My Account")}</strong><small>{t("Hồ sơ, wishlist và đơn hàng", "Profile, wishlist and orders")}</small></span><ChevronRight size={17} /></Link><Link to="/cart" onClick={closeMenus}><span><strong>{t("Giỏ hàng", "Cart")}</strong><small>{t("Kiểm tra sản phẩm đã chọn", "Review selected items")}</small></span><ChevronRight size={17} /></Link></section>
+        <section className="fashion-menu-section fashion-menu-section--info"><span className="fashion-menu-label">03 / INFORMATION</span><Link to="/about" onClick={closeMenus}><span><strong>{t("Về WEARO", "About WEARO")}</strong></span><ChevronRight size={17} /></Link><button type="button" onClick={() => { setOpen(false); setSearchOpen(true); }}><span><Search size={15} /><strong>{t("Tìm kiếm", "Search")}</strong></span><ChevronRight size={17} /></button><Link to="/about#support" onClick={closeMenus}><span><CircleHelp size={15} /><strong>FAQ / Support</strong></span><ChevronRight size={17} /></Link></section>
+      </div>
+      <div className="fashion-menu-footer"><span>WEARO / MODERN EVERYDAY</span><span>SAIGON — 2026</span></div>
+    </div>}
   </nav>;
 }
