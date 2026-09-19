@@ -4,6 +4,7 @@ from typing import Annotated, Any
 
 from fastapi import Depends, Header, HTTPException, status
 
+from app.db.supabase import get_supabase_client
 from app.services.auth_service import AuthenticationError, get_authenticated_user
 
 
@@ -26,3 +27,25 @@ def get_current_user(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=str(exc),
         ) from exc
+
+
+def get_current_admin(
+    user: Annotated[dict[str, Any], Depends(get_current_user)],
+) -> dict[str, Any]:
+    """Return the authenticated user when they are registered as an admin."""
+
+    user_id = str(user["id"])
+    response = (
+        get_supabase_client()
+        .table("admin_users")
+        .select("user_id")
+        .eq("user_id", user_id)
+        .limit(1)
+        .execute()
+    )
+    if not response.data:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin access required",
+        )
+    return user
