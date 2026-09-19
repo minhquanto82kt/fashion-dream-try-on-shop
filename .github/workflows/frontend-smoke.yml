@@ -62,8 +62,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: typecheck-diagnostic
-          path: fashion-dream-try-on-main/.wearo-typecheck.log
-          if-no-files-found: warn
+          path: /tmp/wearo-typecheck.log
+          if-no-files-found: error
           retention-days: 1
       - name: Fail if typecheck failed
         if: ${{ steps.typecheck.outcome == 'failure' }}
