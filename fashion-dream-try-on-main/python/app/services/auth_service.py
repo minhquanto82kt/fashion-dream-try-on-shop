@@ -1,5 +1,6 @@
 """Supabase Auth token verification for the Python backend."""
 
+from functools import lru_cache
 from typing import Any
 
 import httpx
@@ -9,6 +10,13 @@ from app.core.config import get_settings
 
 class AuthenticationError(Exception):
     """Raised when a Supabase access token cannot be verified."""
+
+
+@lru_cache(maxsize=1)
+def _get_auth_client() -> httpx.Client:
+    """Reuse an HTTP client across warm serverless invocations."""
+
+    return httpx.Client(timeout=httpx.Timeout(5.0, connect=2.0))
 
 
 def get_authenticated_user(access_token: str) -> dict[str, Any]:
@@ -23,13 +31,12 @@ def get_authenticated_user(access_token: str) -> dict[str, Any]:
         raise AuthenticationError("Supabase authentication is not configured")
 
     try:
-        response = httpx.get(
+        response = _get_auth_client().get(
             f"{settings.supabase_url.rstrip('/')}/auth/v1/user",
             headers={
                 "apikey": settings.supabase_service_role_key,
                 "Authorization": f"Bearer {token}",
             },
-            timeout=10.0,
         )
     except httpx.HTTPError as exc:
         raise AuthenticationError("Unable to reach Supabase Auth") from exc
