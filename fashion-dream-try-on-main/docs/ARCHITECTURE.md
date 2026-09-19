@@ -1,59 +1,71 @@
-# Architecture
+# WEARO — Architecture & Ownership Map
 
-## Purpose
+> Bản đồ ngắn gọn để mọi thay đổi mới đi đúng layer và không phá các luồng đang chạy.
 
-Canonical architecture reference for Fashion Dream Try-On Shop.
+## Product boundary
 
-## System
+```text
+UPTHINK — internal control layer
+    ├── Admin / CMS
+    ├── Product management
+    ├── Inventory
+    ├── Orders / operational controls
+    ├── Appearance / content controls
+    └── AI configuration
 
-`Browser/UI → Routes/Components → Data/API Layer → Supabase or External Provider`
+WEARO — customer-facing brand
+    ├── Storefront
+    ├── Product discovery
+    ├── Cart / checkout
+    ├── AI Studio
+    └── Virtual Try-On
+```
 
-Server-side operations must remain on the server when they require secrets or privileged access.
+UpThink và WEARO là quan hệ **operator → brand**.
 
-## Current Application Areas
+## Runtime layers
 
-- Homepage: `/`
-- Catalogue: `/shop`
-- Product detail: `/product/$id`
-- AI Try-On: `/ai`
-- Cart: `/cart`
-- Checkout: `/checkout`
-- Admin: `/admin`
-- Admin Products: `/admin/products`
-- Admin Orders: `/admin/orders`
+```text
+UI / Routes
+    ↓
+Components + Hooks
+    ↓
+Domain / lib functions
+    ↓
+Supabase client / server functions
+    ↓
+Supabase PostgreSQL + RLS
+    ↓
+Storage / external AI providers
+```
 
-## Data Source of Truth
+Vercel là deployment/runtime layer; GitHub là source-of-truth của code.
 
-Supabase is the source of truth for database-backed application data.
+## Data ownership
 
-Do not create competing in-memory, mock, or static representations of live entities unless the feature explicitly requires editorial/static content.
+| Entity | Source of truth | Rule |
+|---|---|---|
+| Product | Supabase | Không hard-code production catalog vào UI |
+| Inventory | Supabase | Admin-only mutations |
+| Cart | Existing cart layer | Không tạo thêm cart schema tùy tiện |
+| Order | Supabase | Không hard-delete lịch sử giao dịch |
+| Payment | Supabase/payment provider | Chỉ cập nhật Paid sau verify |
+| User/Auth | Supabase Auth | Authorization qua RLS/admin checks |
+| Appearance | Supabase settings + WEARO tokens | Runtime và code defaults phải nhất quán |
+| AI result | Server → provider → storage/UI | Secret chỉ ở server |
 
-## Product Flow
+## Change rules
 
-`Products → Cart → Orders → Order Items → Payment`
+1. Trước khi sửa dữ liệu: xác định table, PK/FK, RLS, query và UI refresh.
+2. Trước khi sửa UI: xác định page/component sở hữu behavior.
+3. Không tạo component trùng chức năng.
+4. Không đổi internal identifiers chỉ vì đổi public branding.
+5. Không dùng CSS hotfix để giải quyết lỗi logic.
+6. Thay đổi lớn phải có test/verification tương ứng.
 
-Product data should remain compatible across catalogue, product detail, cart, checkout, and AI Try-On.
+## Known technical debt
 
-## Order/Payment Flow
-
-`Cart → Create Order → Pending Payment → Verify Payment → Update Payment Status → Update Order Status`
-
-Opening a payment UI or QR code is not proof of payment.
-
-## AI Try-On Flow
-
-`Upload/Input → Server → AI Provider → Result → Storage → UI`
-
-Provider secrets remain server-side.
-
-## Styling Architecture
-
-Route-specific visual changes should be scoped to the relevant route/section. Global styles must not be used as a shortcut for isolated visual issues.
-
-Current visual direction must be preserved unless the owner explicitly requests a redesign.
-
-## Architecture Change Rule
-
-Do not replace framework, routing, database architecture, or major application structure during a feature fix unless the requirement explicitly calls for it and the impact has been assessed.
-
-Before a structural change, update `PROJECT_MAP.md` and the relevant rules documentation.
+- Nhiều CSS admin/header là override/hotfix; cần gom dần theo domain.
+- README còn mô tả dự án cũ và cần cập nhật thành WEARO/UpThink.
+- Branding constants còn phân tán; nên gom về một config duy nhất rồi migrate từng bước.
+- Cần tăng coverage cho authorization/admin RPC và các route quan trọng.
