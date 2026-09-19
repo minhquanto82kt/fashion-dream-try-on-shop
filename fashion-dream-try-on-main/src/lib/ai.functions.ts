@@ -17,11 +17,7 @@ type DbVariant = { size: string; color: string; stock: number };
 async function generateFashionImage(prompt: string, images: string[] = []): Promise<GeneratedImage> {
   try {
     const imagePrompt = images.length ? { text: prompt, images } : prompt;
-    const result = await generateImage({
-      model: CONCEPT_IMAGE_MODEL,
-      prompt: imagePrompt,
-      n: 1,
-    });
+    const result = await generateImage({ model: CONCEPT_IMAGE_MODEL, prompt: imagePrompt, n: 1 });
     const image = result.image;
     if (!image) throw new Error("AI không trả về hình ảnh.");
     return { image: `data:${image.mediaType};base64,${image.base64}`, text: "" };
@@ -60,12 +56,7 @@ export const listAiProducts = createServerFn({ method: "GET" }).handler(async ()
   return result.filter((product): product is NonNullable<typeof product> => Boolean(product));
 });
 
-const ConceptInput = z.object({
-  style: z.string().trim().min(1).max(40),
-  occasion: z.string().trim().min(1).max(40),
-  prompt: z.string().trim().max(600).optional(),
-  mentions: z.array(z.string().trim().min(1).max(100)).max(8).optional(),
-});
+const ConceptInput = z.object({ style: z.string().trim().min(1).max(40), occasion: z.string().trim().min(1).max(40), prompt: z.string().trim().max(600).optional(), mentions: z.array(z.string().trim().min(1).max(100)).max(8).optional() });
 
 export const generateConcept = createServerFn({ method: "POST" })
   .validator((input: unknown) => ConceptInput.parse(input))
@@ -79,26 +70,20 @@ export const generateConcept = createServerFn({ method: "POST" })
       `Occasion: ${data.occasion}.`,
       items ? `The outfit MUST feature these published WEARO clothing pieces: ${items}.` : "",
       data.prompt ? `Additional creative direction: ${data.prompt}.` : "",
-      "Modern unisex fashion aesthetic.",
-      "WEARO design language: charcoal-black, warm ivory, golden yellow and orange accents.",
-      "Vietnamese urban context.",
+      "Modern casual unisex fashion aesthetic for both men and women.",
+      "WEARO design language: slate blue, dusty blue, warm peach, dusty beige and coral accents on warm ivory neutrals.",
+      "Contemporary Vietnamese urban lifestyle context, with natural everyday styling rather than costume-like streetwear.",
       "Natural editorial lighting.",
       "35mm fashion photography.",
       "Realistic fabric texture, stitching and garment construction.",
-      "Sharp subject detail with a refined fashion-magazine composition.",
+      "Sharp subject detail with a refined contemporary fashion-magazine composition.",
       "No text.",
       "No watermark.",
     ].filter(Boolean).join(" ");
     return generateFashionImage(prompt);
   });
 
-const TryOnInput = z.object({
-  personImage: z.string().min(20).max(8_500_000),
-  productId: z.string().trim().min(1).max(100).optional(),
-  garmentImage: z.string().min(5).max(2_000_000).optional(),
-  garmentName: z.string().trim().min(1).max(200).optional(),
-  note: z.string().trim().max(MAX_NOTE_LENGTH).optional(),
-}).refine((data) => Boolean(data.productId || data.garmentName), { message: "Thiếu sản phẩm thử đồ." });
+const TryOnInput = z.object({ personImage: z.string().min(20).max(8_500_000), productId: z.string().trim().min(1).max(100).optional(), garmentImage: z.string().min(5).max(2_000_000).optional(), garmentName: z.string().trim().min(1).max(200).optional(), note: z.string().trim().max(MAX_NOTE_LENGTH).optional() }).refine((data) => Boolean(data.productId || data.garmentName), { message: "Thiếu sản phẩm thử đồ." });
 
 function mapTryOnCategory(category: string): "top" | "bottom" | "dress" | "outerwear" | "full_body" {
   const normalized = category.trim().toLowerCase();
@@ -123,10 +108,7 @@ function internalSecret(): string {
 }
 
 async function internalTryOnRequest<T>(path: string, init: RequestInit): Promise<T> {
-  const response = await fetch(`${serverOrigin()}${path}`, {
-    ...init,
-    headers: { Authorization: `Bearer ${internalSecret()}`, "Content-Type": "application/json", ...(init.headers ?? {}) },
-  });
+  const response = await fetch(`${serverOrigin()}${path}`, { ...init, headers: { Authorization: `Bearer ${internalSecret()}`, "Content-Type": "application/json", ...(init.headers ?? {}) } });
   const text = await response.text();
   let payload: unknown = null;
   try { payload = text ? JSON.parse(text) : null; } catch { payload = null; }
