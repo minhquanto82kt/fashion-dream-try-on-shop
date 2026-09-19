@@ -1,12 +1,11 @@
 """Protected Admin Tags API."""
 
-from typing import Annotated, Any
+from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
-from app.api.dependencies import get_current_user
-from app.db.supabase import get_supabase_client
+from app.api.dependencies import get_current_admin
 from app.models.tag import Tag, TagCreate, TagUpdate
 from app.services.tag_service import TagConflictError, TagNotFoundError, create_tag, delete_tag, get_tag, list_tags, update_tag
 
@@ -17,17 +16,11 @@ class TagListResponse(BaseModel):
     items: list[Tag]
 
 
-def require_admin(user: Annotated[dict[str, Any], Depends(get_current_user)]) -> dict[str, Any]:
-    """Require an authenticated user that exists in public.admin_users."""
-    user_id = str(user["id"])
-    response = get_supabase_client().table("admin_users").select("user_id").eq("user_id", user_id).limit(1).execute()
-    if not response.data:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin access required")
-    return user
-
-
 @router.get("", response_model=TagListResponse)
-def admin_list_tags(status_filter: str | None = None, _: Annotated[dict[str, Any], Depends(require_admin)] = None) -> TagListResponse:
+def admin_list_tags(
+    status_filter: str | None = None,
+    _: Annotated[dict, Depends(get_current_admin)] = None,
+) -> TagListResponse:
     """List tags for the admin catalog."""
     if status_filter not in (None, "active", "archived"):
         raise HTTPException(status_code=400, detail="Invalid tag status")
@@ -35,7 +28,10 @@ def admin_list_tags(status_filter: str | None = None, _: Annotated[dict[str, Any
 
 
 @router.get("/{tag_id}", response_model=Tag)
-def admin_get_tag(tag_id: str, _: Annotated[dict[str, Any], Depends(require_admin)] = None) -> Tag:
+def admin_get_tag(
+    tag_id: str,
+    _: Annotated[dict, Depends(get_current_admin)] = None,
+) -> Tag:
     try:
         return Tag.model_validate(get_tag(tag_id))
     except TagNotFoundError as exc:
@@ -43,15 +39,29 @@ def admin_get_tag(tag_id: str, _: Annotated[dict[str, Any], Depends(require_admi
 
 
 @router.post("", response_model=Tag, status_code=201)
-def admin_create_tag(payload: TagCreate, user: Annotated[dict[str, Any], Depends(require_admin)]) -> Tag:
+def admin_create_tag(
+    payload: TagCreate,
+    user: Annotated[dict, Depends(get_current_admin)],
+) -> Tag:
     try:
-        return Tag.model_validate(create_tag(name=payload.name, slug=payload.slug, description=payload.description, created_by=str(user["id"])))
+        return Tag.model_validate(
+            create_tag(
+                name=payload.name,
+                slug=payload.slug,
+                description=payload.description,
+                created_by=str(user["id"]),
+            )
+        )
     except TagConflictError as exc:
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
 @router.patch("/{tag_id}", response_model=Tag)
-def admin_update_tag(tag_id: str, payload: TagUpdate, _: Annotated[dict[str, Any], Depends(require_admin)] = None) -> Tag:
+def admin_update_tag(
+    tag_id: str,
+    payload: TagUpdate,
+    _: Annotated[dict, Depends(get_current_admin)] = None,
+) -> Tag:
     try:
         fields = payload.model_fields_set
         return Tag.model_validate(
@@ -70,7 +80,10 @@ def admin_update_tag(tag_id: str, payload: TagUpdate, _: Annotated[dict[str, Any
 
 
 @router.delete("/{tag_id}", status_code=204)
-def admin_delete_tag(tag_id: str, _: Annotated[dict[str, Any], Depends(require_admin)] = None) -> None:
+def admin_delete_tag(
+    tag_id: str,
+    _: Annotated[dict, Depends(get_current_admin)] = None,
+) -> None:
     try:
         delete_tag(tag_id)
     except TagNotFoundError as exc:
