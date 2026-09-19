@@ -1,10 +1,10 @@
 """Protected Admin Product ↔ Tags API."""
 
-from typing import Annotated, Any
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from app.api.admin_tags import require_admin
+from app.api.dependencies import get_current_admin
 from app.models.product_tags import ProductTagItem, ProductTagsResponse, ProductTagsUpdate
 from app.services.product_tag_service import ProductTagNotFoundError, ProductTagValidationError, list_product_tags, set_product_tags
 
@@ -14,7 +14,7 @@ router = APIRouter(prefix="/api/admin/products", tags=["admin-product-tags"])
 @router.get("/{product_id}/tags", response_model=ProductTagsResponse)
 def admin_get_product_tags(
     product_id: str,
-    _: Annotated[dict[str, Any], Depends(require_admin)] = None,
+    _: Annotated[dict, Depends(get_current_admin)] = None,
 ) -> ProductTagsResponse:
     try:
         tags = [ProductTagItem.model_validate(row) for row in list_product_tags(product_id)]
@@ -27,7 +27,7 @@ def admin_get_product_tags(
 def admin_set_product_tags(
     product_id: str,
     payload: ProductTagsUpdate,
-    _: Annotated[dict[str, Any], Depends(require_admin)] = None,
+    _: Annotated[dict, Depends(get_current_admin)] = None,
 ) -> ProductTagsResponse:
     try:
         tags = [ProductTagItem.model_validate(row) for row in set_product_tags(product_id, payload.tag_ids)]
