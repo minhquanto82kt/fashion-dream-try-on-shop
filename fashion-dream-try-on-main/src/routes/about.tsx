@@ -21,15 +21,15 @@ const STATS = [
 ];
 
 const DESIGN_TOKENS = [
-  { k: "01", title: "Palette", value: "INK / YELLOW / ORANGE / PAPER", detail: "#1B1A17 · #F0A500 · #E45826 · #F7F1E7" },
-  { k: "02", title: "Typography", value: "EDITORIAL + FUNCTIONAL", detail: "Tiêu đề có tính thời trang; body rõ ràng, ưu tiên khả năng đọc và hỗ trợ tiếng Việt." },
-  { k: "03", title: "Layout", value: "GRID / SPACE / EDGE", detail: "Bố cục thoáng, đường viền rõ, nhịp spacing nhất quán và ưu tiên hình ảnh sản phẩm." },
-  { k: "04", title: "Interaction", value: "DIRECT / TACTILE / CLEAR", detail: "CTA có thứ bậc rõ, trạng thái loading / success / error dễ nhận biết, không có hiệu ứng thừa." },
+  { k: "01", title: "Palette", value: "SLATE BLUE / DUSTY BLUE / PEACH", detail: "#54728C · #7794A6 · #F2CEAE · #D9BBA9 · #F2AD94" },
+  { k: "02", title: "Typography", value: "MODERN + EDITORIAL", detail: "Tiêu đề có tính thời trang nhưng rõ ràng; body ưu tiên khả năng đọc và hỗ trợ tiếng Việt." },
+  { k: "03", title: "Layout", value: "SPACE / GRID / BALANCE", detail: "Bố cục thoáng, hình ảnh lớn, đường viền nhẹ và nhịp spacing nhất quán cho trải nghiệm unisex." },
+  { k: "04", title: "Interaction", value: "DIRECT / TACTILE / CLEAR", detail: "CTA có thứ bậc rõ, trạng thái loading / success / error dễ nhận biết, không dùng hiệu ứng công nghệ quá mức." },
 ];
 
 function AboutPage() {
-  return <div className="min-h-screen"><SiteNav /><main className="pt-16">
-    <section className="relative"><img src="https://images.pexels.com/photos/18698406/pexels-photo-18698406.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="WEARO fashion editorial" className="h-[46vh] w-full object-cover opacity-60" /><div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" /><div className="absolute inset-x-0 bottom-0 mx-auto max-w-7xl px-6 pb-12 sm:px-12 lg:px-20"><p className="eyebrow">About WEARO</p><h1 className="mt-3 max-w-3xl text-4xl leading-none sm:text-6xl">Mặc theo cách của <span className="text-primary">riêng bạn.</span></h1></div></section>
+  return <div className="min-h-screen wearo-page"><SiteNav /><main className="pt-16">
+    <section className="relative wearo-about-hero"><img src="https://images.pexels.com/photos/18698406/pexels-photo-18698406.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="WEARO fashion editorial" className="h-[46vh] w-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-background via-background/35 to-transparent" /><div className="absolute inset-x-0 bottom-0 mx-auto max-w-7xl px-6 pb-12 sm:px-12 lg:px-20"><p className="eyebrow">About WEARO</p><h1 className="mt-3 max-w-3xl text-4xl leading-none sm:text-6xl">Mặc theo cách của <span className="text-primary">riêng bạn.</span></h1></div></section>
     <section className="mx-auto max-w-4xl px-6 py-16 sm:px-12">
       <p className="text-xl font-light leading-8 text-beige">WEARO là cửa hàng thời trang bán lẻ trực tuyến dành cho những người trẻ và người đi làm bận rộn muốn mặc đẹp, tự tin với vóc dáng cá nhân và không muốn mất quá nhiều thời gian để quyết định hôm nay mặc gì.</p>
       <p className="mt-7 text-beige leading-7">Tên gọi <strong className="text-foreground">WEARO = WEAR + O</strong>. WEAR đại diện cho trang phục và cách bạn thể hiện gu ăn mặc mỗi ngày. O mở ra ba tinh thần: <strong className="text-primary">Own</strong> — làm chủ phong cách; <strong className="text-primary">Original</strong> — giữ bản sắc nguyên bản; và <strong className="text-primary">Open</strong> — cởi mở với những xu hướng mới.</p>
@@ -45,21 +45,19 @@ function AboutPage() {
 
       <section id="design-language" className="mt-16 border-t border-border pt-12 scroll-mt-24" aria-labelledby="design-language-title">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="eyebrow">Design language</p>
-            <h2 id="design-language-title" className="mt-3 text-3xl sm:text-4xl">The visual system behind WEARO.</h2>
-          </div>
+          <div><p className="eyebrow">Design language</p><h2 id="design-language-title" className="mt-3 text-3xl sm:text-4xl">The visual system behind WEARO.</h2></div>
           <span className="text-xs uppercase tracking-[0.18em] text-silver">WEARO / UI SYSTEM 01</span>
         </div>
-        <p className="mt-5 max-w-3xl text-beige leading-7">WEARO không dùng một “Style Guide” như tài liệu kỹ thuật dành cho khách hàng. Thay vào đó, Design Language là cách thương hiệu giữ trải nghiệm nhất quán từ trang chủ, catalogue, AI Studio đến checkout.</p>
+        <p className="mt-5 max-w-3xl text-beige leading-7">WEARO dùng Design Language để giữ trải nghiệm nhất quán từ trang chủ, catalogue, AI Studio đến checkout: casual, modern, unisex và đủ linh hoạt cho nhiều phong cách cá nhân.</p>
         <div className="mt-8 grid gap-px border border-border bg-border sm:grid-cols-2">
           {DESIGN_TOKENS.map((item) => <article key={item.k} className="bg-background p-6 sm:p-7"><div className="flex items-start justify-between gap-4"><span className="text-xs tracking-[0.18em] text-primary">{item.k}</span><span className="text-xs uppercase tracking-[0.14em] text-silver">{item.title}</span></div><h3 className="mt-8 text-lg tracking-[0.08em]">{item.value}</h3><p className="mt-3 text-sm leading-6 text-silver">{item.detail}</p></article>)}
         </div>
-        <div className="mt-8 grid gap-4 sm:grid-cols-4">
-          <div className="h-20 border border-border bg-[#1B1A17] p-3 text-[10px] uppercase tracking-[0.14em] text-[#F7F1E7]">INK<br /><span className="opacity-70">#1B1A17</span></div>
-          <div className="h-20 border border-border bg-[#F0A500] p-3 text-[10px] uppercase tracking-[0.14em] text-[#1B1A17]">YELLOW<br /><span className="opacity-70">#F0A500</span></div>
-          <div className="h-20 border border-border bg-[#E45826] p-3 text-[10px] uppercase tracking-[0.14em] text-[#F7F1E7]">ORANGE<br /><span className="opacity-80">#E45826</span></div>
-          <div className="h-20 border border-border bg-[#F7F1E7] p-3 text-[10px] uppercase tracking-[0.14em] text-[#1B1A17]">PAPER<br /><span className="opacity-70">#F7F1E7</span></div>
+        <div className="mt-8 grid gap-4 sm:grid-cols-5">
+          <div className="h-20 border border-border bg-[#54728C] p-3 text-[10px] uppercase tracking-[0.14em] text-white">SLATE BLUE<br /><span className="opacity-80">#54728C</span></div>
+          <div className="h-20 border border-border bg-[#7794A6] p-3 text-[10px] uppercase tracking-[0.14em] text-white">DUSTY BLUE<br /><span className="opacity-80">#7794A6</span></div>
+          <div className="h-20 border border-border bg-[#F2CEAE] p-3 text-[10px] uppercase tracking-[0.14em] text-[#171717]">PEACH<br /><span className="opacity-70">#F2CEAE</span></div>
+          <div className="h-20 border border-border bg-[#D9BBA9] p-3 text-[10px] uppercase tracking-[0.14em] text-[#171717]">BEIGE<br /><span className="opacity-70">#D9BBA9</span></div>
+          <div className="h-20 border border-border bg-[#F2AD94] p-3 text-[10px] uppercase tracking-[0.14em] text-[#171717]">CORAL<br /><span className="opacity-70">#F2AD94</span></div>
         </div>
       </section>
 
