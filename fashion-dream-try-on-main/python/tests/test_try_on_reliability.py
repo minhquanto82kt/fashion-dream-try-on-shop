@@ -2,8 +2,9 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
-from app.api.try_on_internal import MAX_POLL_ATTEMPTS, MAX_POLL_AGE_SECONDS, _map_provider_status, _poll_metadata
+from app.api.try_on_internal import MAX_POLL_ATTEMPTS, MAX_POLL_AGE_SECONDS, _poll_metadata
 from app.models.try_on import TryOnStatus
+from app.services.try_on_reconciliation_service import _map_provider_status
 
 
 def test_provider_status_mapping_is_explicit():
