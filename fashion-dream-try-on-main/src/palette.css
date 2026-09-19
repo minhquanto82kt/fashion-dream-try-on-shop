@@ -19,15 +19,12 @@
   --wearo-off-white: #F8F6F2;
   --wearo-white: #FFFFFF;
   --wearo-ink: #171717;
-
-  /* Semantic color API used by the existing component system. */
   --brand-primary: var(--wearo-blue);
   --brand-secondary: var(--wearo-blue-light);
   --page-background: var(--theme-background, var(--wearo-off-white));
   --surface: var(--theme-surface, var(--wearo-white));
   --brand-accent: var(--wearo-coral);
   --text-primary: var(--theme-foreground, var(--wearo-ink));
-
   --ink: var(--text-primary);
   --background: var(--page-background);
   --foreground: var(--text-primary);
@@ -48,8 +45,6 @@
   --border: color-mix(in oklab, var(--wearo-beige) 78%, var(--wearo-white));
   --input: var(--wearo-white);
   --ring: var(--brand-primary);
-
-  /* Compatibility aliases. Keep until all legacy consumers are migrated. */
   --electric: var(--brand-accent);
   --beige: var(--wearo-peach);
   --silver: var(--wearo-blue-light);
@@ -126,8 +121,8 @@
 .text-accent-foreground { color: var(--accent-foreground) !important; }
 .border-border, .border-input { border-color: var(--border) !important; }
 .ring-ring { --tw-ring-color: var(--ring) !important; }
-.focus\\:border-primary:focus { border-color: var(--primary) !important; }
-.hover\\:bg-primary\\/90:hover { background-color: color-mix(in oklab, var(--primary) 90%, var(--wearo-blue-light)) !important; }
-.hover\\:bg-accent:hover { background-color: var(--accent) !important; color: var(--accent-foreground) !important; }
+.focus\:border-primary:focus { border-color: var(--primary) !important; }
+.hover\:bg-primary\/90:hover { background-color: color-mix(in oklab, var(--primary) 90%, var(--wearo-blue-light)) !important; }
+.hover\:bg-accent:hover { background-color: var(--accent) !important; color: var(--accent-foreground) !important; }
 .bg-destructive { background-color: var(--destructive) !important; }
 .text-destructive-foreground { color: var(--destructive-foreground) !important; }
