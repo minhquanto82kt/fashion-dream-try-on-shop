@@ -3,7 +3,7 @@ import { enterMockUserMode } from "@/lib/mock-user";
 
 export const Route = createFileRoute("/admin/")({
   component: AdminDashboardPage,
-  head: () => ({ meta: [{ title: "Admin Dashboard — WEARO" }] }),
+  head: () => ({ meta: [{ title: "Admin Dashboard — UpThink" }] }),
 });
 
 const cards = [
@@ -12,7 +12,7 @@ const cards = [
   ["Orders", "Review and manage customer orders", "/admin/orders"],
   ["Customers", "View customer accounts and activity", "#"],
   ["Inventory", "Track stock and availability", "/admin/inventory"],
-  ["Appearance", "Control global color theme and visual system", "/admin/appearance"],
+  ["Appearance", "Control WEARO's global color theme and visual system", "/admin/appearance"],
 ] as const;
 
 function AdminDashboardPage() {
@@ -26,9 +26,9 @@ function AdminDashboardPage() {
     <>
       <header className="up-admin-topbar">
         <div>
-          <div className="up-admin-kicker">WEARO / COMMERCE ADMIN</div>
+          <div className="up-admin-kicker">UPTHINK / WEARO CONTROL ROOM</div>
           <h1>Dashboard</h1>
-          <p>Quản lý catalog, đơn hàng, giao diện và các dịch vụ vận hành của cửa hàng.</p>
+          <p>UpThink là khu vực quản trị và vận hành hệ thống WEARO: catalog, đơn hàng, giao diện và các dịch vụ nền.</p>
         </div>
       </header>
 
