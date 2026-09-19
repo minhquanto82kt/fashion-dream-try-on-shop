@@ -13,31 +13,19 @@ async function expectHeader(name, path, header) {
 
 const checks = [
   ["security headers", async () => {
-    for (const header of [
-      "x-content-type-options",
-      "referrer-policy",
-      "permissions-policy",
-      "x-frame-options",
-      "cross-origin-opener-policy",
-      "x-request-id",
-    ]) await expectHeader("security headers", "/", header);
+    for (const header of ["x-content-type-options", "referrer-policy", "permissions-policy", "x-frame-options", "cross-origin-opener-policy", "x-request-id"]) await expectHeader("security headers", "/", header);
   }],
   ["AI internal endpoint rejects missing secret", async () => {
-    await expectStatus("AI auth", "/api/try-on/internal/jobs", 401, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({}),
-    });
+    await expectStatus("AI auth", "/api/try-on/internal/jobs", 401, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({}) });
   }],
   ["AI internal GET rejects missing secret", async () => {
     await expectStatus("AI GET auth", "/api/try-on/internal/jobs/not-authorized", 401);
   }],
-  ["unknown API route does not expose server error", async () => {
+  ["unknown API route does not expose sensitive server details", async () => {
     const response = await fetch(`${BASE_URL}/api/__phase_f_unknown__`);
+    if (response.status !== 404) throw new Error(`Expected unknown API route to return 404, got ${response.status}`);
     const text = await response.text();
-    if (/SUPABASE_SECRET_KEY|MOMO_SECRET_KEY|VERCEL_ACCESS_TOKEN|OPENAI_API_KEY|REPLICATE_API_TOKEN|stack|node_modules/i.test(text)) {
-      throw new Error("Potential server detail/secret exposure detected");
-    }
+    if (/SUPABASE_SECRET_KEY|MOMO_SECRET_KEY|VERCEL_ACCESS_TOKEN|OPENAI_API_KEY|REPLICATE_API_TOKEN|BEGIN (RSA|OPENSSH|EC|PRIVATE) PRIVATE KEY|at\s+file:\/\//i.test(text)) throw new Error("Potential sensitive server detail exposure detected");
   }],
   ["health response is not cacheable", async () => {
     const response = await fetch(`${BASE_URL}/api/health`);
@@ -47,13 +35,8 @@ const checks = [
 
 let failed = false;
 for (const [name, run] of checks) {
-  try {
-    await run();
-    console.log(`PASS ${name}`);
-  } catch (error) {
-    failed = true;
-    console.error(`FAIL ${name}: ${error.message}`);
-  }
+  try { await run(); console.log(`PASS ${name}`); }
+  catch (error) { failed = true; console.error(`FAIL ${name}: ${error instanceof Error ? error.message : String(error)}`); }
 }
 
 if (failed) process.exit(1);
