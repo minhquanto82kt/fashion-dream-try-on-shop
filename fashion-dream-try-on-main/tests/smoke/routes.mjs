@@ -20,12 +20,12 @@ for (const route of routes) {
     const response = await fetch(url, { redirect: "manual" });
     const status = response.status;
     const location = response.headers.get("location");
-
     if (status >= 200 && status < 400) {
       console.log(`PASS ${status} ${route}${location ? ` -> ${location}` : ""}`);
     } else {
       failed = true;
-      console.error(`FAIL ${status} ${route}${location ? ` -> ${location}` : ""}`);
+      const body = (await response.text()).replace(/\s+/g, " ").slice(0, 500);
+      console.error(`FAIL ${status} ${route}${location ? ` -> ${location}` : ""} :: ${body}`);
     }
   } catch (error) {
     failed = true;
