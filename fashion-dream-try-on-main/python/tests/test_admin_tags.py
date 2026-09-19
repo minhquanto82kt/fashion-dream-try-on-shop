@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from fastapi.testclient import TestClient
 
 from app.api import admin_tags
+from app.api.dependencies import get_current_admin
 from app.main import app
 
 
@@ -32,7 +33,7 @@ def override_admin():
 
 def test_list_tags_requires_admin_and_returns_counts(monkeypatch):
     monkeypatch.setattr(admin_tags, "list_tags", lambda status=None: [sample_tag()])
-    app.dependency_overrides[admin_tags.require_admin] = override_admin
+    app.dependency_overrides[get_current_admin] = override_admin
     try:
         response = TestClient(app).get("/api/admin/tags")
     finally:
@@ -51,7 +52,7 @@ def test_create_tag_passes_authenticated_admin_id(monkeypatch):
         return sample_tag()
 
     monkeypatch.setattr(admin_tags, "create_tag", fake_create_tag)
-    app.dependency_overrides[admin_tags.require_admin] = override_admin
+    app.dependency_overrides[get_current_admin] = override_admin
     try:
         response = TestClient(app).post(
             "/api/admin/tags",
@@ -72,7 +73,7 @@ def test_update_tag_allows_clearing_description(monkeypatch):
         return sample_tag()
 
     monkeypatch.setattr(admin_tags, "update_tag", fake_update_tag)
-    app.dependency_overrides[admin_tags.require_admin] = override_admin
+    app.dependency_overrides[get_current_admin] = override_admin
     try:
         response = TestClient(app).patch(
             "/api/admin/tags/11111111-1111-1111-1111-111111111111",
@@ -86,7 +87,7 @@ def test_update_tag_allows_clearing_description(monkeypatch):
 
 
 def test_invalid_status_is_rejected(monkeypatch):
-    app.dependency_overrides[admin_tags.require_admin] = override_admin
+    app.dependency_overrides[get_current_admin] = override_admin
     try:
         response = TestClient(app).get("/api/admin/tags?status_filter=invalid")
     finally:
