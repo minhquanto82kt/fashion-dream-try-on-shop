@@ -68,7 +68,10 @@ class TryOnReconciliationService:
 
         result_path: str | None = None
         if mapped_status == TryOnStatus.COMPLETED:
-            result_path = self._persist_result(job.id, payload)
+            try:
+                result_path = self._persist_result(job.id, payload)
+            except TryOnStorageError as exc:
+                return self._fail(job.id, user_id, str(exc))
             if result_path is None:
                 return self._fail(job.id, user_id, "Try-On provider completed without a valid output image")
 
@@ -90,10 +93,7 @@ class TryOnReconciliationService:
         candidate = output[0] if isinstance(output, list) and output else output
         if not isinstance(candidate, str) or not candidate.strip():
             return None
-        try:
-            return self.storage_service.persist_provider_result(job_id, candidate.strip())
-        except TryOnStorageError:
-            return None
+        return self.storage_service.persist_provider_result(job_id, candidate.strip())
 
     def _fail(self, job_id: str, user_id: str, error: str) -> TryOnJob:
         failed = self.job_service.update_status(
