@@ -80,6 +80,13 @@ class TryOnReconciliationService:
             "cancelled": TryOnStatus.FAILED,
         }.get(provider_status)
         if mapped_status is None:
+            if internal:
+                return self._fail(
+                    job.id,
+                    "Try-On provider returned an invalid status",
+                    user_id=user_id,
+                    internal=internal,
+                )
             return job
 
         result_path: str | None = None
