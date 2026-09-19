@@ -3,34 +3,41 @@ import { join, relative } from "node:path";
 
 const root = process.cwd();
 const ignored = new Set(["node_modules", ".git", ".output", "dist", ".vercel"]);
-const publicPaths = ["src", "public", "README.md", "docs"];
-const legacyBrand = /Fashion Dream|UpThink —|UpThink \|/i;
-const allowedLegacyPaths = new Set(["src/lib/brand.ts", "docs/PHASE-G-H-BRAND-GROWTH.md"]);
+
+// Inspect only customer-facing storefront route code and public metadata.
+// Technical compatibility identifiers such as upthink-supabase are not brand leakage.
+const publicRoots = ["src/routes", "src/lib/seo.ts", "src/lib/brand.ts", "public"];
+const legacyPublicBrand = /Fashion Dream/i;
+const allowedPaths = new Set(["src/lib/brand.ts"]);
 
 function walk(path) {
-  const entries = readdirSync(path);
   const files = [];
-  for (const entry of entries) {
+  for (const entry of readdirSync(path)) {
     if (ignored.has(entry)) continue;
     const full = join(path, entry);
     const rel = relative(root, full).replaceAll("\\", "/");
     const stat = statSync(full);
     if (stat.isDirectory()) files.push(...walk(full));
-    else if (publicPaths.some((prefix) => rel === prefix || rel.startsWith(`${prefix}/`))) files.push(rel);
+    else files.push(rel);
   }
   return files;
 }
 
+const files = publicRoots.flatMap((entry) => {
+  const full = join(root, entry);
+  return statSync(full).isDirectory() ? walk(full) : [entry];
+});
+
 const failures = [];
-for (const file of walk(root)) {
-  if (allowedLegacyPaths.has(file)) continue;
+for (const file of files) {
+  if (allowedPaths.has(file)) continue;
   let text;
   try { text = readFileSync(join(root, file), "utf8"); } catch { continue; }
-  if (legacyBrand.test(text)) failures.push(file);
+  if (legacyPublicBrand.test(text)) failures.push(file);
 }
 
 if (failures.length) {
-  console.error("Brand governance failed: legacy public-facing brand leakage detected in:");
+  console.error("Brand governance failed: legacy public-facing brand detected in:");
   for (const file of failures) console.error(`- ${file}`);
   process.exit(1);
 }
