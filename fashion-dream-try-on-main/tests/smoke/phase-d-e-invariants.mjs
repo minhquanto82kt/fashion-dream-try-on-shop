@@ -8,25 +8,15 @@ async function get(path) {
 
 async function assertStatus(path, expected, init) {
   const response = await fetch(`${baseUrl}${path}`, init);
-  if (response.status !== expected) {
-    throw new Error(`${path}: expected ${expected}, received ${response.status}`);
-  }
+  if (response.status !== expected) throw new Error(`${path}: expected ${expected}, received ${response.status}`);
   return response;
 }
 
 const health = await get("/api/health");
 if (health.headers.get("x-request-id") == null) throw new Error("health: missing request id");
-
 await get("/shop");
-await assertStatus("/api/try-on/internal/jobs", 401, {
-  method: "POST",
-  headers: { "content-type": "application/json" },
-  body: JSON.stringify({}),
-});
-
+await assertStatus("/api/try-on/internal/jobs", 401, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({}) });
 await assertStatus("/api/try-on/internal/jobs/not-authorized", 401);
-
-const staticRoutes = ["/about", "/contact"];
-for (const route of staticRoutes) await get(route);
+for (const route of ["/about", "/ai?product=shadow-hoodie", "/product/shadow-hoodie", "/cart", "/checkout"]) await get(route);
 
 console.log("Phase D/E invariants PASS");
