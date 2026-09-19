@@ -1,0 +1,204 @@
+/* WEARO — Brand hierarchy layer
+   Primary: #54728C slate blue
+   Secondary: #F2AD94 coral pink
+   Supporting: white / warm neutrals
+   This layer intentionally overrides legacy storefront/admin presentation only. */
+:root {
+  --wearo-primary: #54728C;
+  --wearo-primary-soft: #7794A6;
+  --wearo-secondary: #F2AD94;
+  --wearo-secondary-soft: #F2CEAE;
+  --wearo-neutral: #D9BBA9;
+  --wearo-white: #FFFFFF;
+  --wearo-paper: #F8F6F2;
+  --wearo-ink: #171717;
+}
+
+/* ---------- PUBLIC STOREFRONT ---------- */
+.fashion-site,
+.wearo-page { background: var(--wearo-primary) !important; color: var(--wearo-ink); }
+
+.fashion-nav { background: var(--wearo-white) !important; border-bottom: 1px solid rgba(84,114,140,.24) !important; }
+.fashion-nav__announcement { background: var(--wearo-primary) !important; color: var(--wearo-white) !important; }
+.fashion-brand__mark { background: var(--wearo-primary) !important; color: var(--wearo-white) !important; border-color: var(--wearo-primary) !important; }
+.fashion-brand__name { color: var(--wearo-primary) !important; }
+.fashion-brand__name span,
+.fashion-brand__meta,
+.fashion-ai-nav__beta { color: var(--wearo-white) !important; background: var(--wearo-secondary) !important; }
+.fashion-nav-link,
+.fashion-discovery-link,
+.fashion-ai-nav,
+.fashion-icon-btn,
+.fashion-cart-btn,
+.fashion-language-switcher { color: var(--wearo-primary) !important; }
+.fashion-nav-link:hover,
+.fashion-nav-link.is-active,
+.fashion-discovery-link:hover,
+.fashion-ai-nav:hover,
+.fashion-ai-nav.is-active,
+.fashion-cart-btn:hover,
+.fashion-icon-btn:hover { color: var(--wearo-secondary) !important; }
+
+/* Hero: blue is the visual anchor, pink is the accent, white carries type. */
+.fashion-hero { background: var(--wearo-primary) !important; color: var(--wearo-white) !important; }
+.fashion-hero__copy { background: var(--wearo-primary) !important; color: var(--wearo-white) !important; }
+.fashion-hero__art { background: var(--wearo-primary) !important; }
+.fashion-hero__art::before { background: linear-gradient(90deg,var(--wearo-primary) 0%,rgba(84,114,140,.82) 7%,rgba(84,114,140,.16) 30%,transparent 52%),linear-gradient(180deg,rgba(84,114,140,.04),transparent 55%,rgba(23,23,23,.22)) !important; }
+.fashion-display__solid { color: var(--wearo-white) !important; }
+.fashion-display__brush { color: var(--wearo-secondary) !important; }
+.fashion-hero__mark,
+.fashion-eyebrow,
+.fashion-menu-kicker,
+.fashion-menu-label { color: var(--wearo-secondary) !important; }
+.fashion-hero__lede { color: rgba(255,255,255,.84) !important; }
+.fashion-hero__meta,
+.fashion-hero__label,
+.fashion-hero__side-note { color: rgba(255,255,255,.78) !important; }
+.fashion-hero__badge { background: var(--wearo-secondary) !important; color: var(--wearo-ink) !important; border-color: var(--wearo-secondary) !important; }
+.fashion-hero__actions .fashion-btn { background: var(--wearo-secondary) !important; color: var(--wearo-ink) !important; border-color: var(--wearo-secondary) !important; }
+.fashion-hero__actions .fashion-btn:hover { background: var(--wearo-secondary-soft) !important; border-color: var(--wearo-secondary-soft) !important; }
+.fashion-hero__actions .fashion-btn--ghost { background: transparent !important; color: var(--wearo-white) !important; border-color: rgba(255,255,255,.72) !important; }
+.fashion-hero__actions .fashion-btn--ghost:hover { background: var(--wearo-white) !important; color: var(--wearo-primary) !important; }
+
+.fashion-canvas-nav { background: var(--wearo-white) !important; color: var(--wearo-primary) !important; border-color: rgba(84,114,140,.2) !important; }
+.fashion-canvas-nav__links a,
+.fashion-canvas-nav__top { color: var(--wearo-primary) !important; }
+
+/* Pink secondary section. */
+.fashion-intro-section { background: var(--wearo-secondary) !important; color: var(--wearo-ink) !important; }
+.fashion-intro-section::after { background: linear-gradient(90deg,transparent,var(--wearo-primary),transparent) !important; }
+.fashion-section-title,
+.fashion-section-title--statement { color: var(--wearo-ink) !important; }
+.statement-line--accent-small,
+.statement-line--accent-display,
+.fashion-accent { color: var(--wearo-primary) !important; }
+.fashion-intro-copy,
+.fashion-intro-section p { color: rgba(23,23,23,.72) !important; }
+
+/* AI section: white surface with blue controls and pink accents. */
+.fashion-ai-feature { background: var(--wearo-white) !important; color: var(--wearo-ink) !important; }
+.fashion-ai-feature__visual { border-color: var(--wearo-primary) !important; box-shadow: 10px 10px 0 var(--wearo-secondary) !important; }
+.fashion-ai-feature__copy p,
+.fashion-feature-list span { color: rgba(23,23,23,.7) !important; }
+.fashion-feature-list>div { border-color: rgba(84,114,140,.22) !important; }
+.fashion-ai-feature .fashion-text-link,
+.fashion-text-link { color: var(--wearo-primary) !important; border-bottom-color: var(--wearo-secondary) !important; }
+
+.fashion-products-section { background: var(--wearo-white) !important; color: var(--wearo-ink) !important; }
+.fashion-category-filter { color: var(--wearo-primary) !important; border-color: rgba(84,114,140,.3) !important; background: transparent !important; }
+.fashion-category-filter:hover,
+.fashion-category-filter.is-active { background: var(--wearo-primary) !important; color: var(--wearo-white) !important; border-color: var(--wearo-primary) !important; }
+.fashion-product-image { background: var(--wearo-paper) !important; border-color: rgba(84,114,140,.16) !important; }
+.fashion-product-badge { background: var(--wearo-secondary) !important; color: var(--wearo-ink) !important; }
+.fashion-product-price,
+.fashion-product-title:hover,
+.fashion-heart:hover,
+.fashion-heart.is-saved { color: var(--wearo-primary) !important; }
+
+/* Blue conversion/experience block. */
+.fashion-flow { background: var(--wearo-primary) !important; color: var(--wearo-white) !important; }
+.fashion-flow .fashion-section-title { color: var(--wearo-white) !important; }
+.fashion-flow .fashion-accent { color: var(--wearo-secondary) !important; }
+.fashion-flow p { color: rgba(255,255,255,.84) !important; }
+.fashion-flow__steps>div { border-color: rgba(255,255,255,.24) !important; }
+.fashion-flow__steps span { color: var(--wearo-secondary) !important; }
+
+/* Editorial becomes the secondary pink story surface instead of legacy black. */
+.fashion-editorial { background-color: var(--wearo-secondary) !important; color: var(--wearo-ink) !important; }
+.fashion-editorial::before { background: linear-gradient(90deg,rgba(242,173,148,.94) 0%,rgba(242,173,148,.72) 34%,rgba(84,114,140,.22) 100%) !important; }
+.fashion-editorial::after { border-color: rgba(84,114,140,.42) !important; }
+.fashion-editorial__content .fashion-eyebrow,
+.fashion-editorial .fashion-accent { color: var(--wearo-primary) !important; }
+.fashion-editorial .fashion-btn--light { background: var(--wearo-primary) !important; color: var(--wearo-white) !important; border-color: var(--wearo-primary) !important; }
+
+.wearo-footer { background: var(--wearo-primary) !important; color: var(--wearo-white) !important; border-color: rgba(255,255,255,.18) !important; }
+.wearo-footer a:hover { color: var(--wearo-secondary) !important; }
+
+/* Generic public pages: blue headers/CTAs, pink states, white cards. */
+.wearo-page main > header,
+.wearo-page .page-header,
+.wearo-page [data-wearo-header] { background: var(--wearo-primary) !important; color: var(--wearo-white) !important; }
+.wearo-page .bg-primary,
+.wearo-page [class*="bg-primary"] { background-color: var(--wearo-primary) !important; }
+.wearo-page .text-primary,
+.wearo-page [class*="text-primary"] { color: var(--wearo-primary) !important; }
+.wearo-page .bg-accent,
+.wearo-page [class*="bg-accent"] { background-color: var(--wearo-secondary) !important; }
+.wearo-page .text-accent,
+.wearo-page [class*="text-accent"] { color: var(--wearo-secondary) !important; }
+.wearo-page .bg-card,
+.wearo-page [class*="bg-card"] { background-color: var(--wearo-white) !important; }
+.wearo-page .border-border,
+.wearo-page [class*="border-border"] { border-color: rgba(84,114,140,.2) !important; }
+
+/* ---------- ADMIN ---------- */
+.up-admin-root { background: var(--wearo-paper) !important; color: var(--wearo-ink) !important; }
+.up-admin-sidebar { background: var(--wearo-primary) !important; color: var(--wearo-white) !important; }
+.up-admin-logo { color: var(--wearo-white) !important; }
+.up-admin-logo::before { content: "WEARO"; }
+.up-admin-logo { font-size: 0 !important; }
+.up-admin-logo span { color: var(--wearo-secondary) !important; font-size: 8px !important; }
+.up-admin-sidebar nav a { color: rgba(255,255,255,.68) !important; }
+.up-admin-sidebar nav a:hover { color: var(--wearo-white) !important; background: rgba(255,255,255,.08) !important; }
+.up-admin-sidebar nav a.active { background: rgba(255,255,255,.12) !important; color: var(--wearo-white) !important; border-left-color: var(--wearo-secondary) !important; }
+.up-admin-nav-section { color: rgba(255,255,255,.42) !important; }
+.up-admin-nav-disabled { background: rgba(255,255,255,.06) !important; color: rgba(255,255,255,.42) !important; border-color: rgba(255,255,255,.12) !important; }
+.up-admin-nav-disabled span { background: var(--wearo-secondary) !important; color: var(--wearo-ink) !important; border-color: transparent !important; }
+.up-admin-logout { color: rgba(255,255,255,.68) !important; }
+.up-admin-logout:hover { color: var(--wearo-secondary) !important; }
+.up-admin-main { background: var(--wearo-paper) !important; }
+.up-admin-kicker { color: var(--wearo-primary) !important; }
+.up-admin-topbar h1,
+.up-admin-editor h2 { color: var(--wearo-primary) !important; }
+.up-admin-primary { background: var(--wearo-secondary) !important; color: var(--wearo-ink) !important; }
+.up-admin-primary:hover { background: var(--wearo-secondary-soft) !important; filter:none !important; }
+.up-admin-stats div,
+.up-admin-table-wrap,
+.up-admin-editor,
+.up-admin-dashboard-card,
+.up-admin-dashboard-section { background: var(--wearo-white) !important; border-color: rgba(84,114,140,.18) !important; }
+.up-admin-table th { background: var(--wearo-primary) !important; color: var(--wearo-white) !important; border-bottom-color: var(--wearo-primary) !important; }
+.up-admin-table td { border-bottom-color: rgba(84,114,140,.12) !important; }
+.up-product-placeholder { color: var(--wearo-secondary) !important; }
+.up-row-action,
+.up-icon-btn,
+.up-secondary,
+.up-danger { border-color: rgba(84,114,140,.22) !important; }
+.up-row-action:hover,
+.up-icon-btn:hover,
+.up-secondary:hover { border-color: var(--wearo-primary) !important; color: var(--wearo-primary) !important; }
+.up-check input { accent-color: var(--wearo-secondary) !important; }
+.up-upload-card b { color: var(--wearo-primary) !important; }
+.up-admin-toast { background: var(--wearo-primary) !important; }
+
+/* Admin login: replace acid green/black/cream with WEARO blue/pink/white. */
+.fd-admin-login-page { --fd-ink: var(--wearo-primary) !important; --fd-paper: var(--wearo-white) !important; --fd-paper-soft: var(--wearo-paper) !important; --fd-accent: var(--wearo-secondary) !important; --fd-muted: rgba(84,114,140,.6) !important; background: var(--wearo-primary) !important; color: var(--wearo-white) !important; }
+.fd-admin-login-page::before { background-image: linear-gradient(rgba(255,255,255,.07) 1px, transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px) !important; }
+.fd-admin-login-page::after { color: rgba(255,255,255,.5) !important; }
+.fd-admin-login-visual { border-right-color: rgba(255,255,255,.16) !important; }
+.fd-admin-login-visual::before { background: radial-gradient(circle at 36% 32%,rgba(242,173,148,.95),transparent 2%),radial-gradient(circle at 58% 48%,rgba(242,173,148,.28),transparent 32%),radial-gradient(circle at center,rgba(242,173,148,.12),transparent 66%) !important; }
+.fd-admin-login-visual::after { color: transparent !important; -webkit-text-stroke-color: rgba(255,255,255,.14) !important; }
+.fd-admin-brand__mark { background: var(--wearo-secondary) !important; color: var(--wearo-ink) !important; }
+.fd-admin-brand__meta,
+.fd-admin-editorial__eyebrow,
+.fd-admin-editorial h1 em { color: var(--wearo-secondary) !important; }
+.fd-admin-editorial p { color: rgba(255,255,255,.76) !important; }
+.fd-admin-footer { color: rgba(255,255,255,.44) !important; }
+.fd-admin-footer__line { background: rgba(255,255,255,.18) !important; }
+.fd-admin-login-panel { background: var(--wearo-white) !important; color: var(--wearo-ink) !important; }
+.fd-admin-login-card__topline { border-bottom-color: rgba(84,114,140,.2) !important; color: rgba(84,114,140,.6) !important; }
+.fd-admin-login-card__status::before { background: var(--wearo-secondary) !important; box-shadow: 0 0 0 4px rgba(242,173,148,.18) !important; }
+.fd-admin-login-card h2 { color: var(--wearo-primary) !important; }
+.fd-admin-login-card__intro { color: rgba(23,23,23,.62) !important; }
+.fd-admin-field > span { color: var(--wearo-primary) !important; }
+.fd-admin-field input { border-color: rgba(84,114,140,.25) !important; }
+.fd-admin-field input:focus { border-color: var(--wearo-primary) !important; box-shadow: 4px 4px 0 rgba(84,114,140,.12) !important; }
+.fd-admin-password-toggle:hover { color: var(--wearo-primary) !important; background: rgba(84,114,140,.06) !important; }
+.fd-admin-login-card button[type="submit"] { background: var(--wearo-primary) !important; color: var(--wearo-white) !important; }
+.fd-admin-login-card button[type="submit"]:hover { background: var(--wearo-primary-soft) !important; }
+.fd-admin-login-card .fd-admin-error { background: rgba(242,173,148,.18) !important; color: #8f3f2d !important; border-color: rgba(242,173,148,.65) !important; }
+
+@media (max-width: 900px) {
+  .fashion-hero__copy { background: var(--wearo-primary) !important; }
+  .up-admin-sidebar { background: var(--wearo-primary) !important; }
+}
