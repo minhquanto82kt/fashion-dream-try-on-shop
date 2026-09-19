@@ -121,8 +121,56 @@
 .text-accent-foreground { color: var(--accent-foreground) !important; }
 .border-border, .border-input { border-color: var(--border) !important; }
 .ring-ring { --tw-ring-color: var(--ring) !important; }
-.focus\:border-primary:focus { border-color: var(--primary) !important; }
-.hover\:bg-primary\/90:hover { background-color: color-mix(in oklab, var(--primary) 90%, var(--wearo-blue-light)) !important; }
-.hover\:bg-accent:hover { background-color: var(--accent) !important; color: var(--accent-foreground) !important; }
+.focus\\:border-primary:focus { border-color: var(--primary) !important; }
+.hover\\:bg-primary\\/90:hover { background-color: color-mix(in oklab, var(--primary) 90%, var(--wearo-blue-light)) !important; }
+.hover\\:bg-accent:hover { background-color: var(--accent) !important; color: var(--accent-foreground) !important; }
 .bg-destructive { background-color: var(--destructive) !important; }
 .text-destructive-foreground { color: var(--destructive-foreground) !important; }
+
+/* WEARO storefront direction: casual, modern, unisex. */
+.fashion-site { background: var(--wearo-off-white) !important; color: var(--wearo-ink) !important; }
+.fashion-nav { background: rgba(248,246,242,.96) !important; color: var(--wearo-ink) !important; border-bottom: 1px solid var(--wearo-beige) !important; backdrop-filter: blur(14px); }
+.fashion-nav__announcement { background: var(--wearo-blue) !important; color: var(--wearo-white) !important; }
+.fashion-brand__mark { background: var(--wearo-blue) !important; color: var(--wearo-white) !important; border-radius: 999px !important; }
+.fashion-brand__name { color: var(--wearo-blue) !important; }
+.fashion-brand__meta { color: var(--wearo-blue-light) !important; }
+.fashion-nav__links a, .fashion-discovery-link, .fashion-icon-btn, .fashion-language-switcher { color: var(--wearo-ink) !important; }
+.fashion-nav__links a:hover, .fashion-nav__links a.is-active, .fashion-discovery-link:hover { color: var(--wearo-blue) !important; }
+.fashion-cart-btn { color: var(--wearo-blue) !important; }
+.fashion-cart-btn span { background: var(--wearo-coral) !important; }
+.fashion-hero { background: var(--wearo-off-white) !important; color: var(--wearo-ink) !important; }
+.fashion-hero__beams, .fashion-hero__scan { display: none !important; }
+.fashion-hero__copy { background: var(--wearo-off-white) !important; }
+.fashion-hero__mark { color: var(--wearo-blue) !important; }
+.fashion-display, .fashion-display__solid, .fashion-display__brush { color: var(--wearo-blue) !important; text-shadow: none !important; font-style: normal !important; }
+.fashion-display__brush { font-family: inherit !important; }
+.fashion-hero__lede { color: #3f464a !important; }
+.fashion-hero__meta { color: var(--wearo-blue-light) !important; }
+.fashion-btn { background: var(--wearo-blue) !important; color: var(--wearo-white) !important; border-color: var(--wearo-blue) !important; box-shadow: none !important; }
+.fashion-btn:hover { background: var(--wearo-blue-light) !important; border-color: var(--wearo-blue-light) !important; }
+.fashion-btn--ghost { background: transparent !important; color: var(--wearo-blue) !important; border-color: var(--wearo-blue) !important; }
+.fashion-hero__badge { background: var(--wearo-peach) !important; color: var(--wearo-ink) !important; border-color: var(--wearo-beige) !important; }
+.fashion-hero__side-note, .fashion-hero__stories { color: var(--wearo-blue) !important; }
+.fashion-hero__overlay { background: linear-gradient(180deg, rgba(23,23,23,.02), rgba(23,23,23,.16)) !important; }
+.fashion-canvas-nav { background: var(--wearo-white) !important; color: var(--wearo-ink) !important; border-color: var(--wearo-beige) !important; }
+.fashion-canvas-nav__brand, .fashion-canvas-nav__links a, .fashion-canvas-nav__top { color: var(--wearo-blue) !important; }
+.fashion-intro-section { background: var(--wearo-white) !important; color: var(--wearo-ink) !important; }
+.fashion-intro-bg::after { background: linear-gradient(90deg, rgba(248,246,242,.96), rgba(248,246,242,.58), rgba(248,246,242,.12)) !important; }
+.fashion-intro-copy, .fashion-ai-feature__copy > p { color: #4b5052 !important; }
+.statement-line--solid { color: var(--wearo-ink) !important; }
+.statement-line--accent-small, .statement-line--accent-display, .fashion-accent { color: var(--wearo-blue) !important; }
+.fashion-ai-feature { background: var(--wearo-peach) !important; color: var(--wearo-ink) !important; }
+.fashion-ai-feature__visual { border-color: var(--wearo-blue) !important; box-shadow: 10px 10px 0 var(--wearo-coral) !important; }
+.fashion-feature-list div { border-color: rgba(84,114,140,.26) !important; }
+.fashion-feature-list b { color: var(--wearo-blue) !important; }
+.fashion-products-section { background: var(--wearo-off-white) !important; }
+.fashion-category-filter { color: var(--wearo-blue) !important; background: transparent !important; border-color: var(--wearo-beige) !important; }
+.fashion-category-filter:hover, .fashion-category-filter.is-active { background: var(--wearo-blue) !important; color: var(--wearo-white) !important; border-color: var(--wearo-blue) !important; }
+.fashion-product-badge { background: var(--wearo-coral) !important; }
+.fashion-flow { background: var(--wearo-white) !important; color: var(--wearo-ink) !important; }
+.fashion-flow__steps div { border-color: var(--wearo-beige) !important; }
+.fashion-flow__steps span { color: var(--wearo-blue) !important; }
+.fashion-editorial { background: var(--wearo-blue) !important; }
+.fashion-editorial .fashion-eyebrow, .fashion-editorial .fashion-accent { color: var(--wearo-peach) !important; }
+.fashion-editorial .fashion-btn--light { color: var(--wearo-blue) !important; background: var(--wearo-white) !important; }
+.upthink-footer { background: var(--wearo-white) !important; color: var(--wearo-ink) !important; border-color: var(--wearo-beige) !important; }
