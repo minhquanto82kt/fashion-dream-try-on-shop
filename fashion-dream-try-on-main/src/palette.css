@@ -13,8 +13,8 @@
 :root {
   --wearo-blue: var(--theme-primary, #54728C);
   --wearo-blue-light: var(--theme-secondary, #7794A6);
-  --wearo-peach: var(--theme-background, #F2CEAE);
-  --wearo-beige: var(--theme-surface, #D9BBA9);
+  --wearo-peach: #F2CEAE;
+  --wearo-beige: #D9BBA9;
   --wearo-coral: var(--theme-accent, #F2AD94);
   --wearo-off-white: #F8F6F2;
   --wearo-white: #FFFFFF;
