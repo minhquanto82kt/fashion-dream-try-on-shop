@@ -1,0 +1,10 @@
+/* WEARO admin copy overrides for the legacy login shell. */
+.fd-admin-brand__name { font-size: 0 !important; }
+.fd-admin-brand__name::after { content: "WEARO"; font-size: 19px; letter-spacing: .12em; }
+.fd-admin-brand__mark { font-size: 0 !important; }
+.fd-admin-brand__mark::after { content: "W"; font: 700 16px/1 Inter, ui-sans-serif, system-ui, sans-serif; }
+.fd-admin-editorial p { font-size: 0 !important; }
+.fd-admin-editorial p::after { content: "Không gian quản trị dành cho vận hành sản phẩm, tồn kho và đơn hàng của WEARO."; font-size: 13px; line-height: 1.7; color: rgba(255,255,255,.76); }
+.fd-admin-footer span:first-child { font-size: 0 !important; }
+.fd-admin-footer span:first-child::after { content: "WEARO / 2026"; font-size: 8px; }
+.fd-admin-login-visual[aria-label="Fashion Dream Admin"] { }
