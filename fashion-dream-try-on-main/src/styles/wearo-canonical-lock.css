@@ -69,3 +69,43 @@ html[lang="en"] .fashion-site .fashion-editorial h2::after {
   background: transparent !important;
   background-color: transparent !important;
 }
+
+/* =============================================================================
+   UPTHINK — admin control layer
+   WEARO is the customer-facing brand. UpThink is the internal system used to
+   configure and operate how WEARO works. Keep this distinction explicit.
+   ============================================================================= */
+.fd-admin-login-page .fd-admin-brand__name {
+  font-size: 0 !important;
+}
+.fd-admin-login-page .fd-admin-brand__name::after {
+  content: "UPTHINK";
+  font: 400 19px/1 var(--ft-display, "Anton", sans-serif);
+  letter-spacing: .12em;
+}
+.fd-admin-login-page .fd-admin-brand__meta {
+  font-size: 0 !important;
+}
+.fd-admin-login-page .fd-admin-brand__meta::after {
+  content: "WEARO / CONTROL SYSTEM";
+  font: 500 8px/1 var(--ft-meta, "Oswald", sans-serif);
+  letter-spacing: .22em;
+}
+.fd-admin-login-page .fd-admin-editorial p {
+  font-size: 0 !important;
+}
+.fd-admin-login-page .fd-admin-editorial p::after {
+  content: "Không gian quản trị nội bộ để UpThink vận hành catalog, tồn kho, đơn hàng, giao diện và các dịch vụ của WEARO.";
+  display: block;
+  color: rgba(242,238,231,.62);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.fd-admin-login-page .fd-admin-footer > span:first-child {
+  font-size: 0 !important;
+}
+.fd-admin-login-page .fd-admin-footer > span:first-child::after {
+  content: "UPTHINK / WEARO / 2026";
+  font: 500 8px/1 var(--ft-meta, "Oswald", sans-serif);
+  letter-spacing: .15em;
+}
