@@ -7,7 +7,8 @@ export type ThemeColors = { primary: string; secondary: string; background: stri
 export type ThemeWorkflowStatus = "draft" | "published";
 export type ThemeWorkflowRecord = { id: string; name: string; scope: "global"; status: ThemeWorkflowStatus; theme_data: ThemeColors; created_by: string | null; created_at: string; updated_at: string; published_at: string | null };
 
-export const DEFAULT_THEME_COLORS: ThemeColors = { primary: "#F0A500", secondary: "#E6D5B8", background: "#1B1A17", surface: "#24221E", accent: "#E45826", foreground: "#F7F1E7" };
+// WEARO brand defaults. Supabase-published themes still remain the runtime source of truth.
+export const DEFAULT_THEME_COLORS: ThemeColors = { primary: "#54728C", secondary: "#7794A6", background: "#F8F6F2", surface: "#FFFFFF", accent: "#F2AD94", foreground: "#171717" };
 export const THEME_STORAGE_KEY = "upthink-theme-colors";
 const THEME_PREVIEW_STORAGE_KEY = "upthink-theme-preview";
 const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
