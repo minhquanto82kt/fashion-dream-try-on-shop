@@ -3,7 +3,7 @@ import { formatPrice } from "@/lib/i18n";
 export type Product = {
   id: string;
   name: string;
-  price: number; // VND source price
+  price: number;
   category: "hoodies" | "tees" | "outerwear" | "accessories" | "cap" | "sunglass";
   image: string;
   gallery: string[];
@@ -25,20 +25,17 @@ export const CATEGORIES = [
 ] as const;
 
 export const PRODUCTS: Product[] = [
-  { id: "shadow-hoodie", name: "Shadow Hoodie", price: 1290000, category: "hoodies", image: px("18956666"), gallery: [px("18956666"), px("774909"), px("15213195")], sizes: ["S", "M", "L", "XL"], colors: ["Charcoal", "Ivory"], badge: "New drop", description: "Hoodie oversize vải nỉ bông 480gsm, form rộng vai xuôi, mũ 2 lớp. Chuẩn street cho những ngày Sài Gòn trở gió." },
-  { id: "statement-tee", name: "Statement Tee", price: 690000, category: "tees", image: px("1311588"), gallery: [px("1311588"), px("30186074"), px("14216454")], sizes: ["S", "M", "L", "XL"], colors: ["Black", "Ivory"], description: "Cotton 100% dệt compact, in lụa thủ công. Câu chuyện của bạn nằm ngay trên ngực áo." },
-  { id: "night-shift-set", name: "Night Shift Set", price: 1490000, category: "outerwear", image: px("17037339"), gallery: [px("17037339"), px("12104691"), px("28484979")], sizes: ["M", "L", "XL"], colors: ["Black"], badge: "Best seller", description: "Set áo khoác + quần ống suông tối giản, phối cùng nhau hoặc tách rời đều chất." },
-  { id: "oversized-shell-jacket", name: "Oversized Shell Jacket", price: 1890000, category: "outerwear", image: px("19273260"), gallery: [px("19273260"), px("18698406"), px("5840443")], sizes: ["M", "L", "XL"], colors: ["Moss", "Charcoal"], description: "Áo khoác shell chống gió nhẹ, seam dán, túi hộp lớn — layer cuối cùng bạn cần." },
-  { id: "beanie-mono", name: "Beanie Mono", price: 390000, category: "accessories", image: px("6612173"), gallery: [px("6612173"), px("30989278")], sizes: ["Freesize"], colors: ["Black", "Electric"], description: "Beanie len tăm, thêu logo chìm. Món phụ kiện làm gọn mọi outfit." },
-  { id: "crossbody-utility", name: "Crossbody Utility", price: 590000, category: "accessories", image: px("30989278"), gallery: [px("30989278"), px("28484979")], sizes: ["Freesize"], colors: ["Black"], description: "Túi đeo chéo vải cordura, 3 ngăn, dây bản to điều chỉnh nhanh." },
+  { id: "shadow-hoodie", name: "Shadow Hoodie", price: 1290000, category: "hoodies", image: px("18956666"), gallery: [px("18956666"), px("774909"), px("15213195")], sizes: ["S", "M", "L", "XL"], colors: ["Charcoal", "Ivory"], badge: "New drop", description: "Hoodie oversize vải nỉ bông 480gsm, form rộng vai xuôi, mũ 2 lớp. Dễ phối cho những ngày thường, đi học hoặc xuống phố." },
+  { id: "statement-tee", name: "Statement Tee", price: 690000, category: "tees", image: px("1311588"), gallery: [px("1311588"), px("30186074"), px("14216454")], sizes: ["S", "M", "L", "XL"], colors: ["Black", "Ivory"], description: "Cotton 100% dệt compact, phom thoải mái và dễ phối. Một lớp nền gọn gàng cho nhiều phong cách cá nhân." },
+  { id: "night-shift-set", name: "Night Shift Set", price: 1490000, category: "outerwear", image: px("17037339"), gallery: [px("17037339"), px("12104691"), px("28484979")], sizes: ["M", "L", "XL"], colors: ["Black"], badge: "Best seller", description: "Set áo khoác + quần ống suông tối giản, phối cùng nhau hoặc tách rời đều linh hoạt cho ngày làm việc và cuối tuần." },
+  { id: "oversized-shell-jacket", name: "Oversized Shell Jacket", price: 1890000, category: "outerwear", image: px("19273260"), gallery: [px("19273260"), px("18698406"), px("5840443")], sizes: ["M", "L", "XL"], colors: ["Moss", "Charcoal"], description: "Áo khoác shell chống gió nhẹ, seam dán, túi hộp lớn — một lớp outerwear hiện đại cho mọi tủ đồ." },
+  { id: "beanie-mono", name: "Beanie Mono", price: 390000, category: "accessories", image: px("6612173"), gallery: [px("6612173"), px("30989278")], sizes: ["Freesize"], colors: ["Black", "Electric"], description: "Beanie len tăm, thiết kế tối giản. Món phụ kiện gọn giúp hoàn thiện outfit hằng ngày." },
+  { id: "crossbody-utility", name: "Crossbody Utility", price: 590000, category: "accessories", image: px("30989278"), gallery: [px("30989278"), px("28484979")], sizes: ["Freesize"], colors: ["Black"], description: "Túi đeo chéo vải cordura, 3 ngăn, dây bản to điều chỉnh nhanh — thực dụng và dễ dùng cho cả nam lẫn nữ." },
   { id: "cargo-wide-pant", name: "Cargo Wide Pant", price: 990000, category: "outerwear", image: px("12104691"), gallery: [px("12104691"), px("18698406")], sizes: ["S", "M", "L", "XL"], colors: ["Cement", "Moss"], description: "Quần cargo ống rộng, túi hộp gập, lai bo dây rút — thoải mái từ giảng đường ra phố." },
-  { id: "campus-crewneck", name: "Campus Crewneck", price: 890000, category: "hoodies", image: px("15213195"), gallery: [px("15213195"), px("774909")], sizes: ["S", "M", "L", "XL"], colors: ["Beige", "Charcoal"], badge: "IUH edition", description: "Sweater cổ tròn thêu chữ UpThink, form vừa, mặc quanh năm." },
-  { id: "street-cap", name: "Street Cap", price: 490000, category: "cap", image: px("6612173"), gallery: [px("6612173"), px("30989278")], sizes: ["Freesize"], colors: ["Black", "Electric"], badge: "New accessory", description: "Mũ lưỡi trai cotton 6 mảnh, logo thêu nổi và khóa điều chỉnh phía sau." },
-  { id: "shade-runner", name: "Shade Runner", price: 750000, category: "sunglass", image: px("30989278"), gallery: [px("30989278"), px("28484979")], sizes: ["Freesize"], colors: ["Black"], description: "Kính râm gọng vuông nhẹ, tròng tối và thiết kế gọn cho mọi outfit." },
+  { id: "campus-crewneck", name: "Campus Crewneck", price: 890000, category: "hoodies", image: px("15213195"), gallery: [px("15213195"), px("774909")], sizes: ["S", "M", "L", "XL"], colors: ["Beige", "Charcoal"], badge: "IUH edition", description: "Sweater cổ tròn phom vừa, màu trung tính và dễ layer quanh năm. Thiết kế unisex cho phong cách everyday." },
+  { id: "street-cap", name: "Street Cap", price: 490000, category: "cap", image: px("6612173"), gallery: [px("6612173"), px("30989278")], sizes: ["Freesize"], colors: ["Black", "Electric"], badge: "New accessory", description: "Mũ lưỡi trai cotton 6 mảnh, logo thêu nổi và khóa điều chỉnh phía sau. Dễ phối cho mọi outfit." },
+  { id: "shade-runner", name: "Shade Runner", price: 750000, category: "sunglass", image: px("30989278"), gallery: [px("30989278"), px("28484979")], sizes: ["Freesize"], colors: ["Black"], description: "Kính râm gọng vuông nhẹ, tròng tối và thiết kế gọn cho phong cách casual hiện đại." },
 ];
 
 export function getProduct(id: string) { return PRODUCTS.find((p) => p.id === id); }
-
-export function formatVnd(value: number) {
-  return formatPrice(value);
-}
+export function formatVnd(value: number) { return formatPrice(value); }
