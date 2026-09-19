@@ -126,3 +126,49 @@
 .hover\:bg-accent:hover { background-color: var(--accent) !important; color: var(--accent-foreground) !important; }
 .bg-destructive { background-color: var(--destructive) !important; }
 .text-destructive-foreground { color: var(--destructive-foreground) !important; }
+
+/* WEARO storefront: casual, modern, unisex. These selectors intentionally
+   use plain CSS syntax so the build remains compatible with the existing
+   Tailwind-generated stylesheet. */
+.fashion-site { background: var(--wearo-off-white); color: var(--wearo-ink); }
+.fashion-nav { background: rgba(248, 246, 242, 0.96); color: var(--wearo-ink); border-bottom: 1px solid var(--wearo-beige); }
+.fashion-nav__announcement { background: var(--wearo-blue); color: var(--wearo-white); }
+.fashion-brand__mark { background: var(--wearo-blue); color: var(--wearo-white); }
+.fashion-brand__name { color: var(--wearo-blue); }
+.fashion-brand__meta { color: var(--wearo-blue-light); }
+.fashion-nav__links a { color: var(--wearo-ink); }
+.fashion-nav__links a:hover, .fashion-nav__links a.is-active { color: var(--wearo-blue); }
+.fashion-icon-btn, .fashion-language-switcher { color: var(--wearo-ink); }
+.fashion-cart-btn { color: var(--wearo-blue); }
+.fashion-cart-btn span { background: var(--wearo-coral); }
+.fashion-hero { background: var(--wearo-off-white); color: var(--wearo-ink); }
+.fashion-hero__beams, .fashion-hero__scan { display: none; }
+.fashion-hero__copy { background: var(--wearo-off-white); }
+.fashion-display, .fashion-display__solid, .fashion-display__brush { color: var(--wearo-blue); text-shadow: none; font-style: normal; }
+.fashion-display__brush { font-family: inherit; }
+.fashion-hero__lede { color: #3f464a; }
+.fashion-hero__meta { color: var(--wearo-blue-light); }
+.fashion-btn { background: var(--wearo-blue); color: var(--wearo-white); border-color: var(--wearo-blue); box-shadow: none; }
+.fashion-btn:hover { background: var(--wearo-blue-light); border-color: var(--wearo-blue-light); }
+.fashion-btn--ghost { background: transparent; color: var(--wearo-blue); border-color: var(--wearo-blue); }
+.fashion-hero__badge { background: var(--wearo-peach); color: var(--wearo-ink); border-color: var(--wearo-beige); }
+.fashion-hero__overlay { background: linear-gradient(180deg, rgba(23, 23, 23, 0.02), rgba(23, 23, 23, 0.16)); }
+.fashion-canvas-nav { background: var(--wearo-white); color: var(--wearo-ink); border-color: var(--wearo-beige); }
+.fashion-canvas-nav__brand, .fashion-canvas-nav__links a, .fashion-canvas-nav__top { color: var(--wearo-blue); }
+.fashion-intro-section { background: var(--wearo-white); color: var(--wearo-ink); }
+.fashion-intro-copy, .fashion-ai-feature__copy > p { color: #4b5052; }
+.statement-line--solid { color: var(--wearo-ink); }
+.statement-line--accent-small, .statement-line--accent-display, .fashion-accent { color: var(--wearo-blue); }
+.fashion-ai-feature { background: var(--wearo-peach); color: var(--wearo-ink); }
+.fashion-ai-feature__visual { border-color: var(--wearo-blue); box-shadow: 10px 10px 0 var(--wearo-coral); }
+.fashion-products-section { background: var(--wearo-off-white); }
+.fashion-category-filter { color: var(--wearo-blue); background: transparent; border-color: var(--wearo-beige); }
+.fashion-category-filter:hover, .fashion-category-filter.is-active { background: var(--wearo-blue); color: var(--wearo-white); border-color: var(--wearo-blue); }
+.fashion-product-badge { background: var(--wearo-coral); }
+.fashion-flow { background: var(--wearo-white); color: var(--wearo-ink); }
+.fashion-flow__steps div { border-color: var(--wearo-beige); }
+.fashion-flow__steps span { color: var(--wearo-blue); }
+.fashion-editorial { background: var(--wearo-blue); }
+.fashion-editorial .fashion-eyebrow, .fashion-editorial .fashion-accent { color: var(--wearo-peach); }
+.fashion-editorial .fashion-btn--light { color: var(--wearo-blue); background: var(--wearo-white); }
+.wearo-footer { background: var(--wearo-white); color: var(--wearo-ink); border-color: var(--wearo-beige); }
