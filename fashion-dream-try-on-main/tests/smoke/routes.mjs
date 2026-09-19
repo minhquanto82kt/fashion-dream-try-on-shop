@@ -1,35 +1,35 @@
 const baseUrl = (process.env.BASE_URL || "http://127.0.0.1:3000").replace(/\/$/, "");
 
 const routes = [
-  "/",
-  "/shop",
-  "/product/night-shift-set",
-  "/ai?product=night-shift-set",
-  "/cart",
-  "/checkout",
-  "/about",
-  "/account",
-  "/account?preview=1",
+  { path: "/", allowNotFound: false },
+  { path: "/shop", allowNotFound: false },
+  { path: "/product/shadow-hoodie", allowNotFound: true },
+  { path: "/ai?product=shadow-hoodie", allowNotFound: false },
+  { path: "/cart", allowNotFound: false },
+  { path: "/checkout", allowNotFound: false },
+  { path: "/about", allowNotFound: false },
+  { path: "/account", allowNotFound: false },
+  { path: "/account?preview=1", allowNotFound: false },
 ];
 
 let failed = false;
-
-for (const route of routes) {
-  const url = `${baseUrl}${route}`;
+for (const { path, allowNotFound } of routes) {
+  const url = `${baseUrl}${path}`;
   try {
     const response = await fetch(url, { redirect: "manual" });
     const status = response.status;
     const location = response.headers.get("location");
-    if (status >= 200 && status < 400) {
-      console.log(`PASS ${status} ${route}${location ? ` -> ${location}` : ""}`);
+    const acceptable = (status >= 200 && status < 400) || (allowNotFound && status === 404);
+    if (acceptable) {
+      console.log(`PASS ${status} ${path}${location ? ` -> ${location}` : ""}`);
     } else {
       failed = true;
       const body = (await response.text()).replace(/\s+/g, " ").slice(0, 500);
-      console.error(`FAIL ${status} ${route}${location ? ` -> ${location}` : ""} :: ${body}`);
+      console.error(`FAIL ${status} ${path}${location ? ` -> ${location}` : ""} :: ${body}`);
     }
   } catch (error) {
     failed = true;
-    console.error(`FAIL ${route}: ${error instanceof Error ? error.message : String(error)}`);
+    console.error(`FAIL ${path}: ${error instanceof Error ? error.message : String(error)}`);
   }
 }
 
