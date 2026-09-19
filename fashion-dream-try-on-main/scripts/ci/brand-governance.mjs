@@ -30,7 +30,9 @@ const files = publicRoots.flatMap((entry) => {
 
 const failures = [];
 for (const file of files) {
-  if (allowedPaths.has(file)) continue;
+  // Admin routes are authenticated back-office UI, not public-facing storefront code.
+  // They may retain technical/legacy references without leaking the legacy brand to customers.
+  if (allowedPaths.has(file) || file.startsWith("src/routes/admin/")) continue;
   let text;
   try { text = readFileSync(join(root, file), "utf8"); } catch { continue; }
   if (legacyPublicBrand.test(text)) failures.push(file);
