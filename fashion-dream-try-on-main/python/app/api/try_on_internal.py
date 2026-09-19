@@ -12,15 +12,21 @@ from app.core.rate_limit import TRY_ON_REQUESTS, TRY_ON_WINDOW_SECONDS, RateLimi
 from app.models.try_on import TryOnCategory, TryOnJob, TryOnRequest, TryOnStatus
 from app.services.fashn_provider import FashnProviderError
 from app.services.fashn_vton_provider import FashnVtonProviderError
-from app.services.try_on_job_service import TryOnJobService
+from app.services.image_service import normalize_image
+from app.services.try_on_job_service import TryOnJobContext, TryOnJobService
+from app.services.try_on_reconciliation_service import TryOnReconciliationService
 from app.services.try_on_service import TryOnService
 from app.services.try_on_storage_service import TryOnStorageError, TryOnStorageService
-from app.services.image_service import normalize_image
 
 router = APIRouter(prefix="/api/try-on/internal", tags=["try-on-internal"])
 job_service = TryOnJobService()
 provider_service = TryOnService()
 storage_service = TryOnStorageService()
+reconciliation_service = TryOnReconciliationService(
+    job_service,
+    provider_service,
+    storage_service,
+)
 
 MAX_POLL_ATTEMPTS = 60
 MAX_POLL_AGE_SECONDS = 5 * 60
@@ -86,19 +92,6 @@ def _poll_metadata(metadata: dict[str, Any]) -> tuple[dict[str, Any], int]:
     if attempts > MAX_POLL_ATTEMPTS or age > MAX_POLL_AGE_SECONDS:
         raise TimeoutError("Try-On job exceeded the polling reliability limit")
     return updated, attempts
-
-
-def _map_provider_status(provider_status: str) -> TryOnStatus | None:
-    return {
-        "starting": TryOnStatus.PROCESSING,
-        "in_queue": TryOnStatus.PROCESSING,
-        "queued": TryOnStatus.QUEUED,
-        "processing": TryOnStatus.PROCESSING,
-        "completed": TryOnStatus.COMPLETED,
-        "failed": TryOnStatus.FAILED,
-        "canceled": TryOnStatus.FAILED,
-        "cancelled": TryOnStatus.FAILED,
-    }.get(provider_status)
 
 
 @router.post("/jobs", response_model=TryOnJob, status_code=202, dependencies=[Depends(_require_internal_secret)])
@@ -171,9 +164,7 @@ def get_internal_try_on_job(job_id: str) -> TryOnJob:
 
     job = context.job
     if job.status in {TryOnStatus.COMPLETED, TryOnStatus.FAILED}:
-        if job.status == TryOnStatus.COMPLETED:
-            return _with_signed_result(job)
-        return job
+        return _with_signed_result(job) if job.status == TryOnStatus.COMPLETED else job
 
     try:
         metadata, _attempts = _poll_metadata(context.metadata)
@@ -183,50 +174,11 @@ def get_internal_try_on_job(job_id: str) -> TryOnJob:
     prediction_id = metadata.get("provider_prediction_id")
     if not isinstance(prediction_id, str) or not prediction_id.strip():
         return _fail_internal_job(job_id, "Try-On job is missing the provider prediction ID")
+
     job_service.update_metadata_internal(job_id, metadata)
-
-    try:
-        provider = provider_service.provider_for_name(job.provider)
-        payload = provider.get_status(prediction_id)
-    except ValueError as exc:
-        return _fail_internal_job(job_id, str(exc))
-    except (FashnProviderError, FashnVtonProviderError) as exc:
-        failed = job_service.update_status_internal(job_id, status=TryOnStatus.FAILED, error=str(exc))
-        return failed or job
-    except Exception:
-        return _fail_internal_job(job_id, "Try-On provider request failed")
-
-    provider_status = str(payload.get("status", "")).strip().lower()
-    metadata["provider_status"] = provider_status
-    job_service.update_metadata_internal(job_id, metadata)
-    mapped_status = _map_provider_status(provider_status)
-    if mapped_status is None:
-        return _fail_internal_job(job_id, "Try-On provider returned an invalid status")
-
-    result_path = None
-    if mapped_status == TryOnStatus.COMPLETED:
-        output = payload.get("output")
-        candidate = output[0] if isinstance(output, list) and output else output
-        if not isinstance(candidate, str) or not candidate.strip():
-            return _fail_internal_job(job_id, "Try-On provider completed without a valid output image")
-        try:
-            result_path = storage_service.persist_provider_result(job_id, candidate.strip())
-        except TryOnStorageError as exc:
-            return _fail_internal_job(job_id, str(exc))
-
-    error = payload.get("error") if mapped_status == TryOnStatus.FAILED else None
-    if mapped_status == TryOnStatus.FAILED and not error:
-        error = "Try-On provider prediction failed"
-
-    updated = job_service.update_status_internal(
-        job_id,
-        status=mapped_status,
-        result_image_path=result_path,
-        error=str(error) if error else None,
-    )
-    if updated is None:
-        return job
-    return _with_signed_result(updated) if mapped_status == TryOnStatus.COMPLETED else updated
+    refreshed_context = TryOnJobContext(job=job, metadata=metadata)
+    updated = reconciliation_service.refresh(refreshed_context, internal=True)
+    return _with_signed_result(updated) if updated.status == TryOnStatus.COMPLETED else updated
 
 
 def _with_signed_result(job: TryOnJob) -> TryOnJob:
