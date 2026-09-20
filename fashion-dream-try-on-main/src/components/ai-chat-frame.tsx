@@ -60,14 +60,14 @@ export function AiChatFrame({ onUseConcept }: { onUseConcept?: (prompt: string) 
         <div className="flex items-center gap-3">
           <div className="relative flex size-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
             <Bot className="size-4" />
-            <span className="absolute -bottom-0.5 -right-0.5 size-2.5 rounded-full border-2 border-card bg-[#F2AD94]" />
+            <span className="absolute -bottom-0.5 -right-0.5 size-2.5 rounded-full border-2 border-card bg-[var(--wearo-coral)]" />
           </div>
           <div className="min-w-0">
             <p className="text-[10px] uppercase tracking-[0.18em] text-primary">WEARO / AI STYLIST</p>
             <p className="mt-0.5 truncate text-sm font-medium text-foreground">Personal Style Assistant</p>
           </div>
         </div>
-        <span className="inline-flex items-center gap-1.5 text-[9px] uppercase tracking-[0.14em] text-silver"><span className="size-1.5 rounded-full bg-[#F2AD94]" />Online</span>
+        <span className="inline-flex items-center gap-1.5 text-[9px] uppercase tracking-[0.14em] text-silver"><span className="size-1.5 rounded-full bg-[var(--wearo-coral)]" />Online</span>
       </header>
 
       <div className="ai-chatframe__context">
