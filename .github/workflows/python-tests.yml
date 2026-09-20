@@ -22,7 +22,7 @@ jobs:
           python-version: "3.12"
       - name: Install runtime dependencies
         run: pip install -r requirements.txt
-      - name: Install test tooling
-        run: pip install pytest
+      - name: Install development dependencies
+        run: pip install -r requirements-dev.txt
       - name: Run tests
         run: pytest -q
