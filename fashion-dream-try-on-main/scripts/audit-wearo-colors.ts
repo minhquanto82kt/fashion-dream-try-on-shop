@@ -1,4 +1,4 @@
-import { buildWearoColorMatrix, WEARO_COLORS, WEARO_CONTRAST_THRESHOLDS } from '../fashion-dream-try-on-main/src/lib/wearo-color-system.ts';
+import { buildWearoColorMatrix, WEARO_COLORS, WEARO_CONTRAST_THRESHOLDS } from '../src/lib/wearo-color-system.ts';
 
 const matrix = buildWearoColorMatrix();
 const identical = matrix.filter((pair) => pair.text === pair.background);
