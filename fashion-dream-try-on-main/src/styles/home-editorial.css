@@ -67,3 +67,12 @@
 }
 
 @media (prefers-reduced-motion:reduce){.fashion-hero__scan{animation:none}}
+
+/* WEARO / Manifesto — exact uploaded portrait + blue brand gradient. */
+.fashion-intro-section{position:relative;isolation:isolate;overflow:hidden;background:#54728C!important;color:#fff!important}
+.fashion-intro-section .fashion-intro-bg{position:absolute!important;inset:0!important;z-index:0!important;overflow:hidden!important;background:#54728C!important}
+.fashion-intro-section .fashion-intro-bg img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center center!important;filter:none!important;mix-blend-mode:normal!important;opacity:1!important;content:url('/images/stylish_urban_girl.jpg')!important}
+.fashion-intro-section .fashion-intro-bg::after{content:"";position:absolute!important;inset:0!important;z-index:1!important;pointer-events:none!important;background:linear-gradient(90deg,rgba(84,114,140,.96) 0%,rgba(84,114,140,.82) 25%,rgba(84,114,140,.48) 48%,rgba(119,148,166,.20) 72%,rgba(119,148,166,.08) 100%)!important;mix-blend-mode:normal!important}
+.fashion-intro-section .fashion-intro-content,.fashion-intro-section .fashion-section-number{position:relative;z-index:2}
+.fashion-intro-section .fashion-section-title,.fashion-intro-section .fashion-eyebrow,.fashion-intro-section .fashion-intro-copy{color:#fff!important;text-shadow:0 2px 18px rgba(23,23,23,.18)}
+@media (max-width:800px){.fashion-intro-section .fashion-intro-bg img{object-position:center center!important}.fashion-intro-section .fashion-intro-bg::after{background:linear-gradient(180deg,rgba(84,114,140,.88) 0%,rgba(84,114,140,.58) 45%,rgba(119,148,166,.22) 100%)!important}}
