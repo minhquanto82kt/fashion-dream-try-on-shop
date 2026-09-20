@@ -1,0 +1,127 @@
+/* WEARO — Futuristic Casual typography system
+   H1: Space Grotesk 700
+   H2: Be Vietnam Pro 600
+   H3: Be Vietnam Pro 500
+   Paragraph / Quote: Lexend 400 / 400 italic
+
+   Scoped to public storefront surfaces. Admin/UI controls keep their existing
+   component typography so this hierarchy does not destabilize the dashboard.
+*/
+
+:root {
+  --wearo-font-display: "Space Grotesk", sans-serif;
+  --wearo-font-heading: "Be Vietnam Pro", sans-serif;
+  --wearo-font-body: "Lexend", sans-serif;
+
+  --wearo-h1-size: clamp(3rem, 5.2vw, 4rem);
+  --wearo-h2-size: clamp(2rem, 3.2vw, 2.5rem);
+  --wearo-h3-size: clamp(1.375rem, 2vw, 1.75rem);
+  --wearo-body-size: 1rem;
+  --wearo-quote-size: 1rem;
+}
+
+/* Base public reading text. */
+.fashion-site,
+.wearo-page {
+  font-family: var(--wearo-font-body);
+}
+
+/* H1 — futuristic / AI display voice. */
+.fashion-site h1,
+.wearo-page h1 {
+  font-family: var(--wearo-font-display) !important;
+  font-size: var(--wearo-h1-size);
+  font-weight: 700 !important;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  font-style: normal;
+}
+
+/* H2 — modern Vietnamese heading voice. */
+.fashion-site h2,
+.wearo-page h2 {
+  font-family: var(--wearo-font-heading) !important;
+  font-size: var(--wearo-h2-size);
+  font-weight: 600 !important;
+  line-height: 1.12;
+  letter-spacing: -0.018em;
+  font-style: normal;
+}
+
+/* H3 — softer subsection hierarchy. */
+.fashion-site h3,
+.wearo-page h3 {
+  font-family: var(--wearo-font-heading) !important;
+  font-size: var(--wearo-h3-size);
+  font-weight: 500 !important;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+  font-style: normal;
+}
+
+/* Paragraph — comfortable casual reading. */
+.fashion-site p,
+.wearo-page p {
+  font-family: var(--wearo-font-body) !important;
+  font-size: var(--wearo-body-size);
+  font-weight: 400 !important;
+  line-height: 1.65;
+  letter-spacing: 0;
+}
+
+/* Quotes — same readable voice with a restrained editorial cue. */
+.fashion-site blockquote,
+.wearo-page blockquote,
+.fashion-site .quote,
+.wearo-page .quote {
+  font-family: var(--wearo-font-body) !important;
+  font-size: var(--wearo-quote-size);
+  font-weight: 400 !important;
+  font-style: italic;
+  line-height: 1.65;
+  letter-spacing: 0;
+}
+
+/* UI copy stays readable without pretending every control is a heading. */
+.fashion-site button,
+.fashion-site input,
+.fashion-site select,
+.fashion-site textarea,
+.fashion-site label,
+.fashion-site nav,
+.fashion-site a,
+.wearo-page button,
+.wearo-page input,
+.wearo-page select,
+.wearo-page textarea,
+.wearo-page label,
+.wearo-page nav,
+.wearo-page a {
+  font-family: var(--wearo-font-body);
+}
+
+/* Preserve compact metadata / eyebrow styling while using the new body family. */
+.fashion-site small,
+.wearo-page small,
+.fashion-site .fashion-eyebrow,
+.wearo-page .fashion-eyebrow,
+.fashion-site [class*="meta"],
+.wearo-page [class*="meta"] {
+  font-family: var(--wearo-font-body);
+}
+
+@media (max-width: 700px) {
+  :root {
+    --wearo-h1-size: clamp(2.125rem, 10vw, 2.625rem);
+    --wearo-h2-size: clamp(1.625rem, 7vw, 2rem);
+    --wearo-h3-size: clamp(1.25rem, 5.5vw, 1.5rem);
+    --wearo-body-size: 0.9375rem;
+    --wearo-quote-size: 0.9375rem;
+  }
+
+  .fashion-site h1,
+  .wearo-page h1 {
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+}
