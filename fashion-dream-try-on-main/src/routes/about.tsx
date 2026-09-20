@@ -54,7 +54,7 @@ function AboutPage() {
         </div>
         <div className="mt-8 grid gap-4 sm:grid-cols-5">
           <div className="h-20 border border-border bg-[#54728C] p-3 text-[10px] uppercase tracking-[0.14em] text-white">SLATE BLUE<br /><span className="opacity-80">#54728C</span></div>
-          <div className="h-20 border border-border bg-[#7794A6] p-3 text-[10px] uppercase tracking-[0.14em] text-white">DUSTY BLUE<br /><span className="opacity-80">#7794A6</span></div>
+          <div className="wearo-swatch-blue-light h-20 border border-border bg-[#7794A6] p-3 text-[10px] uppercase tracking-[0.14em] text-black">DUSTY BLUE<br /><span className="opacity-80">#7794A6</span></div>
           <div className="h-20 border border-border bg-[#F2CEAE] p-3 text-[10px] uppercase tracking-[0.14em] text-[#171717]">PEACH<br /><span className="opacity-70">#F2CEAE</span></div>
           <div className="h-20 border border-border bg-[#D9BBA9] p-3 text-[10px] uppercase tracking-[0.14em] text-[#171717]">BEIGE<br /><span className="opacity-70">#D9BBA9</span></div>
           <div className="h-20 border border-border bg-[#F2AD94] p-3 text-[10px] uppercase tracking-[0.14em] text-[#171717]">CORAL<br /><span className="opacity-70">#F2AD94</span></div>
