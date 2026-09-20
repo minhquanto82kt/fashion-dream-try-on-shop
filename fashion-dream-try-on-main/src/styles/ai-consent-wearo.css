@@ -1,0 +1,24 @@
+/* WEARO AI consent experience — scoped to the /ai consent gate. */
+.ai-consent-panel{position:relative;width:min(100%,760px);overflow:hidden;border:1px solid rgba(84,114,140,.20);border-radius:28px;background:rgba(255,255,255,.94);padding:clamp(28px,5vw,56px);color:#1f2933;box-shadow:0 24px 80px rgba(84,114,140,.12);backdrop-filter:blur(18px)}
+.ai-consent-panel::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:linear-gradient(90deg,#54728C 0%,#7794A6 52%,#F2AD94 100%)}
+.ai-consent-panel .eyebrow{color:#54728C;font-size:10px;font-weight:700;letter-spacing:.18em;line-height:1.4;text-transform:uppercase}
+.ai-consent-panel h1{max-width:620px;color:#263746;font-size:clamp(28px,5vw,44px);font-weight:600;letter-spacing:-.035em;line-height:1.04}
+.ai-consent-panel>p:not(.eyebrow):not(:last-child){max-width:620px;color:#667887}
+.ai-consent-panel>div[style*="aiConsentFade"]{display:grid;gap:12px}
+.ai-consent-panel>div[style*="aiConsentFade"]>div{min-height:96px;gap:16px;border:1px solid rgba(84,114,140,.16);border-radius:18px;background:linear-gradient(180deg,rgba(247,250,251,.96),rgba(255,255,255,.96));padding:18px}
+.ai-consent-panel>div[style*="aiConsentFade"]>div>span{width:30px;height:30px;margin-top:0;border-color:rgba(84,114,140,.28);background:#fff;color:#54728C;font-size:10px;font-weight:700}
+.ai-consent-panel>div[style*="aiConsentFade"] p.text-foreground{color:#263746;font-size:13px;font-weight:650;letter-spacing:.01em}
+.ai-consent-panel>div[style*="aiConsentFade"] p.text-silver{color:#71808c;font-size:12px;line-height:1.65}
+.ai-consent-back{display:inline-flex;align-items:center;min-height:40px;margin-bottom:24px;border:1px solid rgba(84,114,140,.18);border-radius:999px;background:#fff;padding:0 14px;color:#54728C;font-size:11px;font-weight:600;transition:border-color .2s ease,background-color .2s ease,transform .2s ease}
+.ai-consent-back:hover{border-color:rgba(84,114,140,.40);background:#F7FAFB;transform:translateX(-2px)}
+.ai-consent-check{display:flex;align-items:flex-start;gap:12px;border:1px solid rgba(84,114,140,.18);border-radius:16px;background:#F7FAFB;padding:15px 16px;color:#425564;font-size:12px;line-height:1.6;cursor:pointer;transition:border-color .2s ease,background-color .2s ease,box-shadow .2s ease}
+.ai-consent-check:hover{border-color:rgba(84,114,140,.38);background:#fff}
+.ai-consent-check:focus-within{border-color:#54728C;box-shadow:0 0 0 3px rgba(84,114,140,.12)}
+.ai-consent-check input{width:18px;height:18px;flex:0 0 18px;margin:1px 0 0;accent-color:#54728C;cursor:pointer}
+.ai-consent-panel>button:not(.ai-consent-back){min-height:50px;border-radius:14px;background:#54728C;color:#fff;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;box-shadow:0 10px 24px rgba(84,114,140,.16);transition:transform .2s ease,background-color .2s ease,opacity .2s ease,box-shadow .2s ease}
+.ai-consent-panel>button:not(.ai-consent-back):hover:not(:disabled){background:#7794A6;transform:translateY(-1px);box-shadow:0 14px 28px rgba(84,114,140,.20)}
+.ai-consent-panel>button:not(.ai-consent-back):focus-visible,.ai-consent-back:focus-visible,.ai-consent-check input:focus-visible{outline:3px solid rgba(242,173,148,.45);outline-offset:3px}
+.ai-consent-panel>button:not(.ai-consent-back):disabled{background:#AEBBC3;box-shadow:none;opacity:.72}
+.ai-consent-panel>p:last-child{color:#87949d}
+@media(max-width:640px){.ai-consent-panel{border-radius:22px;padding:28px 20px}.ai-consent-panel>div[style*="aiConsentFade"]>div{min-height:0;padding:15px}}
+@media(prefers-reduced-motion:reduce){.ai-consent-panel *,.ai-consent-panel *::before,.ai-consent-panel *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
