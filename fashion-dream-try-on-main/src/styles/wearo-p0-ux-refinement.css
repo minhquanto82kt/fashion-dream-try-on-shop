@@ -1,0 +1,277 @@
+/* WEARO P0 — scoped UX refinement.
+ * Purpose: simplify homepage + /ai presentation without changing routes,
+ * shared shell components, palette tokens, data flow, or AI functions.
+ */
+
+/* =========================
+   /ai — calmer workspace
+   ========================= */
+.ai-dashboard-topbar {
+  margin-bottom: 24px;
+  padding-bottom: 18px;
+}
+
+.ai-dashboard-topbar h1 {
+  max-width: 720px;
+  letter-spacing: -.045em;
+}
+
+.ai-dashboard-topbar h1 .text-primary {
+  color: var(--primary);
+}
+
+.ai-dashboard-status {
+  border-radius: 999px;
+  padding: 7px 11px;
+  background: color-mix(in srgb, var(--primary) 6%, transparent);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .12em;
+}
+
+.ai-dashboard-status > span {
+  background: var(--primary) !important;
+}
+
+.ai-dashboard-shell {
+  grid-template-columns: minmax(180px, 205px) minmax(0, 1fr) minmax(280px, 330px);
+  gap: 16px;
+}
+
+.ai-dashboard-panel,
+.ai-chatframe {
+  border-radius: 20px;
+  box-shadow: 0 16px 48px color-mix(in srgb, var(--primary) 7%, transparent);
+}
+
+.ai-dashboard-panel {
+  padding: 8px !important;
+}
+
+.ai-dashboard-panel aside > div:first-child {
+  padding-inline: 8px;
+}
+
+.ai-dashboard-panel button {
+  border-radius: 12px;
+}
+
+.ai-dashboard-panel nav button {
+  min-height: 40px;
+}
+
+.ai-dashboard-panel nav button:not([class*="border-primary"]) {
+  background: transparent;
+}
+
+.ai-dashboard-shell > section > div:first-child {
+  padding-bottom: 16px;
+}
+
+.ai-dashboard-shell > section > div:nth-child(2) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.ai-dashboard-shell > section > div:nth-child(2) button {
+  min-height: 40px;
+  border-radius: 999px;
+  padding-inline: 14px;
+  font-size: 9px;
+  font-weight: 650;
+  letter-spacing: .11em;
+}
+
+.ai-dashboard-shell > section > div:nth-child(2) button:not(.bg-primary) {
+  background: color-mix(in srgb, var(--background) 94%, var(--primary));
+}
+
+/* Keep the existing WEARO palette; remove legacy-looking hard-coded coral/orange accents. */
+.ai-dashboard-shell button,
+.ai-dashboard-shell a {
+  transition-duration: .18s;
+}
+
+/* Consent is already a WEARO-specific component; only tighten its visual footprint. */
+.ai-consent-panel {
+  max-width: 700px;
+}
+
+.ai-consent-panel::before {
+  background: linear-gradient(90deg, var(--primary), color-mix(in srgb, var(--primary) 72%, var(--foreground)), var(--primary));
+}
+
+.ai-consent-panel h1 {
+  letter-spacing: -.04em;
+}
+
+/* =========================
+   Homepage — visual cleanup
+   ========================= */
+.fashion-hero {
+  min-height: min(820px, calc(100svh - 74px));
+  height: min(820px, calc(100svh - 74px));
+}
+
+.fashion-hero__copy {
+  width: min(600px, 50vw);
+}
+
+.fashion-display__solid,
+.fashion-display__brush {
+  text-shadow: none;
+}
+
+.fashion-display__brush {
+  color: var(--primary) !important;
+  text-shadow: none !important;
+}
+
+.fashion-hero__art img {
+  filter: saturate(.68) contrast(1.02) brightness(.96);
+}
+
+.fashion-hero__overlay {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--background) 96%, transparent) 0%, color-mix(in srgb, var(--background) 18%, transparent) 52%, transparent 100%);
+}
+
+.fashion-hero__scan,
+.fashion-hero__frame,
+.fashion-hero__side-note,
+.fashion-hero__stories {
+  opacity: .28;
+}
+
+.fashion-hero__scan {
+  animation: none;
+}
+
+.fashion-hero__badge {
+  opacity: .72;
+}
+
+.fashion-hero__meta {
+  opacity: .76;
+}
+
+.fashion-canvas-nav__inner {
+  min-height: 44px;
+}
+
+.fashion-canvas-nav__links {
+  gap: 20px;
+}
+
+.fashion-intro-section {
+  background: var(--background);
+}
+
+.fashion-intro-bg {
+  opacity: .16;
+  filter: grayscale(.25) saturate(.5);
+}
+
+.fashion-intro-content {
+  position: relative;
+  z-index: 2;
+}
+
+.fashion-section-title,
+.fashion-display {
+  text-wrap: balance;
+}
+
+.fashion-section-title .fashion-accent,
+.fashion-intro-content .statement-line--accent-display {
+  color: var(--primary);
+}
+
+.fashion-ai-feature__visual,
+.fashion-editorial {
+  box-shadow: none;
+}
+
+.fashion-ai-feature__visual img,
+.fashion-editorial {
+  filter: saturate(.72) contrast(1.02);
+}
+
+.fashion-products-section,
+.fashion-flow {
+  border-top-color: var(--border);
+}
+
+.fashion-category-filter {
+  border-radius: 999px;
+}
+
+.fashion-editorial {
+  background-color: var(--background) !important;
+}
+
+/* Keep the existing editorial section and asset, but reduce its streetwear/cyber dominance. */
+.fashion-editorial::before {
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--background) 78%, transparent) 0%,
+    color-mix(in srgb, var(--background) 50%, transparent) 44%,
+    color-mix(in srgb, var(--background) 12%, transparent) 100%),
+    linear-gradient(180deg,
+    color-mix(in srgb, var(--background) 10%, transparent),
+    color-mix(in srgb, var(--background) 55%, transparent));
+}
+
+.fashion-editorial::after {
+  border-color: color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+/* =========================
+   Responsive guardrails
+   ========================= */
+@media (max-width: 1180px) {
+  .ai-dashboard-shell {
+    grid-template-columns: 190px minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 800px) {
+  .fashion-hero {
+    min-height: auto;
+    height: auto;
+  }
+
+  .fashion-hero__copy {
+    width: 100%;
+  }
+
+  .fashion-hero__art {
+    opacity: .88;
+  }
+
+  .fashion-hero__side-note,
+  .fashion-hero__stories,
+  .fashion-hero__frame {
+    display: none;
+  }
+
+  .fashion-canvas-nav__links {
+    display: none;
+  }
+
+  .fashion-intro-bg {
+    opacity: .10;
+  }
+
+  .ai-dashboard-shell {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fashion-hero__art img,
+  .ai-dashboard-shell *,
+  .fashion-editorial * {
+    transition-duration: .01ms !important;
+  }
+}
