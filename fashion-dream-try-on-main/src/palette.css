@@ -5,6 +5,8 @@
    #F2CEAE — warm light / peach beige
    #D9BBA9 — neutral warm / dusty beige
    #F2AD94 — accent / coral peach
+   #FFFFFF — neutral light / white
+   #000000 — neutral dark / black
 
    Runtime theme values are injected by src/lib/theme.ts.
    The fallback values below are the WEARO brand defaults.
@@ -18,6 +20,7 @@
   --wearo-coral: var(--theme-accent, #F2AD94);
   --wearo-off-white: #F8F6F2;
   --wearo-white: #FFFFFF;
+  --wearo-black: #000000;
   --wearo-ink: #171717;
   --brand-primary: var(--wearo-blue);
   --brand-secondary: var(--wearo-blue-light);
@@ -267,6 +270,60 @@
 .wearo-pair-coral-on-blue-light { color: var(--wearo-pair-coral-on-blue-light-text); background-color: var(--wearo-pair-coral-on-blue-light-bg); text-shadow: var(--wearo-pair-coral-on-blue-light-shadow); }
 .wearo-pair-coral-on-peach { color: var(--wearo-pair-coral-on-peach-text); background-color: var(--wearo-pair-coral-on-peach-bg); text-shadow: var(--wearo-pair-coral-on-peach-shadow); }
 .wearo-pair-coral-on-beige { color: var(--wearo-pair-coral-on-beige-text); background-color: var(--wearo-pair-coral-on-beige-bg); text-shadow: var(--wearo-pair-coral-on-beige-shadow); }
+
+/* 7x7 extension: white and black are neutral utility colors, not new brand colors. */
+:root {
+  --wearo-pair-white-on-blue-text: var(--wearo-white);
+  --wearo-pair-white-on-blue-bg: var(--wearo-blue);
+  --wearo-pair-white-on-blue-shadow: var(--wearo-shadow-none);
+  --wearo-pair-white-on-blue-light-text: var(--wearo-white);
+  --wearo-pair-white-on-blue-light-bg: var(--wearo-blue-light);
+  --wearo-pair-white-on-blue-light-shadow: var(--wearo-shadow-none);
+  --wearo-pair-white-on-peach-text: var(--wearo-white);
+  --wearo-pair-white-on-peach-bg: var(--wearo-peach);
+  --wearo-pair-white-on-peach-shadow: var(--wearo-shadow-none);
+  --wearo-pair-white-on-beige-text: var(--wearo-white);
+  --wearo-pair-white-on-beige-bg: var(--wearo-beige);
+  --wearo-pair-white-on-beige-shadow: var(--wearo-shadow-none);
+  --wearo-pair-white-on-coral-text: var(--wearo-white);
+  --wearo-pair-white-on-coral-bg: var(--wearo-coral);
+  --wearo-pair-white-on-coral-shadow: var(--wearo-shadow-none);
+  --wearo-pair-white-on-black-text: var(--wearo-white);
+  --wearo-pair-white-on-black-bg: var(--wearo-black);
+  --wearo-pair-white-on-black-shadow: var(--wearo-shadow-none);
+
+  --wearo-pair-black-on-blue-text: var(--wearo-black);
+  --wearo-pair-black-on-blue-bg: var(--wearo-blue);
+  --wearo-pair-black-on-blue-shadow: var(--wearo-shadow-none);
+  --wearo-pair-black-on-blue-light-text: var(--wearo-black);
+  --wearo-pair-black-on-blue-light-bg: var(--wearo-blue-light);
+  --wearo-pair-black-on-blue-light-shadow: var(--wearo-shadow-none);
+  --wearo-pair-black-on-peach-text: var(--wearo-black);
+  --wearo-pair-black-on-peach-bg: var(--wearo-peach);
+  --wearo-pair-black-on-peach-shadow: var(--wearo-shadow-none);
+  --wearo-pair-black-on-beige-text: var(--wearo-black);
+  --wearo-pair-black-on-beige-bg: var(--wearo-beige);
+  --wearo-pair-black-on-beige-shadow: var(--wearo-shadow-none);
+  --wearo-pair-black-on-coral-text: var(--wearo-black);
+  --wearo-pair-black-on-coral-bg: var(--wearo-coral);
+  --wearo-pair-black-on-coral-shadow: var(--wearo-shadow-none);
+  --wearo-pair-black-on-white-text: var(--wearo-black);
+  --wearo-pair-black-on-white-bg: var(--wearo-white);
+  --wearo-pair-black-on-white-shadow: var(--wearo-shadow-none);
+}
+
+.wearo-pair-white-on-blue { color: var(--wearo-pair-white-on-blue-text); background-color: var(--wearo-pair-white-on-blue-bg); text-shadow: var(--wearo-pair-white-on-blue-shadow); }
+.wearo-pair-white-on-blue-light { color: var(--wearo-pair-white-on-blue-light-text); background-color: var(--wearo-pair-white-on-blue-light-bg); text-shadow: var(--wearo-pair-white-on-blue-light-shadow); }
+.wearo-pair-white-on-peach { color: var(--wearo-pair-white-on-peach-text); background-color: var(--wearo-pair-white-on-peach-bg); text-shadow: var(--wearo-pair-white-on-peach-shadow); }
+.wearo-pair-white-on-beige { color: var(--wearo-pair-white-on-beige-text); background-color: var(--wearo-pair-white-on-beige-bg); text-shadow: var(--wearo-pair-white-on-beige-shadow); }
+.wearo-pair-white-on-coral { color: var(--wearo-pair-white-on-coral-text); background-color: var(--wearo-pair-white-on-coral-bg); text-shadow: var(--wearo-pair-white-on-coral-shadow); }
+.wearo-pair-white-on-black { color: var(--wearo-pair-white-on-black-text); background-color: var(--wearo-pair-white-on-black-bg); text-shadow: var(--wearo-pair-white-on-black-shadow); }
+.wearo-pair-black-on-blue { color: var(--wearo-pair-black-on-blue-text); background-color: var(--wearo-pair-black-on-blue-bg); text-shadow: var(--wearo-pair-black-on-blue-shadow); }
+.wearo-pair-black-on-blue-light { color: var(--wearo-pair-black-on-blue-light-text); background-color: var(--wearo-pair-black-on-blue-light-bg); text-shadow: var(--wearo-pair-black-on-blue-light-shadow); }
+.wearo-pair-black-on-peach { color: var(--wearo-pair-black-on-peach-text); background-color: var(--wearo-pair-black-on-peach-bg); text-shadow: var(--wearo-pair-black-on-peach-shadow); }
+.wearo-pair-black-on-beige { color: var(--wearo-pair-black-on-beige-text); background-color: var(--wearo-pair-black-on-beige-bg); text-shadow: var(--wearo-pair-black-on-beige-shadow); }
+.wearo-pair-black-on-coral { color: var(--wearo-pair-black-on-coral-text); background-color: var(--wearo-pair-black-on-coral-bg); text-shadow: var(--wearo-pair-black-on-coral-shadow); }
+.wearo-pair-black-on-white { color: var(--wearo-pair-black-on-white-text); background-color: var(--wearo-pair-black-on-white-bg); text-shadow: var(--wearo-pair-black-on-white-shadow); }
 
 /* Intentional editorial use: the hero accent stays coral on the blue hero. */
 .fashion-display__brush { color: var(--wearo-coral); }
