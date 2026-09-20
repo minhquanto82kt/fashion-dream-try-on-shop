@@ -11,13 +11,16 @@ const COLOR_ALIASES: Record<string, string> = {
   '#f2ad94': 'coral',
   'var(--wearo-blue)': 'blue',
   'var(--wearo-primary)': 'blue',
+  'var(--primary)': 'blue',
   'var(--brand-primary)': 'blue',
   'var(--wearo-blue-light)': 'blueLight',
   'var(--wearo-primary-light)': 'blueLight',
+  'var(--primary-light)': 'blueLight',
   'var(--wearo-peach)': 'peach',
   'var(--wearo-beige)': 'beige',
   'var(--wearo-coral)': 'coral',
   'var(--wearo-secondary)': 'coral',
+  'var(--accent)': 'coral',
   'var(--brand-accent)': 'coral',
 };
 
@@ -75,14 +78,13 @@ function auditCssFile(path: string): string[] {
   return failures;
 }
 
-const failures = walk(ROOT)
-  .filter((path) => path.endsWith('.css'))
-  .flatMap(auditCssFile);
+const cssFiles = walk(ROOT).filter((path) => path.endsWith('.css'));
+const failures = cssFiles.flatMap(auditCssFile);
 
 console.log('WEARO COLOR USAGE AUDIT');
 console.log('=======================');
-console.log(`CSS files scanned: ${walk(ROOT).filter((path) => path.endsWith('.css')).length}`);
-console.log(`Direct brand color/background collisions: ${failures.length}`);
+console.log(`CSS files scanned: ${cssFiles.length}`);
+console.log(`Direct WEARO color/background collisions: ${failures.length}`);
 
 if (failures.length) {
   console.error('\nFAIL');
@@ -90,4 +92,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log('PASS — no direct WEARO brand color/background collision found.');
+console.log('PASS — no direct WEARO brand/semantic color-background collision found.');
