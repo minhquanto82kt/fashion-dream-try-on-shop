@@ -4,6 +4,8 @@ export const WEARO_COLORS = {
   peach: '#F2CEAE',
   beige: '#D9BBA9',
   coral: '#F2AD94',
+  white: '#FFFFFF',
+  black: '#000000',
 } as const;
 
 export type WearoColorName = keyof typeof WEARO_COLORS;
@@ -16,6 +18,8 @@ export const WEARO_COLOR_ROLES: Record<WearoColorName, string> = {
   peach: 'warm-light',
   beige: 'neutral-warm',
   coral: 'accent',
+  white: 'neutral-light',
+  black: 'neutral-dark',
 };
 
 export const WEARO_CONTRAST_THRESHOLDS = {
@@ -73,6 +77,11 @@ export interface WearoColorPair {
   shadow: WearoShadow;
 }
 
+export const WEARO_NEUTRAL_STANDARD_PAIR_IDS = new Set([
+  'white-on-black',
+  'black-on-white',
+]);
+
 export function buildWearoColorMatrix(): WearoColorPair[] {
   return (Object.keys(WEARO_COLORS) as WearoColorName[]).flatMap((text) =>
     (Object.keys(WEARO_COLORS) as WearoColorName[]).map((background) => {
@@ -93,6 +102,14 @@ export function buildWearoColorMatrix(): WearoColorPair[] {
 }
 
 export const WEARO_COLOR_MATRIX = buildWearoColorMatrix();
+
+/**
+ * 40 design variants = 49 raw combinations - 7 identical pairs -
+ * 2 universal neutral pairs (black-on-white / white-on-black).
+ */
+export const WEARO_COLOR_VARIANT_PAIRS = WEARO_COLOR_MATRIX.filter(
+  (pair) => pair.text !== pair.background && !WEARO_NEUTRAL_STANDARD_PAIR_IDS.has(pair.id),
+);
 
 export const WEARO_ALLOWED_PAIR_IDS = new Set(
   WEARO_COLOR_MATRIX.filter((pair) => pair.status !== 'RESTRICTED').map((pair) => pair.id),
