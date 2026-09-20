@@ -14,7 +14,8 @@
 .fashion-site .fashion-display__brush {
   font-family: "Dancing Script", var(--ft-impact), cursive !important;
   font-weight: 600 !important;
-  color: var(--primary) !important;
+  color: var(--wearo-pair-coral-on-blue-text) !important;
+  text-shadow: var(--wearo-pair-coral-on-blue-shadow) !important;
 }
 .fashion-site .fashion-eyebrow,
 .fashion-site .fashion-hero__mark,
@@ -52,7 +53,8 @@
   font-family: var(--ft-sans), "Space Grotesk", system-ui, sans-serif;
   font-weight: 700;
   letter-spacing: -.055em;
-  color: var(--primary);
+  color: var(--wearo-pair-blue-on-coral-text);
+  text-shadow: var(--wearo-pair-blue-on-coral-shadow);
 }
 html[lang="en"] .fashion-site .fashion-editorial h2::before {
   content: "Wear is";
