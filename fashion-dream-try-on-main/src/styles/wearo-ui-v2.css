@@ -34,8 +34,8 @@ body.wearo-ui-v2 {
 .wearo-ui-v2 .bg-olive,
 .wearo-ui-v2 .bg-mustard { background-color: var(--wearo-v2-blue) !important; }
 .wearo-ui-v2 .border-beige { border-color: var(--wearo-v2-line) !important; }
-.wearo-ui-v2 .hover\\:text-beige:hover { color: var(--wearo-v2-coral) !important; }
-.wearo-ui-v2 .placeholder\\:text-silver::placeholder { color: var(--wearo-v2-muted) !important; }
+.wearo-ui-v2 .hover\:text-beige:hover { color: var(--wearo-v2-coral) !important; }
+.wearo-ui-v2 .placeholder\:text-silver::placeholder { color: var(--wearo-v2-muted) !important; }
 
 /* Public utility surfaces */
 .wearo-ui-v2 main:not(.fashion-hero) {
