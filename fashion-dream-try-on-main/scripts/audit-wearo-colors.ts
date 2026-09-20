@@ -1,32 +1,47 @@
-import { buildWearoColorMatrix, WEARO_COLORS, WEARO_CONTRAST_THRESHOLDS } from '../src/lib/wearo-color-system.ts';
+import {
+  buildWearoColorMatrix,
+  WEARO_COLORS,
+  WEARO_CONTRAST_THRESHOLDS,
+  WEARO_NEUTRAL_STANDARD_PAIR_IDS,
+  WEARO_COLOR_VARIANT_PAIRS,
+} from '../src/lib/wearo-color-system.ts';
 
 const matrix = buildWearoColorMatrix();
 const identical = matrix.filter((pair) => pair.text === pair.background);
 const candidates = matrix.filter((pair) => pair.text !== pair.background);
-const restricted = candidates.filter((pair) => pair.status === 'RESTRICTED');
-const editorialLow = candidates.filter((pair) => pair.status === 'EDITORIAL_LOW');
-const display = candidates.filter((pair) => pair.status === 'DISPLAY');
-const aaText = candidates.filter((pair) => pair.status === 'AA_TEXT');
+const variants = WEARO_COLOR_VARIANT_PAIRS;
+const neutralStandard = candidates.filter((pair) => WEARO_NEUTRAL_STANDARD_PAIR_IDS.has(pair.id));
+const restricted = variants.filter((pair) => pair.status === 'RESTRICTED');
+const editorialLow = variants.filter((pair) => pair.status === 'EDITORIAL_LOW');
+const display = variants.filter((pair) => pair.status === 'DISPLAY');
+const aaText = variants.filter((pair) => pair.status === 'AA_TEXT');
 
 const failures: string[] = [];
-if (Object.keys(WEARO_COLORS).length !== 5) failures.push('WEARO must contain exactly 5 brand colors.');
-if (matrix.length !== 25) failures.push(`Expected 25 matrix pairs, got ${matrix.length}.`);
-if (identical.length !== 5) failures.push(`Expected 5 identical pairs, got ${identical.length}.`);
-if (candidates.length !== 20) failures.push(`Expected 20 non-identical pairs, got ${candidates.length}.`);
-if (candidates.some((pair) => pair.status === 'EDITORIAL_LOW' && pair.shadow === 'none')) {
-  failures.push('Every EDITORIAL_LOW pair must have a shadow treatment.');
+if (Object.keys(WEARO_COLORS).length !== 7) failures.push('WEARO must contain exactly 7 matrix colors: 5 brand + white + black.');
+if (matrix.length !== 49) failures.push(`Expected 49 matrix pairs, got ${matrix.length}.`);
+if (identical.length !== 7) failures.push(`Expected 7 identical pairs, got ${identical.length}.`);
+if (candidates.length !== 42) failures.push(`Expected 42 non-identical pairs, got ${candidates.length}.`);
+if (neutralStandard.length !== 2) failures.push(`Expected 2 neutral standard pairs, got ${neutralStandard.length}.`);
+if (variants.length !== 40) failures.push(`Expected 40 design variants, got ${variants.length}.`);
+if (variants.some((pair) => pair.status === 'EDITORIAL_LOW' && pair.shadow === 'none')) {
+  failures.push('Every EDITORIAL_LOW variant must have a shadow treatment.');
 }
-if (candidates.some((pair) => pair.status !== 'EDITORIAL_LOW' && pair.shadow !== 'none')) {
-  failures.push('Only EDITORIAL_LOW pairs may receive automatic text shadow.');
+if (variants.some((pair) => pair.status !== 'EDITORIAL_LOW' && pair.shadow !== 'none')) {
+  failures.push('Only EDITORIAL_LOW variants may receive automatic text shadow.');
 }
-if (candidates.some((pair) => pair.contrast < 0)) failures.push('Contrast ratio cannot be negative.');
+if (variants.some((pair) => pair.contrast < 0)) failures.push('Contrast ratio cannot be negative.');
+if (neutralStandard.some((pair) => pair.status === 'RESTRICTED')) {
+  failures.push('White-on-black and black-on-white must remain valid neutral standard pairs.');
+}
 
 console.log('WEARO COLOR AUDIT');
 console.log('=================');
-console.log(`Brand colors: ${Object.keys(WEARO_COLORS).length}`);
+console.log(`Matrix colors: ${Object.keys(WEARO_COLORS).length}`);
 console.log(`Raw combinations: ${matrix.length}`);
 console.log(`Identical pairs removed: ${identical.length}`);
-console.log(`Candidate pairs: ${candidates.length}`);
+console.log(`Non-identical pairs: ${candidates.length}`);
+console.log(`Neutral standard pairs excluded from variants: ${neutralStandard.length}`);
+console.log(`Design variants: ${variants.length}`);
 console.log(`AA text: ${aaText.length}`);
 console.log(`Display: ${display.length}`);
 console.log(`Editorial low + shadow: ${editorialLow.length}`);
@@ -35,7 +50,8 @@ console.log(`Thresholds: AA=${WEARO_CONTRAST_THRESHOLDS.aaText}, Display=${WEARO
 console.log('');
 
 for (const pair of candidates) {
-  console.log(`${pair.id.padEnd(24)} ${pair.contrast.toFixed(2).padStart(5)}  ${pair.status.padEnd(15)} shadow=${pair.shadow}`);
+  const marker = WEARO_NEUTRAL_STANDARD_PAIR_IDS.has(pair.id) ? ' [STANDARD]' : '';
+  console.log(`${pair.id.padEnd(28)} ${pair.contrast.toFixed(2).padStart(5)}  ${pair.status.padEnd(15)} shadow=${pair.shadow}${marker}`);
 }
 
 if (failures.length) {
@@ -44,4 +60,5 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log('\nPASS — WEARO color matrix is internally consistent.');
+console.log('\nPASS — WEARO 7x7 color matrix is internally consistent.');
+console.log('40 design variants = 49 combinations - 7 identical - 2 neutral standard pairs.');
