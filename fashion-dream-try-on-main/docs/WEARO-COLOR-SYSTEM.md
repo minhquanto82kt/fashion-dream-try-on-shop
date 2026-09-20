@@ -1,6 +1,6 @@
 # WEARO Color System
 
-WEARO uses five brand colors as the single source of truth:
+WEARO uses seven colors in the pairing matrix: five brand colors plus white and black as neutral utility colors.
 
 | Token | HEX | Role |
 | --- | --- | --- |
@@ -9,10 +9,20 @@ WEARO uses five brand colors as the single source of truth:
 | `peach` | `#F2CEAE` | Warm light |
 | `beige` | `#D9BBA9` | Neutral warm |
 | `coral` | `#F2AD94` | Accent |
+| `white` | `#FFFFFF` | Neutral light |
+| `black` | `#000000` | Neutral dark |
 
-## Pairing rule
+## 7×7 pairing rule
 
-The system evaluates every ordered text/background pair: `5 × 5 = 25` combinations. The five identical pairs are rejected, leaving 20 candidate pairs.
+The system evaluates every ordered text/background pair: `7 × 7 = 49` combinations.
+
+The seven identical pairs are rejected first, leaving 42 non-identical pairs. The two universal neutral pairs — `white-on-black` and `black-on-white` — are treated as standard utility combinations rather than design variants.
+
+Therefore:
+
+`49 - 7 - 2 = 40 design variants`
+
+The full matrix remains available to the Color Engine for contrast and safety checks. The `40` count is the design-variant count used by the audit.
 
 Contrast categories:
 
@@ -23,6 +33,10 @@ Contrast categories:
 
 The canonical calculations live in `src/lib/wearo-color-system.ts`. CSS pair tokens live in `src/palette.css`.
 
+## Neutral standard pairs
+
+`white-on-black` and `black-on-white` remain valid standard utility pairs and are intentionally excluded from the `40` design-variant count. They are not restricted.
+
 ## Developer workflow
 
 Use semantic pair classes instead of hard-coded brand HEX values when a specific text/background combination is intentional:
@@ -31,7 +45,14 @@ Use semantic pair classes instead of hard-coded brand HEX values when a specific
 <span class="wearo-pair-coral-on-blue">RIÊNG BẠN</span>
 ```
 
-For the current homepage hero, the coral accent is represented by the `coral-on-blue` system pair. The brand color remains `#F2AD94`; the pair system controls the approved presentation.
+For neutral UI:
+
+```html
+<span class="wearo-pair-white-on-black">WEARO</span>
+<span class="wearo-pair-black-on-white">WEARO</span>
+```
+
+The pair system controls the approved text color, background color, contrast classification, and shadow treatment.
 
 ## Audit
 
@@ -41,6 +62,6 @@ Run locally:
 node --experimental-strip-types scripts/audit-wearo-colors.ts
 ```
 
-The same audit runs automatically in GitHub Actions. It verifies the five-color matrix, the 25/5/20 counts, contrast classification, and the rule that only `EDITORIAL_LOW` pairs receive automatic shadow treatment.
+The same audit runs automatically in GitHub Actions. It verifies the seven-color matrix, the `49 / 7 / 42 / 2 / 40` counts, contrast classification, neutral standard pairs, and the rule that only `EDITORIAL_LOW` pairs receive automatic shadow treatment.
 
 Do not add another palette file. Extend the central color system instead.
