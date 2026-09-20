@@ -8,7 +8,7 @@ import { readPublishedSiteContent, type SiteContentFields } from "@/lib/site-con
 import { canonicalLink } from "@/lib/seo";
 import "@/styles/home-editorial.css";
 
-const INTRO_IMAGE = "/images/fashion-5-people-bg.png";
+const INTRO_IMAGE = "/images/stylish_urban_girl.jpg";
 const HERO_SLIDES = [
   { image: "https://images.pexels.com/photos/7271149/pexels-photo-7271149.jpeg?auto=compress&cs=tinysrgb&w=1920", label: "LOOK / 001", title: "WEARO / PERSONAL" },
   { image: "https://images.pexels.com/photos/17037339/pexels-photo-17037339.jpeg?auto=compress&cs=tinysrgb&w=1920", label: "LOOK / 002", title: "AI / VIRTUAL FIT" },
