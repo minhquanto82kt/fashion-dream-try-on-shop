@@ -20,50 +20,166 @@ const STATS = [
   { k: "1:1", v: "Hybrid Stylist tư vấn trực tiếp" },
 ];
 
+const SOLUTIONS = [
+  {
+    no: "01",
+    label: "VIRTUAL TRY-ON",
+    title: "Thấy mình trong đồ.",
+    body: "Tải ảnh toàn thân và xem trang phục được ghép trực tiếp lên ảnh của chính bạn trước khi quyết định mua.",
+  },
+  {
+    no: "02",
+    label: "AI PERSONAL STYLIST",
+    title: "Mua cả một outfit.",
+    body: "AI phân tích vóc dáng, tone màu và bối cảnh để đề xuất Full-Set gồm áo, quần/chân váy và phụ kiện.",
+  },
+  {
+    no: "03",
+    label: "HYBRID STYLIST",
+    title: "AI gợi ý, người thật tinh chỉnh.",
+    body: "Stylist hỗ trợ 1:1 qua chat để kiểm duyệt outfit, tư vấn phụ kiện và chọn size khi khách hàng cần thêm góc nhìn chuyên môn.",
+  },
+];
+
 const DESIGN_TOKENS = [
   { k: "01", title: "Palette", value: "SLATE BLUE / DUSTY BLUE / PEACH", detail: "#54728C · #7794A6 · #F2CEAE · #D9BBA9 · #F2AD94" },
-  { k: "02", title: "Typography", value: "MODERN + EDITORIAL", detail: "Tiêu đề có tính thời trang nhưng rõ ràng; body ưu tiên khả năng đọc và hỗ trợ tiếng Việt." },
-  { k: "03", title: "Layout", value: "SPACE / GRID / BALANCE", detail: "Bố cục thoáng, hình ảnh lớn, đường viền nhẹ và nhịp spacing nhất quán cho trải nghiệm unisex." },
-  { k: "04", title: "Interaction", value: "DIRECT / TACTILE / CLEAR", detail: "CTA có thứ bậc rõ, trạng thái loading / success / error dễ nhận biết, không dùng hiệu ứng công nghệ quá mức." },
+  { k: "02", title: "Typography", value: "MODERN + EDITORIAL", detail: "H1 Space Grotesk 700; H2/H3 Be Vietnam Pro 600/500; paragraph & quote Lexend 400." },
+  { k: "03", title: "Layout", value: "SPACE / GRID / BALANCE", detail: "Bố cục bất đối xứng, hình ảnh lớn, khoảng thở rộng và đường viền nhẹ." },
+  { k: "04", title: "Interaction", value: "DIRECT / TACTILE / CLEAR", detail: "CTA có thứ bậc rõ và trạng thái tương tác dễ nhận biết." },
 ];
 
 function AboutPage() {
-  return <div className="min-h-screen wearo-page"><SiteNav /><main className="pt-16">
-    <section className="relative wearo-about-hero"><img src="https://images.pexels.com/photos/18698406/pexels-photo-18698406.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="WEARO fashion editorial" className="h-[46vh] w-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-background via-background/35 to-transparent" /><div className="absolute inset-x-0 bottom-0 mx-auto max-w-7xl px-6 pb-12 sm:px-12 lg:px-20"><p className="eyebrow">About WEARO</p><h1 className="mt-3 max-w-3xl text-4xl leading-none sm:text-6xl">Mặc theo cách của <span className="text-primary">riêng bạn.</span></h1></div></section>
-    <section className="mx-auto max-w-4xl px-6 py-16 sm:px-12">
-      <p className="text-xl font-light leading-8 text-beige">WEARO là cửa hàng thời trang bán lẻ trực tuyến dành cho những người trẻ và người đi làm bận rộn muốn mặc đẹp, tự tin với vóc dáng cá nhân và không muốn mất quá nhiều thời gian để quyết định hôm nay mặc gì.</p>
-      <p className="mt-7 text-beige leading-7">Tên gọi <strong className="text-foreground">WEARO = WEAR + O</strong>. WEAR đại diện cho trang phục và cách bạn thể hiện gu ăn mặc mỗi ngày. O mở ra ba tinh thần: <strong className="text-primary">Own</strong> — làm chủ phong cách; <strong className="text-primary">Original</strong> — giữ bản sắc nguyên bản; và <strong className="text-primary">Open</strong> — cởi mở với những xu hướng mới.</p>
-      <div className="mt-12 grid gap-6 sm:grid-cols-3">{STATS.map((s) => <div key={s.k} className="border border-border bg-card p-5"><p className="font-display text-3xl text-primary">{s.k}</p><p className="mt-2 text-sm leading-6 text-silver">{s.v}</p></div>)}</div>
+  return (
+    <div className="min-h-screen wearo-page wearo-about-page">
+      <SiteNav />
+      <main className="wearo-about">
+        <section className="wearo-about__masthead" aria-labelledby="about-title">
+          <div className="wearo-about__masthead-copy">
+            <p className="wearo-about__kicker">WEARO / ABOUT / 2026</p>
+            <h1 id="about-title">Mặc theo cách của <em>riêng bạn.</em></h1>
+            <p className="wearo-about__intro">Một hệ sinh thái thời trang unisex nơi công nghệ AI giúp bạn nhìn thấy, hiểu và định hình phong cách của chính mình.</p>
+            <div className="wearo-about__actions">
+              <Link to="/shop" className="wearo-about__button">Khám phá WEARO</Link>
+              <Link to="/ai" className="wearo-about__button wearo-about__button--ghost">Thử AI Virtual Try-On</Link>
+            </div>
+          </div>
+          <div className="wearo-about__masthead-meta">
+            <span>FROM CHOOSING CLOTHES<br />TO OWNING YOUR STYLE.</span>
+            <span>UNISEX / AI / PERSONAL STYLE</span>
+          </div>
+        </section>
 
-      <div className="mt-14 border-y border-border py-12"><p className="eyebrow">The problem</p><h2 className="mt-3 text-3xl sm:text-4xl">Mua online không nên là một canh bạc.</h2><p className="mt-5 max-w-3xl text-beige leading-7">Khách hàng thường khó hình dung một món đồ sẽ trông như thế nào trên chính cơ thể mình, đồng thời mất thời gian phối từng món riêng lẻ. WEARO tập trung giải quyết hai pain point đó: <strong className="text-foreground">an tâm khi chọn đồ</strong> và <strong className="text-foreground">tiết kiệm thời gian khi phối đồ</strong>.</p></div>
+        <section className="wearo-about__editorial-grid" aria-label="WEARO overview">
+          <article className="wearo-about__image-card">
+            <img
+              src="https://images.pexels.com/photos/18698406/pexels-photo-18698406.jpeg?auto=compress&cs=tinysrgb&w=1600"
+              alt="WEARO fashion editorial"
+            />
+            <div className="wearo-about__image-caption">
+              <span>WEARO EDITORIAL</span>
+              <strong>STYLE IS PERSONAL.</strong>
+            </div>
+          </article>
 
-      <div className="mt-14"><p className="eyebrow">The WEARO solution</p><div className="mt-8 grid gap-5 md:grid-cols-3">
-        <article className="border border-border bg-card p-6"><span className="text-xs tracking-[0.18em] text-primary">01 / VIRTUAL TRY-ON</span><h3 className="mt-4 text-2xl">Thấy mình trong đồ.</h3><p className="mt-3 text-sm leading-6 text-silver">Tải ảnh toàn thân và xem trang phục được ghép trực tiếp lên ảnh của chính bạn trước khi quyết định mua.</p></article>
-        <article className="border border-border bg-card p-6"><span className="text-xs tracking-[0.18em] text-primary">02 / AI PERSONAL STYLIST</span><h3 className="mt-4 text-2xl">Mua cả một outfit.</h3><p className="mt-3 text-sm leading-6 text-silver">AI phân tích vóc dáng, tone màu và bối cảnh để đề xuất Full-Set gồm áo, quần/chân váy và phụ kiện theo hướng tôn dáng.</p></article>
-        <article className="border border-border bg-card p-6"><span className="text-xs tracking-[0.18em] text-primary">03 / HYBRID STYLIST</span><h3 className="mt-4 text-2xl">AI gợi ý, người thật tinh chỉnh.</h3><p className="mt-3 text-sm leading-6 text-silver">Stylist hỗ trợ 1:1 qua chat để kiểm duyệt outfit, tư vấn phụ kiện và chọn size khi khách hàng cần thêm một góc nhìn chuyên môn.</p></article>
-      </div></div>
+          <article className="wearo-about__value-card">
+            <p className="wearo-about__eyebrow">Core value proposition</p>
+            <blockquote>
+              “WEARO — Mặc theo cách của riêng bạn: Định hình phong cách cá nhân với Thử đồ ảo AI chuẩn dáng.”
+            </blockquote>
+            <p>
+              Dành cho người trẻ và người đi làm bận rộn từ 16–30 tuổi, WEARO kết hợp AI Virtual Try-On và AI Personal Stylist để giảm nỗi lo mua sai form, rút ngắn thời gian phối đồ và giúp khách hàng tự tin thể hiện bản sắc riêng.
+            </p>
+          </article>
 
-      <section id="design-language" className="mt-16 border-t border-border pt-12 scroll-mt-24" aria-labelledby="design-language-title">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div><p className="eyebrow">Design language</p><h2 id="design-language-title" className="mt-3 text-3xl sm:text-4xl">The visual system behind WEARO.</h2></div>
-          <span className="text-xs uppercase tracking-[0.18em] text-silver">WEARO / UI SYSTEM 01</span>
-        </div>
-        <p className="mt-5 max-w-3xl text-beige leading-7">WEARO dùng Design Language để giữ trải nghiệm nhất quán từ trang chủ, catalogue, AI Studio đến checkout: casual, modern, unisex và đủ linh hoạt cho nhiều phong cách cá nhân.</p>
-        <div className="mt-8 grid gap-px border border-border bg-border sm:grid-cols-2">
-          {DESIGN_TOKENS.map((item) => <article key={item.k} className="bg-background p-6 sm:p-7"><div className="flex items-start justify-between gap-4"><span className="text-xs tracking-[0.18em] text-primary">{item.k}</span><span className="text-xs uppercase tracking-[0.14em] text-silver">{item.title}</span></div><h3 className="mt-8 text-lg tracking-[0.08em]">{item.value}</h3><p className="mt-3 text-sm leading-6 text-silver">{item.detail}</p></article>)}
-        </div>
-        <div className="mt-8 grid gap-4 sm:grid-cols-5">
-          <div className="h-20 border border-border bg-[#54728C] p-3 text-[10px] uppercase tracking-[0.14em] text-white">SLATE BLUE<br /><span className="opacity-80">#54728C</span></div>
-          <div className="wearo-swatch-blue-light h-20 border border-border bg-[#7794A6] p-3 text-[10px] uppercase tracking-[0.14em] text-black">DUSTY BLUE<br /><span className="opacity-80">#7794A6</span></div>
-          <div className="h-20 border border-border bg-[#F2CEAE] p-3 text-[10px] uppercase tracking-[0.14em] text-[#171717]">PEACH<br /><span className="opacity-70">#F2CEAE</span></div>
-          <div className="h-20 border border-border bg-[#D9BBA9] p-3 text-[10px] uppercase tracking-[0.14em] text-[#171717]">BEIGE<br /><span className="opacity-70">#D9BBA9</span></div>
-          <div className="h-20 border border-border bg-[#F2AD94] p-3 text-[10px] uppercase tracking-[0.14em] text-[#171717]">CORAL<br /><span className="opacity-70">#F2AD94</span></div>
-        </div>
-      </section>
+          <article className="wearo-about__stats-card">
+            {STATS.map((stat) => (
+              <div key={stat.k} className="wearo-about__stat">
+                <strong>{stat.k}</strong>
+                <span>{stat.v}</span>
+              </div>
+            ))}
+          </article>
 
-      <div className="mt-14 border border-primary/40 bg-primary/5 p-7 sm:p-9"><p className="eyebrow">Core value proposition</p><blockquote className="mt-4 text-2xl leading-9 sm:text-3xl">“WEARO — Mặc theo cách của riêng bạn: Định hình phong cách cá nhân với Thử đồ ảo AI chuẩn dáng.”</blockquote><p className="mt-5 text-sm leading-6 text-silver">Dành cho người trẻ và người đi làm bận rộn từ 16–30 tuổi, WEARO kết hợp AI Virtual Try-On và AI Personal Stylist để giảm nỗi lo mua sai form, rút ngắn thời gian phối đồ và giúp khách hàng tự tin thể hiện bản sắc riêng.</p></div>
+          <article className="wearo-about__story-card">
+            <p className="wearo-about__eyebrow">WEAR + O</p>
+            <h2>Own. Original. Open.</h2>
+            <p>
+              WEAR đại diện cho trang phục và cách bạn thể hiện gu ăn mặc mỗi ngày. O mở ra ba tinh thần: <strong>Own</strong> — làm chủ phong cách; <strong>Original</strong> — giữ bản sắc nguyên bản; và <strong>Open</strong> — cởi mở với những xu hướng mới.
+            </p>
+          </article>
+        </section>
 
-      <div className="mt-12 flex flex-wrap gap-4"><Link to="/shop" className="bg-primary px-7 py-3 text-xs uppercase tracking-[0.15em] text-primary-foreground">Khám phá WEARO</Link><Link to="/ai" className="border border-border px-7 py-3 text-xs uppercase tracking-[0.15em] text-beige hover:border-primary">Thử AI Virtual Try-On</Link></div>
-    </section>
-  </main><SiteFooter /></div>;
+        <section className="wearo-about__problem">
+          <div>
+            <p className="wearo-about__eyebrow">The problem</p>
+            <h2>Mua online không nên là một canh bạc.</h2>
+          </div>
+          <p>
+            Khách hàng thường khó hình dung một món đồ sẽ trông như thế nào trên chính cơ thể mình, đồng thời mất thời gian phối từng món riêng lẻ. WEARO tập trung giải quyết hai pain point đó: <strong>an tâm khi chọn đồ</strong> và <strong>tiết kiệm thời gian khi phối đồ</strong>.
+          </p>
+        </section>
+
+        <section className="wearo-about__solutions" aria-labelledby="solution-title">
+          <div className="wearo-about__section-head">
+            <div>
+              <p className="wearo-about__eyebrow">The WEARO solution</p>
+              <h2 id="solution-title">Technology that gets out of the way.</h2>
+            </div>
+            <span>01 — 03</span>
+          </div>
+          <div className="wearo-about__solution-grid">
+            {SOLUTIONS.map((solution) => (
+              <article key={solution.no} className="wearo-about__solution">
+                <div className="wearo-about__solution-top">
+                  <span>{solution.no}</span>
+                  <small>{solution.label}</small>
+                </div>
+                <h3>{solution.title}</h3>
+                <p>{solution.body}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section id="design-language" className="wearo-about__system" aria-labelledby="design-language-title">
+          <div className="wearo-about__section-head">
+            <div>
+              <p className="wearo-about__eyebrow">Design language</p>
+              <h2 id="design-language-title">The visual system behind WEARO.</h2>
+            </div>
+            <span>WEARO / UI SYSTEM 01</span>
+          </div>
+
+          <p className="wearo-about__system-lede">
+            Casual, modern, unisex — một hệ thống thị giác giữ trải nghiệm nhất quán từ trang chủ, catalogue, AI Studio đến checkout.
+          </p>
+
+          <div className="wearo-about__token-grid">
+            {DESIGN_TOKENS.map((item) => (
+              <article key={item.k}>
+                <div><span>{item.k}</span><small>{item.title}</small></div>
+                <h3>{item.value}</h3>
+                <p>{item.detail}</p>
+              </article>
+            ))}
+          </div>
+
+          <div className="wearo-about__palette" aria-label="WEARO five-color palette">
+            <div className="wearo-swatch wearo-swatch--slate"><span>SLATE BLUE</span><small>#54728C</small></div>
+            <div className="wearo-swatch wearo-swatch--dusty"><span>DUSTY BLUE</span><small>#7794A6</small></div>
+            <div className="wearo-swatch wearo-swatch--peach"><span>PEACH</span><small>#F2CEAE</small></div>
+            <div className="wearo-swatch wearo-swatch--beige"><span>BEIGE</span><small>#D9BBA9</small></div>
+            <div className="wearo-swatch wearo-swatch--coral"><span>CORAL</span><small>#F2AD94</small></div>
+          </div>
+        </section>
+
+        <section className="wearo-about__closing">
+          <p className="wearo-about__eyebrow">WEARO / 2026</p>
+          <h2>Không chỉ chọn đồ.<br /><em>Chọn cách bạn xuất hiện.</em></h2>
+          <p>WEARO biến quyết định mặc gì mỗi ngày thành một trải nghiệm cá nhân, trực quan và có chủ đích.</p>
+        </section>
+      </main>
+      <SiteFooter />
+    </div>
+  );
 }
