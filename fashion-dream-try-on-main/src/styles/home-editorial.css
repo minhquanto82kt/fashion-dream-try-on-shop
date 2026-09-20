@@ -76,3 +76,72 @@
 .fashion-intro-section .fashion-intro-content,.fashion-intro-section .fashion-section-number{position:relative;z-index:2}
 .fashion-intro-section .fashion-section-title,.fashion-intro-section .fashion-eyebrow,.fashion-intro-section .fashion-intro-copy{color:#fff!important;text-shadow:0 2px 18px rgba(23,23,23,.18)}
 @media (max-width:800px){.fashion-intro-section .fashion-intro-bg img{object-position:center center!important}.fashion-intro-section .fashion-intro-bg::after{background:linear-gradient(180deg,rgba(84,114,140,.88) 0%,rgba(84,114,140,.58) 45%,rgba(119,148,166,.22) 100%)!important}}
+
+
+/* WEARO final polish — Futuristic Casual hierarchy + explicit Manifesto layer reset. */
+.fashion-hero .fashion-display {
+  font-family: var(--wearo-font-display) !important;
+  font-weight: 700 !important;
+  font-style: normal !important;
+  letter-spacing: -0.045em !important;
+}
+.fashion-hero .fashion-display__solid,
+.fashion-hero .fashion-display__brush {
+  font-family: var(--wearo-font-display) !important;
+  font-weight: 700 !important;
+  font-style: normal !important;
+}
+.fashion-hero .fashion-display__solid {
+  color: #fff !important;
+}
+.fashion-hero .fashion-display__brush {
+  color: #F2AD94 !important;
+  text-shadow: none !important;
+}
+
+/* Kill every legacy Manifesto background/overlay source before applying the blue gradient. */
+.fashion-intro-section {
+  background: transparent !important;
+  background-image: none !important;
+  background-color: transparent !important;
+}
+.fashion-intro-section::before,
+.fashion-intro-section::after {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+}
+.fashion-intro-section .fashion-intro-bg {
+  background: transparent !important;
+  background-image: none !important;
+}
+.fashion-intro-section .fashion-intro-bg img {
+  filter: none !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
+  -webkit-filter: none !important;
+}
+.fashion-intro-section .fashion-intro-bg::after {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 2 !important;
+  pointer-events: none !important;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(84,114,140,.96) 0%,
+      rgba(84,114,140,.86) 24%,
+      rgba(84,114,140,.58) 43%,
+      rgba(119,148,166,.28) 61%,
+      rgba(119,148,166,.08) 78%,
+      rgba(119,148,166,0) 100%
+    ) !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
+}
+.fashion-intro-section .fashion-intro-content,
+.fashion-intro-section .fashion-section-number {
+  z-index: 3 !important;
+}
