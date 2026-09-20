@@ -6,6 +6,7 @@ import { ArrowRight, Check, Loader2, Menu, RefreshCw, Sparkles, Trash2, Upload, 
 import { toast } from "sonner";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
+import { AiChatFrame } from "@/components/ai-chat-frame";
 import { PRODUCTS, formatVnd } from "@/data/products";
 import { generateConcept, generateTryOn, listAiProducts } from "@/lib/ai.functions";
 import { useCart } from "@/lib/cart";
@@ -38,36 +39,56 @@ function AiPage() {
   return (
     <div className="min-h-screen bg-background">
       <SiteNav />
-      <main className="mx-auto w-full max-w-[1440px] px-4 pb-24 pt-24 sm:px-8 sm:pt-28">
-        <div className="mb-6 flex items-center justify-between gap-4 lg:hidden">
-          <div><p className="eyebrow">AI Experience · Beta</p><p className="mt-1 text-xs uppercase tracking-[0.18em] text-silver">AI Workspace</p></div>
-          <button type="button" aria-label="Mở AI workspace menu" aria-expanded={sidebarOpen} onClick={() => setSidebarOpen(true)} className="inline-flex size-11 items-center justify-center border border-border bg-card text-foreground hover:border-primary"><Menu className="size-4" /></button>
+      <main className="mx-auto w-full max-w-[1600px] px-4 pb-24 pt-24 sm:px-8 sm:pt-28">
+        <div className="ai-dashboard-topbar">
+          <div>
+            <p className="eyebrow">AI Experience · Beta</p>
+            <h1 className="mt-2 text-3xl leading-none sm:text-4xl">AI <span className="text-primary">Dashboard</span></h1>
+            <p className="mt-2 max-w-2xl text-xs leading-5 text-silver sm:text-[13px]">Một workspace cho AI Stylist, Concept và Virtual Try-On — với trợ lý chat luôn sẵn sàng bên cạnh.</p>
+          </div>
+          <span className="ai-dashboard-status"><span className="size-1.5 rounded-full bg-[#F2AD94]" />AI Studio / Ready</span>
         </div>
-        <div className="grid gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:items-start lg:gap-8">
-          <AiSidebar mode={mode} onSelectMode={selectMode} />
+
+        <div className="mb-4 flex items-center justify-between gap-4 lg:hidden">
+          <div><p className="text-[10px] uppercase tracking-[0.2em] text-primary">Workspace navigation</p><p className="mt-1 text-xs text-silver">Concept / Try-On / Looks</p></div>
+          <button type="button" aria-label="Mở AI dashboard menu" aria-expanded={sidebarOpen} onClick={() => setSidebarOpen(true)} className="inline-flex size-11 items-center justify-center border border-border bg-card text-foreground transition-colors hover:border-primary"><Menu className="size-4" /></button>
+        </div>
+
+        <div className="ai-dashboard-shell">
+          <div className="ai-dashboard-panel p-3">
+            <AiSidebar mode={mode} onSelectMode={selectMode} />
+          </div>
+
           {sidebarOpen && <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true">
-            <button type="button" aria-label="Đóng AI workspace menu" onClick={() => setSidebarOpen(false)} className="absolute inset-0 bg-background/75 backdrop-blur-[2px]" />
+            <button type="button" aria-label="Đóng AI dashboard menu" onClick={() => setSidebarOpen(false)} className="absolute inset-0 bg-background/75 backdrop-blur-[2px]" />
             <aside className="relative h-full w-[min(84vw,320px)] border-r border-border bg-card p-4 shadow-2xl">
-              <div className="mb-5 flex items-center justify-between border-b border-border pb-4"><div><p className="text-xs uppercase tracking-[0.2em] text-primary">AI Workspace</p><p className="mt-1 text-[11px] text-silver">WEARO / AI Lab</p></div><button type="button" aria-label="Đóng menu" onClick={() => setSidebarOpen(false)} className="inline-flex size-9 items-center justify-center border border-border text-silver hover:border-primary hover:text-foreground"><X className="size-4" /></button></div>
+              <div className="mb-5 flex items-center justify-between border-b border-border pb-4"><div><p className="text-xs uppercase tracking-[0.2em] text-primary">AI Dashboard</p><p className="mt-1 text-[11px] text-silver">WEARO / AI Lab</p></div><button type="button" aria-label="Đóng menu" onClick={() => setSidebarOpen(false)} className="inline-flex size-9 items-center justify-center border border-border text-silver hover:border-primary hover:text-foreground"><X className="size-4" /></button></div>
               <AiSidebar mode={mode} onSelectMode={selectMode} mobile />
             </aside>
           </div>}
+
           <section className="min-w-0">
-            <header className="max-w-4xl"><p className="eyebrow hidden lg:block">AI Experience · Beta</p><h1 className="mt-3 text-4xl leading-none sm:text-5xl">Concept + <span className="text-primary">Virtual Try-On</span></h1><h3 className="mt-5 text-xl font-medium uppercase tracking-[0.08em] text-foreground">AI workspace</h3><p className="mt-3 max-w-2xl text-[13px] leading-6 text-beige">Hai luồng trong một workspace: tạo concept outfit theo mood, hoặc thử sản phẩm WEARO ngay trên ảnh của bạn.</p></header>
-            <div className="mt-8 flex gap-2 border-b border-border pb-3">{(["concept", "tryon"] as const).map((m) => <button key={m} type="button" onClick={() => setMode(m)} className={`border px-5 py-2 text-xs uppercase tracking-[0.15em] ${mode === m ? "border-primary bg-primary text-primary-foreground" : "border-border text-beige hover:border-primary"}`}>{m === "concept" ? "Concept AI" : "Virtual Try-On"}</button>)}</div>
-            <div className="mt-8 min-w-0">{mode === "concept" ? <ConceptWorkspace /> : <TryOnWorkspace initialProduct={search.product} />}</div>
+            <div className="mb-4 flex items-end justify-between gap-4 border-b border-border pb-4">
+              <div><p className="text-[10px] uppercase tracking-[0.18em] text-primary">02 / Workspace</p><h2 className="mt-1 text-lg font-medium text-foreground sm:text-xl">{mode === "concept" ? "AI Stylist & Concept" : "Virtual Try-On"}</h2></div>
+              <span className="hidden text-[9px] uppercase tracking-[0.16em] text-silver sm:block">{mode === "concept" ? "Creative direction" : "Product simulation"}</span>
+            </div>
+            <div className="mb-4 flex gap-2">{(["concept", "tryon"] as const).map((m) => <button key={m} type="button" onClick={() => setMode(m)} className={`border px-4 py-2 text-[10px] uppercase tracking-[0.15em] transition-all ${mode === m ? "border-primary bg-primary text-primary-foreground" : "border-border text-beige hover:border-primary hover:text-primary"}`}>{m === "concept" ? "Concept AI" : "Virtual Try-On"}</button>)}</div>
+            <div className="min-w-0">{mode === "concept" ? <ConceptWorkspace /> : <TryOnWorkspace initialProduct={search.product} />}</div>
           </section>
+
+          <AiChatFrame />
         </div>
-        <p className="mx-auto mt-4 max-w-2xl text-center text-[11px] leading-5 text-silver">Kết quả AI mang tính tham khảo. Hình ảnh có thể khác với sản phẩm thực tế.</p>
-      </main><SiteFooter />
+        <p className="mx-auto mt-5 max-w-2xl text-center text-[11px] leading-5 text-silver">Kết quả AI mang tính tham khảo. Hình ảnh có thể khác với sản phẩm thực tế.</p>
+      </main>
+      <SiteFooter />
     </div>
   );
 }
 
 function AiSidebar({ mode, onSelectMode, mobile = false }: { mode: AiMode; onSelectMode: (mode: AiMode) => void; mobile?: boolean }) {
   const itemClass = (active = false) => `flex w-full items-center justify-between border px-3 py-2.5 text-left text-[11px] uppercase tracking-[0.13em] transition-colors ${active ? "border-primary bg-primary text-primary-foreground" : "border-transparent text-beige hover:border-border hover:bg-background hover:text-foreground"}`;
-  return <aside className={`${mobile ? "w-full" : "sticky top-24 hidden lg:block"} min-w-0`}>
-    {!mobile && <div className="mb-3 border-b border-border pb-4"><p className="text-xs uppercase tracking-[0.2em] text-primary">AI Workspace</p><p className="mt-1 text-[11px] text-silver">Concept / Try-On / Looks</p></div>}
+  return <aside className={`${mobile ? "w-full" : "sticky top-24"} min-w-0`}>
+    {!mobile && <div className="mb-3 border-b border-border pb-4"><p className="text-xs uppercase tracking-[0.2em] text-primary">AI Dashboard</p><p className="mt-1 text-[11px] text-silver">Concept / Try-On / Looks</p></div>}
     <button type="button" onClick={() => onSelectMode("concept")} className="mb-3 flex w-full items-center justify-between border border-primary/70 bg-background px-3 py-3 text-left text-xs uppercase tracking-[0.15em] text-primary hover:bg-primary hover:text-primary-foreground"><span>+ New Look</span><span className="text-[10px]">⌘ N</span></button>
     <p className="mb-2 px-3 text-[10px] uppercase tracking-[0.2em] text-silver">AI Tools</p>
     <nav className="space-y-1" aria-label="AI tools"><button type="button" onClick={() => onSelectMode("concept")} className={itemClass(mode === "concept")}><span>AI Stylist</span><span className="text-[9px] opacity-70">01</span></button><button type="button" onClick={() => onSelectMode("tryon")} className={itemClass(mode === "tryon")}><span>AI Try-On</span><span className="text-[9px] opacity-70">02</span></button><button type="button" disabled className={`${itemClass(false)} cursor-not-allowed opacity-45`}><span>Outfit Builder</span><span className="text-[9px]">SOON</span></button></nav>
