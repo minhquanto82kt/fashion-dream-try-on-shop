@@ -117,6 +117,9 @@ export function SiteNav() {
     setLanguageModalOpen(false);
   };
 
+  const languageFlag = language === "vi" ? "/flags/vietnam.svg" : "/flags/united-kingdom.svg";
+  const selectedLanguageFlag = selectedLanguage === "vi" ? "/flags/vietnam.svg" : "/flags/united-kingdom.svg";
+
   return (
     <nav className="fashion-nav" aria-label={t("Điều hướng chính", "Main navigation")}>
       <div className="fashion-nav__announcement" role="status">
@@ -158,7 +161,7 @@ export function SiteNav() {
           <Link to="/cart" className="fashion-cart-btn" aria-label={t("Giỏ hàng", "Cart")}><ShoppingBag size={20} />{count > 0 && <span>{count}</span>}</Link>
           {customerEmail && <button type="button" className="fashion-icon-btn fashion-logout-btn" aria-label={t("Đăng xuất", "Log out")} onClick={() => void handleLogout()}><LogOut size={19} /></button>}
           <button type="button" className={`fashion-language-switcher ${languageModalOpen ? "is-active" : ""}`} aria-label={t("Lựa chọn ngôn ngữ và vị trí", "Language and location selection")} aria-expanded={languageModalOpen} aria-haspopup="dialog" onClick={openLanguageModal}>
-            <span className="fashion-language-flag" aria-hidden="true">🇻🇳</span>
+            <img className="fashion-language-flag" src={languageFlag} alt="" width={24} height={24} aria-hidden="true" />
             <span className="fashion-language-code">{language === "vi" ? "VIE" : "ENG"}</span>
           </button>
           <button type="button" className={`fashion-mobile-btn ${mobileOpen ? "is-active" : ""}`} aria-label={mobileOpen ? t("Đóng menu", "Close menu") : t("Mở menu", "Open menu")} aria-expanded={mobileOpen} onClick={() => { setMobileOpen((value) => !value); setSearchOpen(false); setShopOpen(false); setNotificationOpen(false); setLanguageModalOpen(false); }}>{mobileOpen ? <X size={22} /> : <Menu size={22} />}</button>
@@ -186,7 +189,7 @@ export function SiteNav() {
             <div className="wearo-language-dialog__body">
               <button type="button" className="wearo-language-field" aria-label={t("Vị trí Việt Nam", "Vietnam location")}>
                 <span className="wearo-language-field__leading">
-                  <span className="wearo-language-flag wearo-language-flag--large" aria-hidden="true">🇻🇳</span>
+                  <img className="wearo-language-flag wearo-language-flag--large" src={selectedLanguageFlag} alt="" width={28} height={28} aria-hidden="true" />
                   <span>{t("Việt Nam", "Vietnam")}</span>
                 </span>
                 <ChevronDown size={20} strokeWidth={1.8} aria-hidden="true" />
