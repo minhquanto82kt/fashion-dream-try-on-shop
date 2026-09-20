@@ -1,4 +1,4 @@
-/* WEARO — Language & Location selector
+/* WEARO — Language, location & currency selector
    Scoped only to the header locale control/modal. Uses existing header palette tokens.
 */
 
@@ -177,10 +177,40 @@
   color: rgba(17, 17, 17, .55);
 }
 
+/* The existing divider is upgraded into the currency row.
+   Currency follows the active document language: VIE => VND, ENG => USD. */
 .wearo-language-divider {
-  height: 1px;
-  margin: 0 14px;
-  background: rgba(17, 17, 17, .1);
+  height: 50px;
+  margin: 0;
+  padding: 0 15px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-inline: 1px solid rgba(17, 17, 17, .16);
+  border-bottom: 1px solid rgba(17, 17, 17, .16);
+  background: #fff;
+  color: #111;
+  font: 500 14px/1.2 "Space Grotesk", Arial, sans-serif;
+}
+
+.wearo-language-divider::before {
+  content: "Mệnh giá";
+}
+
+.wearo-language-divider::after {
+  content: "VND";
+  font: 700 10px/1 "Oswald", Arial, sans-serif;
+  letter-spacing: .12em;
+  color: rgba(17, 17, 17, .55);
+}
+
+html[lang="en"] .wearo-language-divider::before {
+  content: "Currency";
+}
+
+html[lang="en"] .wearo-language-divider::after {
+  content: "USD";
 }
 
 .wearo-language-confirm {
@@ -259,8 +289,10 @@
   }
 
   .wearo-language-field,
-  .wearo-language-confirm {
+  .wearo-language-confirm,
+  .wearo-language-divider {
     min-height: 48px;
+    height: 48px;
   }
 }
 
