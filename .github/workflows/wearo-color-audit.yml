@@ -22,3 +22,5 @@ jobs:
           node-version: 24
       - name: Run WEARO color matrix audit
         run: node --experimental-strip-types scripts/audit-wearo-colors.ts
+      - name: Run WEARO color usage collision audit
+        run: node --experimental-strip-types scripts/audit-wearo-color-usage.ts
