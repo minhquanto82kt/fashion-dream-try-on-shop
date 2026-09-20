@@ -118,7 +118,6 @@ export function SiteNav() {
   };
 
   const languageFlag = language === "vi" ? "/flags/vietnam.svg" : "/flags/united-kingdom.svg";
-  const selectedLanguageFlag = selectedLanguage === "vi" ? "/flags/vietnam.svg" : "/flags/united-kingdom.svg";
 
   return (
     <nav className="fashion-nav" aria-label={t("Điều hướng chính", "Main navigation")}>
@@ -189,7 +188,7 @@ export function SiteNav() {
             <div className="wearo-language-dialog__body">
               <button type="button" className="wearo-language-field" aria-label={t("Vị trí Việt Nam", "Vietnam location")}>
                 <span className="wearo-language-field__leading">
-                  <img className="wearo-language-flag wearo-language-flag--large" src={selectedLanguageFlag} alt="" width={28} height={28} aria-hidden="true" />
+                  <img className="wearo-language-flag wearo-language-flag--large" src="/flags/vietnam.svg" alt="" width={28} height={28} aria-hidden="true" />
                   <span>{t("Việt Nam", "Vietnam")}</span>
                 </span>
                 <ChevronDown size={20} strokeWidth={1.8} aria-hidden="true" />
