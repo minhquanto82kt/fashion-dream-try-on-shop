@@ -33,9 +33,39 @@
   color: var(--wearo-primary) !important;
 }
 
+/* Replace the text-only BETA tag with a neutral four-point AI sparkle. */
 .fashion-nav .fashion-ai-nav__beta {
   top: -7px !important;
   right: -9px !important;
+  width: 20px !important;
+  min-width: 20px !important;
+  height: 20px !important;
+  padding: 0 !important;
+  border: 2px solid var(--wearo-surface) !important;
+  border-radius: 50% !important;
+  background: var(--wearo-secondary) !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  letter-spacing: 0 !important;
+  box-shadow: 0 3px 8px rgba(84, 114, 140, .22) !important;
+}
+
+.fashion-nav .fashion-ai-nav__beta::before {
+  content: "✦" !important;
+  display: grid !important;
+  place-items: center !important;
+  position: static !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: none !important;
+  color: var(--wearo-primary) !important;
+  font: 800 15px/1 Arial, sans-serif !important;
+  clip-path: none !important;
+  transform: none !important;
+}
+
+.fashion-nav .fashion-ai-nav__beta::after {
+  display: none !important;
 }
 
 /* Desktop navigation stays intentional: the drawer trigger belongs to mobile. */
