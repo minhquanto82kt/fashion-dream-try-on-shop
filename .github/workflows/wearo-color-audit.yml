@@ -1,0 +1,24 @@
+name: WEARO color audit
+
+on:
+  push:
+    branches:
+      - main
+      - feature/product-admin
+  pull_request:
+
+jobs:
+  audit-wearo-colors:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: fashion-dream-try-on-main
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Run WEARO color matrix audit
+        run: node --experimental-strip-types scripts/audit-wearo-colors.ts

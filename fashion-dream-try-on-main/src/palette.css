@@ -172,3 +172,101 @@
 .fashion-editorial .fashion-eyebrow, .fashion-editorial .fashion-accent { color: var(--wearo-peach); }
 .fashion-editorial .fashion-btn--light { color: var(--wearo-blue); background: var(--wearo-white); }
 .wearo-footer { background: var(--wearo-white); color: var(--wearo-ink); border-color: var(--wearo-beige); }
+
+/* WEARO color-pair system. Pair tokens are semantic, auditable combinations.
+   Editorial-low pairs may use the soft shadow; restricted pairs intentionally
+   have no shadow because shadow must not be used as an accessibility bypass. */
+:root {
+  --wearo-shadow-none: none;
+  --wearo-shadow-soft: 0 1px 3px color-mix(in oklab, var(--wearo-ink) 24%, transparent);
+  --wearo-shadow-editorial: 0 2px 6px color-mix(in oklab, var(--wearo-ink) 32%, transparent);
+
+  --wearo-pair-blue-on-blue-light-text: var(--wearo-blue);
+  --wearo-pair-blue-on-blue-light-bg: var(--wearo-blue-light);
+  --wearo-pair-blue-on-blue-light-shadow: var(--wearo-shadow-none);
+  --wearo-pair-blue-on-peach-text: var(--wearo-blue);
+  --wearo-pair-blue-on-peach-bg: var(--wearo-peach);
+  --wearo-pair-blue-on-peach-shadow: var(--wearo-shadow-none);
+  --wearo-pair-blue-on-beige-text: var(--wearo-blue);
+  --wearo-pair-blue-on-beige-bg: var(--wearo-beige);
+  --wearo-pair-blue-on-beige-shadow: var(--wearo-shadow-soft);
+  --wearo-pair-blue-on-coral-text: var(--wearo-blue);
+  --wearo-pair-blue-on-coral-bg: var(--wearo-coral);
+  --wearo-pair-blue-on-coral-shadow: var(--wearo-shadow-soft);
+
+  --wearo-pair-blue-light-on-blue-text: var(--wearo-blue-light);
+  --wearo-pair-blue-light-on-blue-bg: var(--wearo-blue);
+  --wearo-pair-blue-light-on-blue-shadow: var(--wearo-shadow-none);
+  --wearo-pair-blue-light-on-peach-text: var(--wearo-blue-light);
+  --wearo-pair-blue-light-on-peach-bg: var(--wearo-peach);
+  --wearo-pair-blue-light-on-peach-shadow: var(--wearo-shadow-soft);
+  --wearo-pair-blue-light-on-beige-text: var(--wearo-blue-light);
+  --wearo-pair-blue-light-on-beige-bg: var(--wearo-beige);
+  --wearo-pair-blue-light-on-beige-shadow: var(--wearo-shadow-soft);
+  --wearo-pair-blue-light-on-coral-text: var(--wearo-blue-light);
+  --wearo-pair-blue-light-on-coral-bg: var(--wearo-coral);
+  --wearo-pair-blue-light-on-coral-shadow: var(--wearo-shadow-soft);
+
+  --wearo-pair-peach-on-blue-text: var(--wearo-peach);
+  --wearo-pair-peach-on-blue-bg: var(--wearo-blue);
+  --wearo-pair-peach-on-blue-shadow: var(--wearo-shadow-none);
+  --wearo-pair-peach-on-blue-light-text: var(--wearo-peach);
+  --wearo-pair-peach-on-blue-light-bg: var(--wearo-blue-light);
+  --wearo-pair-peach-on-blue-light-shadow: var(--wearo-shadow-soft);
+  --wearo-pair-peach-on-beige-text: var(--wearo-peach);
+  --wearo-pair-peach-on-beige-bg: var(--wearo-beige);
+  --wearo-pair-peach-on-beige-shadow: var(--wearo-shadow-soft);
+  --wearo-pair-peach-on-coral-text: var(--wearo-peach);
+  --wearo-pair-peach-on-coral-bg: var(--wearo-coral);
+  --wearo-pair-peach-on-coral-shadow: var(--wearo-shadow-soft);
+
+  --wearo-pair-beige-on-blue-text: var(--wearo-beige);
+  --wearo-pair-beige-on-blue-bg: var(--wearo-blue);
+  --wearo-pair-beige-on-blue-shadow: var(--wearo-shadow-soft);
+  --wearo-pair-beige-on-blue-light-text: var(--wearo-beige);
+  --wearo-pair-beige-on-blue-light-bg: var(--wearo-blue-light);
+  --wearo-pair-beige-on-blue-light-shadow: var(--wearo-shadow-soft);
+  --wearo-pair-beige-on-peach-text: var(--wearo-beige);
+  --wearo-pair-beige-on-peach-bg: var(--wearo-peach);
+  --wearo-pair-beige-on-peach-shadow: var(--wearo-shadow-soft);
+  --wearo-pair-beige-on-coral-text: var(--wearo-beige);
+  --wearo-pair-beige-on-coral-bg: var(--wearo-coral);
+  --wearo-pair-beige-on-coral-shadow: var(--wearo-shadow-soft);
+
+  --wearo-pair-coral-on-blue-text: var(--wearo-coral);
+  --wearo-pair-coral-on-blue-bg: var(--wearo-blue);
+  --wearo-pair-coral-on-blue-shadow: var(--wearo-shadow-soft);
+  --wearo-pair-coral-on-blue-light-text: var(--wearo-coral);
+  --wearo-pair-coral-on-blue-light-bg: var(--wearo-blue-light);
+  --wearo-pair-coral-on-blue-light-shadow: var(--wearo-shadow-soft);
+  --wearo-pair-coral-on-peach-text: var(--wearo-coral);
+  --wearo-pair-coral-on-peach-bg: var(--wearo-peach);
+  --wearo-pair-coral-on-peach-shadow: var(--wearo-shadow-soft);
+  --wearo-pair-coral-on-beige-text: var(--wearo-coral);
+  --wearo-pair-coral-on-beige-bg: var(--wearo-beige);
+  --wearo-pair-coral-on-beige-shadow: var(--wearo-shadow-soft);
+}
+
+.wearo-pair-blue-on-blue-light { color: var(--wearo-pair-blue-on-blue-light-text); background-color: var(--wearo-pair-blue-on-blue-light-bg); text-shadow: var(--wearo-pair-blue-on-blue-light-shadow); }
+.wearo-pair-blue-on-peach { color: var(--wearo-pair-blue-on-peach-text); background-color: var(--wearo-pair-blue-on-peach-bg); text-shadow: var(--wearo-pair-blue-on-peach-shadow); }
+.wearo-pair-blue-on-beige { color: var(--wearo-pair-blue-on-beige-text); background-color: var(--wearo-pair-blue-on-beige-bg); text-shadow: var(--wearo-pair-blue-on-beige-shadow); }
+.wearo-pair-blue-on-coral { color: var(--wearo-pair-blue-on-coral-text); background-color: var(--wearo-pair-blue-on-coral-bg); text-shadow: var(--wearo-pair-blue-on-coral-shadow); }
+.wearo-pair-blue-light-on-blue { color: var(--wearo-pair-blue-light-on-blue-text); background-color: var(--wearo-pair-blue-light-on-blue-bg); text-shadow: var(--wearo-pair-blue-light-on-blue-shadow); }
+.wearo-pair-blue-light-on-peach { color: var(--wearo-pair-blue-light-on-peach-text); background-color: var(--wearo-pair-blue-light-on-peach-bg); text-shadow: var(--wearo-pair-blue-light-on-peach-shadow); }
+.wearo-pair-blue-light-on-beige { color: var(--wearo-pair-blue-light-on-beige-text); background-color: var(--wearo-pair-blue-light-on-beige-bg); text-shadow: var(--wearo-pair-blue-light-on-beige-shadow); }
+.wearo-pair-blue-light-on-coral { color: var(--wearo-pair-blue-light-on-coral-text); background-color: var(--wearo-pair-blue-light-on-coral-bg); text-shadow: var(--wearo-pair-blue-light-on-coral-shadow); }
+.wearo-pair-peach-on-blue { color: var(--wearo-pair-peach-on-blue-text); background-color: var(--wearo-pair-peach-on-blue-bg); text-shadow: var(--wearo-pair-peach-on-blue-shadow); }
+.wearo-pair-peach-on-blue-light { color: var(--wearo-pair-peach-on-blue-light-text); background-color: var(--wearo-pair-peach-on-blue-light-bg); text-shadow: var(--wearo-pair-peach-on-blue-light-shadow); }
+.wearo-pair-peach-on-beige { color: var(--wearo-pair-peach-on-beige-text); background-color: var(--wearo-pair-peach-on-beige-bg); text-shadow: var(--wearo-pair-peach-on-beige-shadow); }
+.wearo-pair-peach-on-coral { color: var(--wearo-pair-peach-on-coral-text); background-color: var(--wearo-pair-peach-on-coral-bg); text-shadow: var(--wearo-pair-peach-on-coral-shadow); }
+.wearo-pair-beige-on-blue { color: var(--wearo-pair-beige-on-blue-text); background-color: var(--wearo-pair-beige-on-blue-bg); text-shadow: var(--wearo-pair-beige-on-blue-shadow); }
+.wearo-pair-beige-on-blue-light { color: var(--wearo-pair-beige-on-blue-light-text); background-color: var(--wearo-pair-beige-on-blue-light-bg); text-shadow: var(--wearo-pair-beige-on-blue-light-shadow); }
+.wearo-pair-beige-on-peach { color: var(--wearo-pair-beige-on-peach-text); background-color: var(--wearo-pair-beige-on-peach-bg); text-shadow: var(--wearo-pair-beige-on-peach-shadow); }
+.wearo-pair-beige-on-coral { color: var(--wearo-pair-beige-on-coral-text); background-color: var(--wearo-pair-beige-on-coral-bg); text-shadow: var(--wearo-pair-beige-on-coral-shadow); }
+.wearo-pair-coral-on-blue { color: var(--wearo-pair-coral-on-blue-text); background-color: var(--wearo-pair-coral-on-blue-bg); text-shadow: var(--wearo-pair-coral-on-blue-shadow); }
+.wearo-pair-coral-on-blue-light { color: var(--wearo-pair-coral-on-blue-light-text); background-color: var(--wearo-pair-coral-on-blue-light-bg); text-shadow: var(--wearo-pair-coral-on-blue-light-shadow); }
+.wearo-pair-coral-on-peach { color: var(--wearo-pair-coral-on-peach-text); background-color: var(--wearo-pair-coral-on-peach-bg); text-shadow: var(--wearo-pair-coral-on-peach-shadow); }
+.wearo-pair-coral-on-beige { color: var(--wearo-pair-coral-on-beige-text); background-color: var(--wearo-pair-coral-on-beige-bg); text-shadow: var(--wearo-pair-coral-on-beige-shadow); }
+
+/* Intentional editorial use: the hero accent stays coral on the blue hero. */
+.fashion-display__brush { color: var(--wearo-coral); }
