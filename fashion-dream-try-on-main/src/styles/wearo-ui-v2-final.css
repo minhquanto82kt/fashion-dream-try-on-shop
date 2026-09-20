@@ -1,0 +1,284 @@
+/* WEARO UI v2 — final convergence layer.
+   This file is intentionally loaded after the compatibility/canonical stack.
+   It does not introduce a new palette: every color resolves to palette.css.
+*/
+
+body.wearo-ui-v2 {
+  background: var(--page-background) !important;
+  color: var(--text-primary) !important;
+}
+
+body.wearo-ui-v2 :focus-visible {
+  outline: 2px solid var(--wearo-coral) !important;
+  outline-offset: 3px;
+}
+
+/* Header / footer must share one visual language. */
+body.wearo-ui-v2 .fashion-nav,
+body.wearo-ui-v2 .wearo-footer {
+  background: var(--wearo-white) !important;
+  color: var(--wearo-blue) !important;
+  border-color: color-mix(in oklab, var(--wearo-blue) 16%, transparent) !important;
+}
+
+body.wearo-ui-v2 .fashion-nav__announcement {
+  background: var(--wearo-blue) !important;
+  color: var(--wearo-white) !important;
+}
+
+body.wearo-ui-v2 .wearo-footer__accent {
+  background: linear-gradient(90deg, var(--wearo-coral), var(--wearo-peach), var(--wearo-coral)) !important;
+}
+
+body.wearo-ui-v2 .wearo-footer__description,
+body.wearo-ui-v2 .wearo-footer__link,
+body.wearo-ui-v2 .wearo-footer__contact-item {
+  color: color-mix(in oklab, var(--wearo-blue) 78%, var(--wearo-white)) !important;
+}
+
+body.wearo-ui-v2 .wearo-footer__kicker,
+body.wearo-ui-v2 .wearo-footer__edition,
+body.wearo-ui-v2 .wearo-footer__contact-item svg,
+body.wearo-ui-v2 .wearo-footer__signature svg {
+  color: var(--wearo-coral) !important;
+}
+
+body.wearo-ui-v2 .wearo-footer__link:hover,
+body.wearo-ui-v2 .wearo-footer__link:focus-visible,
+body.wearo-ui-v2 .wearo-footer__signature {
+  color: var(--wearo-blue) !important;
+}
+
+/* Shared public-page rhythm. */
+body.wearo-ui-v2 main.mx-auto {
+  color: var(--wearo-ink);
+}
+
+body.wearo-ui-v2 main.mx-auto h1,
+body.wearo-ui-v2 main.mx-auto h2,
+body.wearo-ui-v2 main.mx-auto h3 {
+  color: var(--wearo-ink);
+}
+
+body.wearo-ui-v2 main.mx-auto .eyebrow {
+  color: var(--wearo-coral) !important;
+  font-weight: 750;
+  letter-spacing: .16em;
+}
+
+body.wearo-ui-v2 main.mx-auto .text-primary {
+  color: var(--wearo-blue) !important;
+}
+
+body.wearo-ui-v2 main.mx-auto .text-silver {
+  color: color-mix(in oklab, var(--wearo-blue) 62%, var(--wearo-off-white)) !important;
+}
+
+body.wearo-ui-v2 main.mx-auto .text-beige {
+  color: var(--wearo-ink) !important;
+}
+
+/* Shop — replace the remaining flat utility presentation with the current
+   editorial/card language. */
+body.wearo-ui-v2 main.mx-auto.max-w-7xl > section:first-child {
+  border-color: var(--wearo-beige) !important;
+}
+
+body.wearo-ui-v2 main.mx-auto.max-w-7xl > section:nth-child(2) {
+  border-color: var(--wearo-beige) !important;
+}
+
+body.wearo-ui-v2 main.mx-auto.max-w-7xl > section:nth-child(2) button {
+  border-radius: 999px;
+}
+
+body.wearo-ui-v2 main.mx-auto.max-w-7xl > section:nth-child(2) button.border-primary,
+body.wearo-ui-v2 main.mx-auto.max-w-7xl > section:nth-child(2) button:hover {
+  border-color: var(--wearo-blue) !important;
+}
+
+body.wearo-ui-v2 main.mx-auto.max-w-7xl input[type="search"] {
+  min-height: 48px;
+}
+
+body.wearo-ui-v2 main.mx-auto.max-w-7xl .fashion-product-card,
+body.wearo-ui-v2 main.mx-auto.max-w-7xl .group {
+  transition: transform .22s cubic-bezier(.22,1,.36,1), box-shadow .22s ease;
+}
+
+body.wearo-ui-v2 main.mx-auto.max-w-7xl .fashion-product-card:hover,
+body.wearo-ui-v2 main.mx-auto.max-w-7xl .group:hover {
+  transform: translateY(-3px);
+}
+
+/* Product detail — image, selectors and commerce actions become one system. */
+body.wearo-ui-v2 main.mx-auto.max-w-7xl img.aspect-\[4\/5\] {
+  border-radius: 14px;
+  border: 1px solid color-mix(in oklab, var(--wearo-blue) 16%, var(--wearo-white)) !important;
+  background: var(--wearo-off-white);
+}
+
+body.wearo-ui-v2 main.mx-auto.max-w-7xl button:not([aria-label*="menu"]),
+body.wearo-ui-v2 main.mx-auto.max-w-5xl button:not([aria-label*="menu"]) {
+  transition: transform .18s ease, border-color .18s ease, background-color .18s ease, color .18s ease, box-shadow .18s ease;
+}
+
+body.wearo-ui-v2 main.mx-auto.max-w-7xl button.border:not(:disabled):hover,
+body.wearo-ui-v2 main.mx-auto.max-w-5xl button.border:not(:disabled):hover {
+  border-color: var(--wearo-coral) !important;
+  transform: translateY(-1px);
+}
+
+body.wearo-ui-v2 main.mx-auto.max-w-7xl button.bg-primary,
+body.wearo-ui-v2 main.mx-auto.max-w-5xl button.bg-primary {
+  border-radius: 999px;
+  box-shadow: 0 10px 24px color-mix(in oklab, var(--wearo-blue) 18%, transparent);
+}
+
+body.wearo-ui-v2 main.mx-auto.max-w-7xl a.border-primary {
+  border-radius: 999px;
+}
+
+/* Cart + checkout — cards, inputs and summary rails. */
+body.wearo-ui-v2 main.mx-auto.max-w-5xl > div.mt-10,
+body.wearo-ui-v2 main.mx-auto.max-w-5xl form.mt-10 {
+  color: var(--wearo-ink);
+}
+
+body.wearo-ui-v2 main.mx-auto.max-w-5xl > div.mt-10 > div.border,
+body.wearo-ui-v2 main.mx-auto.max-w-5xl > div.mt-10 aside,
+body.wearo-ui-v2 main.mx-auto.max-w-5xl form.mt-10 aside,
+body.wearo-ui-v2 main.mx-auto.max-w-5xl form.mt-10 > div > .border,
+body.wearo-ui-v2 main.mx-auto.max-w-5xl .ai-consent-panel {
+  border-color: color-mix(in oklab, var(--wearo-blue) 16%, var(--wearo-white)) !important;
+  background: var(--wearo-white) !important;
+  border-radius: 14px;
+  box-shadow: 0 10px 28px color-mix(in oklab, var(--wearo-ink) 6%, transparent);
+}
+
+body.wearo-ui-v2 main.mx-auto.max-w-5xl input,
+body.wearo-ui-v2 main.mx-auto.max-w-5xl textarea,
+body.wearo-ui-v2 main.mx-auto.max-w-5xl select {
+  border-radius: 10px !important;
+  border-color: color-mix(in oklab, var(--wearo-blue) 22%, var(--wearo-white)) !important;
+}
+
+body.wearo-ui-v2 main.mx-auto.max-w-5xl input:focus,
+body.wearo-ui-v2 main.mx-auto.max-w-5xl textarea:focus,
+body.wearo-ui-v2 main.mx-auto.max-w-5xl select:focus {
+  border-color: var(--wearo-blue) !important;
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--wearo-blue) 10%, transparent) !important;
+}
+
+body.wearo-ui-v2 main.mx-auto.max-w-5xl .border-t,
+body.wearo-ui-v2 main.mx-auto.max-w-5xl .divide-y > * {
+  border-color: color-mix(in oklab, var(--wearo-blue) 14%, var(--wearo-white)) !important;
+}
+
+body.wearo-ui-v2 main.mx-auto.max-w-5xl .bg-primary {
+  background: var(--wearo-blue) !important;
+}
+
+body.wearo-ui-v2 main.mx-auto.max-w-5xl .bg-primary:hover:not(:disabled) {
+  background: var(--wearo-blue-light) !important;
+}
+
+/* AI Studio / consent screens. */
+body.wearo-ui-v2 .ai-consent-panel {
+  width: min(760px, calc(100vw - 32px));
+  padding: clamp(28px, 5vw, 56px);
+  background: var(--wearo-white) !important;
+  border: 1px solid color-mix(in oklab, var(--wearo-blue) 16%, var(--wearo-white)) !important;
+  border-radius: 18px;
+  box-shadow: 0 18px 50px color-mix(in oklab, var(--wearo-ink) 8%, transparent);
+}
+
+body.wearo-ui-v2 .ai-consent-panel h1 {
+  color: var(--wearo-blue) !important;
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  line-height: .98;
+}
+
+body.wearo-ui-v2 .ai-consent-panel .ai-consent-back,
+body.wearo-ui-v2 .ai-consent-panel button {
+  border-radius: 999px;
+}
+
+body.wearo-ui-v2 .ai-consent-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: var(--wearo-ink);
+}
+
+body.wearo-ui-v2 .ai-consent-check input {
+  accent-color: var(--wearo-coral);
+  margin-top: 3px;
+}
+
+body.wearo-ui-v2 main.mx-auto.w-full.max-w-\[1440px\] {
+  color: var(--wearo-ink);
+}
+
+body.wearo-ui-v2 main.mx-auto.w-full.max-w-\[1440px\] aside {
+  border-color: color-mix(in oklab, var(--wearo-blue) 14%, var(--wearo-white));
+}
+
+body.wearo-ui-v2 main.mx-auto.w-full.max-w-\[1440px\] .border-border {
+  border-color: color-mix(in oklab, var(--wearo-blue) 14%, var(--wearo-white)) !important;
+}
+
+body.wearo-ui-v2 main.mx-auto.w-full.max-w-\[1440px\] button.border-primary {
+  border-color: var(--wearo-blue) !important;
+}
+
+body.wearo-ui-v2 main.mx-auto.w-full.max-w-\[1440px\] button.bg-primary {
+  background: var(--wearo-blue) !important;
+  border-radius: 999px;
+}
+
+body.wearo-ui-v2 main.mx-auto.w-full.max-w-\[1440px\] button.bg-primary:hover:not(:disabled) {
+  background: var(--wearo-blue-light) !important;
+}
+
+/* Generic legacy utility cleanup for public pages. The old semantic names are
+   aliases in palette.css; these rules only improve geometry/interaction. */
+body.wearo-ui-v2 main:not(.fashion-hero) .border-border,
+body.wearo-ui-v2 main:not(.fashion-hero) .border-input {
+  border-color: color-mix(in oklab, var(--wearo-blue) 14%, var(--wearo-white)) !important;
+}
+
+body.wearo-ui-v2 main:not(.fashion-hero) .rounded-none {
+  border-radius: 10px;
+}
+
+body.wearo-ui-v2 main:not(.fashion-hero) .hover\:underline:hover {
+  text-decoration-color: var(--wearo-coral);
+  text-underline-offset: 4px;
+}
+
+/* Root error / not-found surfaces also use the same design language. */
+body.wearo-ui-v2 > #root .min-h-screen.bg-background.flex.items-center,
+body.wearo-ui-v2 > div.min-h-screen.bg-background.flex.items-center {
+  background: var(--wearo-off-white) !important;
+}
+
+@media (max-width: 680px) {
+  body.wearo-ui-v2 .wearo-footer__inner {
+    width: calc(100% - 32px);
+  }
+
+  body.wearo-ui-v2 main.mx-auto {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.wearo-ui-v2 button,
+  body.wearo-ui-v2 a,
+  body.wearo-ui-v2 .fashion-product-card,
+  body.wearo-ui-v2 .group {
+    transition: none !important;
+  }
+}
