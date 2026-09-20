@@ -1,0 +1,62 @@
+/* WEARO contrast guard — final UI safety layer.
+   Loaded last. It does not create new brand colors; it only selects safe
+   foregrounds for neutral surfaces and known editorial treatments.
+*/
+
+:root {
+  /* White on blue-light is only DISPLAY contrast (3.20:1). Black is the
+     safer utility foreground for small/functional secondary controls. */
+  --secondary-foreground: var(--wearo-black);
+}
+
+.wearo-ui-v2 .bg-secondary,
+.wearo-ui-v2 .bg-secondary * {
+  color: var(--wearo-black) !important;
+}
+
+/* Warm brand surfaces must never inherit white body text. */
+.wearo-ui-v2 .bg-accent,
+.wearo-ui-v2 .bg-accent * {
+  color: var(--wearo-black) !important;
+}
+
+/* Legacy beige/silver names are semantic aliases, not literal foregrounds.
+   Keep them readable on the light storefront surfaces. */
+.wearo-ui-v2 main:not(.fashion-hero) .text-beige {
+  color: var(--wearo-ink) !important;
+}
+
+.wearo-ui-v2 main:not(.fashion-hero) .text-silver {
+  color: #586A74 !important;
+}
+
+/* Editorial photography uses a dark image treatment: coral remains a valid
+   high-contrast accent while the old blue-on-black treatment is only DISPLAY. */
+.wearo-ui-v2 .fashion-editorial .fashion-eyebrow {
+  color: var(--wearo-coral) !important;
+}
+
+/* Home announcement: keep dynamic content inside the WEARO palette. */
+.wearo-ui-v2 .wearo-announcement {
+  background: var(--wearo-coral) !important;
+  color: var(--wearo-black) !important;
+}
+
+/* Palette swatches: blue-light uses black micro-copy rather than white,
+   because the swatch is only 3.20:1 with white. */
+.wearo-ui-v2 .wearo-swatch-blue-light {
+  color: var(--wearo-black) !important;
+}
+
+/* Never allow the two most common accidental neutral collisions. */
+.wearo-ui-v2 [style*="color: #FFFFFF"][style*="background: #FFFFFF"],
+.wearo-ui-v2 [style*="color:#FFFFFF"][style*="background:#FFFFFF"],
+.wearo-ui-v2 [style*="color: #000000"][style*="background: #000000"],
+.wearo-ui-v2 [style*="color:#000000"][style*="background:#000000"] {
+  color: var(--wearo-ink) !important;
+  background: var(--wearo-white) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wearo-ui-v2 .wearo-announcement { transition: none !important; }
+}
