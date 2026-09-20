@@ -1,0 +1,258 @@
+/* WEARO UI v2 — final storefront/account/footer convergence layer.
+   Loaded after the legacy compatibility stack so old UI tokens cannot leak into
+   the current WEARO visual language. Business logic is intentionally untouched.
+*/
+
+:root {
+  --wearo-v2-blue: #54728C;
+  --wearo-v2-blue-light: #7794A6;
+  --wearo-v2-peach: #F2CEAE;
+  --wearo-v2-beige: #D9BBA9;
+  --wearo-v2-coral: #F2AD94;
+  --wearo-v2-paper: #F8F6F2;
+  --wearo-v2-white: #FFFFFF;
+  --wearo-v2-ink: #171717;
+  --wearo-v2-line: rgba(84,114,140,.18);
+  --wearo-v2-line-strong: rgba(84,114,140,.32);
+  --wearo-v2-muted: #586A74;
+  --wearo-v2-shadow: 0 12px 30px rgba(23,23,23,.08);
+}
+
+body.wearo-ui-v2 {
+  background: var(--wearo-v2-paper);
+  color: var(--wearo-v2-ink);
+}
+
+/* Legacy utility names are aliases, not a second palette. */
+.wearo-ui-v2 .text-silver { color: var(--wearo-v2-muted) !important; }
+.wearo-ui-v2 .text-beige { color: var(--wearo-v2-ink) !important; }
+.wearo-ui-v2 .text-olive,
+.wearo-ui-v2 .text-mustard,
+.wearo-ui-v2 .text-electric,
+.wearo-ui-v2 .text-acid { color: var(--wearo-v2-blue) !important; }
+.wearo-ui-v2 .bg-beige { background-color: var(--wearo-v2-peach) !important; }
+.wearo-ui-v2 .bg-olive,
+.wearo-ui-v2 .bg-mustard { background-color: var(--wearo-v2-blue) !important; }
+.wearo-ui-v2 .border-beige { border-color: var(--wearo-v2-line) !important; }
+.wearo-ui-v2 .hover\\:text-beige:hover { color: var(--wearo-v2-coral) !important; }
+.wearo-ui-v2 .placeholder\\:text-silver::placeholder { color: var(--wearo-v2-muted) !important; }
+
+/* Public utility surfaces */
+.wearo-ui-v2 main:not(.fashion-hero) {
+  color: var(--wearo-v2-ink);
+}
+
+.wearo-ui-v2 .border-border,
+.wearo-ui-v2 .border-input {
+  border-color: var(--wearo-v2-line) !important;
+}
+
+.wearo-ui-v2 .bg-card,
+.wearo-ui-v2 .bg-background {
+  background-color: var(--wearo-v2-white) !important;
+}
+
+.wearo-ui-v2 .text-primary { color: var(--wearo-v2-blue) !important; }
+.wearo-ui-v2 .bg-primary { background-color: var(--wearo-v2-blue) !important; }
+.wearo-ui-v2 .text-primary-foreground { color: var(--wearo-v2-white) !important; }
+.wearo-ui-v2 .bg-accent { background-color: var(--wearo-v2-coral) !important; }
+.wearo-ui-v2 .text-accent-foreground { color: var(--wearo-v2-ink) !important; }
+.wearo-ui-v2 .text-muted-foreground { color: var(--wearo-v2-muted) !important; }
+
+.wearo-ui-v2 input,
+.wearo-ui-v2 textarea,
+.wearo-ui-v2 select {
+  border-color: var(--wearo-v2-line) !important;
+  background: var(--wearo-v2-white) !important;
+  color: var(--wearo-v2-ink) !important;
+  border-radius: 10px;
+}
+
+.wearo-ui-v2 input:focus,
+.wearo-ui-v2 textarea:focus,
+.wearo-ui-v2 select:focus {
+  border-color: var(--wearo-v2-blue) !important;
+  box-shadow: 0 0 0 3px rgba(84,114,140,.10) !important;
+  outline: none;
+}
+
+.wearo-ui-v2 button,
+.wearo-ui-v2 a[class*="bg-primary"],
+.wearo-ui-v2 a[class*="border-primary"] {
+  transition: transform .18s ease, background-color .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease;
+}
+
+.wearo-ui-v2 button:not(:disabled):hover,
+.wearo-ui-v2 a[class*="bg-primary"]:hover,
+.wearo-ui-v2 a[class*="border-primary"]:hover {
+  transform: translateY(-1px);
+}
+
+/* Storefront product/card language. */
+.wearo-ui-v2 .fashion-product-card {
+  position: relative;
+}
+
+.wearo-ui-v2 .fashion-product-image {
+  border: 1px solid var(--wearo-v2-line) !important;
+  border-radius: 12px;
+  background: var(--wearo-v2-paper) !important;
+  box-shadow: 0 0 0 0 rgba(84,114,140,0);
+  transition: box-shadow .22s ease, border-color .22s ease, transform .22s ease;
+}
+
+.wearo-ui-v2 .fashion-product-card:hover .fashion-product-image {
+  border-color: var(--wearo-v2-line-strong) !important;
+  box-shadow: var(--wearo-v2-shadow);
+  transform: translateY(-2px);
+}
+
+.wearo-ui-v2 .fashion-product-meta {
+  border-bottom-color: var(--wearo-v2-line) !important;
+}
+
+.wearo-ui-v2 .fashion-category-filter {
+  border-color: var(--wearo-v2-line-strong) !important;
+  border-radius: 999px;
+}
+
+.wearo-ui-v2 .fashion-category-filter:hover,
+.wearo-ui-v2 .fashion-category-filter.is-active {
+  background: var(--wearo-v2-blue) !important;
+  color: var(--wearo-v2-white) !important;
+  border-color: var(--wearo-v2-blue) !important;
+}
+
+.wearo-ui-v2 .fashion-product-badge {
+  background: var(--wearo-v2-coral) !important;
+  color: var(--wearo-v2-ink) !important;
+  border-radius: 999px;
+}
+
+/* About: readability + interactive design-language cards. */
+.wearo-ui-v2 .wearo-about-hero + section .text-beige { color: var(--wearo-v2-ink) !important; }
+.wearo-ui-v2 .wearo-about-hero + section .text-silver { color: var(--wearo-v2-muted) !important; }
+.wearo-ui-v2 #design-language > div:last-child > article {
+  border-color: var(--wearo-v2-line) !important;
+  background: var(--wearo-v2-white) !important;
+  border-radius: 10px;
+  transition: transform .22s cubic-bezier(.22,1,.36,1), box-shadow .22s ease, border-color .22s ease;
+}
+.wearo-ui-v2 #design-language > div:last-child > article:hover {
+  transform: translateY(-4px);
+  border-color: var(--wearo-v2-coral) !important;
+  box-shadow: var(--wearo-v2-shadow);
+}
+
+/* Footer — must match the current light header, not the legacy dark footer. */
+.wearo-ui-v2 .wearo-footer {
+  background: var(--wearo-v2-white) !important;
+  color: var(--wearo-v2-blue) !important;
+  border-top-color: var(--wearo-v2-line) !important;
+}
+.wearo-ui-v2 .wearo-footer__accent {
+  background: linear-gradient(90deg, var(--wearo-v2-coral), var(--wearo-v2-peach), var(--wearo-v2-coral)) !important;
+}
+.wearo-ui-v2 .wearo-footer__description,
+.wearo-ui-v2 .wearo-footer__link,
+.wearo-ui-v2 .wearo-footer__contact-item { color: var(--wearo-v2-muted) !important; }
+.wearo-ui-v2 .wearo-footer__kicker,
+.wearo-ui-v2 .wearo-footer__edition,
+.wearo-ui-v2 .wearo-footer__contact-item svg { color: var(--wearo-v2-coral) !important; }
+.wearo-ui-v2 .wearo-footer__link:hover,
+.wearo-ui-v2 .wearo-footer__link:focus-visible,
+.wearo-ui-v2 .wearo-footer__signature { color: var(--wearo-v2-blue) !important; }
+.wearo-ui-v2 .wearo-footer__bottom { border-top-color: var(--wearo-v2-line) !important; color: var(--wearo-v2-blue-light) !important; }
+.wearo-ui-v2 .wearo-footer__signature svg { color: var(--wearo-v2-coral) !important; }
+
+/* Account/auth — replace the legacy black/orange presentation with WEARO light surfaces. */
+.wearo-ui-v2 .account-page,
+.wearo-ui-v2 .account-content {
+  background: var(--wearo-v2-paper) !important;
+  color: var(--wearo-v2-ink) !important;
+}
+.wearo-ui-v2 .account-content::before { opacity: .08 !important; filter: grayscale(.25) saturate(.55) !important; }
+.wearo-ui-v2 .account-content::after { background: linear-gradient(to bottom, rgba(248,246,242,.02), var(--wearo-v2-paper) 82%, var(--wearo-v2-paper) 100%) !important; }
+.wearo-ui-v2 .account-shell { padding-top: 42px !important; }
+.wearo-ui-v2 .account-kicker,
+.wearo-ui-v2 .account-kicker-small { color: var(--wearo-v2-coral) !important; }
+.wearo-ui-v2 .account-title,
+.wearo-ui-v2 .account-welcome h1 { color: var(--wearo-v2-blue) !important; }
+.wearo-ui-v2 .account-title .accent,
+.wearo-ui-v2 .account-welcome h1 span { color: var(--wearo-v2-coral) !important; }
+.wearo-ui-v2 .account-copy,
+.wearo-ui-v2 .account-note { color: var(--wearo-v2-muted) !important; }
+.wearo-ui-v2 .account-card,
+.wearo-ui-v2 .account-profile-card,
+.wearo-ui-v2 .account-dashboard-card {
+  background: var(--wearo-v2-white) !important;
+  color: var(--wearo-v2-ink) !important;
+  border: 1px solid var(--wearo-v2-line) !important;
+  border-left: 3px solid var(--wearo-v2-coral) !important;
+  box-shadow: var(--wearo-v2-shadow) !important;
+  border-radius: 14px;
+}
+.wearo-ui-v2 .account-card h2,
+.wearo-ui-v2 .account-profile-card h3 { color: var(--wearo-v2-blue) !important; }
+.wearo-ui-v2 .account-switch { border-color: var(--wearo-v2-line) !important; }
+.wearo-ui-v2 .account-switch button { color: var(--wearo-v2-muted) !important; }
+.wearo-ui-v2 .account-switch button[aria-selected=true] { color: var(--wearo-v2-blue) !important; }
+.wearo-ui-v2 .account-switch button[aria-selected=true]::after { background: var(--wearo-v2-coral) !important; }
+.wearo-ui-v2 .account-field label { color: var(--wearo-v2-blue) !important; }
+.wearo-ui-v2 .account-field input { background: var(--wearo-v2-white) !important; color: var(--wearo-v2-ink) !important; border-color: var(--wearo-v2-line-strong) !important; border-radius: 10px !important; }
+.wearo-ui-v2 .account-field input:focus { border-color: var(--wearo-v2-blue) !important; }
+.wearo-ui-v2 .account-eye { color: var(--wearo-v2-muted) !important; }
+.wearo-ui-v2 .account-submit { background: var(--wearo-v2-blue) !important; color: var(--wearo-v2-white) !important; border-radius: 999px !important; }
+.wearo-ui-v2 .account-submit:hover:not(:disabled) { background: var(--wearo-v2-blue-light) !important; }
+.wearo-ui-v2 .account-link,
+.wearo-ui-v2 .account-resend { color: var(--wearo-v2-blue) !important; }
+.wearo-ui-v2 .account-social { background: var(--wearo-v2-white) !important; color: var(--wearo-v2-blue) !important; border-color: var(--wearo-v2-line-strong) !important; border-radius: 10px !important; }
+.wearo-ui-v2 .account-social:hover { border-color: var(--wearo-v2-coral) !important; background: var(--wearo-v2-peach) !important; }
+.wearo-ui-v2 .account-feedback--error { color: #9b3f38 !important; }
+.wearo-ui-v2 .account-feedback--success { color: var(--wearo-v2-blue) !important; }
+.wearo-ui-v2 .account-welcome { border-bottom-color: var(--wearo-v2-line) !important; }
+.wearo-ui-v2 .account-profile-row { color: var(--wearo-v2-muted) !important; }
+.wearo-ui-v2 .account-profile-row strong { color: var(--wearo-v2-ink) !important; }
+
+/* Cart + checkout: make the legacy utility layout read as one WEARO system. */
+.wearo-ui-v2 main.mx-auto[class*="max-w-5xl"],
+.wearo-ui-v2 main.mx-auto[class*="max-w-6xl"],
+.wearo-ui-v2 main.mx-auto[class*="max-w-7xl"] {
+  color: var(--wearo-v2-ink);
+}
+.wearo-ui-v2 main.mx-auto[class*="max-w-5xl"] > div > .border,
+.wearo-ui-v2 main.mx-auto[class*="max-w-5xl"] aside,
+.wearo-ui-v2 main.mx-auto[class*="max-w-6xl"] .border,
+.wearo-ui-v2 main.mx-auto[class*="max-w-6xl"] aside {
+  border-color: var(--wearo-v2-line) !important;
+  background: var(--wearo-v2-white) !important;
+  border-radius: 12px;
+}
+.wearo-ui-v2 main.mx-auto[class*="max-w-5xl"] button.border,
+.wearo-ui-v2 main.mx-auto[class*="max-w-6xl"] button.border {
+  border-color: var(--wearo-v2-line-strong) !important;
+  border-radius: 10px;
+}
+.wearo-ui-v2 main.mx-auto[class*="max-w-5xl"] button.border:hover,
+.wearo-ui-v2 main.mx-auto[class*="max-w-6xl"] button.border:hover {
+  border-color: var(--wearo-v2-coral) !important;
+}
+
+/* AI Studio: keep the AI experience premium without falling back to neon legacy colors. */
+.wearo-ui-v2 .ai-studio,
+.wearo-ui-v2 [data-ai-studio] {
+  --ai-primary: var(--wearo-v2-blue);
+  --ai-accent: var(--wearo-v2-coral);
+  --ai-surface: var(--wearo-v2-white);
+  --ai-paper: var(--wearo-v2-paper);
+}
+.wearo-ui-v2 .ai-studio button,
+.wearo-ui-v2 [data-ai-studio] button { border-radius: 10px; }
+
+/* Motion is optional. */
+@media (prefers-reduced-motion: reduce) {
+  .wearo-ui-v2 button,
+  .wearo-ui-v2 a,
+  .wearo-ui-v2 .fashion-product-image,
+  .wearo-ui-v2 #design-language > div:last-child > article { transition: none !important; }
+}
