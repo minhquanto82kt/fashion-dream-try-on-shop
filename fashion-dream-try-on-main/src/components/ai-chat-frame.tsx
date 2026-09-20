@@ -1,6 +1,6 @@
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation } from "@tanstack/react-query";
-import { Bot, Check, MessageCircle, Send, Sparkles, User } from "lucide-react";
+import { Bot, Check, Send, Sparkles, User } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { generateConcept } from "@/lib/ai.functions";
