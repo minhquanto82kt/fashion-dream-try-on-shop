@@ -72,8 +72,8 @@ function AboutPage() {
         <section className="wearo-about__editorial-grid" aria-label="WEARO overview">
           <article className="wearo-about__image-card">
             <img
-              src="https://images.pexels.com/photos/18698406/pexels-photo-18698406.jpeg?auto=compress&cs=tinysrgb&w=1600"
-              alt="WEARO fashion editorial"
+              src="/images/outdoor_lifestyle_portrait.jpg"
+              alt="WEARO outdoor lifestyle editorial"
             />
             <div className="wearo-about__image-caption">
               <span>WEARO EDITORIAL</span>
