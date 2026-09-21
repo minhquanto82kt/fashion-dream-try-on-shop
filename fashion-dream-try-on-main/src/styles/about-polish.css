@@ -22,12 +22,52 @@
 }
 
 .wearo-about__masthead {
+  position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) minmax(240px, .55fr);
   gap: 48px;
-  min-height: 410px;
+  min-height: 560px;
   padding: 44px 0 58px;
+  overflow: hidden;
   border-bottom: 1px solid rgba(84,114,140,.25);
+  background: #fff;
+}
+
+.wearo-about__masthead::before {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  background-image: url("/images/outside-summer-fashion-smile-nature.jpg");
+  background-position: center right;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.wearo-about__masthead::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      #fff 0%,
+      #fff 25%,
+      rgba(255,255,255,.98) 36%,
+      rgba(255,255,255,.88) 46%,
+      rgba(255,255,255,.58) 58%,
+      rgba(255,255,255,.22) 70%,
+      rgba(255,255,255,0) 84%
+    );
+  pointer-events: none;
+}
+
+.wearo-about__masthead-copy,
+.wearo-about__masthead-meta {
+  position: relative;
+  z-index: 1;
 }
 
 .wearo-about__masthead-copy { max-width: 920px; }
@@ -463,7 +503,21 @@
 
 @media (max-width: 900px) {
   .wearo-about { width: min(100% - 28px, 760px); padding-top: 48px; }
-  .wearo-about__masthead { grid-template-columns: 1fr; min-height: 0; }
+  .wearo-about__masthead {
+    grid-template-columns: 1fr;
+    min-height: 620px;
+  }
+  .wearo-about__masthead::after {
+    background:
+      linear-gradient(
+        180deg,
+        #fff 0%,
+        #fff 28%,
+        rgba(255,255,255,.92) 43%,
+        rgba(255,255,255,.45) 60%,
+        rgba(255,255,255,0) 82%
+      );
+  }
   .wearo-about__masthead-meta { align-items: flex-start; text-align: left; gap: 12px; }
   .wearo-about__editorial-grid {
     grid-template-columns: 1fr;
@@ -479,7 +533,10 @@
 
 @media (max-width: 600px) {
   .wearo-about { width: min(100% - 20px, 560px); padding: 34px 0 70px; }
-  .wearo-about__masthead { padding-top: 25px; }
+  .wearo-about__masthead {
+    min-height: 590px;
+    padding-top: 25px;
+  }
   .wearo-about__masthead h1 { font-size: clamp(3.25rem, 17vw, 5.3rem) !important; }
   .wearo-about__image-card,
   .wearo-about__image-card img { min-height: 430px; }
