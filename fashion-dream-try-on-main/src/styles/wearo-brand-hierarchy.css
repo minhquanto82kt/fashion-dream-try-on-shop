@@ -24,7 +24,7 @@
 .fashion-brand__name { color: var(--wearo-primary) !important; }
 .fashion-brand__name span,
 .fashion-brand__meta,
-.fashion-ai-nav__beta { color: var(--wearo-white) !important; background: var(--wearo-secondary) !important; }
+.fashion-ai-nav__beta { color: var(--wearo-ink) !important; background: var(--wearo-secondary) !important; }
 .fashion-nav-link,
 .fashion-discovery-link,
 .fashion-ai-nav,
