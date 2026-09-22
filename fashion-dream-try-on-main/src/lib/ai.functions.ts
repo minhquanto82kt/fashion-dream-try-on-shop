@@ -14,6 +14,14 @@ type DbProduct = { id: string; name: string; category: string; price: number; im
 type DbProductImage = { image_url: string; sort_order: number; is_primary: boolean };
 type DbVariant = { size: string; color: string; stock: number };
 
+type InternalTryOnJob = {
+  id: string;
+  status: "queued" | "processing" | "completed" | "failed";
+  provider: string;
+  result_image_url?: string | null;
+  error?: string | null;
+};
+
 async function generateFashionImage(prompt: string, images: string[] = []): Promise<GeneratedImage> {
   try {
     const imagePrompt = images.length ? { text: prompt, images } : prompt;
@@ -130,8 +138,6 @@ async function internalTryOnRequest<T>(path: string, init: RequestInit): Promise
   return payload as T;
 }
 
-type InternalTryOnJob = { id: string; status: "queued" | "processing" | "completed" | "failed"; provider: string; result_image_url?: string | null; error?: string | null };
-
 export const generateTryOn = createServerFn({ method: "POST" })
   .validator((input: unknown) => TryOnInput.parse(input))
   .handler(async ({ data }) => {
@@ -140,7 +146,7 @@ export const generateTryOn = createServerFn({ method: "POST" })
     validatePersonImage(data.personImage);
     const { product, garmentImage } = await getPublishedProduct(data.productId);
     const clientKey = getRequestHeader("x-forwarded-for")?.split(",")[0]?.trim() ?? getRequestHeader("x-real-ip") ?? "unknown";
-    let job = await internalTryOnRequest<InternalTryOnJob>("/api/try-on/internal/jobs", {
+    const job = await internalTryOnRequest<InternalTryOnJob>("/api/try-on/internal/jobs", {
       method: "POST",
       body: JSON.stringify({
         person_image: data.personImage,
@@ -150,16 +156,16 @@ export const generateTryOn = createServerFn({ method: "POST" })
         client_key: clientKey,
       }),
     });
-    for (let attempt = 0; attempt < 45; attempt += 1) {
-      if (job.status === "completed") {
-        if (!job.result_image_url) throw new Error("AI hoàn tất nhưng không trả về ảnh kết quả.");
-        return { image: job.result_image_url, text: "" } satisfies GeneratedImage;
-      }
-      if (job.status === "failed") throw new Error(job.error || "AI Try-On thất bại. Vui lòng thử lại.");
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      job = await internalTryOnRequest<InternalTryOnJob>(`/api/try-on/internal/jobs/${encodeURIComponent(job.id)}`, { method: "GET" });
-    }
-    throw new Error("AI đang xử lý lâu hơn dự kiến. Vui lòng thử lại sau ít phút.");
+    return { jobId: job.id, status: job.status };
+  });
+
+export const getTryOnJob = createServerFn({ method: "GET" })
+  .validator((input: unknown) => z.object({ jobId: z.string().trim().min(1).max(200) }).parse(input))
+  .handler(async ({ data }) => {
+    const job = await internalTryOnRequest<InternalTryOnJob>(`/api/try-on/internal/jobs/${encodeURIComponent(data.jobId)}`, { method: "GET" });
+    if (job.status === "completed" && !job.result_image_url) throw new Error("AI hoàn tất nhưng không trả về ảnh kết quả.");
+    if (job.status === "failed") throw new Error(job.error || "AI Try-On thất bại. Vui lòng thử lại.");
+    return { jobId: job.id, status: job.status, image: job.result_image_url ?? null, text: "" };
   });
 
 function validatePersonImage(dataUrl: string) {
