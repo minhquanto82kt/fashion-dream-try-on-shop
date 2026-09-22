@@ -28,10 +28,10 @@ async function generateFashionImage(prompt: string, images: string[] = []): Prom
   }
 }
 
-async function getPublishedProduct(productId?: string, fallbackName?: string) {
+async function getPublishedProduct(productId?: string) {
+  if (!productId?.trim()) throw new Error("Thiếu sản phẩm thử đồ.");
   const { supabaseRequest } = await import("@/lib/supabase.server");
-  const filter = productId ? `id=eq.${encodeURIComponent(productId)}` : `name=eq.${encodeURIComponent(fallbackName ?? "")}`;
-  const products = await supabaseRequest<DbProduct[]>(`products?${filter}&active=eq.true&status=eq.published&select=id,name,category,price,image,active,status&limit=1`);
+  const products = await supabaseRequest<DbProduct[]>(`products?id=eq.${encodeURIComponent(productId)}&active=eq.true&status=eq.published&select=id,name,category,price,image,active,status&limit=1`);
   const product = products[0];
   if (!product) throw new Error("Sản phẩm không tồn tại hoặc chưa được xuất bản.");
   const images = await supabaseRequest<DbProductImage[]>(`product_images?product_id=eq.${encodeURIComponent(product.id)}&select=image_url,sort_order,is_primary&order=sort_order.asc`);
@@ -83,7 +83,11 @@ export const generateConcept = createServerFn({ method: "POST" })
     return generateFashionImage(prompt);
   });
 
-const TryOnInput = z.object({ personImage: z.string().min(20).max(8_500_000), productId: z.string().trim().min(1).max(100).optional(), garmentImage: z.string().min(5).max(2_000_000).optional(), garmentName: z.string().trim().min(1).max(200).optional(), note: z.string().trim().max(MAX_NOTE_LENGTH).optional() }).refine((data) => Boolean(data.productId || data.garmentName), { message: "Thiếu sản phẩm thử đồ." });
+const TryOnInput = z.object({
+  personImage: z.string().min(20).max(8_500_000),
+  productId: z.string().trim().min(1).max(100),
+  note: z.string().trim().max(MAX_NOTE_LENGTH).optional(),
+});
 
 function mapTryOnCategory(category: string): "top" | "bottom" | "dress" | "outerwear" | "full_body" {
   const normalized = category.trim().toLowerCase();
@@ -108,7 +112,14 @@ function internalSecret(): string {
 }
 
 async function internalTryOnRequest<T>(path: string, init: RequestInit): Promise<T> {
-  const response = await fetch(`${serverOrigin()}${path}`, { ...init, headers: { Authorization: `Bearer ${internalSecret()}`, "Content-Type": "application/json", ...(init.headers ?? {}) } });
+  const response = await fetch(`${serverOrigin()}${path}`, {
+    ...init,
+    headers: {
+      Authorization: `Bearer ${internalSecret()}`,
+      "Content-Type": "application/json",
+      ...(init.headers ?? {}),
+    },
+  });
   const text = await response.text();
   let payload: unknown = null;
   try { payload = text ? JSON.parse(text) : null; } catch { payload = null; }
@@ -127,11 +138,23 @@ export const generateTryOn = createServerFn({ method: "POST" })
     const enabled = await getAiTryOnEnabled();
     if (!enabled) throw new Error("AI Virtual Try-On hiện đang tạm tắt. Vui lòng thử lại sau.");
     validatePersonImage(data.personImage);
-    const { product, garmentImage } = await getPublishedProduct(data.productId, data.garmentName);
+    const { product, garmentImage } = await getPublishedProduct(data.productId);
     const clientKey = getRequestHeader("x-forwarded-for")?.split(",")[0]?.trim() ?? getRequestHeader("x-real-ip") ?? "unknown";
-    let job = await internalTryOnRequest<InternalTryOnJob>("/api/try-on/internal/jobs", { method: "POST", body: JSON.stringify({ person_image: data.personImage, garment_image_url: garmentImage, category: mapTryOnCategory(product.category), note: data.note, client_key: clientKey }) });
+    let job = await internalTryOnRequest<InternalTryOnJob>("/api/try-on/internal/jobs", {
+      method: "POST",
+      body: JSON.stringify({
+        person_image: data.personImage,
+        garment_image_url: garmentImage,
+        category: mapTryOnCategory(product.category),
+        note: data.note,
+        client_key: clientKey,
+      }),
+    });
     for (let attempt = 0; attempt < 45; attempt += 1) {
-      if (job.status === "completed") { if (!job.result_image_url) throw new Error("AI hoàn tất nhưng không trả về ảnh kết quả."); return { image: job.result_image_url, text: "" } satisfies GeneratedImage; }
+      if (job.status === "completed") {
+        if (!job.result_image_url) throw new Error("AI hoàn tất nhưng không trả về ảnh kết quả.");
+        return { image: job.result_image_url, text: "" } satisfies GeneratedImage;
+      }
       if (job.status === "failed") throw new Error(job.error || "AI Try-On thất bại. Vui lòng thử lại.");
       await new Promise((resolve) => setTimeout(resolve, 2000));
       job = await internalTryOnRequest<InternalTryOnJob>(`/api/try-on/internal/jobs/${encodeURIComponent(job.id)}`, { method: "GET" });
