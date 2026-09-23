@@ -9,7 +9,7 @@ on:
       - '**'
 
 permissions:
-  contents: read
+  contents: write
 
 defaults:
   run:
@@ -32,11 +32,36 @@ jobs:
           cache: npm
           cache-dependency-path: fashion-dream-try-on-main/package-lock.json
 
-      - name: Pin npm for lockfile compatibility
-        run: npm install --global npm@11.13.0
+      - name: Pin npm for lockfile repair
+        run: npm install --global npm@11.19.1
 
       - name: Install dependencies
-        run: npm ci
+        shell: bash
+        run: |
+          set -o pipefail
+          if npm ci 2>&1 | tee /tmp/npm-ci.log; then
+            exit 0
+          fi
+
+          if ! grep -Eq 'Missing: @emnapi/(core|runtime|wasi-threads)@' /tmp/npm-ci.log; then
+            echo 'npm ci failed for a reason unrelated to the known optional-dependency lock drift.'
+            exit 1
+          fi
+
+          echo 'Detected known @emnapi optional-dependency lock drift; regenerating package-lock.json on the Linux CI runner.'
+          npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add package-lock.json
+          if git diff --cached --quiet -- package-lock.json; then
+            echo 'No package-lock.json change was produced; refusing to hide the npm ci failure.'
+            exit 1
+          fi
+          git commit -m 'chore(deps): sync package lock for CI [lock-sync]'
+          git push origin HEAD:${GITHUB_REF_NAME}
+
+          npm ci
 
       - name: Build
         run: npm run build
