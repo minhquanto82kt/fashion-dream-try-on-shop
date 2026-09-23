@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { useEffect, useMemo, useState } from "react";
 import { Star, Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -13,48 +14,10 @@ export function ProductReviews({ productId }: { productId: string }) {
   const [title, setTitle] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const session = getCustomerSession();
-
-  const load = async () => {
-    setLoading(true);
-    try { setReviews(await listProductReviews(productId)); }
-    catch { toast.error("Không thể tải đánh giá sản phẩm."); }
-    finally { setLoading(false); }
-  };
+  const load = async () => { setLoading(true); try { setReviews(await listProductReviews(productId)); } catch { toast.error("Không thể tải đánh giá sản phẩm."); } finally { setLoading(false); } };
   useEffect(() => { void load(); }, [productId]);
-
-  const summary = useMemo(() => {
-    if (!reviews.length) return { average: 0, count: 0 };
-    return { average: reviews.reduce((sum, item) => sum + item.rating, 0) / reviews.length, count: reviews.length };
-  }, [reviews]);
-
+  const summary = useMemo(() => { if (!reviews.length) return { average: 0, count: 0 }; return { average: reviews.reduce((sum, item) => sum + item.rating, 0) / reviews.length, count: reviews.length }; }, [reviews]);
   const resetForm = () => { setEditingId(null); setRating(5); setTitle(""); setBody(""); };
-  const submit = async () => {
-    if (body.trim().length < 3) { toast.error("Nội dung đánh giá cần ít nhất 3 ký tự."); return; }
-    setSaving(true);
-    try {
-      if (editingId) await updateProductReview(editingId, { rating, title, body });
-      else await createProductReview({ productId, rating, title, body });
-      toast.success(editingId ? "Đã cập nhật đánh giá." : "Đã gửi đánh giá.");
-      resetForm();
-      await load();
-    } catch (error) { toast.error(error instanceof Error ? error.message : "Không thể lưu đánh giá."); }
-    finally { setSaving(false); }
-  };
-
-  return <section className="mt-16 border-t border-border pt-12">
-    <div className="flex flex-wrap items-end justify-between gap-5">
-      <div><p className="eyebrow">Reviews</p><h2 className="mt-3 text-2xl leading-tight sm:text-3xl">Đánh giá sản phẩm</h2></div>
-      {summary.count > 0 && <div className="text-right"><div className="flex items-center justify-end gap-1 text-primary" aria-label={`${summary.average.toFixed(1)} trên 5`}><Star className="size-4 fill-current"/><span className="font-display text-xl">{summary.average.toFixed(1)}</span></div><p className="mt-1 text-xs text-silver">{summary.count} đánh giá</p></div>}
-    </div>
-
-    {session?.access_token ? <div className="mt-6 border border-border bg-card p-5 sm:p-6">
-      <p className="text-xs uppercase tracking-[0.16em] text-silver">{editingId ? "Chỉnh sửa đánh giá" : "Đánh giá của bạn"}</p>
-      <div className="mt-4 flex gap-1" role="radiogroup" aria-label="Chọn số sao">{[1,2,3,4,5].map((value) => <button key={value} type="button" role="radio" aria-checked={rating === value} onClick={() => setRating(value)} className="p-1 text-primary" aria-label={`${value} sao`}><Star className={`size-5 ${value <= rating ? "fill-current" : ""}`}/></button>)}</div>
-      <input value={title} onChange={(event) => setTitle(event.target.value)} maxLength={120} placeholder="Tiêu đề (không bắt buộc)" className="mt-4 min-h-11 w-full border border-border bg-background px-3 text-sm text-foreground outline-none focus:border-primary" />
-      <textarea value={body} onChange={(event) => setBody(event.target.value)} maxLength={2000} rows={4} placeholder="Chia sẻ trải nghiệm của bạn..." className="mt-3 w-full resize-y border border-border bg-background p-3 text-sm leading-6 text-foreground outline-none focus:border-primary" />
-      <div className="mt-3 flex flex-wrap gap-3"><button type="button" disabled={saving} onClick={() => void submit()} className="min-h-10 bg-primary px-5 py-2 text-xs uppercase tracking-[0.15em] text-primary-foreground disabled:opacity-50">{saving ? "Đang lưu…" : editingId ? "Cập nhật" : "Gửi đánh giá"}</button>{editingId && <button type="button" disabled={saving} onClick={resetForm} className="min-h-10 border border-border px-5 py-2 text-xs uppercase tracking-[0.15em] text-silver">Hủy</button>}</div>
-    </div> : <div className="mt-6 border border-border bg-card p-5 text-sm leading-6 text-silver">Đăng nhập để chia sẻ đánh giá của bạn. Chỉ đánh giá thật từ tài khoản đã đăng nhập mới được lưu.</div>}
-
-    <div className="mt-6 space-y-3">{loading ? <div className="border border-border p-6 text-sm text-silver">Đang tải đánh giá…</div> : reviews.length === 0 ? <div className="border border-border bg-card p-8 text-center"><p className="text-sm text-beige">Chưa có đánh giá cho sản phẩm này.</p><p className="mt-2 text-xs leading-5 text-silver">Hãy là người đầu tiên chia sẻ trải nghiệm thực tế.</p></div> : reviews.map((review) => <article key={review.id} className="border border-border bg-card p-5 sm:p-6"><div className="flex items-start justify-between gap-4"><div><div className="flex gap-0.5 text-primary" aria-label={`${review.rating} sao`}>{[1,2,3,4,5].map((value) => <Star key={value} className={`size-3.5 ${value <= review.rating ? "fill-current" : ""}`}/>)}</div>{review.title && <h3 className="mt-2 text-sm font-medium text-foreground">{review.title}</h3>}</div>{session?.user?.id === review.user_id && <div className="flex gap-1"><button type="button" onClick={() => { setEditingId(review.id); setRating(review.rating); setTitle(review.title ?? ""); setBody(review.body); }} className="px-2 py-1 text-[10px] uppercase tracking-[0.12em] text-silver hover:text-primary">Sửa</button><button type="button" onClick={async () => { if (!window.confirm("Xóa đánh giá này?")) return; try { await deleteProductReview(review.id); toast.success("Đã xóa đánh giá."); await load(); } catch (error) { toast.error(error instanceof Error ? error.message : "Không thể xóa đánh giá."); } }} className="px-2 py-1 text-silver hover:text-destructive" aria-label="Xóa đánh giá"><Trash2 className="size-3.5"/></button></div>}</div><p className="mt-3 text-sm leading-6 text-beige">{review.body}</p><p className="mt-4 text-[10px] uppercase tracking-[0.14em] text-silver">{new Date(review.created_at).toLocaleDateString("vi-VN")}</p></article>)}</div>
-  </section>;
+  const submit = async () => { if (body.trim().length < 3) { toast.error("Nội dung đánh giá cần ít nhất 3 ký tự."); return; } setSaving(true); try { if (editingId) await updateProductReview(editingId, { rating, title, body }); else await createProductReview({ productId, rating, title, body }); toast.success(editingId ? "Đã cập nhật đánh giá." : "Đã gửi đánh giá."); resetForm(); await load(); } catch (error) { toast.error(error instanceof Error ? error.message : "Không thể lưu đánh giá."); } finally { setSaving(false); } };
+  return <section className="mt-16 border-t border-border pt-12"><div className="flex flex-wrap items-end justify-between gap-5"><div><p className="eyebrow">Reviews</p><h2 className="mt-3 text-2xl leading-tight sm:text-3xl">Đánh giá sản phẩm</h2></div>{summary.count > 0 && <div className="text-right"><div className="flex items-center justify-end gap-1 text-primary" aria-label={`${summary.average.toFixed(1)} trên 5`}><Star className="size-4 fill-current"/><span className="font-display text-xl">{summary.average.toFixed(1)}</span></div><p className="mt-1 text-xs text-silver">{summary.count} đánh giá</p></div>}</div>{session?.access_token ? <div className="mt-6 border border-border bg-card p-5 sm:p-6"><p className="text-xs uppercase tracking-[0.16em] text-silver">{editingId ? "Chỉnh sửa đánh giá" : "Đánh giá của bạn"}</p><div className="mt-4 flex gap-1" role="radiogroup" aria-label="Chọn số sao">{[1,2,3,4,5].map((value) => <button key={value} type="button" role="radio" aria-checked={rating === value} onClick={() => setRating(value)} className="p-1 text-primary" aria-label={`${value} sao`}><Star className={`size-5 ${value <= rating ? "fill-current" : ""}`}/></button>)}</div><input value={title} onChange={(event) => setTitle(event.target.value)} maxLength={120} placeholder="Tiêu đề (không bắt buộc)" className="mt-4 min-h-11 w-full border border-border bg-background px-3 text-sm text-foreground outline-none focus:border-primary" /><textarea value={body} onChange={(event) => setBody(event.target.value)} maxLength={2000} rows={4} placeholder="Chia sẻ trải nghiệm của bạn..." className="mt-3 w-full resize-y border border-border bg-background p-3 text-sm leading-6 text-foreground outline-none focus:border-primary" /><div className="mt-3 flex flex-wrap gap-3"><button type="button" disabled={saving} onClick={() => void submit()} className="min-h-10 bg-primary px-5 py-2 text-xs uppercase tracking-[0.15em] text-primary-foreground disabled:opacity-50">{saving ? "Đang lưu…" : editingId ? "Cập nhật" : "Gửi đánh giá"}</button>{editingId && <button type="button" disabled={saving} onClick={resetForm} className="min-h-10 border border-border px-5 py-2 text-xs uppercase tracking-[0.15em] text-silver">Hủy</button>}</div></div> : <div className="mt-6 border border-border bg-card p-5 text-sm leading-6 text-silver">Đăng nhập để chia sẻ đánh giá của bạn. Chỉ đánh giá thật từ tài khoản đã đăng nhập mới được lưu.</div>}<div className="mt-6 space-y-3">{loading ? <div className="border border-border p-6 text-sm text-silver">Đang tải đánh giá…</div> : reviews.length === 0 ? <div className="border border-border bg-card p-8 text-center"><p className="text-sm text-beige">Chưa có đánh giá cho sản phẩm này.</p><p className="mt-2 text-xs leading-5 text-silver">Hãy là người đầu tiên chia sẻ trải nghiệm thực tế.</p></div> : reviews.map((review) => <article key={review.id} className="border border-border bg-card p-5 sm:p-6"><div className="flex items-start justify-between gap-4"><div><div className="flex gap-0.5 text-primary" aria-label={`${review.rating} sao`}>{[1,2,3,4,5].map((value) => <Star key={value} className={`size-3.5 ${value <= review.rating ? "fill-current" : ""}`}/>)}</div>{review.title && <h3 className="mt-2 text-sm font-medium text-foreground">{review.title}</h3>}</div>{session?.user?.id === review.user_id && <div className="flex gap-1"><button type="button" onClick={() => { setEditingId(review.id); setRating(review.rating); setTitle(review.title ?? ""); setBody(review.body); }} className="px-2 py-1 text-[10px] uppercase tracking-[0.12em] text-silver hover:text-primary">Sửa</button><button type="button" onClick={async () => { if (!window.confirm("Xóa đánh giá này?")) return; try { await deleteProductReview(review.id); toast.success("Đã xóa đánh giá."); await load(); } catch (error) { toast.error(error instanceof Error ? error.message : "Không thể xóa đánh giá."); } }} className="px-2 py-1 text-silver hover:text-destructive" aria-label="Xóa đánh giá"><Trash2 className="size-3.5"/></button></div>}</div><p className="mt-3 text-sm leading-6 text-beige">{review.body}</p><p className="mt-4 text-[10px] uppercase tracking-[0.14em] text-silver">{new Date(review.created_at).toLocaleDateString("vi-VN")}</p></article>)}</div></section>;
 }
