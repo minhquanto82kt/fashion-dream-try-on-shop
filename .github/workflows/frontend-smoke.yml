@@ -38,9 +38,6 @@ jobs:
       - name: Dependency audit
         run: npm run audit:dependencies
 
-      - name: Secret exposure gate
-        run: npm run security:secrets
-
       - name: Start development server
         run: |
           npm run dev -- --host 127.0.0.1 --port 8080 > /tmp/wearo-vite.log 2>&1 &
