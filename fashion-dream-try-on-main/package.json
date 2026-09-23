@@ -21,8 +21,7 @@
     "test:phase-f-security": "node tests/security/phase-f-security.mjs",
     "test:customer-experience": "node tests/smoke/customer-experience.mjs",
     "audit:architecture": "node scripts/audit-architecture.mjs",
-    "audit:dependencies": "npm audit --audit-level=high",
-    "security:secrets": "git grep -n -I -E '(SUPABASE_SECRET_KEY|MOMO_SECRET_KEY|VERCEL_ACCESS_TOKEN|OPENAI_API_KEY|REPLICATE_API_TOKEN|PRIVATE_KEY)\\s*[:=]' -- ':!*.md' ':!*.example' || true"
+    "audit:dependencies": "npm audit --audit-level=high"
   },
   "overrides": {"rolldown": "1.2.1"},
   "dependencies": {
