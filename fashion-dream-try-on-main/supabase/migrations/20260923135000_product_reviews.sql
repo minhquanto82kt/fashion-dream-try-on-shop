@@ -15,6 +15,11 @@ alter table public.product_reviews enable row level security;
 create index if not exists product_reviews_product_idx on public.product_reviews(product_id, created_at desc);
 create index if not exists product_reviews_user_idx on public.product_reviews(user_id, created_at desc);
 
+drop policy if exists "product reviews select published or backoffice" on public.product_reviews;
+drop policy if exists "product reviews insert verified buyer or backoffice" on public.product_reviews;
+drop policy if exists "product reviews update own or backoffice" on public.product_reviews;
+drop policy if exists "product reviews delete own or backoffice" on public.product_reviews;
+
 create policy "product reviews select published or backoffice"
 on public.product_reviews for select to anon, authenticated
 using ((status = 'published') or (select has_backoffice_role('staff'::app_role)));
