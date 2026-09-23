@@ -38,8 +38,11 @@ jobs:
           cache: npm
           cache-dependency-path: fashion-dream-try-on-main/package-lock.json
 
-      - name: Install dependencies
-        run: npm install --include=optional --ignore-scripts --no-audit --no-fund --package-lock=false
+      - name: Refresh lockfile with peer-dependency policy
+        run: npm install --package-lock-only --legacy-peer-deps --no-audit --no-fund
+
+      - name: Install dependencies from refreshed lockfile
+        run: npm ci --legacy-peer-deps --no-audit --no-fund
 
       - name: Build
         run: npm run build
