@@ -1,0 +1,61 @@
+name: Complete Product Gallery Integration
+
+on:
+  push:
+    branches:
+      - feature/product-admin
+
+permissions:
+  contents: write
+
+jobs:
+  integrate-gallery:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/product-admin
+          fetch-depth: 0
+
+      - name: Integrate reusable ProductGallery
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path('fashion-dream-try-on-main/src/routes/product.$id.tsx')
+          text = path.read_text(encoding='utf-8')
+
+          import_line = 'import { ProductGallery } from "@/components/product-gallery";\n'
+          if import_line not in text:
+              anchor = 'import { ProductCard } from "@/components/product-card";\n'
+              if anchor not in text:
+                  raise SystemExit('ProductCard import anchor not found')
+              text = text.replace(anchor, anchor + import_line, 1)
+
+          text = text.replace('  const [shot, setShot] = useState(product.gallery[0] ?? product.image);\n', '', 1)
+          text = text.replace('  const gallery = Array.from(new Set(product.gallery.filter(Boolean)));\n  const galleryCount = gallery.length;\n', '', 1)
+
+          old = '''      <div className="min-w-0"><div className="overflow-hidden border border-border bg-card"><img src={shot} alt={product.name} className="aspect-[4/5] w-full object-cover" /></div><div className="mt-4 flex max-w-full gap-3 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" aria-label={`Thư viện ${galleryCount} ảnh sản phẩm`}>{gallery.map((image, index) => <button key={`${image}-${index}`} type="button" onClick={() => setShot(image)} className={`size-20 shrink-0 overflow-hidden border transition-colors ${image === shot ? "border-primary" : "border-border hover:border-primary"}`} aria-label={`Chọn ảnh sản phẩm ${index + 1} trong ${galleryCount}`} aria-current={image === shot}><img src={image} alt="" className="size-full object-cover" loading="lazy" /></button>)}</div><p className="mt-2 text-[10px] uppercase tracking-[0.14em] text-silver">{galleryCount} {galleryCount === 1 ? "ảnh sản phẩm" : "ảnh sản phẩm"}</p></div>'''
+          new = '''      <ProductGallery images={product.gallery} productName={product.name} />'''
+          if old not in text:
+              if 'ProductGallery images={product.gallery}' in text:
+                  print('Gallery already integrated')
+              else:
+                  raise SystemExit('Existing gallery markup not found; aborting without changes')
+          else:
+              text = text.replace(old, new, 1)
+              path.write_text(text, encoding='utf-8')
+
+      - name: Commit integration
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No integration changes needed"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add fashion-dream-try-on-main/src/routes/product.'$'\$'id.tsx
+          git commit -m "feat(product-media): integrate accessible product gallery"
+          git push origin HEAD:feature/product-admin
