@@ -42,6 +42,16 @@ function toDbProduct(product: Product) {
   };
 }
 
+function toSmokeCatalogProduct(product: Product) {
+  return {
+    ...toDbProduct(product),
+    sizes: product.sizes,
+    colors: product.colors,
+    gallery: product.gallery,
+    total_stock: product.sizes.length * product.colors.length * 12,
+  };
+}
+
 function smokeVariants(product: Product) {
   return product.sizes.flatMap((size) =>
     product.colors.map((color) => ({
@@ -67,6 +77,10 @@ function smokeImages(product: Product) {
 function smokeCatalogResponse<T>(path: string): T {
   const [resource, query = ""] = path.split("?");
   const params = new URLSearchParams(query);
+
+  if (resource === "rpc/get_published_catalog") {
+    return PRODUCTS.map(toSmokeCatalogProduct) as T;
+  }
 
   if (resource === "products") {
     let products = PRODUCTS.map(toDbProduct);
