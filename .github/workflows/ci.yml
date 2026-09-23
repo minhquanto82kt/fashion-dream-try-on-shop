@@ -16,10 +16,10 @@ defaults:
     working-directory: fashion-dream-try-on-main
 
 env:
-  # Local CI only: lets the browser Supabase adapter initialize during SSR smoke tests.
+  # Local CI only: activates the repository's deterministic Supabase catalog fixture.
   # No production data or credentials are used by the route smoke suite.
   VITE_SUPABASE_URL: https://ci-placeholder.supabase.co
-  VITE_SUPABASE_PUBLISHABLE_KEY: ci-placeholder
+  VITE_SUPABASE_PUBLISHABLE_KEY: ci-smoke-test-placeholder
 
 jobs:
   validate:
