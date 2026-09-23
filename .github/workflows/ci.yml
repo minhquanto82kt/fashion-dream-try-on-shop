@@ -38,10 +38,7 @@ jobs:
           cache: npm
           cache-dependency-path: fashion-dream-try-on-main/package-lock.json
 
-      - name: Refresh lockfile with peer-dependency policy
-        run: npm install --package-lock-only --legacy-peer-deps --no-audit --no-fund
-
-      - name: Install dependencies from refreshed lockfile
+      - name: Install dependencies from committed lockfile
         run: npm ci --legacy-peer-deps --no-audit --no-fund
 
       - name: Build
@@ -55,6 +52,12 @@ jobs:
 
       - name: Architecture boundary audit
         run: npm run audit:architecture
+
+      - name: Dependency audit
+        run: npm run audit:dependencies
+
+      - name: Secret exposure gate
+        run: npm run security:secrets
 
       - name: Start local app for route and customer smoke tests
         shell: bash
