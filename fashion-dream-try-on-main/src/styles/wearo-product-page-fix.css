@@ -1,0 +1,78 @@
+/* WEARO Product Page — light storefront surface fix.
+   Scoped to /product/$id via its Breadcrumb landmark.
+   Presentation-only: no data, cart, variant or routing changes. */
+
+body:has(main > nav[aria-label="Breadcrumb"]) {
+  --background: var(--wearo-paper);
+  --foreground: var(--wearo-ink);
+  --card: var(--wearo-paper);
+  --card-foreground: var(--wearo-ink);
+  --popover: var(--wearo-paper);
+  --popover-foreground: var(--wearo-ink);
+  --primary: var(--wearo-blue);
+  --primary-foreground: #fff;
+  --secondary: var(--wearo-blue-light);
+  --secondary-foreground: var(--wearo-ink);
+  --muted: #EEE8E1;
+  --muted-foreground: #687985;
+  --accent: var(--wearo-peach);
+  --accent-foreground: var(--wearo-ink);
+  --border: rgba(84,114,140,.18);
+  --input: #fff;
+  --ring: var(--wearo-blue);
+  --electric: var(--wearo-blue);
+  --beige: #4A4A4A;
+  --silver: #687985;
+  --y2k-cyan: var(--wearo-blue-light);
+  --ft-mustard: var(--wearo-coral);
+  --ft-olive: var(--wearo-almond);
+  background: var(--wearo-paper);
+  color: var(--wearo-ink);
+}
+
+body:has(main > nav[aria-label="Breadcrumb"]) main {
+  background: var(--wearo-paper);
+  color: var(--wearo-ink);
+}
+
+body:has(main > nav[aria-label="Breadcrumb"]) main .bg-card,
+body:has(main > nav[aria-label="Breadcrumb"]) main .bg-background {
+  background-color: var(--wearo-paper) !important;
+}
+
+body:has(main > nav[aria-label="Breadcrumb"]) main .border-border {
+  border-color: rgba(84,114,140,.18) !important;
+}
+
+body:has(main > nav[aria-label="Breadcrumb"]) main .text-primary {
+  color: var(--wearo-blue) !important;
+}
+
+body:has(main > nav[aria-label="Breadcrumb"]) main .bg-primary {
+  background-color: var(--wearo-blue) !important;
+}
+
+body:has(main > nav[aria-label="Breadcrumb"]) main .text-primary-foreground {
+  color: #fff !important;
+}
+
+body:has(main > nav[aria-label="Breadcrumb"]) main .text-beige {
+  color: var(--wearo-ink) !important;
+}
+
+body:has(main > nav[aria-label="Breadcrumb"]) main .text-silver {
+  color: #687985 !important;
+}
+
+body:has(main > nav[aria-label="Breadcrumb"]) main .eyebrow {
+  color: var(--wearo-blue) !important;
+}
+
+body:has(main > nav[aria-label="Breadcrumb"]) main .hover\\:border-primary:hover {
+  border-color: var(--wearo-blue) !important;
+}
+
+body:has(main > nav[aria-label="Breadcrumb"]) main .bg-card p,
+body:has(main > nav[aria-label="Breadcrumb"]) main .bg-card h3 {
+  color: var(--wearo-ink);
+}
