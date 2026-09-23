@@ -19,15 +19,18 @@
   background: color-mix(in srgb, var(--primary) 8%, transparent) !important;
 }
 
-.account-page .account-field input:focus,
-.account-page .account-submit,
-.account-page .account-switch button[aria-selected="true"]::after {
+.account-page .account-field input:focus {
   border-color: var(--primary) !important;
-  background-color: var(--primary) !important;
 }
 
 .account-page .account-submit {
+  border-color: var(--primary) !important;
+  background-color: var(--primary) !important;
   color: var(--primary-foreground) !important;
+}
+
+.account-page .account-switch button[aria-selected="true"]::after {
+  background-color: var(--primary) !important;
 }
 
 .account-page .account-kicker,
@@ -53,8 +56,7 @@
   border-left-color: var(--primary) !important;
 }
 
-.account-page .account-content,
-.account-page .account-page {
+.account-page .account-content {
   background: var(--background) !important;
 }
 
