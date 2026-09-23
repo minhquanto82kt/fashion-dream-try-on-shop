@@ -18,6 +18,10 @@ concurrency:
   group: self-maintenance-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  VITE_SUPABASE_URL: https://ci-placeholder.supabase.co
+  VITE_SUPABASE_PUBLISHABLE_KEY: ci-smoke-test-placeholder
+
 jobs:
   detect:
     name: Detect maintenance findings
@@ -32,12 +36,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
           cache-dependency-path: fashion-dream-try-on-main/package-lock.json
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Install dependencies from committed lockfile
+        run: npm ci --legacy-peer-deps --no-audit --no-fund
 
       - name: Read maintenance mode
         id: config
@@ -55,7 +59,19 @@ jobs:
         run: npm run build
 
       - name: Smoke test
-        run: npm run test:smoke
+        env:
+          BASE_URL: http://127.0.0.1:8080
+        run: |
+          nohup npm run dev -- --host 127.0.0.1 --port 8080 > /tmp/wearo-maintenance.log 2>&1 &
+          for attempt in {1..30}; do
+            if curl --fail --silent --show-error --max-time 2 "$BASE_URL/" >/dev/null; then
+              npm run test:smoke
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/wearo-maintenance.log
+          exit 1
 
       - name: Maintenance summary
         if: always()
@@ -67,7 +83,7 @@ jobs:
             echo "Mode: ${{ steps.config.outputs.mode }}"
             echo "Auto-fix: ${{ steps.config.outputs.auto_fix }}"
             echo ""
-            echo "This first phase is detect-only: no source files, dependencies, database, secrets, or production configuration are modified."
+            echo "Detect-only: no source files, dependencies, database, secrets, or production configuration are modified."
             echo ""
             echo "Verification commands: npm run lint, npm run build, npm run test:smoke"
           } >> "$GITHUB_STEP_SUMMARY"
