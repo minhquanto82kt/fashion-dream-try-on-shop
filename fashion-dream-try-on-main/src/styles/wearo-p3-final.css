@@ -1,0 +1,89 @@
+:root {
+  --wearo-blue-dark: #54728C;
+  --wearo-blue-soft: #7794A6;
+  --wearo-cream: #F2CEAE;
+  --wearo-almond: #D9BBA9;
+  --wearo-coral: #F2AD94;
+}
+
+/* P3 account cleanup: neutralize the legacy orange/black account visual system without changing layout or behavior. */
+.account-page {
+  --cream: var(--foreground) !important;
+  --orange: var(--primary) !important;
+  --ink: var(--background) !important;
+}
+
+.account-page .account-social:hover,
+.account-page .account-module:hover {
+  border-color: color-mix(in srgb, var(--primary) 60%, transparent) !important;
+  background: color-mix(in srgb, var(--primary) 8%, transparent) !important;
+}
+
+.account-page .account-field input:focus,
+.account-page .account-submit,
+.account-page .account-switch button[aria-selected="true"]::after {
+  border-color: var(--primary) !important;
+  background-color: var(--primary) !important;
+}
+
+.account-page .account-submit {
+  color: var(--primary-foreground) !important;
+}
+
+.account-page .account-kicker,
+.account-page .account-kicker-small,
+.account-page .account-number,
+.account-page .account-welcome h1 span,
+.account-page .account-module-icon,
+.account-page .account-google-button,
+.account-page .account-resend,
+.account-page .account-link,
+.account-page .account-bottom b {
+  color: var(--primary) !important;
+}
+
+.account-page .account-card,
+.account-page .account-profile-card,
+.account-page .account-module {
+  border-color: var(--border) !important;
+  background: color-mix(in srgb, var(--card) 92%, transparent) !important;
+}
+
+.account-page .account-card {
+  border-left-color: var(--primary) !important;
+}
+
+.account-page .account-content,
+.account-page .account-page {
+  background: var(--background) !important;
+}
+
+.account-page .account-field input,
+.account-page .account-social {
+  border-color: var(--border) !important;
+  background: color-mix(in srgb, var(--background) 88%, transparent) !important;
+  color: var(--foreground) !important;
+}
+
+.account-page .account-title .accent {
+  color: var(--primary) !important;
+}
+
+.account-page .account-feedback--error {
+  color: var(--destructive) !important;
+}
+
+/* Shared focus treatment for the final responsive pass. */
+:where(button, a, input, textarea, select):focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
