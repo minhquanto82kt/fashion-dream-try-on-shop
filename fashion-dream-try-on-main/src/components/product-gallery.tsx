@@ -44,16 +44,32 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
       <div className="min-w-0">
         <div
           className="group relative overflow-hidden border border-border bg-card"
-          onTouchStart={(event) => { touchStartX.current = event.changedTouches[0]?.clientX ?? null; }}
+          onTouchStart={(event) => {
+            touchStartX.current = event.changedTouches[0]?.clientX ?? null;
+          }}
           onTouchEnd={(event) => {
             if (touchStartX.current === null) return;
             const delta = (event.changedTouches[0]?.clientX ?? touchStartX.current) - touchStartX.current;
-            if (Math.abs(delta) > 48) delta < 0 ? next() : previous();
+            if (Math.abs(delta) > 48) {
+              if (delta < 0) next();
+              else previous();
+            }
             touchStartX.current = null;
           }}
         >
-          <button type="button" className="block w-full cursor-zoom-in" onClick={() => setLightbox(true)} aria-label={`Mở ảnh ${activeIndex + 1} của ${gallery.length}`}>
-            <img src={activeImage} alt={`${productName} — ảnh ${activeIndex + 1}`} className="aspect-[4/5] w-full object-cover transition-transform duration-500 group-hover:scale-[1.01]" loading="eager" decoding="async" />
+          <button
+            type="button"
+            className="block w-full cursor-zoom-in"
+            onClick={() => setLightbox(true)}
+            aria-label={`Mở ảnh ${activeIndex + 1} của ${gallery.length}`}
+          >
+            <img
+              src={activeImage}
+              alt={`${productName} — ảnh ${activeIndex + 1}`}
+              className="aspect-[4/5] w-full object-cover transition-transform duration-500 group-hover:scale-[1.01]"
+              loading="eager"
+              decoding="async"
+            />
           </button>
           <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between bg-gradient-to-t from-black/35 to-transparent p-4 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
             <span className="text-[10px] uppercase tracking-[0.14em] text-white">{activeIndex + 1} / {gallery.length}</span>
