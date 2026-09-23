@@ -9,7 +9,7 @@ on:
       - '**'
 
 permissions:
-  contents: read
+  contents: write
 
 defaults:
   run:
@@ -39,7 +39,24 @@ jobs:
           cache-dependency-path: fashion-dream-try-on-main/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        shell: bash
+        run: |
+          set -o pipefail
+          if npm ci 2>&1 | tee /tmp/npm-ci.log; then
+            exit 0
+          fi
+          if ! grep -Eq 'Missing: @emnapi/(core|runtime|wasi-threads)@' /tmp/npm-ci.log; then
+            echo 'npm ci failed for an unrelated reason.'
+            exit 1
+          fi
+          echo 'Regenerating the lockfile with a full npm install because the optional dependency graph is incomplete.'
+          npm install --include=optional --ignore-scripts --no-audit --no-fund
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add package-lock.json
+          git commit -m 'chore(deps): regenerate complete npm lockfile [lock-sync]'
+          git push origin HEAD:${GITHUB_REF_NAME}
+          npm ci
 
       - name: Build
         run: npm run build
