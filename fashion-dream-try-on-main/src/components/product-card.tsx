@@ -10,6 +10,7 @@ export function ProductCard({ product }: { product: Product }) {
   const { language } = useI18n();
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+  const tags = product.tags?.slice(0, 2) ?? [];
 
   useEffect(() => {
     let mounted = true;
@@ -62,33 +63,24 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <article className="fashion-product-card">
       <Link to="/product/$id" params={{ id: product.id }} className="fashion-product-image">
-        <img
-          src={product.image}
-          alt={product.name}
-          loading="lazy"
-          decoding="async"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-        />
-        {product.badge && <span className="fashion-product-badge">{product.badge}</span>}
+        <img src={product.image} alt={product.name} loading="lazy" decoding="async" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />
+        <div className="pointer-events-none absolute inset-x-3 top-3 z-10 flex flex-wrap gap-1.5">
+          {product.badge && <span className="fashion-product-badge">{product.badge}</span>}
+          {tags.map((tag) => <span key={tag} className="border border-primary/40 bg-background/80 px-2 py-1 text-[8px] uppercase tracking-[0.12em] text-primary backdrop-blur-sm">{tag}</span>)}
+        </div>
         <span className="fashion-product-index">/{product.id.toUpperCase()}</span>
         <span className="fashion-product-arrow"><ArrowUpRight size={16} /></span>
       </Link>
       <div className="fashion-product-meta">
-        <div>
+        <div className="min-w-0">
           <p className="fashion-product-category">{product.category}</p>
           <Link to="/product/$id" params={{ id: product.id }} className="fashion-product-title">{product.name}</Link>
-          <p className="fashion-product-spec">{product.sizes.join(" / ")} · {product.colors.slice(0, 2).join(" / ")}</p>
+          {product.shortDescription && <p className="mt-2 line-clamp-2 text-xs leading-5 text-silver">{product.shortDescription}</p>}
+          <p className="fashion-product-spec mt-2">{product.sizes.join(" / ")} · {product.colors.slice(0, 2).join(" / ")}</p>
         </div>
-        <div className="fashion-product-price-wrap">
+        <div className="fashion-product-price-wrap shrink-0">
           <span className="fashion-product-price">{formatPrice(product.price, language)}</span>
-          <button
-            type="button"
-            aria-label={saved ? (language === "vi" ? `Bỏ lưu ${product.name}` : `Remove ${product.name}`) : (language === "vi" ? `Lưu ${product.name}` : `Save ${product.name}`)}
-            aria-pressed={saved}
-            disabled={saving}
-            className={`fashion-heart ${saved ? "is-saved" : ""}`}
-            onClick={handleWishlist}
-          >
+          <button type="button" aria-label={saved ? (language === "vi" ? `Bỏ lưu ${product.name}` : `Remove ${product.name}`) : (language === "vi" ? `Lưu ${product.name}` : `Save ${product.name}`)} aria-pressed={saved} disabled={saving} className={`fashion-heart ${saved ? "is-saved" : ""}`} onClick={handleWishlist}>
             <Heart size={16} fill={saved ? "currentColor" : "none"} />
           </button>
         </div>
