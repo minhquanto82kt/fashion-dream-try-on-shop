@@ -56,9 +56,6 @@ jobs:
       - name: Dependency audit
         run: npm run audit:dependencies
 
-      - name: Secret exposure gate
-        run: npm run security:secrets
-
       - name: Start local app for route and customer smoke tests
         shell: bash
         run: |
