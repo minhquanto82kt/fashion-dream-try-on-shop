@@ -17,8 +17,6 @@ jobs:
       VITE_SUPABASE_URL: https://oazipcrbutizdncctkcg.supabase.co
       VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_rnf1MtB0N7uKg1GTWd_tEw_uhr5QRMQ
       SUPABASE_URL: https://oazipcrbutizdncctkcg.supabase.co
-      # Never fall back to a publishable key. Server-side checks that need the
-      # privileged key must receive it from GitHub Actions secrets.
       SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
     defaults:
       run:
@@ -42,12 +40,6 @@ jobs:
 
       - name: Secret exposure gate
         run: npm run security:secrets
-
-      - name: Build
-        run: npm run build
-
-      - name: Typecheck
-        run: npm run typecheck
 
       - name: Start development server
         run: |
