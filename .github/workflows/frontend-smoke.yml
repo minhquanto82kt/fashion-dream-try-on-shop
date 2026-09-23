@@ -8,7 +8,7 @@ on:
   pull_request:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   quality:
@@ -17,61 +17,43 @@ jobs:
       VITE_SUPABASE_URL: https://oazipcrbutizdncctkcg.supabase.co
       VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_rnf1MtB0N7uKg1GTWd_tEw_uhr5QRMQ
       SUPABASE_URL: https://oazipcrbutizdncctkcg.supabase.co
-      SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY || 'sb_publishable_rnf1MtB0N7uKg1GTWd_tEw_uhr5QRMQ' }}
+      # Never fall back to a publishable key. Server-side checks that need the
+      # privileged key must receive it from GitHub Actions secrets.
+      SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
     defaults:
       run:
         working-directory: fashion-dream-try-on-main
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Set up Node 24
         uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Verify npm runtime
-        run: |
-          node --version
-          npm --version
-      - name: Refresh lockfile from package.json
-        run: npm install --package-lock-only --legacy-peer-deps --no-audit --no-fund
-      - name: Install dependencies from refreshed lockfile
+          cache: npm
+          cache-dependency-path: fashion-dream-try-on-main/package-lock.json
+
+      - name: Install dependencies from committed lockfile
         run: npm ci --legacy-peer-deps --no-audit --no-fund
-      - name: Upload generated lockfile for recovery
-        uses: actions/upload-artifact@v4
-        with:
-          name: generated-package-lock
-          path: fashion-dream-try-on-main/package-lock.json
-          if-no-files-found: error
-          retention-days: 1
-      - name: Persist refreshed lockfile on feature/product-admin
-        if: ${{ github.event_name == 'push' && github.ref_name == 'feature/product-admin' }}
-        run: node scripts/ci/repair-baseline.mjs
+
       - name: Dependency audit
         run: npm run audit:dependencies
+
       - name: Secret exposure gate
         run: npm run security:secrets
+
       - name: Build
         run: npm run build
-      - name: Typecheck generated route tree
-        id: typecheck
-        continue-on-error: true
-        run: npm run typecheck 2>&1 | tee /tmp/wearo-typecheck.log
-        shell: bash
-      - name: Upload typecheck diagnostic
-        if: ${{ steps.typecheck.outcome == 'failure' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: typecheck-diagnostic
-          path: /tmp/wearo-typecheck.log
-          if-no-files-found: error
-          retention-days: 1
-      - name: Fail if typecheck failed
-        if: ${{ steps.typecheck.outcome == 'failure' }}
-        run: exit 1
+
+      - name: Typecheck
+        run: npm run typecheck
+
       - name: Start development server
         run: |
           npm run dev -- --host 127.0.0.1 --port 8080 > /tmp/wearo-vite.log 2>&1 &
           echo $! > /tmp/wearo-vite.pid
+
       - name: Wait for development server
         run: |
           for i in {1..60}; do
@@ -80,14 +62,15 @@ jobs:
           done
           cat /tmp/wearo-vite.log
           exit 1
+
       - name: Run customer experience validation
         run: npm run test:customer-experience
         env:
           BASE_URL: http://127.0.0.1:8080
+
       - name: Run lint
         run: npm run lint
+
       - name: Show server log on failure
         if: failure()
         run: cat /tmp/wearo-vite.log
-
-# Roadmap verification stays on feature/product-admin; no side branch is used.
