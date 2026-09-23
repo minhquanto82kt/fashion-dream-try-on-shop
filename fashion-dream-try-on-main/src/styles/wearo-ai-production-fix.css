@@ -1,0 +1,167 @@
+/* WEARO AI Studio — production UX/UI stabilization.
+   Scoped to /ai only; no AI/data logic changes. */
+
+body:has(.ai-dashboard-shell),
+body:has(.ai-consent-panel) {
+  --background: var(--wearo-paper);
+  --foreground: var(--wearo-ink);
+  --card: #ffffff;
+  --card-foreground: var(--wearo-ink);
+  --popover: #ffffff;
+  --popover-foreground: var(--wearo-ink);
+  --primary: var(--wearo-blue);
+  --primary-foreground: #ffffff;
+  --secondary: var(--wearo-blue-light);
+  --secondary-foreground: var(--wearo-ink);
+  --muted: #eef2f4;
+  --muted-foreground: #687985;
+  --accent: var(--wearo-peach);
+  --accent-foreground: var(--wearo-ink);
+  --border: rgba(84,114,140,.18);
+  --input: #ffffff;
+  --ring: var(--wearo-blue);
+  --beige: #4a4a4a;
+  --silver: #687985;
+  background: var(--wearo-paper);
+  color: var(--wearo-ink);
+}
+
+body:has(.ai-dashboard-shell) main,
+body:has(.ai-consent-panel) main {
+  background: var(--wearo-paper);
+  color: var(--wearo-ink);
+}
+
+body:has(.ai-consent-panel) .ai-consent-panel {
+  background: #fff !important;
+  color: var(--wearo-ink);
+}
+
+body:has(.ai-consent-panel) .ai-consent-panel > div[style*="aiConsentFade"] {
+  background: var(--wearo-paper) !important;
+  border-radius: 18px;
+  padding: 4px 0;
+}
+
+body:has(.ai-consent-panel) .ai-consent-panel > div[style*="aiConsentFade"] > div {
+  min-height: 0;
+  background: #fff !important;
+  padding: 15px 18px;
+}
+
+body:has(.ai-consent-panel) .ai-consent-panel > p:last-child {
+  margin-top: 16px;
+}
+
+body:has(.ai-dashboard-shell) .ai-dashboard-shell {
+  grid-template-columns: minmax(170px, 190px) minmax(0, 1fr) minmax(270px, 300px);
+  gap: 12px;
+}
+
+body:has(.ai-dashboard-shell) .ai-dashboard-panel,
+body:has(.ai-dashboard-shell) .ai-chatframe {
+  background: #fff;
+  border-color: rgba(84,114,140,.18);
+}
+
+body:has(.ai-dashboard-shell) .ai-dashboard-panel {
+  padding: 10px !important;
+}
+
+body:has(.ai-dashboard-shell) .ai-chatframe {
+  min-height: 500px;
+  max-height: min(620px, calc(100vh - 132px));
+  border-radius: 12px;
+  box-shadow: 0 12px 34px rgba(84,114,140,.08);
+}
+
+body:has(.ai-dashboard-shell) .ai-chatframe__header {
+  padding: 11px 12px;
+}
+
+body:has(.ai-dashboard-shell) .ai-chatframe__header .size-10 {
+  width: 32px;
+  height: 32px;
+}
+
+body:has(.ai-dashboard-shell) .ai-chatframe__context {
+  display: none;
+}
+
+body:has(.ai-dashboard-shell) .ai-chatframe__messages {
+  padding: 12px 10px;
+}
+
+body:has(.ai-dashboard-shell) .ai-chatframe__message {
+  gap: 6px;
+  margin-bottom: 9px;
+}
+
+body:has(.ai-dashboard-shell) .ai-chatframe__avatar {
+  width: 24px;
+  height: 24px;
+  flex-basis: 24px;
+}
+
+body:has(.ai-dashboard-shell) .ai-chatframe__bubble {
+  border-radius: 10px 10px 10px 3px;
+  padding: 8px 10px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+body:has(.ai-dashboard-shell) .ai-chatframe__quick-actions {
+  gap: 5px;
+  padding: 7px 10px;
+}
+
+body:has(.ai-dashboard-shell) .ai-chatframe__quick-actions button {
+  padding: 6px 8px;
+  font-size: 8px;
+}
+
+body:has(.ai-dashboard-shell) .ai-chatframe__composer {
+  gap: 6px;
+  padding: 8px 10px;
+}
+
+body:has(.ai-dashboard-shell) .ai-chatframe__composer textarea {
+  min-height: 40px;
+  height: 40px;
+  max-height: 40px;
+  padding: 8px 10px;
+  font-size: 11px;
+}
+
+body:has(.ai-dashboard-shell) .ai-chatframe__composer button {
+  width: 40px;
+  height: 40px;
+  flex-basis: 40px;
+  border-radius: 10px;
+}
+
+body:has(.ai-dashboard-shell) .ai-chatframe__footer {
+  padding: 7px 10px;
+  font-size: 8px;
+}
+
+@media (max-width: 1180px) {
+  body:has(.ai-dashboard-shell) .ai-dashboard-shell {
+    grid-template-columns: 180px minmax(0, 1fr);
+  }
+  body:has(.ai-dashboard-shell) .ai-chatframe {
+    min-height: 420px;
+    max-height: 520px;
+  }
+}
+
+@media (max-width: 768px) {
+  body:has(.ai-dashboard-shell) .ai-dashboard-shell {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  body:has(.ai-dashboard-shell) .ai-chatframe {
+    min-height: 440px;
+    max-height: 520px;
+  }
+}
