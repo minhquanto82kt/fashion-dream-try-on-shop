@@ -53,6 +53,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Architecture boundary audit
+        run: npm run audit:architecture
+
       - name: Start local app for route and customer smoke tests
         shell: bash
         run: |
