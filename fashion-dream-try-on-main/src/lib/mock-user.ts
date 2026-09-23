@@ -10,6 +10,11 @@ export const MOCK_USER = {
 const STORAGE_KEY = "wearo:mock-user-mode";
 const PREVIEW_PARAM = "preview";
 
+function dispatchMockAuthEvent(type: "login" | "logout") {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new CustomEvent(`upthink:auth:${type}`, { detail: { mock: true, user: MOCK_USER } }));
+}
+
 export function isMockUserMode(): boolean {
   if (typeof window === "undefined") return false;
   return window.sessionStorage.getItem(STORAGE_KEY) === "1";
@@ -19,12 +24,14 @@ export function enterMockUserMode(): void {
   if (typeof window === "undefined") return;
   window.sessionStorage.setItem(STORAGE_KEY, "1");
   window.dispatchEvent(new Event("wearo:mock-user:changed"));
+  dispatchMockAuthEvent("login");
 }
 
 export function exitMockUserMode(): void {
   if (typeof window === "undefined") return;
   window.sessionStorage.removeItem(STORAGE_KEY);
   window.dispatchEvent(new Event("wearo:mock-user:changed"));
+  dispatchMockAuthEvent("logout");
 }
 
 export function getMockUser() {
