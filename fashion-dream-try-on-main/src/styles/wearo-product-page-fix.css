@@ -68,10 +68,6 @@ body:has(main > nav[aria-label="Breadcrumb"]) main .eyebrow {
   color: var(--wearo-blue) !important;
 }
 
-body:has(main > nav[aria-label="Breadcrumb"]) main .hover\\:border-primary:hover {
-  border-color: var(--wearo-blue) !important;
-}
-
 body:has(main > nav[aria-label="Breadcrumb"]) main .bg-card p,
 body:has(main > nav[aria-label="Breadcrumb"]) main .bg-card h3 {
   color: var(--wearo-ink);
