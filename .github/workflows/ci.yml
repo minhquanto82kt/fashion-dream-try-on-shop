@@ -50,13 +50,13 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Start local app for route smoke tests
+      - name: Start local app for route and customer smoke tests
         shell: bash
         run: |
-          nohup npm run dev -- --host 127.0.0.1 --port 3000 > /tmp/wearo-dev.log 2>&1 &
+          nohup npm run dev -- --host 127.0.0.1 --port 8080 > /tmp/wearo-dev.log 2>&1 &
           echo $! > /tmp/wearo-dev.pid
           for attempt in {1..30}; do
-            if curl --fail --silent --show-error --max-time 2 http://127.0.0.1:3000/ >/dev/null; then
+            if curl --fail --silent --show-error --max-time 2 http://127.0.0.1:8080/ >/dev/null; then
               exit 0
             fi
             sleep 1
@@ -65,7 +65,11 @@ jobs:
           exit 1
 
       - name: Smoke tests
+        env:
+          BASE_URL: http://127.0.0.1:8080
         run: npm run test:smoke
 
       - name: Customer experience smoke tests
+        env:
+          BASE_URL: http://127.0.0.1:8080
         run: npm run test:customer-experience
