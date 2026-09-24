@@ -1322,3 +1322,12 @@
   .fashion-hero__meta > span:last-child { display: none; }
   .fashion-product-grid { grid-template-columns: 1fr; }
 }
+
+.fashion-site a:focus-visible,
+.fashion-site button:focus-visible,
+.fashion-site input:focus-visible,
+.fashion-site textarea:focus-visible,
+.fashion-site select:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}

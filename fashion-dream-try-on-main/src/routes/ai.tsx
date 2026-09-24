@@ -39,7 +39,7 @@ function AiPage() {
   const [mode, setMode] = useState<"concept" | "tryon">(search.product ? "tryon" : "concept");
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen fashion-site">
       <SiteNav />
       <main className="mx-auto max-w-6xl px-6 pb-24 pt-28 sm:px-12">
         <p className="eyebrow">AI Experience · Beta</p>
