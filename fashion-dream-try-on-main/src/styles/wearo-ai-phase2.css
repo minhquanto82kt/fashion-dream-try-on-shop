@@ -1,0 +1,283 @@
+/* WEARO AI Studio — Phase 2 visual foundation
+   Scope: /ai only. Brand palette + typography + compact 2-column workspace.
+*/
+@import url("https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
+body:has(.wearo-ai-phase2) {
+  --ai-blue: #54728C;
+  --ai-blue-light: #7794A6;
+  --ai-peach: #F2CEAE;
+  --ai-beige: #D9BBA9;
+  --ai-coral: #F2AD94;
+  --ai-paper: #F8F6F2;
+  --ai-white: #FFFFFF;
+  --ai-ink: #171717;
+  --ai-muted: #687985;
+  --background: var(--ai-paper);
+  --foreground: var(--ai-ink);
+  --card: var(--ai-white);
+  --card-foreground: var(--ai-ink);
+  --primary: var(--ai-blue);
+  --primary-foreground: var(--ai-white);
+  --secondary: var(--ai-blue-light);
+  --secondary-foreground: var(--ai-white);
+  --muted: #EEF2F4;
+  --muted-foreground: var(--ai-muted);
+  --accent: var(--ai-peach);
+  --accent-foreground: var(--ai-ink);
+  --border: rgba(84,114,140,.20);
+  --input: var(--ai-white);
+  --ring: var(--ai-blue);
+  --beige: var(--ai-beige);
+  --silver: var(--ai-muted);
+  background: var(--ai-paper) !important;
+  color: var(--ai-ink) !important;
+  font-family: "Space Grotesk", sans-serif !important;
+}
+
+body:has(.wearo-ai-phase2) * {
+  font-family: "Space Grotesk", sans-serif;
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-display {
+  font-family: "Bodoni Moda", Georgia, serif !important;
+  font-weight: 500;
+  letter-spacing: -.035em;
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-page {
+  background: var(--ai-paper);
+  color: var(--ai-ink);
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-shell {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 48px 0 72px;
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-kicker {
+  color: var(--ai-blue);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .20em;
+  text-transform: uppercase;
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-title {
+  margin-top: 8px;
+  color: var(--ai-ink);
+  font-size: clamp(3rem, 6vw, 5.6rem);
+  line-height: .92;
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-title-accent { color: var(--ai-blue); }
+
+body:has(.wearo-ai-phase2) .wearo-ai-lede {
+  max-width: 680px;
+  margin-top: 18px;
+  color: var(--ai-muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(320px, .92fr);
+  gap: 18px;
+  margin-top: 34px;
+  align-items: start;
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-card {
+  border: 1px solid var(--ai-border, rgba(84,114,140,.20));
+  background: var(--ai-white);
+  box-shadow: 8px 8px 0 rgba(242,206,174,.42);
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  border-bottom: 1px solid rgba(84,114,140,.14);
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-card-title {
+  color: var(--ai-ink);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-card-body { padding: 20px; }
+
+body:has(.wearo-ai-phase2) .wearo-ai-field-label {
+  display: block;
+  margin-bottom: 9px;
+  color: var(--ai-muted);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-chip {
+  min-height: 36px;
+  padding: 7px 13px;
+  border: 1px solid rgba(84,114,140,.22);
+  background: var(--ai-white);
+  color: var(--ai-ink);
+  font-size: 12px;
+  transition: .18s ease;
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-chip:hover {
+  border-color: var(--ai-blue);
+  background: rgba(119,148,166,.10);
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-chip[data-active="true"] {
+  border-color: var(--ai-blue);
+  background: var(--ai-blue);
+  color: var(--ai-white);
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-textarea {
+  width: 100%;
+  min-height: 132px;
+  resize: vertical;
+  border: 1px solid rgba(84,114,140,.22);
+  background: var(--ai-paper);
+  padding: 13px 14px;
+  color: var(--ai-ink);
+  font-size: 13px;
+  line-height: 1.6;
+  outline: none;
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-textarea:focus {
+  border-color: var(--ai-blue);
+  box-shadow: 0 0 0 3px rgba(84,114,140,.10);
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-generate {
+  display: inline-flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--ai-blue);
+  background: var(--ai-blue);
+  padding: 0 20px;
+  color: var(--ai-white);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  transition: .18s ease;
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-generate:hover {
+  background: #45647A;
+  border-color: #45647A;
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-result {
+  position: sticky;
+  top: 96px;
+  min-height: 430px;
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-result-empty {
+  min-height: 330px;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  background: linear-gradient(135deg, rgba(242,206,174,.18), rgba(119,148,166,.08));
+  border: 1px dashed rgba(84,114,140,.28);
+  text-align: center;
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-result-mark {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 16px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(84,114,140,.24);
+  background: var(--ai-peach);
+  color: var(--ai-blue);
+  font-size: 18px;
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-result-empty h3 {
+  color: var(--ai-ink);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-result-empty p {
+  max-width: 300px;
+  margin: 8px auto 0;
+  color: var(--ai-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-tools {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-tool {
+  border: 1px solid rgba(84,114,140,.16);
+  background: var(--ai-white);
+  padding: 12px;
+  color: var(--ai-ink);
+  font-size: 11px;
+  text-align: left;
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-tool strong {
+  display: block;
+  color: var(--ai-blue);
+  font-size: 10px;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-tool span {
+  display: block;
+  margin-top: 4px;
+  color: var(--ai-muted);
+  line-height: 1.45;
+}
+
+body:has(.wearo-ai-phase2) .wearo-ai-helper {
+  margin-top: 14px;
+  color: var(--ai-muted);
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+@media (max-width: 900px) {
+  body:has(.wearo-ai-phase2) .wearo-ai-grid { grid-template-columns: 1fr; }
+  body:has(.wearo-ai-phase2) .wearo-ai-result { position: static; }
+}
+
+@media (max-width: 560px) {
+  body:has(.wearo-ai-phase2) .wearo-ai-shell { width: min(100% - 24px, 1180px); padding-top: 32px; }
+  body:has(.wearo-ai-phase2) .wearo-ai-title { font-size: 3.25rem; }
+  body:has(.wearo-ai-phase2) .wearo-ai-card-body { padding: 16px; }
+  body:has(.wearo-ai-phase2) .wearo-ai-tools { grid-template-columns: 1fr; }
+}
