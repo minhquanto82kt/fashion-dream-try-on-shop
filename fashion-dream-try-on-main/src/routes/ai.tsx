@@ -49,15 +49,27 @@ function AiPage() {
           </div>
           <span className="ai-dashboard-status"><span className="size-1.5 rounded-full bg-[var(--wearo-coral)]" />AI Studio / Ready</span>
         </div>
+
         <div className="mb-4 flex items-center justify-between gap-4 lg:hidden">
           <div><p className="text-[10px] uppercase tracking-[0.2em] text-primary">Workspace navigation</p><p className="mt-1 text-xs text-silver">New Look / Recent Looks</p></div>
           <button type="button" aria-label="Mở AI dashboard menu" aria-expanded={sidebarOpen} onClick={() => setSidebarOpen(true)} className="inline-flex size-11 items-center justify-center border border-border bg-card text-foreground transition-colors hover:border-primary"><Menu className="size-4" /></button>
         </div>
+
         <div className="ai-dashboard-shell">
           <div className="ai-dashboard-panel p-3"><AiSidebar /></div>
-          {sidebarOpen && <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true"><button type="button" aria-label="Đóng AI dashboard menu" onClick={() => setSidebarOpen(false)} className="absolute inset-0 bg-background/75 backdrop-blur-[2px]" /><aside className="relative h-full w-[min(84vw,320px)] border-r border-border bg-card p-4 shadow-2xl"><div className="mb-5 flex items-center justify-between border-b border-border pb-4"><div><p className="text-xs uppercase tracking-[0.2em] text-primary">AI Dashboard</p><p className="mt-1 text-[11px] text-silver">WEARO / AI Lab</p></div><button type="button" aria-label="Đóng menu" onClick={() => setSidebarOpen(false)} className="inline-flex size-9 items-center justify-center border border-border text-silver hover:border-primary hover:text-foreground"><X className="size-4" /></button></div><AiSidebar mobile /></aside></div>}
+          {sidebarOpen && <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true">
+            <button type="button" aria-label="Đóng AI dashboard menu" onClick={() => setSidebarOpen(false)} className="absolute inset-0 bg-background/75 backdrop-blur-[2px]" />
+            <aside className="relative h-full w-[min(84vw,320px)] border-r border-border bg-card p-4 shadow-2xl">
+              <div className="mb-5 flex items-center justify-between border-b border-border pb-4"><div><p className="text-xs uppercase tracking-[0.2em] text-primary">AI Dashboard</p><p className="mt-1 text-[11px] text-silver">WEARO / AI Lab</p></div><button type="button" aria-label="Đóng menu" onClick={() => setSidebarOpen(false)} className="inline-flex size-9 items-center justify-center border border-border text-silver hover:border-primary hover:text-foreground"><X className="size-4" /></button></div>
+              <AiSidebar mobile />
+            </aside>
+          </div>}
+
           <section className="min-w-0">
-            <div className="mb-4 flex items-end justify-between gap-4 border-b border-border pb-4"><div><p className="text-[10px] uppercase tracking-[0.18em] text-primary">02 / Workspace</p><h2 className="mt-1 text-lg font-medium text-foreground sm:text-xl">{mode === "concept" ? "AI Stylist & Concept" : "Virtual Try-On"}</h2></div><span className="hidden text-[9px] uppercase tracking-[0.16em] text-silver sm:block">{mode === "concept" ? "Creative direction" : "Product simulation"}</span></div>
+            <div className="mb-4 flex items-end justify-between gap-4 border-b border-border pb-4">
+              <div><p className="text-[10px] uppercase tracking-[0.18em] text-primary">02 / Workspace</p><h2 className="mt-1 text-lg font-medium text-foreground sm:text-xl">{mode === "concept" ? "AI Stylist & Concept" : "Virtual Try-On"}</h2></div>
+              <span className="hidden text-[9px] uppercase tracking-[0.16em] text-silver sm:block">{mode === "concept" ? "Creative direction" : "Product simulation"}</span>
+            </div>
             <div className="mb-4 flex gap-2">{(["concept", "tryon"] as const).map((m) => <button key={m} type="button" onClick={() => selectMode(m)} className={`border px-4 py-2 text-[10px] uppercase tracking-[0.15em] transition-all ${mode === m ? "border-primary bg-primary text-primary-foreground" : "border-border text-beige hover:border-primary hover:text-primary"}`}>{m === "concept" ? "Concept AI" : "Virtual Try-On"}</button>)}</div>
             <div className="min-w-0">{mode === "concept" ? <ConceptWorkspace /> : <TryOnWorkspace initialProduct={search.product} />}</div>
           </section>
@@ -126,9 +138,11 @@ function TryOnWorkspace({ initialProduct }: { initialProduct?: string }) {
   const changeItem = () => { document.getElementById("tryon-product-title")?.scrollIntoView({ behavior: "smooth", block: "center" }); };
   const saveLook = () => { if (!mutation.data?.image || !product || !currentVariant) return; try { const key = "wearo.ai.savedLooks"; const existing = JSON.parse(localStorage.getItem(key) ?? "[]") as unknown[]; existing.unshift({ productId: product.id, productName: product.name, image: mutation.data.image, size: currentVariant.size, color: currentVariant.color, savedAt: new Date().toISOString() }); localStorage.setItem(key, JSON.stringify(existing.slice(0, 12))); setSavedLook(true); toast.success("Đã lưu look trên thiết bị này."); } catch { toast.error("Không thể lưu look trên thiết bị này."); } };
   const addLookToCart = () => { if (!product || !currentVariant || selectedStock <= 0) return; add({ productId: product.id, size: currentVariant.size, color: currentVariant.color, qty: 1 }); toast.success("Đã thêm look vào giỏ hàng."); };
+
   if (productsQuery.isLoading) return <div className="overflow-hidden border border-border bg-card"><ResultFrame pending={true} emptyLabel="" /><div className="border-t border-border p-5 text-center text-xs text-silver">Đang đồng bộ sản phẩm đã xuất bản từ Supabase…</div></div>;
   if (productsQuery.isError) return <div className="overflow-hidden border border-border bg-card"><ResultFrame pending={false} emptyLabel="Không thể tải danh sách sản phẩm thử đồ." emptyHint="Hãy thử tải lại workspace." /><div className="flex flex-wrap items-center justify-center gap-3 border-t border-border p-5"><button type="button" onClick={() => productsQuery.refetch()} className="inline-flex min-h-10 items-center gap-2 border border-primary px-4 text-xs uppercase tracking-[0.12em] text-primary hover:bg-primary hover:text-primary-foreground"><RefreshCw className="size-3.5" />Tải lại</button><Link to="/shop" className="inline-flex min-h-10 items-center border border-border px-4 text-xs uppercase tracking-[0.12em] text-beige hover:border-primary">Về shop</Link></div></div>;
   if (!product) return <div className="overflow-hidden border border-border bg-card"><ResultFrame pending={false} emptyLabel="Chưa có sản phẩm phù hợp để thử đồ." emptyHint="Cần sản phẩm đã xuất bản, đang hoạt động và có hình ảnh + biến thể." /><div className="border-t border-border p-5 text-center"><Link to="/shop" className="inline-flex min-h-10 items-center border border-primary px-4 text-xs uppercase tracking-[0.12em] text-primary hover:bg-primary hover:text-primary-foreground">Xem sản phẩm</Link></div></div>;
+
   const resultReady = Boolean(mutation.data?.image); const selectedVariantLabel = currentVariant ? `${currentVariant.size} · ${currentVariant.color}` : "Chưa chọn";
   return <div className="ai-workspace-grid">
     <div className="ai-workspace-input order-1 overflow-hidden border border-border bg-card">
