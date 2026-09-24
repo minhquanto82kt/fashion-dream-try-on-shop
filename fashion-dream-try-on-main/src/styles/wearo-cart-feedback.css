@@ -1,0 +1,29 @@
+.fashion-cart-btn > svg { transition: transform 180ms ease; }
+
+.fashion-cart-btn:has(> span) > svg {
+  animation: wearo-cart-bounce 1.8s ease-in-out infinite;
+  transform-origin: 50% 80%;
+}
+
+.fashion-cart-btn > span {
+  animation: wearo-cart-badge 1.8s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes wearo-cart-bounce {
+  0%, 72%, 100% { transform: translateY(0) rotate(0deg); }
+  78% { transform: translateY(-2px) rotate(-7deg); }
+  84% { transform: translateY(0) rotate(5deg); }
+  90% { transform: translateY(-1px) rotate(-2deg); }
+}
+
+@keyframes wearo-cart-badge {
+  0%, 72%, 100% { transform: scale(1); }
+  80% { transform: scale(1.12); }
+  88% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fashion-cart-btn:has(> span) > svg,
+  .fashion-cart-btn > span { animation: none; }
+}
