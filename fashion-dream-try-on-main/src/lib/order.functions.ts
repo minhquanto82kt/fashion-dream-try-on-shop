@@ -4,7 +4,7 @@ import { supabaseUserRequest } from "./supabase-user.server";
 import { createRequestId, fetchWithTimeoutAndRetry } from "./server-reliability";
 
 type OrderItemInput = { productId: string; size: string; color: string; quantity: number };
-type CreateOrderInput = { customerName: string; phone: string; email?: string; address: string; city: string; district: string; paymentMethod: "cod" | "vietqr" | "momo"; items: OrderItemInput[]; accessToken?: string; idempotencyKey?: string };
+type CreateOrderInput = { customerName: string; phone: string; email?: string; address: string; city: string; district: string; paymentMethod: "cod" | "vietqr" | "momo" | "mastercard"; items: OrderItemInput[]; accessToken?: string; idempotencyKey?: string };
 export type CustomerOrder = { id: string; order_code: string; customer_name: string; phone: string; email: string | null; address: string; city: string; district: string; payment_method: string; payment_status: string; order_status: string; subtotal: number; shipping_fee: number; total: number; note: string | null; created_at: string; user_id?: string | null };
 export type CustomerOrderItem = { id: string; order_id: string; product_id: string; product_name: string; size: string; color: string; quantity: number; unit_price: number; variant_id: string | null; created_at: string };
 export type CustomerOrderDetail = CustomerOrder & { items: CustomerOrderItem[] };
@@ -49,7 +49,7 @@ export async function getCustomerOrderByToken(accessToken: string, orderIdOrCode
 export const createOrder = createServerFn({ method: "POST" }).validator((data: CreateOrderInput) => data).handler(async ({ data }) => {
   if (!data.items?.length) throw new Error("Giỏ hàng đang trống.");
   if (!data.customerName?.trim() || !data.phone?.trim() || !data.address?.trim() || !data.city?.trim() || !data.district?.trim()) throw new Error("Vui lòng nhập đầy đủ thông tin giao hàng.");
-  if (!["cod", "vietqr", "momo"].includes(data.paymentMethod)) throw new Error("Phương thức thanh toán không hợp lệ.");
+  if (!["cod", "vietqr", "momo", "mastercard"].includes(data.paymentMethod)) throw new Error("Phương thức thanh toán không hợp lệ.");
   for (const item of data.items) {
     if (!item.productId || !item.size || !item.color) throw new Error("Thông tin sản phẩm trong giỏ hàng không hợp lệ.");
     if (!Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > 99) throw new Error("Số lượng sản phẩm không hợp lệ.");
