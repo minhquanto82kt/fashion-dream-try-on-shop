@@ -32,7 +32,6 @@ body:has(.ai-consent-panel) main {
   color: var(--wearo-ink);
 }
 
-/* ---------------- Consent: clean, short, readable ---------------- */
 body:has(.ai-consent-panel) .ai-consent-panel {
   width: min(100%, 720px);
   max-height: none;
@@ -59,14 +58,9 @@ body:has(.ai-consent-panel) .ai-consent-panel > div[style*="aiConsentFade"] > di
   border-radius: 10px;
 }
 
-body:has(.ai-consent-panel) .ai-consent-panel > p:last-child {
-  margin-top: 14px;
-}
+body:has(.ai-consent-panel) .ai-consent-panel > p:last-child { margin-top: 14px; }
 
-/* ---------------- Dashboard shell ---------------- */
-body:has(.ai-dashboard-shell) .ai-dashboard-topbar {
-  margin-bottom: 18px;
-}
+body:has(.ai-dashboard-shell) .ai-dashboard-topbar { margin-bottom: 18px; }
 
 body:has(.ai-dashboard-shell) .ai-dashboard-topbar h1 {
   font-family: var(--ft-editorial, "Bodoni Moda", Georgia, serif) !important;
@@ -77,9 +71,7 @@ body:has(.ai-dashboard-shell) .ai-dashboard-topbar h1 {
   color: var(--wearo-ink) !important;
 }
 
-body:has(.ai-dashboard-shell) .ai-dashboard-topbar h1 .text-primary {
-  color: var(--wearo-blue) !important;
-}
+body:has(.ai-dashboard-shell) .ai-dashboard-topbar h1 .text-primary { color: var(--wearo-blue) !important; }
 
 body:has(.ai-dashboard-shell) .ai-dashboard-topbar .ai-dashboard-status {
   border-color: rgba(84,114,140,.22);
@@ -87,41 +79,20 @@ body:has(.ai-dashboard-shell) .ai-dashboard-topbar .ai-dashboard-status {
   color: var(--wearo-ink);
 }
 
+/* Legacy 3-column rules are intentionally overridden: MVP is Sidebar + Workspace. */
 body:has(.ai-dashboard-shell) .ai-dashboard-shell {
-  grid-template-columns: minmax(165px, 184px) minmax(0, 1fr) minmax(245px, 270px);
-  gap: 10px;
+  grid-template-columns: minmax(165px, 184px) minmax(0, 1fr) !important;
+  gap: 14px !important;
   align-items: start;
 }
 
+body:has(.ai-dashboard-shell) .ai-dashboard-panel { padding: 8px !important; }
 body:has(.ai-dashboard-shell) .ai-dashboard-panel,
-body:has(.ai-dashboard-shell) .ai-chatframe {
-  background: #fff;
-  border-color: rgba(84,114,140,.18);
-}
+body:has(.ai-dashboard-shell) .ai-chatframe { background: #fff; border-color: rgba(84,114,140,.18); }
+body:has(.ai-dashboard-shell) .ai-dashboard-panel .mt-7 { margin-top: 18px !important; padding-top: 14px !important; }
 
-body:has(.ai-dashboard-shell) .ai-dashboard-panel {
-  padding: 8px !important;
-}
-
-body:has(.ai-dashboard-shell) .ai-dashboard-panel .mt-7 {
-  margin-top: 18px !important;
-  padding-top: 14px !important;
-}
-
-/* Make the inactive future tool visibly secondary, not broken. */
-body:has(.ai-dashboard-shell) .ai-dashboard-panel button:disabled {
-  opacity: .42;
-}
-
-/* ---------------- Concept workspace ---------------- */
-body:has(.ai-dashboard-shell) .ai-dashboard-shell section > .mb-4.border-b {
-  margin-bottom: 10px !important;
-  padding-bottom: 10px !important;
-}
-
-body:has(.ai-dashboard-shell) .ai-dashboard-shell section > .mb-4.flex.gap-2 {
-  margin-bottom: 10px !important;
-}
+body:has(.ai-dashboard-shell) .ai-dashboard-shell section > .mb-4.border-b { margin-bottom: 10px !important; padding-bottom: 10px !important; }
+body:has(.ai-dashboard-shell) .ai-dashboard-shell section > .mb-4.flex.gap-2 { margin-bottom: 10px !important; }
 
 body:has(.ai-dashboard-shell) .ai-dashboard-shell section [class*="min-h-[360px]"] {
   min-height: 300px !important;
@@ -137,7 +108,6 @@ body:has(.ai-dashboard-shell) .ai-dashboard-shell section [class*="min-h-[360px]
   color: var(--wearo-blue) !important;
 }
 
-/* Warm editorial surface for the two primary concept selectors. */
 body:has(.ai-dashboard-shell) .ai-dashboard-shell section [class*="sm:grid-cols-2"] > div {
   background: rgba(242,206,174,.18);
   border: 1px solid rgba(217,187,169,.42);
@@ -145,182 +115,62 @@ body:has(.ai-dashboard-shell) .ai-dashboard-shell section [class*="sm:grid-cols-
   padding: 11px;
 }
 
-body:has(.ai-dashboard-shell) .ai-dashboard-shell section [class*="sm:grid-cols-2"] > div > div:first-child {
-  margin-bottom: 7px;
-}
-
-body:has(.ai-dashboard-shell) .ai-dashboard-shell section [class*="sm:grid-cols-2"] button {
-  background: rgba(255,255,255,.72);
-}
-
+body:has(.ai-dashboard-shell) .ai-dashboard-shell section [class*="sm:grid-cols-2"] > div > div:first-child { margin-bottom: 7px; }
+body:has(.ai-dashboard-shell) .ai-dashboard-shell section [class*="sm:grid-cols-2"] button { background: rgba(255,255,255,.72); }
 body:has(.ai-dashboard-shell) .ai-dashboard-shell section [class*="sm:grid-cols-2"] button:hover,
-body:has(.ai-dashboard-shell) .ai-dashboard-shell section [class*="sm:grid-cols-2"] button[class*="bg-primary"] {
-  background: var(--wearo-blue) !important;
-  color: #fff !important;
-}
+body:has(.ai-dashboard-shell) .ai-dashboard-shell section [class*="sm:grid-cols-2"] button[class*="bg-primary"] { background: var(--wearo-blue) !important; color: #fff !important; }
 
-/* Rename the brief without touching route logic. */
-body:has(.ai-dashboard-shell) label[for="ai-stylist-brief"] {
-  font-size: 0 !important;
-}
+body:has(.ai-dashboard-shell) label[for="ai-stylist-brief"] { font-size: 0 !important; }
+body:has(.ai-dashboard-shell) label[for="ai-stylist-brief"]::before { content: "04 · MÔ TẢ OUTFIT"; font-size: 10px; letter-spacing: .18em; color: #687985; }
+body:has(.ai-dashboard-shell) label[for="tryon-note"] { font-size: 0 !important; }
+body:has(.ai-dashboard-shell) label[for="tryon-note"]::before { content: "04 · GHI CHÚ"; font-size: 10px; letter-spacing: .18em; color: #687985; }
 
-body:has(.ai-dashboard-shell) label[for="ai-stylist-brief"]::before {
-  content: "04 · MÔ TẢ OUTFIT";
-  font-size: 10px;
-  letter-spacing: .18em;
-  color: #687985;
-}
+body:has(.ai-dashboard-shell) .ai-chatframe { min-height: 0; height: min(430px, calc(100vh - 205px)); max-height: 430px; border-radius: 14px; box-shadow: 0 12px 34px rgba(84,114,140,.07); }
+body:has(.ai-dashboard-shell) .ai-chatframe__header { padding: 10px 11px; }
+body:has(.ai-dashboard-shell) .ai-chatframe__header .size-10 { width: 30px; height: 30px; }
+body:has(.ai-dashboard-shell) .ai-chatframe__messages { min-height: 0; padding: 10px 9px; }
+body:has(.ai-dashboard-shell) .ai-chatframe__message { gap: 5px; margin-bottom: 7px; }
+body:has(.ai-dashboard-shell) .ai-chatframe__avatar { width: 22px; height: 22px; flex-basis: 22px; }
+body:has(.ai-dashboard-shell) .ai-chatframe__bubble { border-radius: 9px 9px 9px 3px; padding: 7px 9px; font-size: 10.5px; line-height: 1.45; }
+body:has(.ai-dashboard-shell) .ai-chatframe__quick-actions { display: grid; grid-template-columns: 1fr; gap: 4px; padding: 6px 9px; border-top: 1px solid rgba(84,114,140,.10); }
+body:has(.ai-dashboard-shell) .ai-chatframe__quick-actions button { min-height: 27px; padding: 5px 7px; border-color: rgba(217,187,169,.48); background: rgba(242,206,174,.13); color: #4a4a4a; font-size: 8.5px; line-height: 1.25; white-space: normal; text-align: left; }
+body:has(.ai-dashboard-shell) .ai-chatframe__quick-actions button:hover { border-color: var(--wearo-blue); background: rgba(84,114,140,.07); }
+body:has(.ai-dashboard-shell) .ai-chatframe__composer { gap: 5px; padding: 7px 9px; }
+body:has(.ai-dashboard-shell) .ai-chatframe__composer textarea { min-height: 36px; height: 36px; max-height: 36px; padding: 7px 9px; font-size: 10.5px; }
+body:has(.ai-dashboard-shell) .ai-chatframe__composer button { width: 36px; height: 36px; flex-basis: 36px; border-radius: 9px; }
+body:has(.ai-dashboard-shell) .ai-chatframe__footer { padding: 6px 9px; font-size: 7.5px; color: #687985; }
+body:has(.ai-dashboard-shell) .ai-chatframe__context { display: none !important; }
 
-body:has(.ai-dashboard-shell) label[for="tryon-note"] {
-  font-size: 0 !important;
-}
-
-body:has(.ai-dashboard-shell) label[for="tryon-note"]::before {
-  content: "04 · GHI CHÚ";
-  font-size: 10px;
-  letter-spacing: .18em;
-  color: #687985;
-}
-
-/* ---------------- Stylist chat: compact assistant, not a second workspace ---------------- */
-body:has(.ai-dashboard-shell) .ai-chatframe {
-  min-height: 0;
-  height: min(430px, calc(100vh - 205px));
-  max-height: 430px;
-  border-radius: 14px;
-  box-shadow: 0 12px 34px rgba(84,114,140,.07);
-}
-
-body:has(.ai-dashboard-shell) .ai-chatframe__header {
-  padding: 10px 11px;
-}
-
-body:has(.ai-dashboard-shell) .ai-chatframe__header .size-10 {
-  width: 30px;
-  height: 30px;
-}
-
-body:has(.ai-dashboard-shell) .ai-chatframe__messages {
-  min-height: 0;
-  padding: 10px 9px;
-}
-
-body:has(.ai-dashboard-shell) .ai-chatframe__message {
-  gap: 5px;
-  margin-bottom: 7px;
-}
-
-body:has(.ai-dashboard-shell) .ai-chatframe__avatar {
-  width: 22px;
-  height: 22px;
-  flex-basis: 22px;
-}
-
-body:has(.ai-dashboard-shell) .ai-chatframe__bubble {
-  border-radius: 9px 9px 9px 3px;
-  padding: 7px 9px;
-  font-size: 10.5px;
-  line-height: 1.45;
-}
-
-body:has(.ai-dashboard-shell) .ai-chatframe__quick-actions {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 4px;
-  padding: 6px 9px;
-  border-top: 1px solid rgba(84,114,140,.10);
-}
-
-body:has(.ai-dashboard-shell) .ai-chatframe__quick-actions button {
-  min-height: 27px;
-  padding: 5px 7px;
-  border-color: rgba(217,187,169,.48);
-  background: rgba(242,206,174,.13);
-  color: #4a4a4a;
-  font-size: 8.5px;
-  line-height: 1.25;
-  white-space: normal;
-  text-align: left;
-}
-
-body:has(.ai-dashboard-shell) .ai-chatframe__quick-actions button:hover {
-  border-color: var(--wearo-blue);
-  background: rgba(84,114,140,.07);
-}
-
-body:has(.ai-dashboard-shell) .ai-chatframe__composer {
-  gap: 5px;
-  padding: 7px 9px;
-}
-
-body:has(.ai-dashboard-shell) .ai-chatframe__composer textarea {
-  min-height: 36px;
-  height: 36px;
-  max-height: 36px;
-  padding: 7px 9px;
-  font-size: 10.5px;
-}
-
-body:has(.ai-dashboard-shell) .ai-chatframe__composer button {
-  width: 36px;
-  height: 36px;
-  flex-basis: 36px;
-  border-radius: 9px;
-}
-
-body:has(.ai-dashboard-shell) .ai-chatframe__footer {
-  padding: 6px 9px;
-  font-size: 7.5px;
-  color: #687985;
-}
-
-/* Hide redundant system/context block if an older component version is cached. */
-body:has(.ai-dashboard-shell) .ai-chatframe__context {
-  display: none !important;
-}
-
-/* ---------------- Accessibility / contrast ---------------- */
 body:has(.ai-dashboard-shell) .text-silver,
-body:has(.ai-dashboard-shell) [class*="text-silver"] {
-  color: #687985 !important;
+body:has(.ai-dashboard-shell) [class*="text-silver"] { color: #687985 !important; }
+body:has(.ai-dashboard-shell) .text-beige,
+body:has(.ai-dashboard-shell) [class*="text-beige"] { color: #4a4a4a !important; }
+
+/* Final workspace override: Input first, Result second. */
+body:has(.ai-dashboard-shell) .ai-workspace-grid {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.08fr) minmax(300px, .92fr) !important;
+  gap: 14px !important;
+  align-items: start;
 }
 
-body:has(.ai-dashboard-shell) .text-beige,
-body:has(.ai-dashboard-shell) [class*="text-beige"] {
-  color: #4a4a4a !important;
-}
+body:has(.ai-dashboard-shell) .ai-workspace-input { grid-column: 1; grid-row: 1; }
+body:has(.ai-dashboard-shell) .ai-workspace-result { grid-column: 2; grid-row: 1; position: sticky; top: 92px; }
+body:has(.ai-dashboard-shell) .ai-workspace-result > div:first-child { min-height: 420px; }
 
 @media (max-width: 1180px) {
-  body:has(.ai-dashboard-shell) .ai-dashboard-shell {
-    grid-template-columns: 175px minmax(0, 1fr);
-  }
+  body:has(.ai-dashboard-shell) .ai-dashboard-shell { grid-template-columns: 175px minmax(0, 1fr) !important; }
+  body:has(.ai-dashboard-shell) .ai-workspace-grid { grid-template-columns: minmax(0, 1fr) minmax(280px, .82fr) !important; }
+}
 
-  body:has(.ai-dashboard-shell) .ai-chatframe {
-    grid-column: 2;
-    height: 390px;
-    max-height: 390px;
-  }
+@media (max-width: 900px) {
+  body:has(.ai-dashboard-shell) .ai-dashboard-shell { grid-template-columns: 1fr !important; gap: 10px !important; }
+  body:has(.ai-dashboard-shell) .ai-workspace-grid { grid-template-columns: 1fr !important; }
+  body:has(.ai-dashboard-shell) .ai-workspace-input { grid-column: 1; grid-row: 1; }
+  body:has(.ai-dashboard-shell) .ai-workspace-result { grid-column: 1; grid-row: 2; position: static; }
 }
 
 @media (max-width: 768px) {
-  body:has(.ai-dashboard-shell) .ai-dashboard-topbar h1 {
-    font-size: 2.75rem !important;
-  }
-
-  body:has(.ai-dashboard-shell) .ai-dashboard-shell {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  body:has(.ai-dashboard-shell) .ai-chatframe {
-    grid-column: auto;
-    height: auto;
-    max-height: none;
-    min-height: 0;
-  }
-
-  body:has(.ai-consent-panel) .ai-consent-panel {
-    padding: 22px 18px;
-    border-radius: 14px;
-  }
+  body:has(.ai-dashboard-shell) .ai-dashboard-topbar h1 { font-size: 2.75rem !important; }
+  body:has(.ai-consent-panel) .ai-consent-panel { padding: 22px 18px; border-radius: 14px; }
 }
