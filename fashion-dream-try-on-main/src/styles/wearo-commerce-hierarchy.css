@@ -1,0 +1,287 @@
+/* WEARO Commerce visual system — Product / Cart / Checkout / Payment Success
+ * Palette: #54728C #7794A6 #F2CEAE #D9BBA9 #F2AD94 + white / black
+ * Typography: Space Grotesk (H1), Be Vietnam Pro (H2/H3), Lexend (body/UI)
+ * Presentation only: no data, cart, order or payment behavior changes.
+ */
+
+:root {
+  --wearo-blue: #54728C;
+  --wearo-blue-light: #7794A6;
+  --wearo-peach: #F2CEAE;
+  --wearo-almond: #D9BBA9;
+  --wearo-coral: #F2AD94;
+  --wearo-white: #FFFFFF;
+  --wearo-black: #171717;
+  --wearo-paper: #F8F6F2;
+}
+
+/* Product detail --------------------------------------------------------- */
+body:has(main > nav[aria-label="Breadcrumb"]) {
+  --background: var(--wearo-paper);
+  --foreground: var(--wearo-black);
+  --card: var(--wearo-white);
+  --card-foreground: var(--wearo-black);
+  --primary: var(--wearo-blue);
+  --primary-foreground: var(--wearo-white);
+  --secondary: var(--wearo-blue-light);
+  --secondary-foreground: var(--wearo-white);
+  --muted: #EEE8E1;
+  --muted-foreground: var(--wearo-blue-light);
+  --accent: var(--wearo-peach);
+  --accent-foreground: var(--wearo-black);
+  --border: rgba(84,114,140,.20);
+  --input: var(--wearo-white);
+  --ring: var(--wearo-blue);
+  --beige: #3F4549;
+  --silver: #687985;
+  background: var(--wearo-paper) !important;
+  color: var(--wearo-black) !important;
+  font-family: "Lexend", sans-serif;
+}
+
+body:has(main > nav[aria-label="Breadcrumb"]) main {
+  background: var(--wearo-paper) !important;
+  color: var(--wearo-black) !important;
+  font-family: "Lexend", sans-serif;
+}
+
+body:has(main > nav[aria-label="Breadcrumb"]) main h1 {
+  font-family: "Space Grotesk", sans-serif !important;
+  font-weight: 700 !important;
+  line-height: .98 !important;
+  letter-spacing: -.025em !important;
+  color: var(--wearo-black) !important;
+}
+
+body:has(main > nav[aria-label="Breadcrumb"]) main h2 {
+  font-family: "Be Vietnam Pro", sans-serif !important;
+  font-weight: 600 !important;
+  line-height: 1.12 !important;
+  color: var(--wearo-black) !important;
+}
+
+body:has(main > nav[aria-label="Breadcrumb"]) main h3 {
+  font-family: "Be Vietnam Pro", sans-serif !important;
+  font-weight: 500 !important;
+  color: var(--wearo-black) !important;
+}
+
+body:has(main > nav[aria-label="Breadcrumb"]) main p,
+body:has(main > nav[aria-label="Breadcrumb"]) main button,
+body:has(main > nav[aria-label="Breadcrumb"]) main a,
+body:has(main > nav[aria-label="Breadcrumb"]) main label,
+body:has(main > nav[aria-label="Breadcrumb"]) main input {
+  font-family: "Lexend", sans-serif;
+}
+
+body:has(main > nav[aria-label="Breadcrumb"]) main .bg-card,
+body:has(main > nav[aria-label="Breadcrumb"]) main .bg-background {
+  background-color: var(--wearo-white) !important;
+}
+
+body:has(main > nav[aria-label="Breadcrumb"]) main .border-border {
+  border-color: rgba(84,114,140,.20) !important;
+}
+
+body:has(main > nav[aria-label="Breadcrumb"]) main .text-primary,
+body:has(main > nav[aria-label="Breadcrumb"]) main .eyebrow {
+  color: var(--wearo-blue) !important;
+}
+
+body:has(main > nav[aria-label="Breadcrumb"]) main .bg-primary {
+  background-color: var(--wearo-blue) !important;
+}
+
+body:has(main > nav[aria-label="Breadcrumb"]) main .text-primary-foreground {
+  color: var(--wearo-white) !important;
+}
+
+body:has(main > nav[aria-label="Breadcrumb"]) main .text-beige {
+  color: var(--wearo-black) !important;
+}
+
+body:has(main > nav[aria-label="Breadcrumb"]) main .text-silver {
+  color: #687985 !important;
+}
+
+body:has(main > nav[aria-label="Breadcrumb"]) main button:hover:not(:disabled) {
+  border-color: var(--wearo-blue) !important;
+}
+
+/* Cart / Checkout / Payment result ------------------------------------- */
+body:has(main.max-w-5xl) {
+  background: var(--wearo-paper) !important;
+  color: var(--wearo-black) !important;
+  font-family: "Lexend", sans-serif;
+}
+
+body:has(main.max-w-5xl) main {
+  color: var(--wearo-black);
+  font-family: "Lexend", sans-serif;
+}
+
+body:has(main.max-w-5xl) main h1 {
+  font-family: "Space Grotesk", sans-serif !important;
+  font-weight: 700 !important;
+  font-size: clamp(2.5rem, 5vw, 4rem) !important;
+  line-height: .98 !important;
+  letter-spacing: -.025em !important;
+}
+
+body:has(main.max-w-5xl) main h2 {
+  font-family: "Be Vietnam Pro", sans-serif !important;
+  font-weight: 600 !important;
+  line-height: 1.12 !important;
+}
+
+body:has(main.max-w-5xl) main p,
+body:has(main.max-w-5xl) main button,
+body:has(main.max-w-5xl) main a,
+body:has(main.max-w-5xl) main label,
+body:has(main.max-w-5xl) main input {
+  font-family: "Lexend", sans-serif;
+}
+
+body:has(main.max-w-5xl) main .bg-card {
+  background-color: var(--wearo-white) !important;
+}
+
+body:has(main.max-w-5xl) main .border-border {
+  border-color: rgba(84,114,140,.20) !important;
+}
+
+body:has(main.max-w-5xl) main .bg-primary {
+  background-color: var(--wearo-blue) !important;
+}
+
+body:has(main.max-w-5xl) main .text-primary,
+body:has(main.max-w-5xl) main .eyebrow {
+  color: var(--wearo-blue) !important;
+}
+
+body:has(main.max-w-5xl) main .text-primary-foreground {
+  color: var(--wearo-white) !important;
+}
+
+body:has(main.max-w-5xl) main .text-beige {
+  color: var(--wearo-black) !important;
+}
+
+body:has(main.max-w-5xl) main .text-silver {
+  color: #687985 !important;
+}
+
+/* Checkout-specific payment option hierarchy. */
+body:has(main.max-w-5xl form) main form [role="radio"],
+body:has(main.max-w-5xl form) main form label:has(input[type="radio"]) {
+  border-color: rgba(84,114,140,.20);
+  background: var(--wearo-white);
+}
+
+body:has(main.max-w-5xl form) main form input:focus,
+body:has(main.max-w-5xl form) main form textarea:focus,
+body:has(main.max-w-5xl form) main form select:focus {
+  border-color: var(--wearo-blue) !important;
+  box-shadow: 0 0 0 3px rgba(84,114,140,.10) !important;
+  outline: none;
+}
+
+body:has(main.max-w-5xl form) main form input[type="radio"] {
+  accent-color: var(--wearo-blue);
+}
+
+body:has(main.max-w-5xl form) main form [class*="border-primary"] {
+  border-color: var(--wearo-blue) !important;
+}
+
+/* QR payment screen: centered transaction card, blue hierarchy, peach accent. */
+body:has(main.max-w-2xl) {
+  background: var(--wearo-paper) !important;
+  color: var(--wearo-black) !important;
+  font-family: "Lexend", sans-serif;
+}
+
+body:has(main.max-w-2xl) main {
+  color: var(--wearo-black);
+  font-family: "Lexend", sans-serif;
+}
+
+body:has(main.max-w-2xl) main h1 {
+  font-family: "Space Grotesk", sans-serif !important;
+  font-weight: 700 !important;
+  line-height: .98 !important;
+  letter-spacing: -.025em !important;
+}
+
+body:has(main.max-w-2xl) main p,
+body:has(main.max-w-2xl) main button,
+body:has(main.max-w-2xl) main a {
+  font-family: "Lexend", sans-serif;
+}
+
+body:has(main.max-w-2xl) main .bg-card {
+  background-color: var(--wearo-white) !important;
+}
+
+body:has(main.max-w-2xl) main .border-border {
+  border-color: rgba(84,114,140,.20) !important;
+}
+
+body:has(main.max-w-2xl) main .bg-primary {
+  background-color: var(--wearo-blue) !important;
+}
+
+body:has(main.max-w-2xl) main .text-primary,
+body:has(main.max-w-2xl) main .eyebrow {
+  color: var(--wearo-blue) !important;
+}
+
+body:has(main.max-w-2xl) main .text-beige {
+  color: var(--wearo-black) !important;
+}
+
+body:has(main.max-w-2xl) main .text-silver {
+  color: #687985 !important;
+}
+
+/* Success state: use peach as a restrained celebration accent, blue as the CTA. */
+body:has(main.max-w-2xl) main a.border-primary {
+  background: var(--wearo-blue);
+  color: var(--wearo-white) !important;
+  border-color: var(--wearo-blue) !important;
+}
+
+body:has(main.max-w-2xl) main a.border-border {
+  border-color: rgba(84,114,140,.24) !important;
+  color: var(--wearo-blue) !important;
+  background: var(--wearo-white);
+}
+
+body:has(main.max-w-2xl) main a.border-primary:hover,
+body:has(main.max-w-2xl) main a.border-border:hover {
+  transform: translateY(-1px);
+}
+
+/* Small brand accent used for status / micro-labels only. */
+body:has(main.max-w-2xl) main .text-primary::selection,
+body:has(main.max-w-5xl) main .text-primary::selection,
+body:has(main > nav[aria-label="Breadcrumb"]) main .text-primary::selection {
+  background: var(--wearo-peach);
+  color: var(--wearo-black);
+}
+
+@media (max-width: 700px) {
+  body:has(main > nav[aria-label="Breadcrumb"]) main h1,
+  body:has(main.max-w-5xl) main h1,
+  body:has(main.max-w-2xl) main h1 {
+    font-size: clamp(2.125rem, 10vw, 2.75rem) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body:has(main.max-w-2xl) main a,
+  body:has(main.max-w-5xl) main button,
+  body:has(main > nav[aria-label="Breadcrumb"]) main button {
+    transition: none !important;
+  }
+}
