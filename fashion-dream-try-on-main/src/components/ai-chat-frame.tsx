@@ -13,9 +13,9 @@ type ChatMessage = {
 };
 
 const QUICK_PROMPTS = [
-  "Phối cho tôi một look tối giản",
-  "Tôi nên mặc gì đi hẹn hò?",
-  "Gợi ý outfit hợp dáng unisex",
+  "Gợi ý outfit cho tôi",
+  "Phối đồ đi hẹn hò",
+  "Look unisex tối giản",
 ];
 
 export function AiChatFrame({ onUseConcept }: { onUseConcept?: (prompt: string) => void }) {
@@ -25,7 +25,7 @@ export function AiChatFrame({ onUseConcept }: { onUseConcept?: (prompt: string) 
     {
       id: "welcome",
       role: "assistant",
-      text: "Chào bạn. Tôi là WEARO Stylist. Hãy nói cho tôi biết bạn muốn mặc gì, đi đâu hoặc mood hôm nay.",
+      text: "Chào bạn. Tôi là WEARO Stylist. Hãy nói phong cách, dịp hoặc mood bạn muốn.",
     },
   ]);
 
@@ -63,17 +63,12 @@ export function AiChatFrame({ onUseConcept }: { onUseConcept?: (prompt: string) 
             <span className="absolute -bottom-0.5 -right-0.5 size-2.5 rounded-full border-2 border-card bg-[var(--wearo-coral)]" />
           </div>
           <div className="min-w-0">
-            <p className="text-[10px] uppercase tracking-[0.18em] text-primary">WEARO / AI STYLIST</p>
-            <p className="mt-0.5 truncate text-sm font-medium text-foreground">Personal Style Assistant</p>
+            <p className="text-[10px] uppercase tracking-[0.18em] text-primary">WEARO / GỢI Ý STYLIST</p>
+            <p className="mt-0.5 truncate text-sm font-medium text-foreground">Trợ lý phối đồ</p>
           </div>
         </div>
         <span className="inline-flex items-center gap-1.5 text-[9px] uppercase tracking-[0.14em] text-silver"><span className="size-1.5 rounded-full bg-[var(--wearo-coral)]" />Online</span>
       </header>
-
-      <div className="ai-chatframe__context">
-        <Sparkles className="size-3.5 shrink-0 text-primary" />
-        <span>AI Stylist · Concept mode</span>
-      </div>
 
       <div className="ai-chatframe__messages" aria-live="polite">
         {messages.map((message) => (
@@ -93,15 +88,15 @@ export function AiChatFrame({ onUseConcept }: { onUseConcept?: (prompt: string) 
         )}
       </div>
 
-      <div className="ai-chatframe__quick-actions">
+      <div className="ai-chatframe__quick-actions" aria-label="Gợi ý nhanh">
         {QUICK_PROMPTS.map((prompt) => <button key={prompt} type="button" onClick={() => send(prompt)} disabled={mutation.isPending}>{prompt}</button>)}
       </div>
 
       <form className="ai-chatframe__composer" onSubmit={(event) => { event.preventDefault(); send(); }}>
-        <textarea value={input} onChange={(event) => setInput(event.target.value)} rows={2} maxLength={500} placeholder="Nhắn cho AI Stylist…" aria-label="Tin nhắn cho AI Stylist" />
+        <textarea value={input} onChange={(event) => setInput(event.target.value)} rows={2} maxLength={500} placeholder="Hỏi stylist…" aria-label="Tin nhắn cho AI Stylist" />
         <button type="submit" disabled={!input.trim() || mutation.isPending} aria-label="Gửi tin nhắn"><Send className="size-4" /></button>
       </form>
-      <div className="ai-chatframe__footer"><Check className="size-3" /> AI có thể tạo concept và hình ảnh tham khảo. Kiểm tra kết quả trước khi mua.</div>
+      <div className="ai-chatframe__footer"><Check className="size-3" /> Kết quả AI mang tính tham khảo.</div>
     </aside>
   );
 }
