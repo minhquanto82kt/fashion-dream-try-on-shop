@@ -14,7 +14,11 @@ async function walk(dir) {
     }
     if (!textExtensions.has(path.extname(entry.name))) continue;
     const relative = path.relative(process.cwd(), full).replaceAll(path.sep, "/");
-    const isServerBoundary = relative.endsWith(".server.ts") || relative.includes("/routes/api/") || relative.includes("/python/");
+    const isServerBoundary =
+      relative.endsWith(".server.ts") ||
+      relative.endsWith(".functions.ts") ||
+      relative.includes("/routes/api/") ||
+      relative.includes("/python/");
     if (isServerBoundary) continue;
     const content = await readFile(full, "utf8");
 
