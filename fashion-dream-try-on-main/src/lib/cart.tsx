@@ -15,7 +15,7 @@ type ServerCart = Awaited<ReturnType<typeof getServerCart>>;
 const getCartProducts = createServerFn({ method: "GET" }).validator((productIds: string[]) => productIds).handler(async ({ data: productIds }) => {
   if (productIds.length === 0) return [] as CartProduct[];
   const { supabaseRequest } = await import("@/lib/supabase.server");
-  const encodedIds = productIds.map((id) => `\"${id.replace(/\"/g, '\\\"')}\"`).join(",");
+  const encodedIds = productIds.map((id) => encodeURIComponent(id)).join(",");
   const [products, images, variants] = await Promise.all([
     supabaseRequest<DbProduct[]>(`products?id=in.(${encodedIds})&active=eq.true&status=eq.published&select=id,name,description,price,category,image,active,status,featured`),
     supabaseRequest<DbImage[]>(`product_images?product_id=in.(${encodedIds})&select=id,product_id,image_url,sort_order,is_primary&order=sort_order.asc`),
@@ -63,9 +63,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return () => { window.removeEventListener("wearo:mock-user:changed", sync); window.removeEventListener("upthink:auth:login", onAuth); window.removeEventListener("upthink:auth:logout", onAuth); window.removeEventListener("upthink:auth:recovery", onAuth); };
   }, []);
 
-  // Local cart is deliberately hydrated first. This guarantees that the cart UI
-  // never disappears because a server response is late, empty, or missing a
-  // related variant. Server persistence is then synchronized in the background.
   useEffect(() => {
     let cancelled = false;
     async function load() {
@@ -92,8 +89,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return () => { cancelled = true; };
   }, [mockMode, authenticated]);
 
-  // Persist every cart change locally for both guests and authenticated users.
-  // This is the durable UI fallback and also protects the cart across refreshes.
   useEffect(() => {
     if (!hydrated) return;
     const key = storageKey(mockMode);
@@ -123,7 +118,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         if (!cancelled) setProducts(result);
       } catch (error) {
         console.error("Không thể tải sản phẩm trong giỏ hàng:", error);
-        if (!cancelled) setProducts([]);
+        // Keep the last successfully resolved products visible. Clearing this
+        // state on a transient request failure makes a valid cart look empty.
       } finally { if (!cancelled) setLoading(false); }
     }
     void loadProducts();
