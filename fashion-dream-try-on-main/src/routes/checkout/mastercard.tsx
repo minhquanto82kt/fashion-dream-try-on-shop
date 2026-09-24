@@ -6,6 +6,9 @@ import { getInvoiceData, type InvoiceData } from "@/lib/invoice.functions";
 import { createClientOnlyFn } from "@tanstack/react-start";
 
 export const Route = createFileRoute("/checkout/mastercard")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    order: typeof search.order === "string" ? search.order : undefined,
+  }),
   head: () => ({ meta: [{ title: "Xác nhận thanh toán | WEARO" }] }),
   component: MastercardReturnPage,
 });
@@ -17,7 +20,7 @@ const openInvoicePdfClient = createClientOnlyFn(async (invoice: InvoiceData) => 
 
 function MastercardReturnPage() {
   const search = Route.useSearch();
-  const orderCode = typeof search?.order === "string" ? search.order.trim() : "";
+  const orderCode = search.order?.trim() ?? "";
   const [status, setStatus] = useState<"checking" | "paid" | "pending" | "failed">("checking");
   const [invoice, setInvoice] = useState<InvoiceData | null>(null);
   const [error, setError] = useState("");
@@ -68,7 +71,7 @@ function MastercardReturnPage() {
         }
         await new Promise((resolve) => window.setTimeout(resolve, 3000));
       }
-      if (!cancelled && status !== "paid") setStatus("pending");
+      if (!cancelled) setStatus("pending");
     };
 
     void verify();
