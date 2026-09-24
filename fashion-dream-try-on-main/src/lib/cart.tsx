@@ -94,7 +94,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const key = storageKey(mockMode);
     localStorage.setItem(key, JSON.stringify(lines));
     if (!mockMode) localStorage.removeItem(LEGACY_GUEST_STORAGE_KEY);
-    window.dispatchEvent(new Event(eventName(mockMode)));
+    // Same-tab state is already owned by CartProvider. Do not dispatch the
+    // same custom event that this provider listens to: that creates a
+    // setState -> event -> setState feedback loop for guest carts.
   }, [lines, hydrated, mockMode]);
 
   useEffect(() => {
@@ -103,6 +105,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const sync = () => setLines(mockMode ? readLocalCart(MOCK_STORAGE_KEY) : readLocalCart(GUEST_STORAGE_KEY));
     const onStorage = (event: StorageEvent) => { if (event.key === key || (!mockMode && event.key === LEGACY_GUEST_STORAGE_KEY)) sync(); };
     window.addEventListener("storage", onStorage);
+    // Keep the custom event listener for compatibility with any external
+    // cart writer, but CartProvider itself no longer emits it on every state
+    // write. Cross-tab changes continue to use the native storage event.
     window.addEventListener(eventName(mockMode), sync);
     return () => { window.removeEventListener("storage", onStorage); window.removeEventListener(eventName(mockMode), sync); };
   }, [authenticated, mockMode]);
