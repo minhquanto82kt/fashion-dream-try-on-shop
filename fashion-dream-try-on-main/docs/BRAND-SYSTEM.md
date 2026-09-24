@@ -16,27 +16,27 @@ Never merge these identities in the UI:
 
 | Preview | HEX | Role | Name |
 |---|---|---|---|
-| ![54728C](https://img.shields.io/badge/%20-%2354728C-54728C?style=flat-square) | `#54728C` | Primary | slate blue |
+| ![color](https://img.shields.io/badge/%20-%2354728C-54728C?style=flat-square) | `#54728C` | Primary | slate blue |
 
 ### Secondary
 
 | Preview | HEX | Role | Name |
 |---|---|---|---|
-| ![F2AD94](https://img.shields.io/badge/%20-%23F2AD94-F2AD94?style=flat-square) | `#F2AD94` | Secondary | coral peach / pink accent |
+| ![color](https://img.shields.io/badge/%20-%23F2AD94-F2AD94?style=flat-square) | `#F2AD94` | Secondary | coral peach / pink accent |
 
 ### Neutral
 
 | Preview | HEX | Role | Name |
 |---|---|---|---|
-| ![FFFFFF](https://img.shields.io/badge/%20-%23FFFFFF-FFFFFF?style=flat-square) | `#FFFFFF` | Neutral | white |
+| ![color](https://img.shields.io/badge/%20-%23FFFFFF-FFFFFF?style=flat-square) | `#FFFFFF` | Neutral | white |
 
 ### Supporting palette
 
 | Preview | HEX | Role | Name |
 |---|---|---|---|
-| ![7794A6](https://img.shields.io/badge/%20-%237794A6-7794A6?style=flat-square) | `#7794A6` | Supporting | secondary blue tone |
-| ![F2CEAE](https://img.shields.io/badge/%20-%23F2CEAE-F2CEAE?style=flat-square) | `#F2CEAE` | Supporting | warm peach |
-| ![D9BBA9](https://img.shields.io/badge/%20-%23D9BBA9-D9BBA9?style=flat-square) | `#D9BBA9` | Supporting | dusty beige |
+| ![color](https://img.shields.io/badge/%20-%237794A6-7794A6?style=flat-square) | `#7794A6` | Supporting | secondary blue tone |
+| ![color](https://img.shields.io/badge/%20-%23F2CEAE-F2CEAE?style=flat-square) | `#F2CEAE` | Supporting | warm peach |
+| ![color](https://img.shields.io/badge/%20-%23D9BBA9-D9BBA9?style=flat-square) | `#D9BBA9` | Supporting | dusty beige |
 
 ## UX rule
 
