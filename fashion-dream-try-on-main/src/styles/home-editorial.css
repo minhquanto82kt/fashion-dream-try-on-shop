@@ -128,7 +128,7 @@
   inset: 0 !important;
   z-index: 2 !important;
   pointer-events: none !important;
-  background:
+  /* background:
     linear-gradient(
       90deg,
       rgba(84,114,140,.96) 0%,
@@ -139,7 +139,7 @@
       rgba(119,148,166,0) 100%
     ) !important;
   opacity: 1 !important;
-  mix-blend-mode: multiply !important;
+  mix-blend-mode: multiply !important; */
 }
 .fashion-intro-section .fashion-intro-content,
 .fashion-intro-section .fashion-section-number {
