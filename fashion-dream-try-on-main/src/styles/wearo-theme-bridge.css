@@ -1,0 +1,35 @@
+/* WEARO theme bridge: neutralize legacy theme variables without rewriting the legacy stylesheet stack. */
+:root {
+  --theme-primary: #54728C;
+  --theme-secondary: #7794A6;
+  --theme-background: #FFFFFF;
+  --theme-surface: #F7F7F5;
+  --theme-accent: #F2AD94;
+  --theme-foreground: #171717;
+}
+
+/* Section 02: use the original image with no legacy color treatment. */
+.fashion-intro-section,
+.fashion-intro-section .fashion-intro-bg {
+  background: transparent !important;
+  background-image: none !important;
+  background-color: transparent !important;
+}
+
+.fashion-intro-section::before,
+.fashion-intro-section::after,
+.fashion-intro-section .fashion-intro-bg::before,
+.fashion-intro-section .fashion-intro-bg::after {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  opacity: 0 !important;
+}
+
+.fashion-intro-section .fashion-intro-bg img {
+  filter: none !important;
+  -webkit-filter: none !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
+  transform: none !important;
+}
