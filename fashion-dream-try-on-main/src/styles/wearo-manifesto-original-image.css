@@ -1,0 +1,56 @@
+/* WEARO Manifesto — original image only.
+ * Remove the legacy blue/black image treatment without changing layout or typography.
+ */
+.fashion-intro-section {
+  background: transparent !important;
+  background-image: none !important;
+  background-color: transparent !important;
+}
+
+.fashion-intro-section::before,
+.fashion-intro-section::after {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  opacity: 0 !important;
+}
+
+.fashion-intro-section .fashion-intro-bg {
+  background: transparent !important;
+  background-image: none !important;
+  background-color: transparent !important;
+}
+
+.fashion-intro-section .fashion-intro-bg img {
+  filter: none !important;
+  -webkit-filter: none !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
+  transform: none !important;
+  background: transparent !important;
+  content: url('/images/stylish_urban_girl.jpg') !important;
+}
+
+/* The previous color layer lived here; explicitly remove it. */
+.fashion-intro-section .fashion-intro-bg::before,
+.fashion-intro-section .fashion-intro-bg::after {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  background-image: none !important;
+  opacity: 0 !important;
+  mix-blend-mode: normal !important;
+}
+
+.fashion-intro-section .fashion-intro-content,
+.fashion-intro-section .fashion-section-number {
+  position: relative !important;
+  z-index: 3 !important;
+}
+
+.fashion-intro-section .fashion-section-title,
+.fashion-intro-section .fashion-eyebrow,
+.fashion-intro-section .fashion-intro-copy {
+  color: #fff !important;
+  text-shadow: 0 2px 18px rgba(23,23,23,.18);
+}
