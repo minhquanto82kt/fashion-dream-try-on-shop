@@ -118,7 +118,7 @@
 .fashion-intro-section .fashion-intro-bg img {
   filter: none !important;
   opacity: 1 !important;
-  mix-blend-mode: normal !important;
+  mix-blend-mode: multiply !important;
   -webkit-filter: none !important;
 }
 .fashion-intro-section .fashion-intro-bg::after {
