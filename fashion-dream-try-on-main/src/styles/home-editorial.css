@@ -116,7 +116,7 @@
   background-image: none !important;
 }
 .fashion-intro-section .fashion-intro-bg img {
-  filter: none !important;
+  filter: saturate(.8) contrast(1.05) brightness(.9) !important;
   opacity: 1 !important;
   mix-blend-mode: normal !important;
   -webkit-filter: none !important;
