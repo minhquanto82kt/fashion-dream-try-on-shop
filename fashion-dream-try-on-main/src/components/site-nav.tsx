@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ChevronDown, ChevronRight, Globe2, Heart, Menu, Search, ShoppingBag, UserRound, X } from "lucide-react";
+import { ChevronDown, ChevronRight, Heart, Menu, Search, ShoppingBag, UserRound, X } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
 import { CATEGORIES } from "@/data/products";
 import { useCart } from "@/lib/cart";
