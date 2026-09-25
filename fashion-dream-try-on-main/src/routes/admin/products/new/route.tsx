@@ -8,7 +8,7 @@ import {
   type Product,
 } from "@/lib/upthink-supabase";
 
-export const Route = createFileRoute("/admin/products/new/")({
+export const Route = createFileRoute("/admin/products/new")({
   component: NewProductPage,
   head: () => ({
     meta: [{ title: "Add Product — UpThink" }],

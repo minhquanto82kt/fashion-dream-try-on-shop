@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { enterMockUserMode } from "@/lib/mock-user";
+import { AiTryOnControl } from "@/components/admin/AiTryOnControl";
 
 export const Route = createFileRoute("/admin/")({
   component: AdminDashboardPage,
@@ -38,6 +39,8 @@ function AdminDashboardPage() {
         <div className="up-admin-dashboard-card"><div className="up-admin-dashboard-label">Orders</div><div className="up-admin-dashboard-value">ORDERS</div><div className="up-admin-dashboard-muted">Order lifecycle</div></div>
         <div className="up-admin-dashboard-card"><div className="up-admin-dashboard-label">AI</div><div className="up-admin-dashboard-value">STUDIO</div><div className="up-admin-dashboard-muted">Try-On controls</div></div>
       </section>
+
+      <AiTryOnControl />
 
       <section className="up-admin-dashboard-section">
         <h2>Quick Actions</h2>
