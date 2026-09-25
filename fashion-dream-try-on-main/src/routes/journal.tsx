@@ -1,6 +1,17 @@
-import { Link } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import "@/styles/journal.css";
 
-export default function JournalPage() {
+export const Route = createFileRoute("/journal")({
+  head: () => ({
+    meta: [
+      { title: "WEARO Journal — Phong cách & cảm hứng" },
+      { name: "description", content: "WEARO Journal — phong cách, cảm hứng và xu hướng thời trang." },
+    ],
+  }),
+  component: JournalPage,
+});
+
+function JournalPage() {
   return (
     <main className="wearo-journal-page">
       <section className="wearo-journal-hero">
