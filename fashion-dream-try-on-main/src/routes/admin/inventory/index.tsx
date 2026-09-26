@@ -1,23 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  listProductVariants,
-  listProducts,
+  listInventoryRows,
   updateProductVariant,
-  type Product,
-  type ProductVariant,
+  type InventoryRow,
 } from "@/lib/upthink-supabase";
 
 export const Route = createFileRoute("/admin/inventory/")({
   component: InventoryAdminPage,
   head: () => ({
-    meta: [{ title: "Inventory Admin — UpThink" }],
+    meta: [{ title: "Inventory Admin — WEARO" }],
   }),
 });
 
 const LOW_STOCK_THRESHOLD = 5;
-
-type InventoryRow = ProductVariant & { product: Product };
 
 function InventoryAdminPage() {
   const [rows, setRows] = useState<InventoryRow[]>([]);
@@ -34,14 +30,7 @@ function InventoryAdminPage() {
     setLoading(true);
     setError("");
     try {
-      const products = await listProducts();
-      const variantsByProduct = await Promise.all(
-        products.map(async (product) => {
-          const variants = await listProductVariants(product.id);
-          return variants.map((variant) => ({ ...variant, product }));
-        }),
-      );
-      setRows(variantsByProduct.flat());
+      setRows(await listInventoryRows());
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Không thể tải dữ liệu tồn kho.");
     } finally {
