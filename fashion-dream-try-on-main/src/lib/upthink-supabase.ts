@@ -12,6 +12,7 @@ import {
   createAdminProductVariant,
   deleteAdminProductImage,
   deleteAdminProductVariant,
+  listAdminInventory,
   listAdminProductImages,
   listAdminProductVariants,
   setPrimaryAdminProductImage,
@@ -78,9 +79,13 @@ export type Product = {
 };
 export type ProductImage = { id?: string; product_id: string; image_url: string; alt_text?: string | null; sort_order: number; is_primary: boolean };
 export type ProductVariant = { id: string; product_id: string; size: string; color: string; sku: string | null; stock: number; created_at: string };
+export type InventoryRow = ProductVariant & { product: Product };
 
 export async function listProductVariants(productId: string) {
   return listAdminProductVariants({ data: { accessToken: requireAccessToken(), productId } });
+}
+export async function listInventoryRows(): Promise<InventoryRow[]> {
+  return listAdminInventory({ data: { accessToken: requireAccessToken() } });
 }
 export async function createProductVariant(payload: { product_id: string; size: string; color: string; sku?: string | null; stock?: number }) {
   return createAdminProductVariant({ data: { accessToken: requireAccessToken(), productId: payload.product_id, size: payload.size, color: payload.color, sku: payload.sku, stock: payload.stock } });
