@@ -79,6 +79,29 @@ export const listAdminProducts = createServerFn({ method: "POST" })
     );
   });
 
+export const listAdminInventory = createServerFn({ method: "POST" })
+  .validator((data: AdminContext) => data)
+  .handler(async ({ data }) => {
+    await requireAdmin(data.accessToken);
+
+    const [products, variants] = await Promise.all([
+      supabaseRequest<AdminProduct[]>(
+        "products?select=id,name,slug,description,short_description,long_description,price,category,image,active,status,featured,created_at,updated_at&order=created_at.desc",
+        { method: "GET" },
+      ),
+      supabaseRequest<AdminProductVariant[]>(
+        "product_variants?select=id,product_id,size,color,sku,stock,created_at&order=size.asc,color.asc",
+        { method: "GET" },
+      ),
+    ]);
+
+    const productsById = new Map(products.map((product) => [product.id, product]));
+    return variants.flatMap((variant) => {
+      const product = productsById.get(variant.product_id);
+      return product ? [{ ...variant, product }] : [];
+    });
+  });
+
 export const getAdminProduct = createServerFn({ method: "POST" })
   .validator((data: AdminContext & { id: string }) => data)
   .handler(async ({ data }) => {
