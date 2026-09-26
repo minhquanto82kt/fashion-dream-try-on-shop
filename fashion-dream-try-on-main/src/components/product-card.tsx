@@ -11,6 +11,8 @@ export function ProductCard({ product }: { product: Product }) {
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
   const tags = product.tags?.slice(0, 2) ?? [];
+  const secondaryImage = product.gallery?.[1];
+  const hasSale = typeof product.originalPrice === "number" && product.originalPrice > product.price;
 
   useEffect(() => {
     let mounted = true;
@@ -62,10 +64,12 @@ export function ProductCard({ product }: { product: Product }) {
 
   return (
     <article className="fashion-product-card">
-      <Link to="/product/$id" params={{ id: product.id }} className="fashion-product-image">
-        <img src={product.image} alt={product.name} loading="lazy" decoding="async" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />
+      <Link to="/product/$id" params={{ id: product.id }} className={`fashion-product-image${secondaryImage ? " has-hover-gallery" : ""}`}>
+        <img src={product.image} alt={product.name} loading="lazy" decoding="async" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" className="fashion-product-image__primary" />
+        {secondaryImage && <img src={secondaryImage} alt="" aria-hidden="true" loading="lazy" decoding="async" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" className="fashion-product-image__secondary" />}
         <div className="pointer-events-none absolute inset-x-3 top-3 z-10 flex flex-wrap gap-1.5">
           {product.badge && <span className="fashion-product-badge">{product.badge}</span>}
+          {hasSale && <span className="fashion-product-badge">SALE</span>}
           {tags.map((tag) => <span key={tag} className="border border-primary/40 bg-background/80 px-2 py-1 text-[8px] uppercase tracking-[0.12em] text-primary backdrop-blur-sm">{tag}</span>)}
         </div>
         <span className="fashion-product-index">/{product.id.toUpperCase()}</span>
@@ -80,6 +84,7 @@ export function ProductCard({ product }: { product: Product }) {
         </div>
         <div className="fashion-product-price-wrap shrink-0">
           <span className="fashion-product-price">{formatPrice(product.price, language)}</span>
+          {hasSale && <span className="fashion-product-price-old">{formatPrice(product.originalPrice!, language)}</span>}
           <button type="button" aria-label={saved ? (language === "vi" ? `Bỏ lưu ${product.name}` : `Remove ${product.name}`) : (language === "vi" ? `Lưu ${product.name}` : `Save ${product.name}`)} aria-pressed={saved} disabled={saving} className={`fashion-heart ${saved ? "is-saved" : ""}`} onClick={handleWishlist}>
             <Heart size={16} fill={saved ? "currentColor" : "none"} />
           </button>
