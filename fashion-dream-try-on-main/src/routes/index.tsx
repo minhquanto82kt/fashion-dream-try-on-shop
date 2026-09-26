@@ -119,6 +119,15 @@ function Index() {
       </div><div className="fashion-hero__plus" aria-hidden="true">+</div>
     </header>
 
+    <section className="wearo-mvp-trust" aria-label="WEARO shopping guarantees">
+      <div className="wearo-mvp-trust__inner">
+        <div><strong>FREE SHIPPING</strong><span>Đơn từ 700K</span></div>
+        <div><strong>7-DAY RETURNS</strong><span>Hỗ trợ đổi trả</span></div>
+        <div><strong>SIZE SUPPORT</strong><span>Tư vấn chọn size</span></div>
+        <div><strong>SECURE PAYMENT</strong><span>COD · MoMo · VNPay</span></div>
+      </div>
+    </section>
+
     <nav className="fashion-canvas-nav" aria-label="Homepage sections"><div className="fashion-canvas-nav__inner"><span className="fashion-canvas-nav__brand">WEARO / INDEX</span><div className="fashion-canvas-nav__links"><a href="#intro">02 / Manifesto</a><a href="#ai-studio">03 / AI Studio</a><a href="#collection">04 / Collection</a><a href="#experience">05 / Experience</a></div><a href="#top" className="fashion-canvas-nav__top">↑ TOP</a></div></nav>
 
     <main>
