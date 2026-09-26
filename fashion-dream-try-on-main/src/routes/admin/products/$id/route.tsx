@@ -12,7 +12,7 @@ import {
   type ProductVariant,
 } from "@/lib/upthink-supabase";
 
-export const Route = createFileRoute("/admin/products/$id/")({
+export const Route = createFileRoute("/admin/products/$id")({
   component: ProductDetailPage,
   head: () => ({ meta: [{ title: "Product Detail — UpThink" }] }),
 });
