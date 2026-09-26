@@ -1,0 +1,69 @@
+/* WEARO P1 — commerce enhancements. Keep the existing editorial system intact. */
+.fashion-product-image.has-hover-gallery{position:relative;overflow:hidden}
+.fashion-product-image.has-hover-gallery .fashion-product-image__primary,.fashion-product-image.has-hover-gallery .fashion-product-image__secondary{transition:opacity .35s ease,transform .65s cubic-bezier(.2,.65,.2,1)}
+.fashion-product-image.has-hover-gallery .fashion-product-image__secondary{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.02)}
+.fashion-product-image.has-hover-gallery:hover .fashion-product-image__primary{opacity:0;transform:scale(1.02)}
+.fashion-product-image.has-hover-gallery:hover .fashion-product-image__secondary{opacity:1;transform:scale(1)}
+.fashion-product-price-wrap{display:grid;grid-template-columns:auto auto;align-items:center;gap:5px 8px}
+.fashion-product-price-old{grid-column:1/-1;justify-self:end;font-size:10px;color:var(--silver);text-decoration:line-through;opacity:.72}
+
+.wearo-p1-outfits,.wearo-p1-community{padding:clamp(56px,7vw,104px) max(24px,calc((100% - 1240px)/2));background:var(--background);color:var(--foreground)}
+.wearo-p1-outfits{border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.wearo-p1-section-head,.wearo-p1-community-head{display:flex;justify-content:space-between;align-items:flex-end;gap:28px;margin-bottom:32px}
+.wearo-p1-section-head>div>p:last-child{max-width:580px;margin:12px 0 0;color:var(--silver);font-size:13px;line-height:1.7}
+.wearo-p1-size-trigger{display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:10px 15px;border:1px solid var(--border);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--foreground);transition:border-color .2s ease,color .2s ease}
+.wearo-p1-size-trigger:hover{border-color:var(--primary);color:var(--primary)}
+.wearo-p1-outfit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.wearo-p1-outfit-card{border:1px solid var(--border);background:color-mix(in oklab,var(--card) 92%,transparent);overflow:hidden}
+.wearo-p1-outfit-images{display:grid;grid-template-columns:repeat(3,1fr);aspect-ratio:1.65;overflow:hidden}
+.wearo-p1-outfit-images a{display:block;overflow:hidden;border-right:1px solid var(--border)}
+.wearo-p1-outfit-images a:last-child{border-right:0}
+.wearo-p1-outfit-images img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.wearo-p1-outfit-images a:hover img{transform:scale(1.045)}
+.wearo-p1-outfit-copy{display:flex;justify-content:space-between;gap:20px;padding:22px}
+.wearo-p1-outfit-copy h3{margin:7px 0 5px;font-family:var(--wearo-font-display,var(--ft-editorial));font-size:clamp(22px,2.5vw,34px);line-height:.95}
+.wearo-p1-outfit-copy p:not(.fashion-eyebrow){max-width:360px;margin:0;color:var(--silver);font-size:12px;line-height:1.6}
+.wearo-p1-outfit-action{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;gap:16px;white-space:nowrap}
+.wearo-p1-outfit-action strong{font-size:13px;color:var(--primary)}
+.wearo-p1-outfit-action button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:10px 14px;background:var(--primary);color:var(--primary-foreground);font-size:9px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;transition:transform .18s ease,opacity .18s ease}
+.wearo-p1-outfit-action button:hover{transform:translateY(-1px);opacity:.9}
+
+.wearo-p1-community{background:var(--card);border-bottom:1px solid var(--border)}
+.wearo-p1-community-head{align-items:center}
+.wearo-p1-beta{font:9px var(--ft-meta);letter-spacing:.14em;text-transform:uppercase;color:var(--primary)}
+.wearo-p1-community-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.wearo-p1-community-grid article{position:relative;min-height:430px;overflow:hidden;background:var(--background)}
+.wearo-p1-community-grid img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .7s ease}
+.wearo-p1-community-grid article:hover img{transform:scale(1.035)}
+.wearo-p1-community-grid article::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.78) 100%);pointer-events:none}
+.wearo-p1-community-grid article>div{position:absolute;z-index:2;left:22px;right:22px;bottom:22px;color:#fff}
+.wearo-p1-community-grid span{display:block;margin-bottom:8px;font:9px var(--ft-meta);letter-spacing:.14em;color:#F2AD94}
+.wearo-p1-community-grid strong{display:block;font-family:var(--wearo-font-display,var(--ft-editorial));font-size:24px;line-height:1}
+.wearo-p1-community-note{margin:16px 0 0;color:var(--silver);font-size:10px;line-height:1.6}
+
+.wearo-p1-modal-backdrop{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:20px;background:rgba(0,0,0,.62);backdrop-filter:blur(10px)}
+.wearo-p1-size-modal{position:relative;width:min(720px,100%);max-height:min(86vh,760px);overflow:auto;padding:clamp(24px,5vw,44px);border:1px solid var(--border);background:var(--background);color:var(--foreground);box-shadow:0 30px 90px rgba(0,0,0,.35)}
+.wearo-p1-size-modal h2{max-width:580px;margin:10px 0 12px;font-family:var(--wearo-font-display,var(--ft-editorial));font-size:clamp(32px,5vw,56px);line-height:.95}
+.wearo-p1-size-modal>p:not(.fashion-eyebrow){max-width:620px;color:var(--silver);font-size:12px;line-height:1.7}
+.wearo-p1-modal-close{position:absolute;top:14px;right:16px;width:38px;height:38px;border:1px solid var(--border);font-size:24px;line-height:1;color:var(--silver)}
+.wearo-p1-modal-close:hover{color:var(--primary);border-color:var(--primary)}
+.wearo-p1-size-table-wrap{margin-top:24px;overflow:auto;border:1px solid var(--border)}
+.wearo-p1-size-table-wrap table{width:100%;border-collapse:collapse;min-width:560px;font-size:12px}
+.wearo-p1-size-table-wrap th,.wearo-p1-size-table-wrap td{padding:13px 14px;text-align:left;border-bottom:1px solid var(--border)}
+.wearo-p1-size-table-wrap th{font:9px var(--ft-meta);letter-spacing:.13em;text-transform:uppercase;color:var(--primary);background:color-mix(in oklab,var(--card) 88%,transparent)}
+.wearo-p1-size-table-wrap tr:last-child td{border-bottom:0}
+.wearo-p1-size-note{margin-top:14px!important;font-size:10px!important}
+
+@media (max-width:800px){
+  .fashion-product-image.has-hover-gallery:hover .fashion-product-image__primary{opacity:1;transform:none}
+  .fashion-product-image.has-hover-gallery:hover .fashion-product-image__secondary{opacity:0;transform:none}
+  .wearo-p1-outfits,.wearo-p1-community{padding-left:20px;padding-right:20px}
+  .wearo-p1-section-head,.wearo-p1-community-head{align-items:flex-start;flex-direction:column}
+  .wearo-p1-size-trigger{align-self:flex-start}
+  .wearo-p1-outfit-grid,.wearo-p1-community-grid{grid-template-columns:1fr}
+  .wearo-p1-outfit-images{aspect-ratio:1.55}
+  .wearo-p1-outfit-copy{flex-direction:column}
+  .wearo-p1-outfit-action{align-items:flex-start;flex-direction:row}
+  .wearo-p1-community-grid article{min-height:360px}
+}
+@media (prefers-reduced-motion:reduce){.fashion-product-image.has-hover-gallery img,.wearo-p1-outfit-images img,.wearo-p1-community-grid img{transition:none}}
