@@ -12,6 +12,7 @@ export type Product = {
   id: string;
   name: string;
   price: number;
+  originalPrice?: number;
   category: "hoodies" | "tees" | "outerwear" | "accessories" | "cap" | "sunglass";
   image: string;
   gallery: string[];
