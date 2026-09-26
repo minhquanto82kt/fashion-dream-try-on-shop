@@ -11,8 +11,8 @@ const ALLOWED_IMAGE_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"] as co
 
 type GeneratedImage = { image: string; text: string };
 type DbProduct = { id: string; name: string; category: string; price: number; image: string | null; active: boolean; status: string };
-type DbProductImage = { image_url: string; sort_order: number; is_primary: boolean };
-type DbVariant = { size: string; color: string; stock: number };
+type DbProductImage = { product_id: string; image_url: string; sort_order: number; is_primary: boolean };
+type DbVariant = { product_id: string; size: string; color: string; stock: number };
 
 type InternalTryOnJob = {
   id: string;
@@ -42,7 +42,7 @@ async function getPublishedProduct(productId?: string) {
   const products = await supabaseRequest<DbProduct[]>(`products?id=eq.${encodeURIComponent(productId)}&active=eq.true&status=eq.published&select=id,name,category,price,image,active,status&limit=1`);
   const product = products[0];
   if (!product) throw new Error("Sản phẩm không tồn tại hoặc chưa được xuất bản.");
-  const images = await supabaseRequest<DbProductImage[]>(`product_images?product_id=eq.${encodeURIComponent(product.id)}&select=image_url,sort_order,is_primary&order=sort_order.asc`);
+  const images = await supabaseRequest<DbProductImage[]>(`product_images?product_id=eq.${encodeURIComponent(product.id)}&select=product_id,image_url,sort_order,is_primary&order=sort_order.asc`);
   const garmentImage = images.find((image) => image.is_primary)?.image_url ?? images[0]?.image_url ?? product.image;
   if (!garmentImage) throw new Error("Sản phẩm chưa có hình ảnh để thử đồ.");
   return { product, garmentImage };
@@ -51,17 +51,45 @@ async function getPublishedProduct(productId?: string) {
 export const listAiProducts = createServerFn({ method: "GET" }).handler(async () => {
   const { supabaseRequest } = await import("@/lib/supabase.server");
   const products = await supabaseRequest<DbProduct[]>("products?active=eq.true&status=eq.published&select=id,name,category,price,image&order=created_at.desc");
-  const result = await Promise.all(products.map(async (product) => {
-    const [images, variants] = await Promise.all([
-      supabaseRequest<DbProductImage[]>(`product_images?product_id=${encodeURIComponent(product.id)}&select=image_url,sort_order,is_primary&order=sort_order.asc&limit=20`),
-      supabaseRequest<DbVariant[]>(`product_variants?product_id=${encodeURIComponent(product.id)}&select=size,color,stock&order=size.asc,color.asc&limit=100`),
-    ]);
-    const image = images.find((item) => item.is_primary)?.image_url ?? images[0]?.image_url ?? product.image;
-    const availableVariants = variants.filter((item) => item.stock > 0);
-    const defaultVariant = availableVariants[0] ?? variants[0];
-    return image && defaultVariant ? { id: product.id, name: product.name, category: product.category, price: product.price, image, defaultVariant: { size: defaultVariant.size, color: defaultVariant.color }, variants } : null;
-  }));
-  return result.filter((product): product is NonNullable<typeof product> => Boolean(product));
+  if (!products.length) return [];
+
+  const productIds = products.map((product) => product.id);
+  const idFilter = productIds.join(",");
+  const [images, variants] = await Promise.all([
+    supabaseRequest<DbProductImage[]>(`product_images?product_id=in.(${idFilter})&select=product_id,image_url,sort_order,is_primary&order=sort_order.asc&limit=1000`),
+    supabaseRequest<DbVariant[]>(`product_variants?product_id=in.(${idFilter})&select=product_id,size,color,stock&order=size.asc,color.asc&limit=5000`),
+  ]);
+
+  const imagesByProduct = new Map<string, DbProductImage[]>();
+  for (const image of images) {
+    const bucket = imagesByProduct.get(image.product_id) ?? [];
+    bucket.push(image);
+    imagesByProduct.set(image.product_id, bucket);
+  }
+  const variantsByProduct = new Map<string, DbVariant[]>();
+  for (const variant of variants) {
+    const bucket = variantsByProduct.get(variant.product_id) ?? [];
+    bucket.push(variant);
+    variantsByProduct.set(variant.product_id, bucket);
+  }
+
+  return products.flatMap((product) => {
+    const productImages = imagesByProduct.get(product.id) ?? [];
+    const productVariants = variantsByProduct.get(product.id) ?? [];
+    const image = productImages.find((item) => item.is_primary)?.image_url ?? productImages[0]?.image_url ?? product.image;
+    const availableVariants = productVariants.filter((item) => item.stock > 0);
+    const defaultVariant = availableVariants[0] ?? productVariants[0];
+    if (!image || !defaultVariant) return [];
+    return [{
+      id: product.id,
+      name: product.name,
+      category: product.category,
+      price: product.price,
+      image,
+      defaultVariant: { size: defaultVariant.size, color: defaultVariant.color },
+      variants: productVariants,
+    }];
+  });
 });
 
 const ConceptInput = z.object({ style: z.string().trim().min(1).max(40), occasion: z.string().trim().min(1).max(40), prompt: z.string().trim().max(600).optional(), mentions: z.array(z.string().trim().min(1).max(100)).max(8).optional() });
