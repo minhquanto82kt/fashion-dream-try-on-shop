@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ShoppingBag, WandSparkles } from "lucide-react";
+import { WandSparkles } from "lucide-react";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { ProductCard } from "@/components/product-card";
@@ -147,23 +147,15 @@ function Index() {
 
   return (
     <div className="wearo-reference-page">
-      {content.announcement_enabled && content.announcement_text && (
-        <div className="wearo-reference-announcement">{content.announcement_text}</div>
-      )}
-
-      {/* Existing WEARO header — intentionally unchanged. */}
+      {content.announcement_enabled && content.announcement_text && <div className="wearo-reference-announcement">{content.announcement_text}</div>}
       <SiteNav />
 
-      {/* 01 / HERO — same two-column structure as the supplied HTML reference. */}
       <section className="wearo-reference-hero">
         <div className="wearo-reference-container">
           <div className="wearo-reference-hero-grid">
             <div className="wearo-reference-hero-copy">
               <div className="wearo-reference-kicker"><WandSparkles size={13} /> FASHION TECH NEXT-GEN</div>
-              <h1>
-                THỜI TRANG MODERN<br />
-                <span>HỖ TRỢ BỞI AI.</span>
-              </h1>
+              <h1>THỜI TRANG MODERN<br /><span>HỖ TRỢ BỞI AI.</span></h1>
               <p>{content.hero_description}</p>
               <div className="wearo-reference-actions">
                 <Link to="/shop" className="wearo-reference-btn">{content.hero_cta_label || "Khám phá cửa hàng"}<span>→</span></Link>
@@ -175,7 +167,6 @@ function Index() {
                 <div><strong>100%</strong><span>Chất Unisex Modern</span></div>
               </div>
             </div>
-
             <div className="wearo-reference-hero-visual">
               <div className="wearo-reference-image-card">
                 <img src={REFERENCE_IMAGES.hero} alt="WEARO AI fashion model" fetchPriority="high" />
@@ -191,7 +182,6 @@ function Index() {
         </div>
       </section>
 
-      {/* 02 / AI STUDIO — same banner structure as the supplied HTML reference. */}
       <section id="ai-studio" className="wearo-reference-ai-banner">
         <div className="wearo-reference-container">
           <div className="wearo-reference-ai-panel">
@@ -214,55 +204,28 @@ function Index() {
         </div>
       </section>
 
-      {/* 03 / STOREFRONT — same hierarchy and filter row as the supplied HTML reference. */}
       <main id="storefront" className="wearo-reference-container wearo-reference-storefront">
         <div className="wearo-reference-storefront-head">
-          <div>
-            <span className="wearo-reference-section-label">WEARO COLLECTION</span>
-            <h2>CỬA HÀNG SẢN PHẨM</h2>
-            <p>Khám phá các thiết kế Streetwear & Unisex mới nhất hỗ trợ AI Try-On</p>
-          </div>
+          <div><span className="wearo-reference-section-label">WEARO COLLECTION</span><h2>CỬA HÀNG SẢN PHẨM</h2><p>Khám phá các thiết kế Streetwear & Unisex mới nhất hỗ trợ AI Try-On</p></div>
           <div className="wearo-reference-category-tabs" aria-label="Danh mục sản phẩm">
-            {CATEGORIES.map((category) => (
-              <button key={category.slug} type="button" className={activeCategory === category.slug ? "is-active" : ""} onClick={() => setActiveCategory(category.slug)}>{category.label}</button>
-            ))}
+            {CATEGORIES.map((category) => <button key={category.slug} type="button" className={activeCategory === category.slug ? "is-active" : ""} onClick={() => setActiveCategory(category.slug)}>{category.label}</button>)}
           </div>
         </div>
-
-        <div className="wearo-reference-product-grid">
-          {filteredProducts.map((product) => <ProductCard key={product.id} product={product} />)}
-        </div>
-
+        <div className="wearo-reference-product-grid">{filteredProducts.map((product) => <ProductCard key={product.id} product={product} />)}</div>
         <div className="wearo-reference-view-all"><Link to="/shop">XEM TẤT CẢ SẢN PHẨM</Link></div>
       </main>
 
-      {/* 04 / JOURNAL — same three-card editorial structure as the supplied HTML reference. */}
       <section id="journal" className="wearo-reference-journal">
         <div className="wearo-reference-container">
-          <div className="wearo-reference-journal-head">
-            <div><span className="wearo-reference-section-label">INSIGHTS & STYLES</span><h2>WEARO JOURNAL</h2></div>
-            <Link to="/about">ĐỌC THÊM →</Link>
-          </div>
-          <div className="wearo-reference-journal-grid">
-            {JOURNAL.map((article) => (
-              <article key={article.title}>
-                <div className="wearo-reference-journal-image"><img src={article.image} alt={article.title} loading="lazy" /></div>
-                <div className="wearo-reference-journal-copy"><span>{article.tag}</span><h3>{article.title}</h3><p>{article.description}</p></div>
-              </article>
-            ))}
-          </div>
+          <div className="wearo-reference-journal-head"><div><span className="wearo-reference-section-label">INSIGHTS & STYLES</span><h2>WEARO JOURNAL</h2></div><Link to="/about">ĐỌC THÊM →</Link></div>
+          <div className="wearo-reference-journal-grid">{JOURNAL.map((article) => <article key={article.title}><div className="wearo-reference-journal-image"><img src={article.image} alt={article.title} loading="lazy" /></div><div className="wearo-reference-journal-copy"><span>{article.tag}</span><h3>{article.title}</h3><p>{article.description}</p></div></article>)}</div>
         </div>
       </section>
 
-      {/* 05 / ABOUT — same final content block as the supplied HTML reference. */}
       <section id="about" className="wearo-reference-about">
-        <div className="wearo-reference-container">
-          <h2>VỀ THƯƠNG HIỆU WEARO</h2>
-          <p>WEARO ra đời với sứ mệnh mang đến giải pháp thời trang casual, streetwear & unisex hiện đại tiên phong tại Việt Nam. Bằng việc kết hợp tư duy thiết kế tối giản và sức mạnh của công nghệ AI, WEARO giúp bạn tự tin làm chủ phong cách cá nhân mọi lúc, mọi nơi.</p>
-        </div>
+        <div className="wearo-reference-container"><h2>VỀ THƯƠNG HIỆU WEARO</h2><p>WEARO ra đời với sứ mệnh mang đến giải pháp thời trang casual, streetwear & unisex hiện đại tiên phong tại Việt Nam. Bằng việc kết hợp tư duy thiết kế tối giản và sức mạnh của công nghệ AI, WEARO giúp bạn tự tin làm chủ phong cách cá nhân mọi lúc, mọi nơi.</p></div>
       </section>
 
-      {/* Existing WEARO footer — intentionally unchanged. */}
       <SiteFooter />
     </div>
   );
