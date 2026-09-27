@@ -8,6 +8,11 @@
 
    White and black are reserved for small contrast accents, icons, logos,
    photography, and text placed on brand-color surfaces.
+
+   Visual depth system:
+   - gradients connect sections instead of creating hard visual blocks
+   - blue-tinted shadows create depth without returning to black-heavy UI
+   - shadows are intentionally restrained; not every element gets one
 */
 
 :root {
@@ -16,6 +21,21 @@
   --wearo-brand-peach: #F2CEAE;
   --wearo-brand-beige: #D9BBA9;
   --wearo-brand-coral: #F2AD94;
+
+  /* WEARO gradient tokens */
+  --wearo-gradient-warm: linear-gradient(135deg, #F2CEAE 0%, #D9BBA9 100%);
+  --wearo-gradient-cool: linear-gradient(135deg, #7794A6 0%, #54728C 100%);
+  --wearo-gradient-warm-cool: linear-gradient(135deg, #F2CEAE 0%, #D9BBA9 45%, #7794A6 100%);
+  --wearo-gradient-brand: linear-gradient(90deg, #54728C 0%, #7794A6 100%);
+  --wearo-gradient-coral: linear-gradient(90deg, #F2CEAE 0%, #F2AD94 100%);
+  --wearo-gradient-editorial: linear-gradient(135deg, #54728C 0%, #7794A6 48%, #D9BBA9 100%);
+
+  /* WEARO soft depth tokens */
+  --wearo-shadow-subtle: 0 2px 8px rgba(84, 114, 140, 0.10);
+  --wearo-shadow-card: 0 6px 20px rgba(84, 114, 140, 0.14);
+  --wearo-shadow-floating: 0 12px 32px rgba(84, 114, 140, 0.16);
+  --wearo-shadow-editorial: 0 18px 45px rgba(84, 114, 140, 0.12);
+  --wearo-shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.22);
 
   --page-background: var(--wearo-brand-peach) !important;
   --surface: var(--wearo-brand-beige) !important;
@@ -62,11 +82,18 @@ select {
   background-color: var(--wearo-brand-peach);
   color: var(--wearo-brand-primary);
   border-color: color-mix(in oklab, var(--wearo-brand-primary) 30%, var(--wearo-brand-beige));
+  box-shadow: var(--wearo-shadow-subtle);
 }
 
 input::placeholder,
 textarea::placeholder {
   color: color-mix(in oklab, var(--wearo-brand-primary) 58%, var(--wearo-brand-peach));
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  box-shadow: 0 0 0 3px rgba(242, 173, 148, 0.32), var(--wearo-shadow-subtle);
 }
 
 /* Generic cards/panels inherit the five-color system. */
@@ -88,14 +115,18 @@ textarea::placeholder {
   outline-color: var(--wearo-brand-primary);
 }
 
-/* Existing storefront surfaces are pulled into the same five-color rhythm. */
+/* -------------------------------------------------------------
+   WEARO SECTION FLOW
+   Soft gradients prevent the site from feeling like disconnected blocks.
+   ------------------------------------------------------------- */
+
 .fashion-site,
 .fashion-hero,
 .fashion-products-section,
 .fashion-intro-section,
 .fashion-flow,
 .fashion-canvas-nav {
-  background: var(--wearo-brand-peach) !important;
+  background: var(--wearo-gradient-warm-cool) !important;
   color: var(--wearo-brand-primary);
 }
 
@@ -104,32 +135,50 @@ textarea::placeholder {
   background: var(--wearo-brand-beige) !important;
   color: var(--wearo-brand-primary);
   border-color: color-mix(in oklab, var(--wearo-brand-primary) 30%, var(--wearo-brand-beige));
+  box-shadow: var(--wearo-shadow-subtle);
 }
 
 .fashion-ai-feature {
-  background: var(--wearo-brand-secondary) !important;
+  background: var(--wearo-gradient-cool) !important;
   color: #FFFFFF;
+  box-shadow: var(--wearo-shadow-editorial);
 }
 
 .fashion-editorial {
-  background: var(--wearo-brand-primary) !important;
+  background: var(--wearo-gradient-editorial) !important;
   color: #FFFFFF;
+  box-shadow: var(--wearo-shadow-editorial);
+}
+
+/* Featured/hero imagery gets depth without a heavy black outline. */
+.fashion-hero img,
+.fashion-editorial img,
+.fashion-ai-feature img {
+  box-shadow: var(--wearo-shadow-editorial);
 }
 
 .fashion-hero__badge,
 .fashion-product-badge,
 .fashion-cart-btn span {
-  background: var(--wearo-brand-coral) !important;
+  background: var(--wearo-gradient-coral) !important;
   color: var(--wearo-brand-primary) !important;
+  box-shadow: var(--wearo-shadow-subtle);
 }
 
 .fashion-btn,
 .fashion-ai-btn,
 .fashion-category-filter.is-active,
 .fashion-category-filter:hover {
-  background: var(--wearo-brand-primary) !important;
+  background: var(--wearo-gradient-brand) !important;
   color: #FFFFFF !important;
   border-color: var(--wearo-brand-primary) !important;
+  box-shadow: var(--wearo-shadow-subtle);
+}
+
+.fashion-btn:hover,
+.fashion-ai-btn:hover {
+  box-shadow: var(--wearo-shadow-card);
+  transform: translateY(-1px);
 }
 
 .fashion-btn--ghost,
@@ -137,17 +186,31 @@ textarea::placeholder {
   color: var(--wearo-brand-primary) !important;
   border-color: var(--wearo-brand-primary) !important;
   background: transparent !important;
+  box-shadow: none;
 }
 
 .fashion-product-image {
-  background: var(--wearo-brand-secondary) !important;
+  background: var(--wearo-gradient-cool) !important;
   color: #FFFFFF !important;
+  box-shadow: var(--wearo-shadow-subtle);
 }
 
-/* AI Studio follows the same system instead of becoming a separate black/white app. */
+/* Product/content surfaces gain restrained depth. */
+.fashion-product-card,
+.product-card,
+[class*="product-card"],
+[class*="product-grid"] > article {
+  box-shadow: var(--wearo-shadow-card);
+}
+
+/* -------------------------------------------------------------
+   AI STUDIO
+   Gradient establishes atmosphere; cards use shadow to establish hierarchy.
+   ------------------------------------------------------------- */
+
 .wearo-ai-page,
 .wearo-ai-page main {
-  background: var(--wearo-brand-peach);
+  background: var(--wearo-gradient-warm-cool);
   color: var(--wearo-brand-primary);
 }
 
@@ -155,11 +218,13 @@ textarea::placeholder {
   background: var(--wearo-brand-beige);
   color: var(--wearo-brand-primary);
   border-color: color-mix(in oklab, var(--wearo-brand-primary) 30%, var(--wearo-brand-beige));
+  box-shadow: var(--wearo-shadow-card);
 }
 
 .wearo-ai-card-header {
-  background: var(--wearo-brand-secondary);
+  background: var(--wearo-gradient-cool);
   color: #FFFFFF;
+  box-shadow: var(--wearo-shadow-subtle);
 }
 
 .wearo-ai-kicker,
@@ -167,15 +232,45 @@ textarea::placeholder {
   color: #FFFFFF;
 }
 
+/* Consent/modal/floating AI surfaces: strongest depth level. */
+.wearo-ai-consent,
+.wearo-ai-modal,
+.wearo-ai-drawer,
+[role="dialog"] {
+  box-shadow: var(--wearo-shadow-floating);
+}
+
+/* AI result is a focal surface, so it gets a little more depth. */
+.wearo-ai-result,
+.wearo-ai-result-card {
+  box-shadow: var(--wearo-shadow-editorial);
+}
+
 /* Avoid a large white footer/newsletter block while keeping white as a small contrast accent. */
 .fashion-footer,
 .site-footer {
-  background: var(--wearo-brand-primary);
+  background: var(--wearo-gradient-brand);
   color: #FFFFFF;
+  box-shadow: 0 -8px 24px rgba(84, 114, 140, 0.10);
+}
+
+/* Newsletter / floating panels sit above the footer surface. */
+.fashion-newsletter,
+.newsletter,
+[class*="newsletter"] {
+  box-shadow: var(--wearo-shadow-card);
 }
 
 /* Never let an old generic gray text token dominate the brand palette. */
 .text-silver,
 .text-muted-foreground {
   color: color-mix(in oklab, var(--wearo-brand-primary) 70%, var(--wearo-brand-beige)) !important;
+}
+
+/* Respect reduced-motion preferences while keeping the visual hierarchy. */
+@media (prefers-reduced-motion: reduce) {
+  .fashion-btn:hover,
+  .fashion-ai-btn:hover {
+    transform: none;
+  }
 }
