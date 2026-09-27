@@ -1,6 +1,7 @@
 import "../admin-theme.css";
 import "../wearo-contrast.css";
 import "../styles/admin-appearance-fixes.css";
+import "../styles/wearo-brand-system.css";
 import "./branding";
 
 export type ThemeColors = { primary: string; secondary: string; background: string; surface: string; accent: string; foreground: string };
@@ -79,7 +80,7 @@ export function applyTheme(colors: ThemeColors): void {
   for (const [key, value] of Object.entries(theme)) document.documentElement.style.setProperty(`--theme-${key}`, value);
 }
 
-function cacheTheme(theme: ThemeColors): void { if (typeof window !== "undefined") window.localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(WEARO_BRAND_THEME)); }
+function cacheTheme(_theme: ThemeColors): void { if (typeof window !== "undefined") window.localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(WEARO_BRAND_THEME)); }
 
 async function fetchThemeRows(status?: ThemeWorkflowStatus): Promise<ThemeWorkflowRecord[]> {
   const { config, token } = requireAdminConfig();
