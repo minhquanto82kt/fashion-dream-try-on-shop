@@ -239,3 +239,84 @@
   .wearo-footer__grid { grid-template-columns: 1fr; }
   .wearo-footer__section, .wearo-footer__brand { grid-column: auto; }
 }
+
+/* Homepage UX/UI repair — keep the existing WEARO palette, remove the visual dead block,
+   and force readable foreground/background pairs in the newsletter CTA. */
+.wearo-footer__newsletter {
+  position: relative;
+  width: min(1320px, calc(100% - 56px));
+  margin: 0 auto;
+  padding: 30px;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 1.05fr);
+  align-items: center;
+  gap: clamp(28px, 5vw, 64px);
+  border: 0;
+  border-radius: 0;
+  background: var(--footer-blue);
+  color: #fff;
+}
+
+.wearo-footer__newsletter::before,
+.wearo-footer__newsletter::after { display: none !important; }
+
+.wearo-footer__newsletter-copy,
+.wearo-footer__newsletter-form { position: relative; z-index: 1; }
+.wearo-footer__newsletter-kicker { color: var(--footer-peach); }
+.wearo-footer__newsletter h2 { color: #fff; }
+.wearo-footer__newsletter p { color: rgba(255,255,255,.78); }
+
+.wearo-footer__newsletter-form {
+  min-height: 52px;
+  border: 1px solid rgba(255,255,255,.34);
+  background: rgba(255,255,255,.08);
+  box-shadow: none;
+}
+
+.wearo-footer__newsletter-form input {
+  color: #fff;
+  background: transparent;
+}
+
+.wearo-footer__newsletter-form input::placeholder { color: rgba(255,255,255,.62); }
+
+.wearo-footer__newsletter-form button {
+  min-width: 142px;
+  color: #233746;
+  background: var(--footer-coral);
+}
+
+.wearo-footer__newsletter-form button:hover { background: var(--footer-peach); }
+
+/* Hero readability: give the copy its own tonal field instead of relying on text-shadow. */
+.fashion-hero__copy { isolation: isolate; }
+.fashion-hero__copy::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: min(760px, 70vw);
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(20,29,36,.42) 0%, rgba(20,29,36,.22) 52%, transparent 100%);
+}
+
+.fashion-hero__lede { color: rgba(255,255,255,.92); opacity: 1; }
+.fashion-hero__meta { color: rgba(255,255,255,.76); }
+
+@media (max-width: 800px) {
+  .wearo-footer__newsletter {
+    width: calc(100% - 32px);
+    padding: 26px 22px;
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .wearo-footer__newsletter-form { grid-template-columns: 1fr; }
+  .wearo-footer__newsletter-form button { min-height: 46px; }
+
+  .fashion-hero__copy::before {
+    width: 100%;
+    background: linear-gradient(180deg, rgba(20,29,36,.60) 0%, rgba(20,29,36,.34) 52%, transparent 100%);
+  }
+}
