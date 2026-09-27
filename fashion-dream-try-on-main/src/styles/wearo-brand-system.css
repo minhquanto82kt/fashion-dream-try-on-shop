@@ -1,0 +1,181 @@
+/* WEARO — Global five-color brand layer
+   Brand colors are the visual source of truth:
+   #54728C  primary slate blue
+   #7794A6  secondary dusty blue
+   #F2CEAE  warm peach
+   #D9BBA9  dusty beige
+   #F2AD94  coral peach
+
+   White and black are reserved for small contrast accents, icons, logos,
+   photography, and text placed on brand-color surfaces.
+*/
+
+:root {
+  --wearo-brand-primary: #54728C;
+  --wearo-brand-secondary: #7794A6;
+  --wearo-brand-peach: #F2CEAE;
+  --wearo-brand-beige: #D9BBA9;
+  --wearo-brand-coral: #F2AD94;
+
+  --page-background: var(--wearo-brand-peach) !important;
+  --surface: var(--wearo-brand-beige) !important;
+  --background: var(--wearo-brand-peach) !important;
+  --foreground: var(--wearo-brand-primary) !important;
+  --card: var(--wearo-brand-beige) !important;
+  --card-foreground: var(--wearo-brand-primary) !important;
+  --popover: var(--wearo-brand-beige) !important;
+  --popover-foreground: var(--wearo-brand-primary) !important;
+  --primary: var(--wearo-brand-primary) !important;
+  --primary-foreground: #FFFFFF !important;
+  --secondary: var(--wearo-brand-secondary) !important;
+  --secondary-foreground: #FFFFFF !important;
+  --accent: var(--wearo-brand-coral) !important;
+  --accent-foreground: var(--wearo-brand-primary) !important;
+  --muted: color-mix(in oklab, var(--wearo-brand-beige) 72%, var(--wearo-brand-peach)) !important;
+  --muted-foreground: var(--wearo-brand-primary) !important;
+  --border: color-mix(in oklab, var(--wearo-brand-primary) 34%, var(--wearo-brand-beige)) !important;
+  --input: var(--wearo-brand-peach) !important;
+  --ring: var(--wearo-brand-primary) !important;
+  --text-primary: var(--wearo-brand-primary) !important;
+}
+
+html,
+body {
+  background: var(--wearo-brand-peach);
+  color: var(--wearo-brand-primary);
+}
+
+/* Common utility neutrals become brand surfaces instead of page-level white/black. */
+.bg-white { background-color: var(--wearo-brand-beige) !important; }
+.bg-black { background-color: var(--wearo-brand-primary) !important; }
+.text-black { color: var(--wearo-brand-primary) !important; }
+.border-black { border-color: var(--wearo-brand-primary) !important; }
+
+/* Keep white/black available only where the component explicitly needs contrast. */
+.text-white { color: #FFFFFF !important; }
+.border-white { border-color: rgba(255,255,255,.38) !important; }
+
+/* Form controls use the warm brand surfaces rather than white browser fields. */
+input,
+textarea,
+select {
+  background-color: var(--wearo-brand-peach);
+  color: var(--wearo-brand-primary);
+  border-color: color-mix(in oklab, var(--wearo-brand-primary) 30%, var(--wearo-brand-beige));
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: color-mix(in oklab, var(--wearo-brand-primary) 58%, var(--wearo-brand-peach));
+}
+
+/* Generic cards/panels inherit the five-color system. */
+[class*="bg-card"] {
+  background-color: var(--wearo-brand-beige) !important;
+}
+
+[class*="text-card-foreground"] {
+  color: var(--wearo-brand-primary) !important;
+}
+
+/* Selection/focus use the primary blue; no black focus treatment. */
+::selection {
+  background: var(--wearo-brand-coral);
+  color: var(--wearo-brand-primary);
+}
+
+:focus-visible {
+  outline-color: var(--wearo-brand-primary);
+}
+
+/* Existing storefront surfaces are pulled into the same five-color rhythm. */
+.fashion-site,
+.fashion-hero,
+.fashion-products-section,
+.fashion-intro-section,
+.fashion-flow,
+.fashion-canvas-nav {
+  background: var(--wearo-brand-peach) !important;
+  color: var(--wearo-brand-primary);
+}
+
+.fashion-nav,
+.wearo-footer {
+  background: var(--wearo-brand-beige) !important;
+  color: var(--wearo-brand-primary);
+  border-color: color-mix(in oklab, var(--wearo-brand-primary) 30%, var(--wearo-brand-beige));
+}
+
+.fashion-ai-feature {
+  background: var(--wearo-brand-secondary) !important;
+  color: #FFFFFF;
+}
+
+.fashion-editorial {
+  background: var(--wearo-brand-primary) !important;
+  color: #FFFFFF;
+}
+
+.fashion-hero__badge,
+.fashion-product-badge,
+.fashion-cart-btn span {
+  background: var(--wearo-brand-coral) !important;
+  color: var(--wearo-brand-primary) !important;
+}
+
+.fashion-btn,
+.fashion-ai-btn,
+.fashion-category-filter.is-active,
+.fashion-category-filter:hover {
+  background: var(--wearo-brand-primary) !important;
+  color: #FFFFFF !important;
+  border-color: var(--wearo-brand-primary) !important;
+}
+
+.fashion-btn--ghost,
+.fashion-category-filter {
+  color: var(--wearo-brand-primary) !important;
+  border-color: var(--wearo-brand-primary) !important;
+  background: transparent !important;
+}
+
+.fashion-product-image {
+  background: var(--wearo-brand-secondary) !important;
+  color: #FFFFFF !important;
+}
+
+/* AI Studio follows the same system instead of becoming a separate black/white app. */
+.wearo-ai-page,
+.wearo-ai-page main {
+  background: var(--wearo-brand-peach);
+  color: var(--wearo-brand-primary);
+}
+
+.wearo-ai-card {
+  background: var(--wearo-brand-beige);
+  color: var(--wearo-brand-primary);
+  border-color: color-mix(in oklab, var(--wearo-brand-primary) 30%, var(--wearo-brand-beige));
+}
+
+.wearo-ai-card-header {
+  background: var(--wearo-brand-secondary);
+  color: #FFFFFF;
+}
+
+.wearo-ai-kicker,
+.wearo-ai-card-title {
+  color: #FFFFFF;
+}
+
+/* Avoid a large white footer/newsletter block while keeping white as a small contrast accent. */
+.fashion-footer,
+.site-footer {
+  background: var(--wearo-brand-primary);
+  color: #FFFFFF;
+}
+
+/* Never let an old generic gray text token dominate the brand palette. */
+.text-silver,
+.text-muted-foreground {
+  color: color-mix(in oklab, var(--wearo-brand-primary) 70%, var(--wearo-brand-beige)) !important;
+}
