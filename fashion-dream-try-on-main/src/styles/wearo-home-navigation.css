@@ -1,0 +1,276 @@
+/* WEARO homepage utility navigation — unify the trust strip + index rail with the editorial hero. */
+
+/* The black utility block shown under the hero is replaced by a compact brand-blue service rail. */
+.wearo-mvp-trust {
+  position: relative;
+  z-index: 20;
+  background: #54728C !important;
+  color: #fff !important;
+  border-top: 1px solid rgba(255,255,255,.18);
+  border-bottom: 1px solid rgba(255,255,255,.16);
+  overflow: hidden;
+}
+
+.wearo-mvp-trust__inner {
+  width: min(1240px, calc(100% - 48px));
+  min-height: 68px;
+  margin: 0 auto;
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+.wearo-mvp-trust__inner > div {
+  position: relative;
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 13px 24px;
+  border-right: 1px solid rgba(255,255,255,.16);
+  color: #fff !important;
+}
+
+.wearo-mvp-trust__inner > div:first-child {
+  padding-left: 0;
+}
+
+.wearo-mvp-trust__inner > div:last-child {
+  border-right: 0;
+  padding-right: 0;
+}
+
+.wearo-mvp-trust__inner > div::before {
+  content: "";
+  flex: 0 0 5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #F2AD94;
+  box-shadow: 0 0 0 4px rgba(242,173,148,.10);
+}
+
+.wearo-mvp-trust__inner strong {
+  display: block;
+  flex: 0 0 auto;
+  font: 800 9px/1 var(--ft-meta);
+  letter-spacing: .12em;
+  white-space: nowrap;
+  color: #fff !important;
+}
+
+.wearo-mvp-trust__inner span {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 500 10px/1.25 var(--ft-body, inherit);
+  color: rgba(255,255,255,.72) !important;
+}
+
+.wearo-mvp-trust__inner > div:hover {
+  background: rgba(255,255,255,.045);
+}
+
+/* Homepage index rail — deliberately light, precise and quieter than the hero. */
+.fashion-canvas-nav {
+  position: relative;
+  z-index: 19;
+  background: #fff !important;
+  color: #54728C !important;
+  border-bottom: 1px solid rgba(84,114,140,.18);
+  box-shadow: 0 4px 18px rgba(23,23,23,.045);
+}
+
+.fashion-canvas-nav__inner {
+  width: min(1240px, calc(100% - 48px));
+  min-height: 56px !important;
+  margin: 0 auto;
+  display: grid !important;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 28px;
+}
+
+.fashion-canvas-nav__brand,
+.fashion-canvas-nav__top {
+  font: 800 8px/1 var(--ft-meta);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: #54728C !important;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.fashion-canvas-nav__brand::before {
+  content: "◇";
+  margin-right: 7px;
+  color: #F2AD94;
+}
+
+.fashion-canvas-nav__links {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(18px, 2.8vw, 38px) !important;
+  white-space: nowrap;
+}
+
+.fashion-canvas-nav__links a {
+  position: relative;
+  padding: 21px 0 19px;
+  font: 700 8px/1 var(--ft-meta);
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: #54728C !important;
+  text-decoration: none;
+  opacity: .82;
+  transition: color .2s ease, opacity .2s ease;
+}
+
+.fashion-canvas-nav__links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: 13px;
+  height: 2px;
+  background: #F2AD94;
+  transition: right .22s ease;
+}
+
+.fashion-canvas-nav__links a:hover,
+.fashion-canvas-nav__links a:focus-visible {
+  color: #54728C !important;
+  opacity: 1;
+}
+
+.fashion-canvas-nav__links a:hover::after,
+.fashion-canvas-nav__links a:focus-visible::after {
+  right: 0;
+}
+
+.fashion-canvas-nav__top {
+  justify-self: end;
+  padding: 9px 11px;
+  border: 1px solid rgba(84,114,140,.20);
+  border-radius: 999px;
+  transition: border-color .2s ease, background .2s ease, color .2s ease;
+}
+
+.fashion-canvas-nav__top:hover,
+.fashion-canvas-nav__top:focus-visible {
+  background: #F2CEAE;
+  border-color: #D9BBA9;
+  color: #171717 !important;
+}
+
+/* Keep the hero's utility marker attached to the hero rather than visually leaking into the rail. */
+.fashion-hero__plus {
+  z-index: 14 !important;
+  width: 38px !important;
+  height: 38px !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(255,255,255,.28) !important;
+  border-radius: 50% !important;
+  background: rgba(23,23,23,.52) !important;
+  color: #fff !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.fashion-hero__plus:hover {
+  background: #F2AD94 !important;
+  color: #171717 !important;
+  border-color: #F2AD94 !important;
+}
+
+@media (max-width: 900px) {
+  .wearo-mvp-trust__inner {
+    width: calc(100% - 32px);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .wearo-mvp-trust__inner > div:nth-child(2) {
+    border-right: 0;
+  }
+
+  .wearo-mvp-trust__inner > div:nth-child(3),
+  .wearo-mvp-trust__inner > div:nth-child(4) {
+    border-top: 1px solid rgba(255,255,255,.14);
+  }
+
+  .wearo-mvp-trust__inner > div:nth-child(3) {
+    padding-left: 0;
+  }
+
+  .fashion-canvas-nav__inner {
+    width: calc(100% - 32px);
+    grid-template-columns: auto 1fr auto;
+    gap: 14px;
+  }
+
+  .fashion-canvas-nav__links {
+    justify-content: flex-start;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .fashion-canvas-nav__links::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .wearo-mvp-trust__inner {
+    min-height: auto;
+  }
+
+  .wearo-mvp-trust__inner > div {
+    gap: 7px;
+    padding: 11px 8px;
+  }
+
+  .wearo-mvp-trust__inner > div:first-child,
+  .wearo-mvp-trust__inner > div:nth-child(3) {
+    padding-left: 0;
+  }
+
+  .wearo-mvp-trust__inner strong {
+    font-size: 7px;
+    letter-spacing: .09em;
+  }
+
+  .wearo-mvp-trust__inner span {
+    font-size: 9px;
+  }
+
+  .fashion-canvas-nav__inner {
+    min-height: 50px !important;
+  }
+
+  .fashion-canvas-nav__brand {
+    font-size: 7px;
+  }
+
+  .fashion-canvas-nav__top {
+    padding: 8px 9px;
+    font-size: 7px;
+  }
+
+  .fashion-canvas-nav__links a {
+    padding: 18px 0 16px;
+    font-size: 7px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fashion-canvas-nav__links a,
+  .fashion-canvas-nav__links a::after,
+  .fashion-canvas-nav__top,
+  .wearo-mvp-trust__inner > div {
+    transition: none !important;
+  }
+}
