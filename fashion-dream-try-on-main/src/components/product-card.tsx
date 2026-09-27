@@ -5,6 +5,7 @@ import type { Product } from "@/data/products";
 import { formatPrice, useI18n } from "@/lib/i18n";
 import { getCustomerSession } from "@/lib/auth";
 import { toggleWishlist, isWishlisted } from "@/lib/wishlist";
+import "@/styles/wearo-product-card-v1.css";
 
 export function ProductCard({ product }: { product: Product }) {
   const { language } = useI18n();
