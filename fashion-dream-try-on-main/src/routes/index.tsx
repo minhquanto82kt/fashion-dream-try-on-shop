@@ -1,53 +1,62 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ShoppingBag, Ruler } from "lucide-react";
+import { ShoppingBag, WandSparkles } from "lucide-react";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { ProductCard } from "@/components/product-card";
-import { PRODUCTS, type Product } from "@/data/products";
+import { PRODUCTS } from "@/data/products";
 import { readPublishedSiteContent, type SiteContentFields } from "@/lib/site-content";
-import { useCart } from "@/lib/cart";
 import { canonicalLink } from "@/lib/seo";
-import "@/styles/home-editorial.css";
-import "@/styles/home-p1.css";
+import "@/styles/wearo-reference-landing.css";
 
-const UNSPLASH_IMAGES = {
-  intro: "https://images.unsplash.com/photo-1470406852800-b97e5d92e2aa?auto=format&fit=crop&w=1200&q=80",
-  aiStylist: "https://images.unsplash.com/photo-1550246140-29f40b909e5a?auto=format&fit=crop&w=1200&q=80",
-  communityCouple: "https://images.unsplash.com/photo-1507553532144-b9df5e38c8d1?auto=format&fit=crop&w=1200&q=80",
-  communityWoman: "https://images.unsplash.com/photo-1748369829675-75f559a49565?auto=format&fit=crop&w=1200&q=80",
-  communityMan: "https://images.unsplash.com/photo-1511474274885-186ea2ca6b24?auto=format&fit=crop&w=1200&q=80",
-  editorial: "https://images.unsplash.com/photo-1594035795072-3fcd236b7d83?auto=format&fit=crop&w=2000&q=82",
+const REFERENCE_IMAGES = {
+  hero: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000&auto=format&fit=crop",
+  journal1: "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=800&auto=format&fit=crop",
+  journal2: "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=800&auto=format&fit=crop",
+  journal3: "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?q=80&w=800&auto=format&fit=crop",
 };
 
-const INTRO_IMAGE = UNSPLASH_IMAGES.intro;
-const HERO_SLIDES = [
-  { image: "/images/outside-summer-fashion-smile-nature.jpg", label: "LOOK / 001", title: "WEARO / PERSONAL" },
-  { image: "/images/outdoor_lifestyle_portrait.jpg", label: "LOOK / 002", title: "AI / VIRTUAL FIT" },
-  { image: "/images/fashion-5-people-bg.png", label: "LOOK / 003", title: "SAIGON / YOUR WAY" },
-];
-const HERO = HERO_SLIDES[0].image;
 const DEFAULT_CONTENT: SiteContentFields = {
   announcement_enabled: false,
   announcement_text: "",
   hero_eyebrow: "WEARO / IUH / SAIGON — 2026",
   hero_title: "WEAR IT YOUR WAY.",
   hero_description: "WEARO kết hợp thời trang, AI Virtual Try-On và AI Personal Stylist để bạn hình dung đúng outfit trên chính mình, chọn trọn bộ và mặc theo cách riêng.",
-  hero_cta_label: "Explore collection ↗",
+  hero_cta_label: "Khám phá cửa hàng",
   hero_cta_url: "/shop",
   social_title: "WEARO — Mặc theo cách của riêng bạn",
   social_description: "Thử đồ ảo AI trên ảnh thật và nhận gợi ý outfit trọn bộ theo vóc dáng, bối cảnh và gu cá nhân.",
   favicon_url: null,
-  social_image_url: HERO,
+  social_image_url: REFERENCE_IMAGES.hero,
 };
-const COLLECTION_CATEGORIES = [
-  { slug: "all", label: "All" }, { slug: "hoodies", label: "Hoodies" }, { slug: "tees", label: "Tees" },
-  { slug: "outerwear", label: "Outerwear" }, { slug: "cap", label: "Caps" }, { slug: "sunglass", label: "Sunglasses" },
+
+const CATEGORIES = [
+  { slug: "all", label: "Tất cả" },
+  { slug: "streetwear", label: "Streetwear" },
+  { slug: "casual", label: "Casual" },
+  { slug: "unisex", label: "Unisex" },
+  { slug: "new", label: "Hàng mới về" },
 ] as const;
 
-const OUTFITS: { name: string; note: string; productIds: string[] }[] = [
-  { name: "Campus Everyday", note: "Gọn, dễ mặc, phù hợp đi học và xuống phố.", productIds: ["statement-tee", "cargo-wide-pant", "street-cap"] },
-  { name: "Night Utility", note: "Một set tối giản cho ngày làm việc và cuối tuần.", productIds: ["night-shift-set", "crossbody-utility", "shade-runner"] },
+const JOURNAL = [
+  {
+    image: REFERENCE_IMAGES.journal1,
+    tag: "FASHION TECH",
+    title: "Công nghệ AI thay đổi cách chọn size quần áo như thế nào?",
+    description: "Khám phá giải pháp AI Virtual Try-On 2D giải quyết nỗi đau lệch size mua sắm trực tuyến.",
+  },
+  {
+    image: REFERENCE_IMAGES.journal2,
+    tag: "STREETWEAR TRENDS",
+    title: "Phối đồ Unisex chuẩn gu cho giới trẻ đô thị 2026",
+    description: "Bí quyết chọn Full-Set Outfit vừa lịch sự đi làm vừa tự tin xuống phố cuối tuần.",
+  },
+  {
+    image: REFERENCE_IMAGES.journal3,
+    tag: "AI STYLIST",
+    title: "5 cách tối ưu hóa gợi ý phối đồ từ AI Personal Stylist",
+    description: "Tận dụng công nghệ để định hình phong cách cá nhân độc bản.",
+  },
 ];
 
 export const Route = createFileRoute("/")({
@@ -57,8 +66,8 @@ export const Route = createFileRoute("/")({
       { name: "description", content: DEFAULT_CONTENT.social_description },
       { property: "og:title", content: DEFAULT_CONTENT.social_title },
       { property: "og:description", content: DEFAULT_CONTENT.social_description },
-      { property: "og:image", content: DEFAULT_CONTENT.social_image_url ?? HERO },
-      { name: "twitter:image", content: DEFAULT_CONTENT.social_image_url ?? HERO },
+      { property: "og:image", content: DEFAULT_CONTENT.social_image_url ?? REFERENCE_IMAGES.hero },
+      { name: "twitter:image", content: DEFAULT_CONTENT.social_image_url ?? REFERENCE_IMAGES.hero },
     ],
     links: [canonicalLink("/")],
   }),
@@ -70,7 +79,11 @@ function applyContentMeta(content: SiteContentFields) {
   if (content.social_title) document.title = content.social_title;
   const setMeta = (selector: string, attribute: string, value: string) => {
     let node = document.head.querySelector(selector) as HTMLMetaElement | null;
-    if (!node) { node = document.createElement("meta"); node.setAttribute(attribute, selector.includes("property=") ? selector.match(/property=\"([^\"]+)/)?.[1] ?? "" : selector.match(/name=\"([^\"]+)/)?.[1] ?? ""); document.head.appendChild(node); }
+    if (!node) {
+      node = document.createElement("meta");
+      node.setAttribute(attribute, selector.includes("property=") ? selector.match(/property=\"([^\"]+)/)?.[1] ?? "" : selector.match(/name=\"([^\"]+)/)?.[1] ?? "");
+      document.head.appendChild(node);
+    }
     node.content = value;
   };
   if (content.social_description) setMeta('meta[name="description"]', "name", content.social_description);
@@ -80,20 +93,18 @@ function applyContentMeta(content: SiteContentFields) {
   if (content.social_image_url) setMeta('meta[name="twitter:image"]', "name", content.social_image_url);
   if (content.favicon_url) {
     let icon = document.head.querySelector('link[rel="icon"]') as HTMLLinkElement | null;
-    if (!icon) { icon = document.createElement("link"); icon.rel = "icon"; document.head.appendChild(icon); }
+    if (!icon) {
+      icon = document.createElement("link");
+      icon.rel = "icon";
+      document.head.appendChild(icon);
+    }
     icon.href = content.favicon_url;
   }
 }
 
 function Index() {
   const [content, setContent] = useState<SiteContentFields>(DEFAULT_CONTENT);
-  const [activeCategory, setActiveCategory] = useState<(typeof COLLECTION_CATEGORIES)[number]["slug"]>("all");
-  const [slide, setSlide] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [showSizeGuide, setShowSizeGuide] = useState(false);
-  const { add } = useCart();
-  const active = HERO_SLIDES[slide];
-  const featured = PRODUCTS.filter((product) => activeCategory === "all" || product.category === activeCategory);
+  const [activeCategory, setActiveCategory] = useState<(typeof CATEGORIES)[number]["slug"]>("all");
 
   useEffect(() => {
     let mounted = true;
@@ -102,70 +113,157 @@ function Index() {
     if (params.get("content_preview") === "1" && previewRaw) {
       try {
         const preview = JSON.parse(previewRaw) as SiteContentFields;
-        if (mounted) { setContent({ ...DEFAULT_CONTENT, ...preview }); applyContentMeta({ ...DEFAULT_CONTENT, ...preview }); }
-      } catch { /* keep published content fallback */ }
+        if (mounted) {
+          const next = { ...DEFAULT_CONTENT, ...preview };
+          setContent(next);
+          applyContentMeta(next);
+        }
+      } catch {
+        // Keep the local fallback.
+      }
     } else {
       void readPublishedSiteContent().then((published) => {
-        if (mounted && published) { setContent({ ...DEFAULT_CONTENT, ...published }); applyContentMeta({ ...DEFAULT_CONTENT, ...published }); }
-      }).catch(() => { /* static fallback keeps storefront available */ });
+        if (mounted && published) {
+          const next = { ...DEFAULT_CONTENT, ...published };
+          setContent(next);
+          applyContentMeta(next);
+        }
+      }).catch(() => {
+        // Static fallback keeps the landing page available.
+      });
     }
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, []);
 
-  useEffect(() => { if (isPaused) return; const timer = window.setInterval(() => setSlide((current) => (current + 1) % HERO_SLIDES.length), 5200); return () => window.clearInterval(timer); }, [isPaused]);
+  const filteredProducts = PRODUCTS.filter((product) => {
+    if (activeCategory === "all") return true;
+    if (activeCategory === "streetwear") return product.tags?.some((tag) => /street|utility/i.test(tag)) ?? false;
+    if (activeCategory === "casual") return product.tags?.some((tag) => /casual|everyday/i.test(tag)) ?? false;
+    if (activeCategory === "unisex") return product.tags?.some((tag) => /unisex/i.test(tag)) ?? false;
+    return Boolean(product.badge?.toLowerCase().includes("new"));
+  });
 
-  const productById = (id: string) => PRODUCTS.find((product) => product.id === id);
-  const outfitProducts = (ids: string[]) => ids.map(productById).filter((product): product is Product => Boolean(product));
-  const addOutfit = async (products: Product[]) => {
-    for (const product of products) {
-      await add({ productId: product.id, size: product.sizes[0] ?? "Freesize", color: product.colors[0] ?? "Black", qty: 1 });
-    }
-    window.location.href = "/cart";
-  };
+  return (
+    <div className="wearo-reference-page">
+      {content.announcement_enabled && content.announcement_text && (
+        <div className="wearo-reference-announcement">{content.announcement_text}</div>
+      )}
 
-  return <div className="min-h-screen fashion-site">
-    {content.announcement_enabled && content.announcement_text && <div className="wearo-announcement" style={{ padding: "7px 16px", textAlign: "center", fontSize: "9px", fontWeight: 900, letterSpacing: ".08em", textTransform: "uppercase" }}>{content.announcement_text}</div>}
-    <SiteNav />
-    <style>{`@media (min-width: 801px){.fashion-site .fashion-hero__copy{padding-top:clamp(78px,10vh,110px)}}`}</style>
-    <header id="top" className="fashion-hero" onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
-      <div className="fashion-hero__beams" aria-hidden="true" />
-      <div className="fashion-hero__copy">
-        <div className="fashion-hero__primary">
-          <p className="fashion-hero__mark"><span aria-hidden="true">◇</span> / 01</p>
-          <h1 className="fashion-display"><span className="fashion-display__solid">{content.hero_title.split(" ").slice(0, -2).join(" ") || content.hero_title}</span><span className="fashion-display__brush">{content.hero_title.split(" ").slice(-2).join(" ")}</span></h1>
-          <p className="fashion-hero__lede">{content.hero_description}</p>
-          <div className="fashion-hero__actions"><a href={content.hero_cta_url} className="fashion-btn">{content.hero_cta_label}</a><Link to="/ai" className="fashion-btn fashion-btn--ghost">Start AI try-on</Link></div>
+      {/* Existing WEARO header — intentionally unchanged. */}
+      <SiteNav />
+
+      {/* 01 / HERO — same two-column structure as the supplied HTML reference. */}
+      <section className="wearo-reference-hero">
+        <div className="wearo-reference-container">
+          <div className="wearo-reference-hero-grid">
+            <div className="wearo-reference-hero-copy">
+              <div className="wearo-reference-kicker"><WandSparkles size={13} /> FASHION TECH NEXT-GEN</div>
+              <h1>
+                THỜI TRANG MODERN<br />
+                <span>HỖ TRỢ BỞI AI.</span>
+              </h1>
+              <p>{content.hero_description}</p>
+              <div className="wearo-reference-actions">
+                <Link to="/shop" className="wearo-reference-btn">{content.hero_cta_label || "Khám phá cửa hàng"}<span>→</span></Link>
+                <Link to="/ai" className="wearo-reference-btn wearo-reference-btn--outline"><WandSparkles size={14} /> AI Virtual Try-On</Link>
+              </div>
+              <div className="wearo-reference-stats">
+                <div><strong>99.8%</strong><span>Độ chuẩn Form AI</span></div>
+                <div><strong>1-Click</strong><span>Phối trọn bộ Full-Set</span></div>
+                <div><strong>100%</strong><span>Chất Unisex Modern</span></div>
+              </div>
+            </div>
+
+            <div className="wearo-reference-hero-visual">
+              <div className="wearo-reference-image-card">
+                <img src={REFERENCE_IMAGES.hero} alt="WEARO AI fashion model" fetchPriority="high" />
+                <div className="wearo-reference-ai-badge"><i /> AI Virtual Try-On Active</div>
+                <div className="wearo-reference-stylist-card">
+                  <div className="wearo-reference-stylist-head"><strong>✦ AI Personal Stylist</strong><span>Match 98%</span></div>
+                  <p>"Set đồ Oversized Jacket + Straight Cargo Pant tôn chiều cao & che khuyết điểm hiệu quả."</p>
+                  <Link to="/ai">THỬ ĐỒ TRỰC TIẾP LÊN ẢNH CỦA BẠN</Link>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="fashion-hero__meta"><span>{content.hero_eyebrow}</span><span>SAIGON — 2026</span><span>SYS_02 // ONLINE</span></div>
-      </div>
-      <div className="fashion-hero__art">
-        {HERO_SLIDES.map((item, index) => <img key={item.image} src={item.image} alt="WEARO fashion editorial" fetchPriority={index === 0 ? "high" : undefined} className={index === slide ? "is-active" : ""} />)}
-        <div className="fashion-hero__overlay" /><div className="fashion-hero__scan" /><div className="fashion-hero__frame" />
-        <div className="fashion-hero__badge">AI TRY-ON<br />/ BETA</div><span className="fashion-hero__label">{active.label}</span>
-        <div className="fashion-hero__side-note"><span>YOUR</span><span>STYLE</span><span>YOUR</span><span>STORY</span></div><div className="fashion-hero__stories" aria-hidden="true"><span>STORIES</span><i /></div>
-        <div className="fashion-hero__dots" aria-label="Hero slides">{HERO_SLIDES.map((item, index) => <button key={item.label} type="button" aria-label={`Xem ${item.label}`} className={index === slide ? "is-active" : ""} style={{ width: "44px", height: "28px", padding: "13px 8px", boxSizing: "border-box", backgroundClip: "content-box" }} onClick={() => setSlide(index)} />)}</div>
-      </div><div className="fashion-hero__plus" aria-hidden="true">+</div>
-    </header>
+      </section>
 
-    <section className="wearo-mvp-trust" aria-label="WEARO shopping guarantees"><div className="wearo-mvp-trust__inner"><div><strong>FREE SHIPPING</strong><span>Đơn từ 700K</span></div><div><strong>7-DAY RETURNS</strong><span>Hỗ trợ đổi trả</span></div><div><strong>SIZE SUPPORT</strong><span>Tư vấn chọn size</span></div><div><strong>SECURE PAYMENT</strong><span>COD · MoMo · VNPay</span></div></div></section>
+      {/* 02 / AI STUDIO — same banner structure as the supplied HTML reference. */}
+      <section id="ai-studio" className="wearo-reference-ai-banner">
+        <div className="wearo-reference-container">
+          <div className="wearo-reference-ai-panel">
+            <div className="wearo-reference-ai-grid">
+              <div>
+                <span className="wearo-reference-section-label">ĐỘT PHÁ TRẢI NGHIỆM</span>
+                <h2>WEARO AI STUDIO 2.0</h2>
+                <p>Không còn e ngại mua hàng online không hợp form hay tốn thời gian suy nghĩ cách phối đồ. Hãy để AI Virtual Try-On giúp bạn thử trang phục lên chính ảnh chụp của mình chỉ trong vài giây.</p>
+                <div className="wearo-reference-actions">
+                  <Link to="/ai" className="wearo-reference-btn wearo-reference-btn--accent"><WandSparkles size={14} /> Tải Ảnh Cá Nhân Thử Đồ</Link>
+                  <Link to="/ai" className="wearo-reference-btn wearo-reference-btn--dark">AI Personal Stylist</Link>
+                </div>
+              </div>
+              <div className="wearo-reference-ai-features">
+                <article><strong>◈</strong><h3>Virtual Try-On 2D</h3><p>Mô phỏng chân thực dáng áo, phom quần trực tiếp trên cơ thể bạn.</p></article>
+                <article><strong>✦</strong><h3>Full-Set Outfits</h3><p>Gợi ý phối sẵn trọn bộ chuẩn phong cách Streetwear & Casual.</p></article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-    <nav className="fashion-canvas-nav" aria-label="Homepage sections"><div className="fashion-canvas-nav__inner"><span className="fashion-canvas-nav__brand">WEARO / INDEX</span><div className="fashion-canvas-nav__links"><a href="#intro">02 / Manifesto</a><a href="#ai-studio">03 / AI Studio</a><a href="#collection">04 / Collection</a><a href="#experience">05 / Experience</a></div><a href="#top" className="fashion-canvas-nav__top">↑ TOP</a></div></nav>
+      {/* 03 / STOREFRONT — same hierarchy and filter row as the supplied HTML reference. */}
+      <main id="storefront" className="wearo-reference-container wearo-reference-storefront">
+        <div className="wearo-reference-storefront-head">
+          <div>
+            <span className="wearo-reference-section-label">WEARO COLLECTION</span>
+            <h2>CỬA HÀNG SẢN PHẨM</h2>
+            <p>Khám phá các thiết kế Streetwear & Unisex mới nhất hỗ trợ AI Try-On</p>
+          </div>
+          <div className="wearo-reference-category-tabs" aria-label="Danh mục sản phẩm">
+            {CATEGORIES.map((category) => (
+              <button key={category.slug} type="button" className={activeCategory === category.slug ? "is-active" : ""} onClick={() => setActiveCategory(category.slug)}>{category.label}</button>
+            ))}
+          </div>
+        </div>
 
-    <main>
-      <section id="intro" className="fashion-intro-section"><div className="fashion-intro-bg" aria-hidden="true"><img src={INTRO_IMAGE} alt="WEARO casual fashion portrait" loading="lazy" /></div><div className="fashion-section-number">02</div><div className="fashion-intro-content"><p className="fashion-eyebrow">From choosing clothes to owning your style</p><h2 className="fashion-section-title fashion-section-title--statement"><span className="statement-line statement-line--solid">KHÔNG CHỈ</span><span className="statement-line statement-line--solid statement-line--offset">CHỌN ĐỒ.</span><span className="statement-line statement-line--accent-small">CHỌN CÁCH BẠN</span><span className="statement-line statement-line--accent-display">XUẤT HIỆN.</span></h2><p className="fashion-intro-copy">WEARO giải quyết nỗi lo mua online không hợp dáng và việc mất thời gian phối từng món. Từ thử đồ ảo trên ảnh thật đến gợi ý Full-Set theo vóc dáng và bối cảnh, mọi bước đều hướng tới một lựa chọn tự tin hơn.</p></div></section>
-      <section id="ai-studio" className="fashion-ai-feature"><div className="fashion-ai-feature__visual"><img src={UNSPLASH_IMAGES.aiStylist} alt="WEARO AI Personal Stylist" loading="lazy" /><span>AI STUDIO / 01</span></div><div className="fashion-ai-feature__copy"><p className="fashion-eyebrow">AI Personal Stylist</p><h2 className="fashion-section-title">Your look,<br /><span className="fashion-accent">your logic.</span></h2><p>AI phân tích vóc dáng, tone màu và bối cảnh để đề xuất Full-Set Outfit — ưu tiên những lựa chọn tôn dáng, dễ mặc và phù hợp với mục đích sử dụng.</p><div className="fashion-feature-list"><div><b>01</b><span>Phân tích vóc dáng & bối cảnh</span></div><div><b>02</b><span>Virtual Try-On trên ảnh thật</span></div><div><b>03</b><span>Full-Set Outfit cá nhân hóa</span></div></div><Link to="/ai" className="fashion-text-link">Open AI Stylist ↗</Link></div></section>
-      <section id="collection" className="fashion-products-section"><div className="fashion-section-head"><div><p className="fashion-eyebrow">04 / THE COLLECTION</p><h2 className="fashion-section-title fashion-collection-title">Selected pieces<span className="fashion-accent">.</span></h2></div><Link to="/shop" className="fashion-text-link">View all products ↗</Link></div><div className="fashion-category-filters" aria-label="Danh mục sản phẩm">{COLLECTION_CATEGORIES.map((category) => <button key={category.slug} type="button" className={`fashion-category-filter${activeCategory === category.slug ? " is-active" : ""}`} aria-pressed={activeCategory === category.slug} onClick={() => setActiveCategory(category.slug)}>{category.label}</button>)}</div><div className="fashion-product-grid">{featured.map((p) => <ProductCard key={p.id} product={p} />)}</div></section>
+        <div className="wearo-reference-product-grid">
+          {filteredProducts.map((product) => <ProductCard key={product.id} product={product} />)}
+        </div>
 
-      <section className="wearo-p1-outfits" aria-labelledby="outfit-title"><div className="wearo-p1-section-head"><div><p className="fashion-eyebrow">04.5 / SHOP THE LOOK</p><h2 id="outfit-title" className="fashion-section-title">Full looks<span className="fashion-accent">.</span></h2><p>Phối sẵn để bạn không phải tìm từng món. Chọn một look và thêm trọn bộ vào giỏ.</p></div><button type="button" className="wearo-p1-size-trigger" onClick={() => setShowSizeGuide(true)}><Ruler size={15} /> Size guide</button></div><div className="wearo-p1-outfit-grid">{OUTFITS.map((outfit) => { const products = outfitProducts(outfit.productIds); const total = products.reduce((sum, product) => sum + product.price, 0); return <article key={outfit.name} className="wearo-p1-outfit-card"><div className="wearo-p1-outfit-images">{products.map((product) => <Link key={product.id} to="/product/$id" params={{ id: product.id }}><img src={product.image} alt={product.name} loading="lazy" /></Link>)}</div><div className="wearo-p1-outfit-copy"><div><p className="fashion-eyebrow">{products.length} PIECES / UNISEX</p><h3>{outfit.name}</h3><p>{outfit.note}</p></div><div className="wearo-p1-outfit-action"><strong>{new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND", maximumFractionDigits: 0 }).format(total)}</strong><button type="button" onClick={() => void addOutfit(products)}><ShoppingBag size={15} /> Shop this look</button></div></div></article>; })}</div></section>
+        <div className="wearo-reference-view-all"><Link to="/shop">XEM TẤT CẢ SẢN PHẨM</Link></div>
+      </main>
 
-      <section className="wearo-p1-community" aria-labelledby="community-title"><div className="wearo-p1-community-head"><div><p className="fashion-eyebrow">WEARO / COMMUNITY</p><h2 id="community-title" className="fashion-section-title">Style, seen in real life<span className="fashion-accent">.</span></h2></div><span className="wearo-p1-beta">BETA / COMMUNITY PREVIEW</span></div><div className="wearo-p1-community-grid"><article><img src={UNSPLASH_IMAGES.communityCouple} alt="WEARO unisex casual couple" loading="lazy" /><div><span>01 / EVERYDAY</span><strong>Unisex, dễ mặc, dễ phối.</strong></div></article><article><img src={UNSPLASH_IMAGES.communityWoman} alt="WEARO casual urban style" loading="lazy" /><div><span>02 / PERSONAL</span><strong>Phong cách bắt đầu từ cách bạn chọn.</strong></div></article><article><img src={UNSPLASH_IMAGES.communityMan} alt="WEARO casual streetwear style" loading="lazy" /><div><span>03 / SAIGON</span><strong>Mặc theo cách của riêng bạn.</strong></div></article></div><p className="wearo-p1-community-note">Đây là preview cộng đồng cho giai đoạn beta. Khi WEARO có UGC/feedback được xác thực, khu vực này sẽ hiển thị nội dung khách hàng thật thay cho editorial preview.</p></section>
+      {/* 04 / JOURNAL — same three-card editorial structure as the supplied HTML reference. */}
+      <section id="journal" className="wearo-reference-journal">
+        <div className="wearo-reference-container">
+          <div className="wearo-reference-journal-head">
+            <div><span className="wearo-reference-section-label">INSIGHTS & STYLES</span><h2>WEARO JOURNAL</h2></div>
+            <Link to="/about">ĐỌC THÊM →</Link>
+          </div>
+          <div className="wearo-reference-journal-grid">
+            {JOURNAL.map((article) => (
+              <article key={article.title}>
+                <div className="wearo-reference-journal-image"><img src={article.image} alt={article.title} loading="lazy" /></div>
+                <div className="wearo-reference-journal-copy"><span>{article.tag}</span><h3>{article.title}</h3><p>{article.description}</p></div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
 
-      <section id="experience" className="fashion-flow"><div><p className="fashion-eyebrow">05 / THE EXPERIENCE</p><h2 className="fashion-section-title">See it.<br /><span className="fashion-accent">Try it.</span><br />Own it.</h2><p className="mt-5 max-w-md text-sm leading-6 text-beige">Từ khám phá sản phẩm đến tư vấn stylist, WEARO biến hành trình mua sắm thành một trải nghiệm cá nhân hóa thay vì chỉ bán từng món đồ.</p></div><div className="fashion-flow__steps"><div><span>01</span><h3>Discover</h3><p>Khám phá thiết kế basic và casual phù hợp gu riêng.</p></div><div><span>02</span><h3>Try</h3><p>Tải ảnh toàn thân và hình dung trang phục trực tiếp trên chính mình.</p></div><div><span>03</span><h3>Style</h3><p>AI Personal Stylist phối Full-Set theo vóc dáng và bối cảnh.</p></div><div><span>04</span><h3>Refine</h3><p>Stylist 1:1 hỗ trợ tinh chỉnh outfit, phụ kiện và size khi cần.</p></div></div></section>
-      <section className="fashion-editorial"><img src={UNSPLASH_IMAGES.editorial} alt="WEARO casual unisex fashion editorial" loading="lazy" /><div><p className="fashion-eyebrow">WEARO / SAIGON</p><h2>Wear is<br /><span className="fashion-accent">your identity.</span></h2><p className="mt-4 max-w-md text-sm leading-6 text-white/80">Own — Original — Open. Mặc theo cách của riêng bạn.</p><Link to="/about" className="fashion-btn fashion-btn--light">Our story ↗</Link></div></section>
-    </main>
+      {/* 05 / ABOUT — same final content block as the supplied HTML reference. */}
+      <section id="about" className="wearo-reference-about">
+        <div className="wearo-reference-container">
+          <h2>VỀ THƯƠNG HIỆU WEARO</h2>
+          <p>WEARO ra đời với sứ mệnh mang đến giải pháp thời trang casual, streetwear & unisex hiện đại tiên phong tại Việt Nam. Bằng việc kết hợp tư duy thiết kế tối giản và sức mạnh của công nghệ AI, WEARO giúp bạn tự tin làm chủ phong cách cá nhân mọi lúc, mọi nơi.</p>
+        </div>
+      </section>
 
-    {showSizeGuide && <div className="wearo-p1-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.currentTarget === event.target) setShowSizeGuide(false); }}><section className="wearo-p1-size-modal" role="dialog" aria-modal="true" aria-labelledby="size-guide-title"><button type="button" className="wearo-p1-modal-close" onClick={() => setShowSizeGuide(false)} aria-label="Đóng bảng size">×</button><p className="fashion-eyebrow">WEARO / SIZE GUIDE</p><h2 id="size-guide-title">Chọn size theo chiều cao & cân nặng.</h2><p>Đây là bảng tham khảo cho form casual/unisex. Nếu số đo nằm giữa hai dòng, ưu tiên size lớn hơn cho phong cách oversized.</p><div className="wearo-p1-size-table-wrap"><table><thead><tr><th>Size</th><th>Chiều cao</th><th>Cân nặng</th><th>Gợi ý</th></tr></thead><tbody><tr><td>S</td><td>155–165 cm</td><td>45–55 kg</td><td>Gọn / vừa</td></tr><tr><td>M</td><td>160–172 cm</td><td>52–65 kg</td><td>Regular</td></tr><tr><td>L</td><td>168–180 cm</td><td>62–75 kg</td><td>Thoải mái</td></tr><tr><td>XL</td><td>175–188 cm</td><td>72–90 kg</td><td>Oversized</td></tr></tbody></table></div><p className="wearo-p1-size-note">Bảng này là hướng dẫn UX cho MVP; size thực tế vẫn phụ thuộc từng sản phẩm và thông số may.</p></section></div>}
-
-    <SiteFooter />
-  </div>;
+      {/* Existing WEARO footer — intentionally unchanged. */}
+      <SiteFooter />
+    </div>
+  );
 }
