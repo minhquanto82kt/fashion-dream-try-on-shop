@@ -1,0 +1,118 @@
+/* WEARO editorial + newsletter repair
+ * Replaces the visually empty/dark terminal block with a real casual-unisex fashion image
+ * and lets the newsletter CTA bridge the editorial section into the footer.
+ */
+
+.fashion-editorial {
+  position: relative !important;
+  min-height: clamp(380px, 46vw, 560px) !important;
+  display: flex !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  isolation: isolate;
+  background:
+    linear-gradient(90deg, rgba(25, 40, 50, .78) 0%, rgba(25, 40, 50, .42) 42%, rgba(25, 40, 50, .08) 100%),
+    url("https://images.unsplash.com/photo-1594035795072-3fcd236b7d83?auto=format&fit=crop&w=2000&q=82") center 48% / cover no-repeat !important;
+}
+
+.fashion-editorial > img {
+  display: none !important;
+}
+
+.fashion-editorial::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: -1 !important;
+  display: block !important;
+  background: linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.28)) !important;
+  pointer-events: none;
+}
+
+.fashion-editorial::after {
+  content: "WEARO / CASUAL — UNISEX" !important;
+  position: absolute !important;
+  right: clamp(20px, 4vw, 64px) !important;
+  top: 28px !important;
+  z-index: 2 !important;
+  border: 1px solid rgba(255,255,255,.45) !important;
+  padding: 8px 11px !important;
+  color: rgba(255,255,255,.9) !important;
+  background: rgba(20,32,40,.22) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font: 700 8px/1 "Space Grotesk", Arial, sans-serif !important;
+  letter-spacing: .14em !important;
+}
+
+.fashion-editorial > div {
+  position: relative !important;
+  z-index: 3 !important;
+  width: min(560px, 48vw) !important;
+  margin-left: clamp(24px, 7vw, 110px) !important;
+  padding: 28px 0 !important;
+}
+
+.fashion-editorial .fashion-eyebrow {
+  color: var(--wearo-peach, #F2CEAE) !important;
+}
+
+.fashion-editorial h2 {
+  color: #fff !important;
+  text-shadow: 0 8px 30px rgba(0,0,0,.22);
+}
+
+.fashion-editorial .fashion-accent {
+  color: var(--wearo-coral, #F2AD94) !important;
+}
+
+.fashion-editorial p:not(.fashion-eyebrow) {
+  color: rgba(255,255,255,.84) !important;
+}
+
+/* Pull the newsletter over the bottom edge of the editorial image.
+   This removes the perception of a dead black block while preserving the footer structure. */
+.wearo-footer {
+  position: relative;
+  z-index: 10;
+}
+
+.wearo-footer__newsletter {
+  transform: translateY(-64px);
+  margin-bottom: -64px !important;
+  box-shadow: 0 18px 48px rgba(23, 23, 23, .16);
+  border: 1px solid rgba(255,255,255,.22) !important;
+}
+
+.wearo-footer__inner {
+  padding-top: 50px;
+}
+
+@media (max-width: 800px) {
+  .fashion-editorial {
+    min-height: 440px !important;
+    background-position: 58% center !important;
+  }
+
+  .fashion-editorial::after {
+    top: 18px !important;
+    right: 18px !important;
+    font-size: 7px !important;
+  }
+
+  .fashion-editorial > div {
+    width: auto !important;
+    margin: 0 24px !important;
+    align-self: flex-end;
+    padding-bottom: 74px !important;
+  }
+
+  .wearo-footer__newsletter {
+    transform: translateY(-42px);
+    margin-bottom: -42px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wearo-footer__newsletter { transform: none; margin-bottom: 0 !important; }
+}
