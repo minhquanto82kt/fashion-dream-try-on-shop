@@ -1,0 +1,99 @@
+/* WEARO reference landing — light surface variant.
+   Keeps the existing structure, font tokens and WEARO palette.
+*/
+.wearo-reference-page {
+  --wr-black: #171717;
+  --wr-white: #ffffff;
+  --wr-surface: #ffffff;
+  --wr-surface-soft: #f7f8f8;
+  --wr-text: #171717;
+  --wr-text-muted: rgba(23,23,23,.62);
+  --wr-line: rgba(84,114,140,.22);
+  background: var(--wr-surface) !important;
+  color: var(--wr-text) !important;
+}
+
+.wearo-reference-hero {
+  background: #fff !important;
+  color: var(--wr-text) !important;
+}
+.wearo-reference-hero::before { opacity: 0 !important; }
+.wearo-reference-hero-copy > p,
+.wearo-reference-stats span,
+.wearo-reference-storefront-head p,
+.wearo-reference-journal-copy p,
+.wearo-reference-about p,
+.wearo-reference-ai-panel > .wearo-reference-ai-grid > div:first-child > p {
+  color: var(--wr-text-muted) !important;
+}
+.wearo-reference-hero h1,
+.wearo-reference-storefront-head h2,
+.wearo-reference-ai-panel h2,
+.wearo-reference-journal-head h2,
+.wearo-reference-about h2 {
+  color: var(--wr-text);
+}
+.wearo-reference-image-card {
+  background: #f4f6f7;
+  border-color: rgba(84,114,140,.25);
+  box-shadow: 0 24px 60px rgba(23,23,23,.12);
+}
+.wearo-reference-ai-badge,
+.wearo-reference-stylist-card {
+  background: rgba(255,255,255,.9);
+  color: var(--wr-text);
+  border-color: rgba(84,114,140,.22);
+}
+.wearo-reference-stylist-card p { color: rgba(23,23,23,.64); }
+.wearo-reference-stylist-head span { background: #fff; }
+
+.wearo-reference-ai-banner,
+.wearo-reference-journal {
+  background: #f7f8f8 !important;
+  color: var(--wr-text) !important;
+}
+.wearo-reference-ai-panel {
+  background: linear-gradient(135deg, rgba(84,114,140,.10), rgba(242,173,148,.10));
+  border-color: rgba(84,114,140,.22);
+}
+.wearo-reference-ai-features article {
+  background: #fff;
+  border-color: rgba(84,114,140,.18);
+}
+.wearo-reference-ai-features h3 { color: var(--wr-text); }
+.wearo-reference-ai-features p { color: var(--wr-text-muted); }
+
+.wearo-reference-storefront {
+  background: #fff;
+}
+.wearo-reference-storefront-head { border-bottom-color: var(--wr-line); }
+.wearo-reference-category-tabs button {
+  background: #fff;
+  color: rgba(23,23,23,.58);
+  border-color: rgba(84,114,140,.22);
+}
+.wearo-reference-category-tabs button:hover { color: var(--wr-text); }
+.wearo-reference-product-grid .fashion-product-card {
+  background: #fff;
+  border-color: rgba(84,114,140,.16);
+}
+.wearo-reference-product-grid .fashion-product-image { background: #f1f3f4; }
+.wearo-reference-product-grid .fashion-product-title,
+.wearo-reference-product-grid .fashion-product-price { color: var(--wr-text); }
+.wearo-reference-product-grid .fashion-product-index { color: rgba(23,23,23,.5); }
+.wearo-reference-view-all a { color: var(--wr-text); border-color: rgba(84,114,140,.35); }
+
+.wearo-reference-journal { border-top-color: var(--wr-line); }
+.wearo-reference-journal-head > a { color: #54728C; }
+.wearo-reference-journal-copy h3 { color: var(--wr-text); }
+.wearo-reference-journal-copy span { color: #54728C; }
+
+.wearo-reference-about {
+  background: #fff !important;
+  color: var(--wr-text) !important;
+  border-top: 1px solid var(--wr-line);
+}
+
+@media (max-width: 700px) {
+  .wearo-reference-page { background: #fff !important; }
+}
