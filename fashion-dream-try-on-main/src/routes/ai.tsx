@@ -8,12 +8,14 @@ import {
   listAiProducts,
 } from "@/lib/ai.functions";
 import { generateWearoAiReply } from "@/lib/wearo-ai-chat.functions";
+import { getStylistRecommendations } from "@/lib/stylist.functions";
 
 const STYLES = ["Street", "Minimal", "Smart casual", "Y2K"];
 const OCCASIONS = ["Đi học", "Đi làm", "Hẹn hò", "Đi chơi"];
 const CONSENT_KEY = "wearo-ai-studio-consent-v2";
 
 type AiProduct = Awaited<ReturnType<typeof listAiProducts>>[number];
+type StylistRecommendation = Awaited<ReturnType<typeof getStylistRecommendations>>["recommendations"][number];
 type TryOnStatus = "idle" | "uploading" | "processing" | "completed" | "failed";
 
 export const Route = createFileRoute("/ai")({
@@ -291,6 +293,9 @@ function AiPage() {
   const [products, setProducts] = useState<AiProduct[]>([]);
   const [productsLoading, setProductsLoading] = useState(false);
   const [productsError, setProductsError] = useState("");
+  const [recommendations, setRecommendations] = useState<StylistRecommendation[]>([]);
+  const [recommendationsLoading, setRecommendationsLoading] = useState(false);
+  const [recommendationsError, setRecommendationsError] = useState("");
 
   useEffect(() => {
     setConsented(window.localStorage.getItem(CONSENT_KEY) === "accepted");
@@ -326,6 +331,8 @@ function AiPage() {
     const userBrief = brief.trim() || "Hãy đề xuất một outfit phù hợp với phong cách và dịp đã chọn.";
     setIsLoading(true);
     setError("");
+    setRecommendations([]);
+    setRecommendationsError("");
 
     try {
       const response = await generateWearoAiReply({
@@ -347,6 +354,25 @@ function AiPage() {
         },
       });
       setResult(response.text);
+
+      setRecommendationsLoading(true);
+      try {
+        const recommendationResponse = await getStylistRecommendations({
+          data: {
+            occasion,
+            mood: userBrief,
+            preferences: {
+              style_tags: [style],
+            },
+            limit: 4,
+          },
+        });
+        setRecommendations(recommendationResponse.recommendations);
+      } catch {
+        setRecommendationsError("Concept đã tạo, nhưng chưa thể tải sản phẩm phù hợp lúc này.");
+      } finally {
+        setRecommendationsLoading(false);
+      }
     } catch {
       setError("Chưa thể kết nối WEARO AI lúc này. Hãy thử lại sau.");
     } finally {
@@ -454,6 +480,54 @@ function AiPage() {
                 </div>
               </aside>
             </div>
+
+            <section className="wearo-ai-card mt-6" aria-labelledby="wearo-ai-recommendations-title">
+              <div className="wearo-ai-card-header">
+                <span id="wearo-ai-recommendations-title" className="wearo-ai-card-title">03 · Sản phẩm AI đề xuất</span>
+                <span className="wearo-ai-kicker">CATALOG / REAL DATA</span>
+              </div>
+              <div className="wearo-ai-card-body">
+                {recommendationsLoading ? (
+                  <p className="text-sm text-silver">Đang đối chiếu concept với sản phẩm WEARO đã xuất bản…</p>
+                ) : recommendationsError ? (
+                  <div className="border border-red-200 bg-red-50 p-4 text-sm leading-6 text-red-800" role="alert">{recommendationsError}</div>
+                ) : recommendations.length ? (
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    {recommendations.map((item) => {
+                      const product = item.product as Record<string, unknown>;
+                      const productId = String(product.id ?? "");
+                      const productName = String(product.name ?? "Sản phẩm WEARO");
+                      const category = String(product.category ?? "");
+                      const price = Number(product.price ?? 0);
+                      return (
+                        <article key={productId} className="border border-[rgba(84,114,140,.16)] bg-[rgba(242,206,174,.08)] p-4">
+                          <div className="flex items-start justify-between gap-3">
+                            <div>
+                              <p className="text-sm font-semibold text-[#171717]">{productName}</p>
+                              {category ? <p className="mt-1 text-xs text-silver">{category}</p> : null}
+                            </div>
+                            <span className="shrink-0 text-xs font-semibold text-[#54728C]">{item.score}/100</span>
+                          </div>
+                          {price > 0 ? <p className="mt-4 text-sm font-semibold text-[#171717]">{price.toLocaleString("vi-VN")} ₫</p> : null}
+                          <p className="mt-3 min-h-[60px] text-xs leading-5 text-silver">{item.reason}</p>
+                          <Link
+                            to="/product/$id"
+                            params={{ id: productId }}
+                            className="mt-4 inline-flex w-full items-center justify-center border border-[#54728C] px-3 py-2 text-xs font-semibold uppercase tracking-[.12em] text-[#54728C] transition hover:bg-[#54728C] hover:text-white"
+                          >
+                            Xem sản phẩm →
+                          </Link>
+                        </article>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="border border-[rgba(84,114,140,.14)] bg-[rgba(242,206,174,.08)] p-5 text-sm leading-6 text-silver">
+                    Hãy bấm “Tạo concept” để WEARO AI đối chiếu nhu cầu với catalog thật và trả về sản phẩm phù hợp.
+                  </div>
+                )}
+              </div>
+            </section>
 
             <div className="mt-6">
               {productsLoading ? (
