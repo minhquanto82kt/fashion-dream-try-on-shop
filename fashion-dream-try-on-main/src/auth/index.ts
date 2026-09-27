@@ -1,18 +1,22 @@
 export {
+  getCustomerSession,
   getCustomerUser,
+  isCustomerAuthenticated,
   signInCustomer,
   signUpCustomer,
   signOutCustomer,
   signInWithGoogle,
   requestPasswordReset,
   updateCustomerPassword,
+  refreshCustomerSession,
   handleOAuthCallback,
   getSafeReturnPath,
   startCustomerSessionWatcher,
-  stopCustomerSessionWatcher,
 } from "@/lib/auth";
 
 export type {
-  CustomerUser,
-  CustomerSession,
-} from "@/lib/auth";
+  Session as CustomerSession,
+} from "@/lib/upthink-supabase";
+
+type CustomerUser = { id: string; email?: string };
+export type { CustomerUser };
