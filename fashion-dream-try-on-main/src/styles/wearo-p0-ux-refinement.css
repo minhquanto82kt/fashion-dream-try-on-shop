@@ -275,3 +275,67 @@
     transition-duration: .01ms !important;
   }
 }
+
+/* WEARO HERO / viewport repair — prevent the desktop hero copy from being clipped
+   against the header and keep the trust strip below the full hero composition. */
+@media (min-width: 801px) {
+  .fashion-hero {
+    min-height: clamp(560px, calc(100svh - 74px), 760px) !important;
+    height: clamp(560px, calc(100svh - 74px), 760px) !important;
+    overflow: hidden !important;
+  }
+
+  .fashion-hero__copy {
+    box-sizing: border-box;
+    width: min(640px, 52vw) !important;
+    min-height: 100% !important;
+    padding-top: clamp(88px, 10vh, 118px) !important;
+    padding-bottom: clamp(30px, 4vh, 44px) !important;
+    overflow: visible;
+  }
+
+  .fashion-hero__primary,
+  .fashion-display {
+    overflow: visible;
+  }
+
+  .fashion-display {
+    line-height: 1;
+  }
+
+  .fashion-display__solid {
+    line-height: .9;
+  }
+
+  .fashion-display__brush {
+    line-height: .94;
+  }
+
+  .fashion-hero__lede {
+    margin-top: 24px;
+  }
+
+  .fashion-hero__actions {
+    margin-top: 28px;
+  }
+
+  .fashion-hero__meta {
+    padding-top: 28px;
+  }
+
+  .fashion-hero__art {
+    height: 100% !important;
+  }
+
+  .wearo-mvp-trust {
+    position: relative;
+    z-index: 11;
+  }
+}
+
+@media (max-width: 800px) {
+  .fashion-hero {
+    min-height: 0 !important;
+    height: auto !important;
+  }
+}
