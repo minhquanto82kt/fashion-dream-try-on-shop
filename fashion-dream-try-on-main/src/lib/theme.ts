@@ -7,8 +7,16 @@ export type ThemeColors = { primary: string; secondary: string; background: stri
 export type ThemeWorkflowStatus = "draft" | "published";
 export type ThemeWorkflowRecord = { id: string; name: string; scope: "global"; status: ThemeWorkflowStatus; theme_data: ThemeColors; created_by: string | null; created_at: string; updated_at: string; published_at: string | null };
 
-// WEARO brand defaults. Supabase-published themes still remain the runtime source of truth.
-export const DEFAULT_THEME_COLORS: ThemeColors = { primary: "#54728C", secondary: "#7794A6", background: "#F8F6F2", surface: "#FFFFFF", accent: "#F2AD94", foreground: "#171717" };
+// WEARO brand source of truth. White and black remain neutral UI accents only.
+export const WEARO_BRAND_THEME: ThemeColors = {
+  primary: "#54728C",
+  secondary: "#7794A6",
+  background: "#F2CEAE",
+  surface: "#D9BBA9",
+  accent: "#F2AD94",
+  foreground: "#54728C",
+};
+export const DEFAULT_THEME_COLORS: ThemeColors = WEARO_BRAND_THEME;
 export const THEME_STORAGE_KEY = "upthink-theme-colors";
 const THEME_PREVIEW_STORAGE_KEY = "upthink-theme-preview";
 const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
@@ -45,14 +53,13 @@ function requireAdminConfig(): { config: SupabaseConfig; token: string } {
 function authHeaders(config: SupabaseConfig, token: string) { return { apikey: config.key, Authorization: `Bearer ${token}`, "Content-Type": "application/json" }; }
 export function isValidHexColor(value: string): boolean { return HEX_COLOR.test(value); }
 
-export function sanitizeThemeColors(value: unknown): ThemeColors {
-  if (!value || typeof value !== "object") return DEFAULT_THEME_COLORS;
-  const candidate = value as Partial<Record<keyof ThemeColors, unknown>>;
-  const next = { ...DEFAULT_THEME_COLORS };
-  for (const key of Object.keys(DEFAULT_THEME_COLORS) as Array<keyof ThemeColors>) {
-    if (typeof candidate[key] === "string" && isValidHexColor(candidate[key])) next[key] = candidate[key] as string;
-  }
-  return next;
+/**
+ * Normalize every runtime theme to the fixed WEARO five-color brand system.
+ * This prevents a published Supabase theme from silently reintroducing
+ * white/black as page-level background and text colors.
+ */
+export function sanitizeThemeColors(_value: unknown): ThemeColors {
+  return { ...WEARO_BRAND_THEME };
 }
 
 function fromWorkflowRow(row: Record<string, unknown>): ThemeWorkflowRecord {
@@ -61,8 +68,9 @@ function fromWorkflowRow(row: Record<string, unknown>): ThemeWorkflowRecord {
 }
 
 export function getStoredTheme(): ThemeColors {
-  if (typeof window === "undefined") return DEFAULT_THEME_COLORS;
-  try { const raw = window.localStorage.getItem(THEME_STORAGE_KEY); return raw ? sanitizeThemeColors(JSON.parse(raw)) : DEFAULT_THEME_COLORS; } catch { return DEFAULT_THEME_COLORS; }
+  if (typeof window === "undefined") return WEARO_BRAND_THEME;
+  try { window.localStorage.removeItem(THEME_STORAGE_KEY); } catch { /* ignore stale legacy theme */ }
+  return { ...WEARO_BRAND_THEME };
 }
 
 export function applyTheme(colors: ThemeColors): void {
@@ -71,7 +79,7 @@ export function applyTheme(colors: ThemeColors): void {
   for (const [key, value] of Object.entries(theme)) document.documentElement.style.setProperty(`--theme-${key}`, value);
 }
 
-function cacheTheme(theme: ThemeColors): void { if (typeof window !== "undefined") window.localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(theme)); }
+function cacheTheme(theme: ThemeColors): void { if (typeof window !== "undefined") window.localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(WEARO_BRAND_THEME)); }
 
 async function fetchThemeRows(status?: ThemeWorkflowStatus): Promise<ThemeWorkflowRecord[]> {
   const { config, token } = requireAdminConfig();
@@ -164,14 +172,14 @@ export async function discardThemeDraft(): Promise<void> {
   }
 }
 
-export async function resetTheme(): Promise<ThemeColors> { return saveThemeToDatabase(DEFAULT_THEME_COLORS, "WEARO 2026 Draft"); }
+export async function resetTheme(): Promise<ThemeColors> { return saveThemeToDatabase(WEARO_BRAND_THEME, "WEARO 2026 Brand Theme"); }
 
 export async function openThemePreview(colors?: ThemeColors): Promise<void> {
-  const preview = sanitizeThemeColors(colors ?? getStoredTheme());
+  const preview = sanitizeThemeColors(colors ?? WEARO_BRAND_THEME);
   if (typeof window === "undefined") return;
   window.sessionStorage.setItem(THEME_PREVIEW_STORAGE_KEY, JSON.stringify(preview));
   const params = new URLSearchParams({ theme_preview: "1", theme_data: JSON.stringify(preview) });
   window.open(`/?${params.toString()}`, "_blank", "noopener,noreferrer");
 }
 
-if (typeof window !== "undefined") applyTheme(getStoredTheme());
+if (typeof window !== "undefined") applyTheme(WEARO_BRAND_THEME);
