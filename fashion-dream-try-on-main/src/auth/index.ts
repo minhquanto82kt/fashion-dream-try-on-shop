@@ -23,6 +23,6 @@ export {
 
 export { signUpCustomer, resendSignupConfirmation } from "./customer/sign-up";
 export { signInCustomerWithPassword, sendMagicLink, getGoogleAuthorizeUrl, getFacebookAuthorizeUrl } from "./customer/sign-in";
-export { requestPasswordReset, updateCustomerPassword, changeCustomerEmail } from "./customer/password";
+export { requestPasswordReset, updateCustomerPassword, changeCustomerEmail, reauthenticateCustomer } from "./customer/password";
 export { resolveAuthCallback } from "./callbacks/auth-callback";
 export type { AuthUser, AuthResponse, AuthResult, RedirectOptions } from "./auth.types";
