@@ -37,93 +37,62 @@ function AiConsent({ onAccept }: { onAccept: () => void }) {
   const [checked, setChecked] = useState(false);
 
   return (
-    <main className="wearo-ai-page min-h-screen bg-background text-foreground">
-      <div className="mx-auto flex min-h-screen w-full max-w-6xl items-center px-5 py-10 sm:px-8 lg:px-12">
-        <section
-          className="relative grid w-full overflow-hidden border border-[rgba(84,114,140,.18)] bg-card shadow-[0_24px_80px_rgba(84,114,140,.10)] lg:grid-cols-[.72fr_1.28fr]"
-          aria-labelledby="ai-consent-title"
-        >
-          <div className="relative flex min-h-[260px] flex-col justify-between overflow-hidden border-b border-[rgba(84,114,140,.14)] bg-[linear-gradient(145deg,rgba(84,114,140,.96),rgba(119,148,166,.88))] p-7 text-white sm:p-10 lg:min-h-[680px] lg:border-b-0 lg:border-r lg:p-12">
-            <div className="relative z-10">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/70">
-                WEARO / AI STUDIO
-              </p>
-              <div className="mt-16 max-w-sm sm:mt-24">
-                <p className="text-xs uppercase tracking-[0.22em] text-white/65">Personal style intelligence</p>
-                <h1 className="mt-4 font-serif text-4xl leading-[1.05] tracking-[-0.03em] sm:text-5xl">
-                  Phong cách của bạn, bắt đầu từ đây.
-                </h1>
-                <p className="mt-6 max-w-sm text-sm leading-7 text-white/78">
-                  Một không gian thử nghiệm để khám phá outfit, nhận gợi ý phối đồ và hình dung phong cách với sự hỗ trợ của AI.
-                </p>
-              </div>
-            </div>
-            <div className="relative z-10 flex items-end justify-between gap-6 pt-12">
-              <span className="text-[10px] uppercase tracking-[0.2em] text-white/60">AI / 01</span>
-              <span className="text-right text-[10px] uppercase tracking-[0.16em] text-white/60">WEARO</span>
-            </div>
-            <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full border border-white/15" />
-            <div className="pointer-events-none absolute -bottom-28 -left-20 h-64 w-64 rounded-full border border-white/10" />
+    <main className="wearo-ai-page">
+      <div className="wearo-ai-consent-shell">
+        <section className="ai-consent-panel" aria-labelledby="ai-consent-title">
+          <div className="border-b border-[rgba(84,114,140,.16)] pb-5">
+            <p className="eyebrow">WEARO / AI STUDIO · NOTICE</p>
+            <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#54728C]">01 · Before you begin</p>
           </div>
 
-          <div className="p-7 sm:p-10 lg:p-14">
-            <div className="max-w-2xl">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#54728C]">
-                Notice / Before you begin
-              </p>
-              <h2 id="ai-consent-title" className="mt-3 font-serif text-3xl leading-tight tracking-[-0.025em] sm:text-4xl">
-                Trước khi sử dụng AI Studio
-              </h2>
-              <p className="mt-5 max-w-xl text-sm leading-7 text-silver">
-                Vui lòng đọc nhanh các nguyên tắc dưới đây. WEARO sử dụng AI để hỗ trợ tư vấn phong cách và tạo concept; kết quả có thể khác thực tế và chỉ mang tính tham khảo.
-              </p>
+          <h1 id="ai-consent-title" className="wearo-ai-display mt-6">
+            Trước khi sử dụng AI Studio
+          </h1>
+          <p className="mt-4 max-w-2xl text-sm leading-7 text-silver">
+            WEARO AI hỗ trợ tư vấn phong cách, tạo concept và thử đồ ảo. Vui lòng đọc nhanh các nguyên tắc dưới đây trước khi tiếp tục; kết quả AI chỉ mang tính tham khảo.
+          </p>
 
-              <div className="mt-9 divide-y divide-[rgba(84,114,140,.14)] border-y border-[rgba(84,114,140,.14)]">
-                {[
-                  ["01", "Ảnh & quyền sử dụng", "Chỉ tải lên hình ảnh bạn có quyền sử dụng. Không sử dụng hình ảnh của người khác khi chưa được cho phép."],
-                  ["02", "Nội dung & quyền riêng tư", "Không dùng AI để tạo nội dung vi phạm pháp luật hoặc xâm phạm quyền riêng tư, danh dự và sở hữu trí tuệ."],
-                  ["03", "Kết quả AI", "Màu sắc, kích thước, form và hình ảnh tạo bởi AI có thể khác sản phẩm thực tế và không phải cam kết về sản phẩm."],
-                  ["04", "Thông tin cung cấp", "Không nhập thông tin nhạy cảm. Chỉ cung cấp những thông tin cần thiết để WEARO hỗ trợ bạn."],
-                  ["05", "Trách nhiệm sử dụng", "Bạn chịu trách nhiệm về nội dung mình cung cấp và xác nhận đã đọc, hiểu các quy định khi tiếp tục."],
-                ].map(([number, title, description]) => (
-                  <div key={number} className="grid grid-cols-[44px_1fr] gap-4 py-5 sm:grid-cols-[56px_1fr] sm:gap-5">
-                    <span className="flex h-9 w-9 items-center justify-center border border-[rgba(84,114,140,.22)] text-[10px] font-semibold tracking-[0.12em] text-[#54728C] sm:h-10 sm:w-10">
-                      {number}
-                    </span>
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{title}</p>
-                      <p className="mt-1.5 text-xs leading-6 text-silver sm:text-sm">{description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <label className="mt-7 flex cursor-pointer gap-3 rounded-sm border border-[rgba(84,114,140,.16)] bg-[rgba(242,206,174,.10)] p-4 transition-colors hover:bg-[rgba(242,206,174,.18)]">
-                <input
-                  type="checkbox"
-                  checked={checked}
-                  onChange={(event) => setChecked(event.target.checked)}
-                  className="mt-0.5 h-4 w-4 shrink-0 accent-[#54728C]"
-                />
-                <span className="text-xs leading-6 text-foreground sm:text-sm">
-                  Tôi đã đọc, hiểu và chấp nhận các quy định sử dụng WEARO AI Studio.
+          <div className="mt-8 grid gap-3">
+            {[
+              ["01", "Ảnh & quyền sử dụng", "Chỉ tải lên hình ảnh bạn có quyền sử dụng. Không sử dụng hình ảnh của người khác khi chưa được cho phép."],
+              ["02", "Nội dung & quyền riêng tư", "Không dùng AI để tạo nội dung vi phạm pháp luật hoặc xâm phạm quyền riêng tư, danh dự và sở hữu trí tuệ."],
+              ["03", "Kết quả AI", "Màu sắc, kích thước, form và hình ảnh tạo bởi AI có thể khác sản phẩm thực tế và không phải cam kết về sản phẩm."],
+              ["04", "Thông tin cung cấp", "Không nhập thông tin nhạy cảm. Chỉ cung cấp thông tin cần thiết để WEARO hỗ trợ bạn."],
+              ["05", "Trách nhiệm sử dụng", "Bạn chịu trách nhiệm về nội dung mình cung cấp và xác nhận đã đọc, hiểu các quy định khi tiếp tục."],
+            ].map(([number, title, description]) => (
+              <div key={number} className="group grid grid-cols-[42px_1fr] gap-4 border border-[rgba(84,114,140,.14)] bg-[rgba(242,206,174,.07)] p-4 transition-colors hover:bg-[rgba(242,206,174,.14)] sm:grid-cols-[48px_1fr] sm:gap-5">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(84,114,140,.28)] text-[10px] font-semibold tracking-[.08em] text-[#54728C] sm:h-10 sm:w-10">
+                  {number}
                 </span>
-              </label>
-
-              <button
-                type="button"
-                className="mt-4 flex w-full items-center justify-between border border-[#54728C] bg-[#54728C] px-5 py-4 text-left text-xs font-semibold uppercase tracking-[0.16em] text-white transition-all duration-200 hover:bg-[#7794A6] disabled:cursor-not-allowed disabled:border-[rgba(84,114,140,.18)] disabled:bg-[rgba(84,114,140,.08)] disabled:text-silver focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#54728C] focus-visible:ring-offset-2"
-                disabled={!checked}
-                onClick={onAccept}
-              >
-                <span>Tiếp tục vào AI Studio</span>
-                <span aria-hidden="true" className="text-base">→</span>
-              </button>
-              <p className="mt-4 text-center text-[11px] leading-5 text-silver">
-                Bạn có thể rời trang bất cứ lúc nào.
-              </p>
-            </div>
+                <div>
+                  <p className="text-sm font-medium text-foreground">{title}</p>
+                  <p className="mt-1.5 text-xs leading-6 text-silver sm:text-sm">{description}</p>
+                </div>
+              </div>
+            ))}
           </div>
+
+          <label className="ai-consent-check mt-7 flex cursor-pointer items-start gap-3 rounded-sm border border-[rgba(84,114,140,.16)] p-4 transition-colors hover:bg-[rgba(242,206,174,.10)]">
+            <input
+              type="checkbox"
+              checked={checked}
+              onChange={(event) => setChecked(event.target.checked)}
+              className="mt-1 h-4 w-4 shrink-0 accent-[#54728C]"
+            />
+            <span className="text-sm leading-6 text-foreground">
+              Tôi đã đọc, hiểu và chấp nhận các quy định sử dụng WEARO AI Studio.
+            </span>
+          </label>
+
+          <button
+            type="button"
+            className="mt-4 w-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#54728C] focus-visible:ring-offset-2"
+            disabled={!checked}
+            onClick={onAccept}
+          >
+            Tiếp tục vào AI Studio <span aria-hidden="true">→</span>
+          </button>
+          <p className="mt-4 text-center text-xs leading-5 text-silver">Bạn có thể rời trang bất cứ lúc nào.</p>
         </section>
       </div>
     </main>
@@ -264,50 +233,107 @@ function TryOnStudio({
                 </option>
               ))}
             </select>
-            <label htmlFor="wearo-tryon-note" className="wearo-ai-field-label mt-5 block">Ghi chú</label>
-            <textarea
-              id="wearo-tryon-note"
-              value={note}
-              onChange={(event) => setNote(event.target.value)}
-              rows={4}
-              maxLength={240}
-              placeholder="Ví dụ: giữ nguyên màu sắc và form sản phẩm."
-              className="mt-2 w-full resize-none border border-[rgba(84,114,140,.18)] bg-background px-3 py-3 text-sm outline-none focus:border-[#54728C]"
-              disabled={status === "uploading" || status === "processing"}
-            />
-            <button type="button" className="mt-4 w-full" disabled={status === "uploading" || status === "processing"} onClick={handleTryOn}>
-              {status === "uploading" ? "Đang tải ảnh…" : status === "processing" ? "AI đang xử lý…" : "Bắt đầu Try-On"}
-            </button>
+
+            {productId ? (
+              <div className="mt-4 border border-[rgba(84,114,140,.16)] bg-[rgba(242,206,174,.12)] p-3">
+                <p className="text-xs font-semibold text-[#54728C]">SẢN PHẨM ĐƯỢC CHỌN</p>
+                <p className="mt-1 text-sm text-[#171717]">
+                  {products.find((product) => product.id === productId)?.name ?? "Sản phẩm"}
+                </p>
+              </div>
+            ) : null}
+
+            <div className="mt-5">
+              <label htmlFor="wearo-tryon-note" className="wearo-ai-field-label">Ghi chú phối đồ · không bắt buộc</label>
+              <textarea
+                id="wearo-tryon-note"
+                value={note}
+                onChange={(event) => setNote(event.target.value)}
+                maxLength={400}
+                className="wearo-ai-textarea mt-2"
+                placeholder="Ví dụ: giữ nguyên nền ảnh, phối tự nhiên, form hơi rộng…"
+              />
+            </div>
+
+            <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+              <p className="wearo-ai-helper">
+                {status === "processing" ? "WEARO đang xử lý ảnh…" : "Kết quả được tạo từ pipeline AI Try-On hiện có."}
+              </p>
+              <button
+                type="button"
+                className="wearo-ai-generate"
+                onClick={handleTryOn}
+                disabled={status === "uploading" || status === "processing" || !products.length}
+              >
+                {status === "uploading" ? "Đang gửi…" : status === "processing" ? "Đang xử lý…" : "Thử đồ bằng AI"}
+              </button>
+            </div>
+
+            {error ? (
+              <div className="mt-4 border border-red-200 bg-red-50 p-3 text-sm leading-6 text-red-800" role="alert">
+                {error}
+              </div>
+            ) : null}
           </div>
         </div>
 
-        {error ? <p className="mt-4 text-sm text-red-600">{error}</p> : null}
-        {resultImage ? (
-          <div className="mt-8 border-t border-[rgba(84,114,140,.14)] pt-6">
-            <p className="wearo-ai-field-label">Kết quả</p>
-            <img src={resultImage} alt="Kết quả AI Try-On" className="mt-3 max-h-[680px] w-full object-contain bg-[rgba(242,206,174,.08)]" />
+        <div className="mt-7 border-t border-[rgba(84,114,140,.14)] pt-6">
+          <span className="wearo-ai-field-label">Kết quả</span>
+          <div className="mt-2 min-h-[300px] border border-[rgba(84,114,140,.18)] bg-[rgba(242,206,174,.08)] p-4">
+            {resultImage ? (
+              <img src={resultImage} alt="Kết quả thử đồ ảo WEARO" className="mx-auto max-h-[620px] w-full object-contain" />
+            ) : (
+              <div className="flex min-h-[270px] items-center justify-center text-center text-sm leading-6 text-silver">
+                {status === "processing" ? "Đang chờ AI hoàn tất kết quả…" : "Kết quả thử đồ ảo sẽ xuất hiện tại đây."}
+              </div>
+            )}
           </div>
-        ) : null}
+        </div>
       </div>
     </section>
   );
 }
 
 function AiPage() {
-  const [consented, setConsented] = useState(false);
-  const [products, setProducts] = useState<AiProduct[]>([]);
-  const [productError, setProductError] = useState("");
   const search = Route.useSearch();
+  const [consented, setConsented] = useState(false);
+  const [consentReady, setConsentReady] = useState(false);
+  const [style, setStyle] = useState("Street");
+  const [occasion, setOccasion] = useState("Đi chơi");
+  const [brief, setBrief] = useState("");
+  const [result, setResult] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [products, setProducts] = useState<AiProduct[]>([]);
+  const [productsLoading, setProductsLoading] = useState(false);
+  const [productsError, setProductsError] = useState("");
+  const [recommendations, setRecommendations] = useState<StylistRecommendation[]>([]);
+  const [recommendationsLoading, setRecommendationsLoading] = useState(false);
+  const [recommendationsError, setRecommendationsError] = useState("");
 
   useEffect(() => {
     setConsented(window.localStorage.getItem(CONSENT_KEY) === "accepted");
+    setConsentReady(true);
   }, []);
 
   useEffect(() => {
     if (!consented) return;
-    listAiProducts({ data: {} })
-      .then(setProducts)
-      .catch(() => setProductError("Không thể tải catalogue AI lúc này."));
+    let active = true;
+    setProductsLoading(true);
+    setProductsError("");
+    listAiProducts()
+      .then((items) => {
+        if (active) setProducts(items.filter(Boolean) as AiProduct[]);
+      })
+      .catch(() => {
+        if (active) setProductsError("Chưa thể tải danh sách sản phẩm cho AI Try-On.");
+      })
+      .finally(() => {
+        if (active) setProductsLoading(false);
+      });
+    return () => {
+      active = false;
+    };
   }, [consented]);
 
   function acceptConsent() {
@@ -315,22 +341,224 @@ function AiPage() {
     setConsented(true);
   }
 
-  if (!consented) return <AiConsent onAccept={acceptConsent} />;
+  async function handleGenerate() {
+    const userBrief = brief.trim() || "Hãy đề xuất một outfit phù hợp với phong cách và dịp đã chọn.";
+    setIsLoading(true);
+    setError("");
+    setRecommendations([]);
+    setRecommendationsError("");
+
+    try {
+      const response = await generateWearoAiReply({
+        data: {
+          messages: [
+            {
+              role: "user",
+              content: [
+                `Phong cách: ${style}`,
+                `Dịp: ${occasion}`,
+                search.product ? `Sản phẩm tham chiếu: ${search.product}` : "",
+                `Yêu cầu: ${userBrief}`,
+                "Hãy trả lời như WEARO AI Stylist: ngắn gọn, cụ thể, có cấu trúc outfit và lý do phối.",
+              ]
+                .filter(Boolean)
+                .join("\n"),
+            },
+          ],
+        },
+      });
+      setResult(response.text);
+
+      setRecommendationsLoading(true);
+      try {
+        const recommendationResponse = await getStylistRecommendations({
+          data: {
+            occasion,
+            mood: userBrief,
+            preferences: {
+              style_tags: [style],
+            },
+            limit: 4,
+          },
+        });
+        setRecommendations(recommendationResponse.recommendations);
+      } catch {
+        setRecommendationsError("Concept đã tạo, nhưng chưa thể tải sản phẩm phù hợp lúc này.");
+      } finally {
+        setRecommendationsLoading(false);
+      }
+    } catch {
+      setError("Chưa thể kết nối WEARO AI lúc này. Hãy thử lại sau.");
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   return (
-    <div className="wearo-ai-page">
+    <div className="wearo-ai-phase2 min-h-screen bg-background text-foreground">
       <SiteNav />
-      <main className="mx-auto w-full max-w-7xl px-5 pb-16 pt-10 sm:px-8 lg:px-12">
-        <header className="border-b border-[rgba(84,114,140,.16)] pb-8">
-          <p className="eyebrow">WEARO / AI STUDIO</p>
-          <h1 className="wearo-ai-display mt-3">Khám phá phong cách của bạn.</h1>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-silver">
-            Chọn phong cách, dịp sử dụng và để WEARO hỗ trợ bạn xây dựng concept, gợi ý sản phẩm và thử đồ bằng AI.
-          </p>
-        </header>
-        {productError ? <p className="mt-5 text-sm text-red-600">{productError}</p> : null}
-        <TryOnStudio products={products} initialProductId={search.product} />
-      </main>
+      {!consentReady ? (
+        <main className="wearo-ai-page"><div className="wearo-ai-consent-shell"><div className="ai-consent-panel" aria-hidden="true" /></div></main>
+      ) : !consented ? (
+        <AiConsent onAccept={acceptConsent} />
+      ) : (
+        <main className="wearo-ai-page">
+          <div className="wearo-ai-shell">
+            <header>
+              <p className="wearo-ai-kicker">WEARO / AI STUDIO · BETA</p>
+              <h1 className="wearo-ai-title wearo-ai-display">
+                AI <span className="wearo-ai-title-accent">Dashboard</span>
+              </h1>
+              <p className="wearo-ai-lede">
+                Chọn phong cách, dịp sử dụng và mô tả mong muốn. WEARO AI Stylist sẽ giúp bạn định hình outfit theo cách của riêng bạn.
+              </p>
+            </header>
+
+            <div className="wearo-ai-grid">
+              <section className="wearo-ai-card">
+                <div className="wearo-ai-card-header">
+                  <span className="wearo-ai-card-title">01 · Tạo concept</span>
+                  <span className="wearo-ai-kicker">Input</span>
+                </div>
+
+                <div className="wearo-ai-card-body">
+                  <div>
+                    <span className="wearo-ai-field-label">Phong cách</span>
+                    <div className="wearo-ai-chip-group">
+                      {STYLES.map((item) => (
+                        <button key={item} type="button" className="wearo-ai-chip" data-active={style === item} onClick={() => setStyle(item)}>
+                          {item}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mt-6">
+                    <span className="wearo-ai-field-label">Dịp sử dụng</span>
+                    <div className="wearo-ai-chip-group">
+                      {OCCASIONS.map((item) => (
+                        <button key={item} type="button" className="wearo-ai-chip" data-active={occasion === item} onClick={() => setOccasion(item)}>
+                          {item}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {search.product ? (
+                    <div className="mt-6 border border-[rgba(84,114,140,.16)] bg-[rgba(242,206,174,.18)] p-3">
+                      <span className="wearo-ai-field-label">Sản phẩm tham chiếu</span>
+                      <p className="text-xs text-[#171717]">{search.product}</p>
+                    </div>
+                  ) : null}
+
+                  <div className="mt-6">
+                    <label htmlFor="wearo-ai-brief" className="wearo-ai-field-label">Mô tả outfit</label>
+                    <textarea id="wearo-ai-brief" value={brief} onChange={(event) => setBrief(event.target.value)} className="wearo-ai-textarea" placeholder="Ví dụ: form rộng, tông trung tính, phối cùng sneaker trắng…" />
+                  </div>
+
+                  <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+                    <p className="wearo-ai-helper">AI dùng các lựa chọn trên làm context cho Stylist.</p>
+                    <button type="button" className="wearo-ai-generate" onClick={handleGenerate} disabled={isLoading}>
+                      {isLoading ? "Đang tạo…" : "Tạo concept"}
+                    </button>
+                  </div>
+                </div>
+              </section>
+
+              <aside className="wearo-ai-card wearo-ai-result">
+                <div className="wearo-ai-card-header">
+                  <span className="wearo-ai-card-title">02 · AI Result</span>
+                  <span className="wearo-ai-kicker">Output</span>
+                </div>
+
+                <div className="wearo-ai-card-body">
+                  {error ? (
+                    <div className="wearo-ai-result-empty">
+                      <div><div className="wearo-ai-result-mark">!</div><h3>Không thể tạo concept</h3><p>{error}</p></div>
+                    </div>
+                  ) : result ? (
+                    <div className="min-h-[330px] border border-[rgba(84,114,140,.18)] bg-[rgba(242,206,174,.12)] p-5">
+                      <p className="mb-4 text-[10px] font-semibold uppercase tracking-[.16em] text-[#54728C]">WEARO AI Stylist</p>
+                      <p className="whitespace-pre-wrap text-sm leading-7 text-[#171717]">{result}</p>
+                    </div>
+                  ) : (
+                    <div className="wearo-ai-result-empty">
+                      <div><div className="wearo-ai-result-mark">✦</div><h3>Concept outfit của bạn sẽ ở đây</h3><p>Chọn style, dịp và brief ở bên trái rồi bấm “Tạo concept”.</p></div>
+                    </div>
+                  )}
+
+                  <div className="wearo-ai-tools">
+                    <Link to="/ai/assistant" className="wearo-ai-tool"><strong>AI Stylist</strong><span>Trò chuyện trực tiếp để tinh chỉnh outfit.</span></Link>
+                    <Link to="/shop" className="wearo-ai-tool"><strong>Shop</strong><span>Khám phá sản phẩm sau khi có concept.</span></Link>
+                  </div>
+                </div>
+              </aside>
+            </div>
+
+            <section className="wearo-ai-card mt-6" aria-labelledby="wearo-ai-recommendations-title">
+              <div className="wearo-ai-card-header">
+                <span id="wearo-ai-recommendations-title" className="wearo-ai-card-title">03 · Sản phẩm AI đề xuất</span>
+                <span className="wearo-ai-kicker">CATALOG / REAL DATA</span>
+              </div>
+              <div className="wearo-ai-card-body">
+                {recommendationsLoading ? (
+                  <p className="text-sm text-silver">Đang đối chiếu concept với sản phẩm WEARO đã xuất bản…</p>
+                ) : recommendationsError ? (
+                  <div className="border border-red-200 bg-red-50 p-4 text-sm leading-6 text-red-800" role="alert">{recommendationsError}</div>
+                ) : recommendations.length ? (
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    {recommendations.map((item) => {
+                      const product = item.product as Record<string, unknown>;
+                      const productId = String(product.id ?? "");
+                      const productName = String(product.name ?? "Sản phẩm WEARO");
+                      const category = String(product.category ?? "");
+                      const price = Number(product.price ?? 0);
+                      return (
+                        <article key={productId} className="border border-[rgba(84,114,140,.16)] bg-[rgba(242,206,174,.08)] p-4">
+                          <div className="flex items-start justify-between gap-3">
+                            <div>
+                              <p className="text-sm font-semibold text-[#171717]">{productName}</p>
+                              {category ? <p className="mt-1 text-xs text-silver">{category}</p> : null}
+                            </div>
+                            <span className="shrink-0 text-xs font-semibold text-[#54728C]">{item.score}/100</span>
+                          </div>
+                          {price > 0 ? <p className="mt-4 text-sm font-semibold text-[#171717]">{price.toLocaleString("vi-VN")} ₫</p> : null}
+                          <p className="mt-3 min-h-[60px] text-xs leading-5 text-silver">{item.reason}</p>
+                          <Link
+                            to="/product/$id"
+                            params={{ id: productId }}
+                            className="mt-4 inline-flex w-full items-center justify-center border border-[#54728C] px-3 py-2 text-xs font-semibold uppercase tracking-[.12em] text-[#54728C] transition hover:bg-[#54728C] hover:text-white"
+                          >
+                            Xem sản phẩm →
+                          </Link>
+                        </article>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="border border-[rgba(84,114,140,.14)] bg-[rgba(242,206,174,.08)] p-5 text-sm leading-6 text-silver">
+                    Hãy bấm “Tạo concept” để WEARO AI đối chiếu nhu cầu với catalog thật và trả về sản phẩm phù hợp.
+                  </div>
+                )}
+              </div>
+            </section>
+
+            <div className="mt-6">
+              {productsLoading ? (
+                <section className="wearo-ai-card">
+                  <div className="wearo-ai-card-body text-sm text-silver">Đang tải sản phẩm đã xuất bản cho AI Try-On…</div>
+                </section>
+              ) : productsError ? (
+                <section className="wearo-ai-card">
+                  <div className="wearo-ai-card-body text-sm text-red-700">{productsError}</div>
+                </section>
+              ) : (
+                <TryOnStudio products={products} initialProductId={search.product} />
+              )}
+            </div>
+          </div>
+        </main>
+      )}
       <SiteFooter />
     </div>
   );
