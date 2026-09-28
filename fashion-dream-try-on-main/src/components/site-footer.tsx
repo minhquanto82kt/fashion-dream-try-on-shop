@@ -15,10 +15,15 @@ export function SiteFooter() {
       <div className="wearo-footer__inner">
         <section className="wearo-footer__newsletter" aria-labelledby="wearo-newsletter-title">
           <div className="wearo-footer__newsletter-copy">
-            <span className="wearo-footer__newsletter-kicker">WEARO / NEWSLETTER</span>
-            <h2 id="wearo-newsletter-title">{t("Mặc theo cách của riêng bạn", "Wear it your way")}</h2>
-            <p>{t("Nhận ngay ưu đãi 10% cho đơn hàng đầu tiên.", "Get 10% off your first order.")}</p>
+            <span className="wearo-footer__newsletter-kicker">[ {t("PRE-FOOTER: KHỐI ĐĂNG KÝ NHẬN TIN", "PRE-FOOTER: NEWSLETTER SIGN-UP")} ]</span>
+            <h2 id="wearo-newsletter-title">
+              {t(
+                "Mặc theo cách của riêng bạn — Nhận ngay ưu đãi 10% cho đơn hàng đầu tiên",
+                "Wear it your way — Get 10% off your first order",
+              )}
+            </h2>
           </div>
+
           <form className="wearo-footer__newsletter-form" onSubmit={(event) => event.preventDefault()}>
             <label className="sr-only" htmlFor="wearo-newsletter-email">Email</label>
             <div className="wearo-footer__newsletter-input-wrap">
