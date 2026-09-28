@@ -57,13 +57,12 @@ select
 select
   'product_variants_stock_nonnegative' as check_name,
   case when exists (
-    select 1 from information_schema.check_constraints
-    where constraint_schema='public'
-      and constraint_name in (
-        select constraint_name
-        from information_schema.constraint_column_usage
-        where table_schema='public' and table_name='product_variants' and column_name='stock'
-      )
+    select 1
+    from pg_constraint
+    where conrelid = 'public.product_variants'::regclass
+      and contype = 'c'
+      and pg_get_constraintdef(oid) ilike '%stock%'
+      and pg_get_constraintdef(oid) ilike '%>= 0%'
   ) then 'PASS' else 'REVIEW' end as status;
 
 select
@@ -86,15 +85,27 @@ select
 
 select
   'admin_users_is_admin_function' as check_name,
-  case when to_regprocedure('public.is_admin()') is not null then 'PASS' else 'FAIL' end as status;
+  case when exists (
+    select 1 from pg_proc p
+    join pg_namespace n on n.oid=p.pronamespace
+    where n.nspname='public' and p.proname='is_admin'
+  ) then 'PASS' else 'FAIL' end as status;
 
 select
   'atomic_order_rpc_present' as check_name,
-  case when to_regprocedure('public.create_order_atomic') is not null then 'PASS' else 'REVIEW' end as status;
+  case when exists (
+    select 1 from pg_proc p
+    join pg_namespace n on n.oid=p.pronamespace
+    where n.nspname='public' and p.proname='create_order_atomic'
+  ) then 'PASS' else 'REVIEW' end as status;
 
 select
   'payment_verification_rpc_present' as check_name,
-  case when to_regprocedure('public.verify_payment_status') is not null then 'PASS' else 'REVIEW' end as status;
+  case when exists (
+    select 1 from pg_proc p
+    join pg_namespace n on n.oid=p.pronamespace
+    where n.nspname='public' and p.proname='verify_payment_status'
+  ) then 'PASS' else 'REVIEW' end as status;
 
 -- Review these results together with pg_policies and storage.objects policies.
 -- A PASS here does not prove that the complete live RLS policy set is correct.
