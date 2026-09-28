@@ -19,7 +19,7 @@ export type InvoiceData = {
   address: string;
   city: string;
   district: string;
-  payment_method: "cod" | "vietqr" | "momo" | string;
+  payment_method: "cod" | "vietqr" | "momo" | "mastercard" | string;
   payment_status: string;
   order_status: string;
   subtotal: number;
@@ -29,10 +29,7 @@ export type InvoiceData = {
   items: InvoiceItem[];
 };
 
-type InvoiceRequest = {
-  orderCode: string;
-  phone: string;
-};
+type InvoiceRequest = { orderCode: string; phone: string };
 
 function normalizePhone(value: string) {
   return value.replace(/\s+/g, "").trim();
@@ -43,10 +40,7 @@ export const getInvoiceData = createServerFn({ method: "POST" })
   .handler(async ({ data }: { data: InvoiceRequest }) => {
     const orderCode = data.orderCode.trim();
     const phone = normalizePhone(data.phone);
-
-    if (!orderCode || !phone) {
-      throw new Error("Thiếu mã đơn hàng hoặc số điện thoại.");
-    }
+    if (!orderCode || !phone) throw new Error("Thiếu mã đơn hàng hoặc số điện thoại.");
 
     const orders = await supabaseRequest<InvoiceData[]>(
       `orders?order_code=eq.${encodeURIComponent(orderCode)}&select=id,order_code,customer_name,phone,email,address,city,district,payment_method,payment_status,order_status,subtotal,shipping_fee,total,created_at&limit=1`,
@@ -54,24 +48,19 @@ export const getInvoiceData = createServerFn({ method: "POST" })
     );
 
     const order = orders[0];
-    if (!order || normalizePhone(order.phone) !== phone) {
-      throw new Error("Không tìm thấy đơn hàng.");
-    }
+    if (!order || normalizePhone(order.phone) !== phone) throw new Error("Không tìm thấy đơn hàng.");
 
     const isCod = order.payment_method === "cod";
     const isPaidOnline =
-      (order.payment_method === "vietqr" || order.payment_method === "momo") &&
+      ["vietqr", "momo", "mastercard"].includes(order.payment_method) &&
       order.payment_status === "paid";
 
-    if (!isCod && !isPaidOnline) {
-      throw new Error("INVOICE_NOT_READY");
-    }
+    if (!isCod && !isPaidOnline) throw new Error("INVOICE_NOT_READY");
 
     const items = await supabaseRequest<InvoiceItem[]>(
       `order_items?order_id=eq.${encodeURIComponent(order.id)}&select=product_name,product_id,size,color,quantity,unit_price&order=created_at.asc`,
       { method: "GET" },
     );
-
     return { ...order, items };
   });
 
@@ -81,9 +70,7 @@ export const waitForInvoice = createServerFn({ method: "POST" })
     try {
       return await getInvoiceData({ data });
     } catch (error) {
-      if (error instanceof Error && error.message === "INVOICE_NOT_READY") {
-        return null;
-      }
+      if (error instanceof Error && error.message === "INVOICE_NOT_READY") return null;
       throw error;
     }
   });
