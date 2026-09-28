@@ -6,6 +6,7 @@ import { useCart } from "@/lib/cart";
 const LINKS = [
   { to: "/shop", label: "Collections" },
   { to: "/ai", label: "AI Studio" },
+  { to: "/membership", label: "Membership" },
   { to: "/about", label: "About" },
 ] as const;
 
@@ -28,11 +29,7 @@ export function SiteNav() {
 
         <div className="fashion-nav__links">
           {LINKS.map((link) => (
-            <Link
-              key={link.to}
-              to={link.to}
-              activeProps={{ className: "is-active" }}
-            >
+            <Link key={link.to} to={link.to} activeProps={{ className: "is-active" }}>
               {link.label}
             </Link>
           ))}
