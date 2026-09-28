@@ -1,0 +1,96 @@
+/* Footer newsletter placement: the email CTA lives directly under the WEARO logo. */
+.wearo-footer__brand > .wearo-footer__newsletter {
+  width: 100%;
+  margin: 18px 0 0;
+  padding: 0;
+  display: block;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--footer-blue);
+}
+
+.wearo-footer__brand > .wearo-footer__newsletter .wearo-footer__newsletter-copy,
+.wearo-footer__brand > .wearo-footer__newsletter .wearo-footer__newsletter-form {
+  position: relative;
+  z-index: 1;
+}
+
+.wearo-footer__brand > .wearo-footer__newsletter .wearo-footer__newsletter-kicker {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--footer-coral);
+}
+
+.wearo-footer__brand > .wearo-footer__newsletter h2 {
+  margin: 0 0 5px;
+  color: var(--footer-blue);
+  font: 700 clamp(18px, 1.8vw, 24px)/1.08 "Space Grotesk", Arial, sans-serif;
+  letter-spacing: -.025em;
+}
+
+.wearo-footer__brand > .wearo-footer__newsletter p {
+  margin: 0 0 14px;
+  color: color-mix(in srgb, var(--footer-blue) 72%, transparent);
+  font: 500 12px/1.5 "Space Grotesk", Arial, sans-serif;
+}
+
+.wearo-footer__brand > .wearo-footer__newsletter .wearo-footer__newsletter-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid color-mix(in srgb, var(--footer-blue) 24%, transparent);
+  background: #fff;
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--footer-blue) 10%, transparent);
+}
+
+.wearo-footer__brand > .wearo-footer__newsletter .wearo-footer__newsletter-form input {
+  min-width: 0;
+  padding: 0 12px;
+  color: var(--footer-blue);
+  background: transparent;
+  font: 500 12px/1 "Space Grotesk", Arial, sans-serif;
+}
+
+.wearo-footer__brand > .wearo-footer__newsletter .wearo-footer__newsletter-form input::placeholder {
+  color: var(--footer-blue-light);
+}
+
+.wearo-footer__brand > .wearo-footer__newsletter .wearo-footer__newsletter-form button {
+  min-width: 118px;
+  padding: 0 14px;
+  color: var(--footer-blue);
+  background: var(--footer-coral);
+  font: 750 9px/1 "Space Grotesk", Arial, sans-serif;
+  letter-spacing: .1em;
+}
+
+.wearo-footer__brand > .wearo-footer__newsletter .wearo-footer__newsletter-form button:hover {
+  background: var(--footer-peach);
+}
+
+.wearo-footer__brand > .wearo-footer__description {
+  margin-top: 16px;
+}
+
+@media (max-width: 960px) {
+  .wearo-footer__brand > .wearo-footer__newsletter {
+    width: min(520px, 100%);
+  }
+}
+
+@media (max-width: 680px) {
+  .wearo-footer__brand > .wearo-footer__newsletter {
+    width: 100%;
+    margin-top: 16px;
+  }
+
+  .wearo-footer__brand > .wearo-footer__newsletter .wearo-footer__newsletter-form {
+    grid-template-columns: 1fr;
+  }
+
+  .wearo-footer__brand > .wearo-footer__newsletter .wearo-footer__newsletter-form button {
+    min-height: 42px;
+  }
+}
