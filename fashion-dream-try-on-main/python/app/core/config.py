@@ -6,9 +6,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    """Runtime settings for the UPTHINK Python services."""
+    """Runtime settings for the WEARO Python services."""
 
-    app_name: str = "UPTHINK AI Backend"
+    app_name: str = "WEARO AI Backend"
     environment: str = "development"
     supabase_url: str = ""
     supabase_service_role_key: str = ""
@@ -19,6 +19,8 @@ class Settings(BaseSettings):
     local_tryon_api_key: str = ""
     gemini_api_key: str = ""
     gemini_product_vision_model: str = "gemini-3.8-flash"
+    cron_secret: str = ""
+    try_on_worker_batch_size: int = 10
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -31,5 +33,4 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     """Return a cached settings instance."""
-
     return Settings()

@@ -72,6 +72,18 @@ class TryOnJobService:
             return None
         return self._context_from_row(response.data[0])
 
+    def list_pending_contexts(self, *, limit: int = 10) -> list[TryOnJobContext]:
+        """Return a bounded FIFO slice of jobs waiting for provider reconciliation."""
+        response = (
+            self._table()
+            .select("*")
+            .in_("status", [TryOnStatus.QUEUED.value, TryOnStatus.PROCESSING.value])
+            .order("created_at", desc=False)
+            .limit(max(1, min(limit, 50)))
+            .execute()
+        )
+        return [self._context_from_row(row) for row in (response.data or [])]
+
     def update_status(
         self,
         job_id: str,
@@ -108,11 +120,22 @@ class TryOnJobService:
         )
 
     def update_metadata_internal(self, job_id: str, metadata: dict[str, Any]) -> TryOnJob | None:
-        """Persist provider polling metadata through the trusted server bridge."""
+        """Persist provider polling/worker metadata through the trusted bridge."""
         response = self._table().update({"metadata": metadata}).eq("id", job_id).execute()
         if not response.data:
             return None
         return self._to_model(response.data[0])
+
+    def list_metrics(self, *, limit: int = 1000) -> list[dict[str, Any]]:
+        """Return recent lifecycle fields used by the monitoring endpoint."""
+        response = (
+            self._table()
+            .select("status,provider,category,created_at,updated_at,error")
+            .order("created_at", desc=True)
+            .limit(max(1, min(limit, 5000)))
+            .execute()
+        )
+        return list(response.data or [])
 
     def _update_status(
         self,

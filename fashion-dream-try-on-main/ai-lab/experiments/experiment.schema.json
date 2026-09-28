@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "WEARO AI Experiment",
+  "type": "object",
+  "required": ["experiment_id", "git_revision", "provider", "created_at"],
+  "properties": {
+    "experiment_id": {"type": "string"},
+    "git_revision": {"type": "string"},
+    "provider": {"type": "string"},
+    "model_version": {"type": "string"},
+    "category": {"type": "string"},
+    "parameters": {"type": "object"},
+    "latency_ms": {"type": "number", "minimum": 0},
+    "output": {"type": "object"},
+    "evaluation": {"type": "object"},
+    "error": {"type": ["string", "null"]},
+    "created_at": {"type": "string", "format": "date-time"}
+  }
+}

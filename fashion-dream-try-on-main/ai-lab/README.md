@@ -1,88 +1,42 @@
 # WEARO AI Lab
 
-AI research and validation workspace for the WEARO project.
-
-## Purpose
-
-`ai-lab/` is the experimental layer between the GitHub source code and production AI services.
-
-Use it for:
-
-- Google Colab experiments
-- FASHN VTON validation
-- model/parameter experiments
-- latency and output-quality benchmarks
-- reproducible evaluation
-
-Do **not** use Colab as the production API. Production inference remains separated in `gpu-tryon/`, while the main FastAPI application owns authentication, job ownership and durable lifecycle persistence.
-
-## Current production boundary
-
-```text
-WEARO Frontend
-      |
-      v
-Python FastAPI
-      |
-      +--> FASHN hosted provider
-      |
-      +--> FASHN VTON GPU service
-                |
-                v
-          FASHN VTON 1.5
-```
-
-The GPU service currently downloads model weights from Hugging Face into its mounted model volume. See `../gpu-tryon/scripts/download_weights.py`.
-
-## R&D boundary
-
-```text
-GitHub
-  |
-  v
-Google Colab
-  |
-  +--> experiment
-  +--> benchmark
-  +--> evaluate
-  +--> record result
-  |
-  v
-GitHub
-```
-
-An experiment result must not be treated as production-ready until it has been validated against the production contract.
-
-## Directory structure
+AI research, benchmark and validation layer for WEARO.
 
 ```text
 ai-lab/
-├── notebooks/
-├── experiments/
-└── evaluation/
+├── notebooks/       Google Colab entry points
+├── experiments/     reproducible experiment metadata/configs
+├── evaluation/      output-quality and contract checks
+├── benchmarks/      latency/provider/GPU benchmark scripts
+└── README.md
 ```
 
-The first notebook is `notebooks/01_fashn_vton_colab.ipynb`.
+## Production boundary
+
+Colab and `ai-lab/` are **not** production inference. Production flow remains:
+
+```text
+WEARO Frontend
+  -> FastAPI
+  -> Supabase try_on_jobs
+  -> provider router
+  -> FASHN hosted OR GPU VTON
+  -> Supabase Storage
+  -> signed result URL
+```
+
+The database-backed queue is reconciled by a scheduled worker at `/api/try-on/internal/worker/reconcile`.
+
+## Colab workflow
+
+1. Clone the exact GitHub branch/revision being tested.
+2. Run the notebook bootstrap cell.
+3. Load credentials from Colab Secrets, never from committed cells.
+4. Run a controlled experiment.
+5. Export a JSON result matching `experiments/experiment.schema.json`.
+6. Run benchmark/evaluation scripts.
+7. Promote only validated provider/model/config changes to production code.
 
 ## Security
 
-Never commit:
-
-- API keys
-- Supabase service-role keys
-- VTON API keys
-- private image URLs
-- customer images containing personal data
-- model credentials
-
-Use Colab Secrets or environment variables for credentials.
-
-## MVP workflow
-
-1. Clone this repository in Colab.
-2. Run the bootstrap cells in the notebook.
-3. Confirm the repository revision being tested.
-4. Run controlled VTON experiments.
-5. Record model/version, inputs, runtime and observed output quality.
-6. Keep production credentials out of the notebook.
-7. Only promote validated changes into `gpu-tryon/` or the Python backend through normal GitHub review.
+Never commit API keys, Supabase service-role keys, customer images, private URLs or model credentials.

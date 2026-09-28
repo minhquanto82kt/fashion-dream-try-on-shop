@@ -1,4 +1,4 @@
-"""FastAPI entry point for the UPTHINK AI backend."""
+"""FastAPI entry point for the WEARO AI backend."""
 
 from fastapi import FastAPI
 
@@ -16,9 +16,9 @@ from app.api.try_on_internal import router as try_on_internal_router
 from app.middleware.request_observability import RequestObservabilityMiddleware
 
 app = FastAPI(
-    title="UPTHINK AI Backend",
-    version="0.5.0",
-    description="AI, data and admin services for UPTHINK Fashion Dream.",
+    title="WEARO AI Backend",
+    version="0.6.0",
+    description="AI, data and admin services for WEARO Fashion.",
 )
 
 app.add_middleware(RequestObservabilityMiddleware)
