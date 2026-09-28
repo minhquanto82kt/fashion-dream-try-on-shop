@@ -1,8 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { Clock, Facebook, Instagram, MapPin, Music2, Phone, Youtube } from "lucide-react";
+import { Clock, Facebook, Instagram, Mail, MapPin, Music2, Phone, Youtube } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import "@/styles/wearo-footer-unified.css";
-import "@/styles/wearo-footer-newsletter-placement.css";
 
 const linkClass = "wearo-footer__link";
 
@@ -14,25 +13,27 @@ export function SiteFooter() {
       <div className="wearo-footer__accent" aria-hidden="true" />
 
       <div className="wearo-footer__inner">
+        <section className="wearo-footer__newsletter" aria-labelledby="wearo-newsletter-title">
+          <div className="wearo-footer__newsletter-copy">
+            <span className="wearo-footer__newsletter-kicker">WEARO / NEWSLETTER</span>
+            <h2 id="wearo-newsletter-title">{t("Mặc theo cách của riêng bạn", "Wear it your way")}</h2>
+            <p>{t("Nhận ngay ưu đãi 10% cho đơn hàng đầu tiên.", "Get 10% off your first order.")}</p>
+          </div>
+          <form className="wearo-footer__newsletter-form" onSubmit={(event) => event.preventDefault()}>
+            <label className="sr-only" htmlFor="wearo-newsletter-email">Email</label>
+            <div className="wearo-footer__newsletter-input-wrap">
+              <Mail size={16} aria-hidden="true" />
+              <input id="wearo-newsletter-email" name="email" type="email" autoComplete="email" placeholder={t("Nhập địa chỉ email của bạn...", "Enter your email address...")} required />
+            </div>
+            <button type="submit">{t("ĐĂNG KÝ NGAY", "SUBSCRIBE NOW")}</button>
+          </form>
+        </section>
+
         <div className="wearo-footer__grid">
           <section className="wearo-footer__brand">
             <Link to="/" className="wearo-footer__logo" aria-label="WEARO home">
               <img src="/brand/wearo-logo-header.svg" alt="WEARO" />
             </Link>
-
-            <section className="wearo-footer__newsletter" aria-labelledby="wearo-newsletter-title">
-              <div className="wearo-footer__newsletter-copy">
-                <span className="wearo-footer__newsletter-kicker">WEARO / NEWSLETTER</span>
-                <h2 id="wearo-newsletter-title">{t("Mặc theo cách của riêng bạn", "Wear it your way")}</h2>
-                <p>{t("Nhận voucher 10% cho đơn hàng đầu tiên.", "Get 10% off your first order.")}</p>
-              </div>
-              <form className="wearo-footer__newsletter-form" onSubmit={(event) => event.preventDefault()}>
-                <label className="sr-only" htmlFor="wearo-newsletter-email">Email</label>
-                <input id="wearo-newsletter-email" name="email" type="email" autoComplete="email" placeholder={t("Địa chỉ Email...", "Your email address...")} required />
-                <button type="submit">{t("ĐĂNG KÝ NGAY", "SUBSCRIBE NOW")}</button>
-              </form>
-            </section>
-
             <p className="wearo-footer__description">
               {t(
                 "Thương hiệu thời trang casual, streetwear & unisex hiện đại, hỗ trợ bởi AI.",
@@ -54,8 +55,8 @@ export function SiteFooter() {
           </section>
 
           <section className="wearo-footer__section">
-            <p className="wearo-footer__kicker">02 / {t("Hỗ trợ", "SUPPORT")}</p>
-            <nav className="wearo-footer__links" aria-label={t("Hỗ trợ", "Support")}>
+            <p className="wearo-footer__kicker">02 / {t("Hỗ trợ & pháp lý", "SUPPORT & LEGAL")}</p>
+            <nav className="wearo-footer__links" aria-label={t("Hỗ trợ và pháp lý", "Support and legal")}>
               <Link to="/about" className={linkClass}>{t("Hướng dẫn chọn size", "Size Guide")}</Link>
               <Link to="/about" className={linkClass}>{t("Hướng dẫn mua hàng", "Shopping Guide")}</Link>
               <Link to="/about" className={linkClass}>{t("Chính sách đổi trả", "Returns & Refunds")}</Link>
@@ -72,6 +73,7 @@ export function SiteFooter() {
               <span className="wearo-footer__contact-item"><MapPin size={15} aria-hidden="true" /><span>12 Nguyễn Văn Bảo, Phường Hạnh Thông, TP.HCM</span></span>
               <span className="wearo-footer__contact-item"><Clock size={15} aria-hidden="true" /><span>08:00 — 22:00 / Thứ 2 — Chủ Nhật</span></span>
             </div>
+            <div className="wearo-footer__social-label">{t("KẾT NỐI", "CONNECT")}</div>
             <div className="wearo-footer__socials" aria-label={t("Mạng xã hội", "Social media")}>
               <a href="#instagram" aria-label="Instagram"><Instagram size={17} /></a>
               <a href="#facebook" aria-label="Facebook"><Facebook size={17} /></a>
