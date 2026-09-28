@@ -1,6 +1,6 @@
 # Supabase Database Layer
 
-This directory keeps the database structure, database contracts, development seed data, and migration guidance for Fashion Dream Try-On Shop under Git version control.
+This directory keeps the database structure, database contracts, development seed data, read-only audit checks, and migration guidance for Fashion Dream Try-On Shop under Git version control.
 
 ## Current database
 
@@ -15,6 +15,9 @@ supabase/
 ├── README.md
 ├── contracts/
 │   └── data-model.md
+├── checks/
+│   ├── README.md
+│   └── 001_security_integrity_audit.sql
 ├── migrations/
 │   └── README.md
 ├── schema/
@@ -47,6 +50,7 @@ supabase/
 | SQL functions / triggers | `schema/008_backend_functions.sql` | Yes |
 | Site branding / logo storage | `schema/009_site_branding.sql` | Yes |
 | Development seed | `seed/001_development.sql` | Template only |
+| Read-only DB audit | `checks/001_security_integrity_audit.sql` | Manual |
 
 ## Source-of-truth model
 
@@ -56,7 +60,7 @@ There are three different database artifacts and they must not be confused:
 2. **`schema/`** — human-readable architecture snapshots reconstructed from the live database. They describe tables, constraints, RLS, indexes, functions, and triggers but are not safe to replay blindly.
 3. **`migrations/`** — reserved for an ordered, replayable migration history after the existing production migration history has been reconciled. It is intentionally not populated with a fake baseline today.
 
-The database contract in `contracts/data-model.md` defines the intended relationships, ownership, CRUD boundaries, and invariants shared by frontend, API, AI, and database work.
+The database contract in `contracts/data-model.md` defines the intended relationships, ownership, CRUD boundaries, and invariants shared by frontend, API, AI, and database work. The read-only checks in `checks/` provide a repeatable sanity audit without mutating the database.
 
 ## Important distinction: schema snapshot vs migration
 
