@@ -12,25 +12,26 @@ export function SiteFooter() {
     <footer className="wearo-footer" aria-label={t("Chân trang WEARO", "WEARO footer")}>
       <div className="wearo-footer__accent" aria-hidden="true" />
 
-      <section className="wearo-footer__newsletter" aria-labelledby="wearo-newsletter-title">
-        <div className="wearo-footer__newsletter-copy">
-          <span className="wearo-footer__newsletter-kicker">WEARO / NEWSLETTER</span>
-          <h2 id="wearo-newsletter-title">{t("Mặc theo cách của riêng bạn", "Wear it your way")}</h2>
-          <p>{t("Nhận voucher 10% cho đơn hàng đầu tiên.", "Get 10% off your first order.")}</p>
-        </div>
-        <form className="wearo-footer__newsletter-form" onSubmit={(event) => event.preventDefault()}>
-          <label className="sr-only" htmlFor="wearo-newsletter-email">Email</label>
-          <input id="wearo-newsletter-email" name="email" type="email" autoComplete="email" placeholder={t("Địa chỉ Email...", "Your email address...")} required />
-          <button type="submit">{t("ĐĂNG KÝ NGAY", "SUBSCRIBE NOW")}</button>
-        </form>
-      </section>
-
       <div className="wearo-footer__inner">
         <div className="wearo-footer__grid">
           <section className="wearo-footer__brand">
             <Link to="/" className="wearo-footer__logo" aria-label="WEARO home">
               <img src="/brand/wearo-logo-header.svg" alt="WEARO" />
             </Link>
+
+            <section className="wearo-footer__newsletter" aria-labelledby="wearo-newsletter-title">
+              <div className="wearo-footer__newsletter-copy">
+                <span className="wearo-footer__newsletter-kicker">WEARO / NEWSLETTER</span>
+                <h2 id="wearo-newsletter-title">{t("Mặc theo cách của riêng bạn", "Wear it your way")}</h2>
+                <p>{t("Nhận voucher 10% cho đơn hàng đầu tiên.", "Get 10% off your first order.")}</p>
+              </div>
+              <form className="wearo-footer__newsletter-form" onSubmit={(event) => event.preventDefault()}>
+                <label className="sr-only" htmlFor="wearo-newsletter-email">Email</label>
+                <input id="wearo-newsletter-email" name="email" type="email" autoComplete="email" placeholder={t("Địa chỉ Email...", "Your email address...")} required />
+                <button type="submit">{t("ĐĂNG KÝ NGAY", "SUBSCRIBE NOW")}</button>
+              </form>
+            </section>
+
             <p className="wearo-footer__description">
               {t(
                 "Thương hiệu thời trang casual, streetwear & unisex hiện đại, hỗ trợ bởi AI.",
