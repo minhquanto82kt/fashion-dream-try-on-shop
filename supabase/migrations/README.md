@@ -1,24 +1,32 @@
 # Production migrations
 
-This directory is intentionally a placeholder for the future replayable production migration history.
+This directory tracks the path from the live Supabase migration history to a replayable Git-managed migration history.
 
 ## Current state
 
-The live Supabase project already has an existing production migration history. The repository's `supabase/schema/` files are reconstructed snapshots and must **not** be renamed or copied here as a fake baseline.
+The live Supabase project reports **71 applied production migrations**. Their exact versions and names are captured in `production-manifest.json`.
 
-## Before adding migrations
+The repository does **not** yet contain the SQL bodies of those 71 historical migrations. Therefore this directory is **not yet a replayable migration baseline**.
 
-1. Export/retrieve the authoritative production migration history.
-2. Reconcile all existing tables, constraints, indexes, RLS policies, grants, functions, triggers, storage buckets, and storage policies.
-3. Verify the result against `supabase/contracts/data-model.md`.
-4. Test the resulting baseline on a non-production Supabase project.
-5. Only then commit the ordered migration history here.
+The repository's `supabase/schema/` files are reconstructed snapshots and must **not** be renamed, concatenated, or copied here as a fake baseline.
+
+## Required baseline procedure
+
+1. Retrieve/export the exact SQL body for each of the 71 production migrations.
+2. Preserve the original migration version/timestamp and name.
+3. Commit the files in exact version order.
+4. Verify that all tables, columns, constraints, indexes, enums, RLS policies, grants, functions, triggers, storage buckets, and storage policies are represented.
+5. Apply the complete history to a disposable/non-production Supabase database.
+6. Run the repository read-only audit and compare the catalog/RLS/RPC/storage surface with production.
+7. Only after parity is confirmed should this directory become the source for future database changes.
 
 ## Rules
 
-- Never rewrite already-applied production migration IDs.
+- Never rewrite or renumber already-applied production migration IDs.
 - Never silently convert a schema snapshot into a migration.
-- Prefer small, ordered, reversible or safely additive changes.
-- Every migration that changes authorization must include an RLS/grant review.
-- Every migration that changes an entity must include a dependent application/API review.
+- Never apply a reconstructed baseline over the existing production database.
+- Prefer small, ordered, backward-compatible changes after baseline parity is established.
+- Every authorization migration requires an RLS/grant/security-definer review.
+- Every entity migration requires a dependent application/API review.
+- Every storage migration requires bucket and `storage.objects` policy review.
 - Production deployment must be verified after migration, not inferred from GitHub commit success.
