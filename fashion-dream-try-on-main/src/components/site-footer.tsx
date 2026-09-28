@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Clock, Facebook, Instagram, MapPin, Music2, Phone, Youtube } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import "@/styles/wearo-footer-unified.css";
+import "@/styles/wearo-footer-newsletter-placement.css";
 
 const linkClass = "wearo-footer__link";
 
