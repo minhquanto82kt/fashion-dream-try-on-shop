@@ -1,6 +1,6 @@
 # Supabase Database Layer
 
-This directory keeps the database structure, database contracts, development seed data, read-only audit checks, and migration guidance for Fashion Dream Try-On Shop under Git version control.
+This directory keeps the database structure, database contracts, development seed data, read-only audit checks, live reconciliation records, and migration guidance for Fashion Dream Try-On Shop under Git version control.
 
 ## Current database
 
@@ -18,8 +18,11 @@ supabase/
 ├── checks/
 │   ├── README.md
 │   └── 001_security_integrity_audit.sql
+├── reconciliation/
+│   └── 2026-09-live-audit.md
 ├── migrations/
-│   └── README.md
+│   ├── README.md
+│   └── production-manifest.json
 ├── schema/
 │   ├── README.md
 │   ├── 001_core_products.sql
@@ -36,6 +39,17 @@ supabase/
     └── 001_development.sql
 ```
 
+## Live audit result — 2026-09-28
+
+The live Supabase project contains:
+
+- **71 production migrations** — exact versions/names are recorded in `migrations/production-manifest.json`.
+- **27 public base tables** — all 27 have RLS enabled.
+- **5 storage buckets** — including private AI/Try-On storage and public catalog/branding storage.
+- A broader commerce/RBAC/content surface than the original 9 schema snapshots.
+
+The original 9 schema files cover the core catalog, orders, payments, admin, AI Try-On, Product Vision, backend functions, and site branding. The live database also contains carts, inventory movements, reviews, tags, vouchers, wishlist, RBAC, AI quota tracking, and appearance/content workflows. See `reconciliation/2026-09-live-audit.md` and `contracts/data-model.md`.
+
 ## Architecture coverage
 
 | Area | Git SQL reference | Live database checked |
@@ -49,52 +63,61 @@ supabase/
 | Product Vision | `schema/007_product_vision.sql` | Yes |
 | SQL functions / triggers | `schema/008_backend_functions.sql` | Yes |
 | Site branding / logo storage | `schema/009_site_branding.sql` | Yes |
+| Live commerce extensions | `reconciliation/2026-09-live-audit.md` | Yes |
+| Live RBAC / appearance / content | `reconciliation/2026-09-live-audit.md` | Yes |
 | Development seed | `seed/001_development.sql` | Template only |
 | Read-only DB audit | `checks/001_security_integrity_audit.sql` | Manual |
 
 ## Source-of-truth model
 
-There are three different database artifacts and they must not be confused:
+There are four different database artifacts and they must not be confused:
 
 1. **Live Supabase database** — source of truth for production data and current production migration history.
-2. **`schema/`** — human-readable architecture snapshots reconstructed from the live database. They describe tables, constraints, RLS, indexes, functions, and triggers but are not safe to replay blindly.
-3. **`migrations/`** — reserved for an ordered, replayable migration history after the existing production migration history has been reconciled. It is intentionally not populated with a fake baseline today.
+2. **`schema/`** — human-readable architecture snapshots reconstructed from the live database. They describe selected tables, constraints, RLS, indexes, functions, and triggers but are not safe to replay blindly.
+3. **`migrations/production-manifest.json`** — exact live migration versions/names captured from Supabase. It is a manifest, not the migration SQL bodies.
+4. **`migrations/` SQL files** — reserved for the exact ordered production migration history. They must be populated from the real migration bodies, not manufactured from schema snapshots.
 
-The database contract in `contracts/data-model.md` defines the intended relationships, ownership, CRUD boundaries, and invariants shared by frontend, API, AI, and database work. The read-only checks in `checks/` provide a repeatable sanity audit without mutating the database.
+The database contract in `contracts/data-model.md` defines the live relationships, ownership, CRUD boundaries, and invariants shared by frontend, API, AI, and database work. The read-only checks in `checks/` provide a repeatable sanity audit without mutating the database.
 
 ## Important distinction: schema snapshot vs migration
 
 These files document the current architecture so the database design is visible in GitHub. They do **not** replace the existing production migrations already present in Supabase.
 
-Do not execute the schema files blindly against the existing production project. Before creating a replayable migration baseline, reconcile the existing production migration history and verify the resulting schema, RLS, grants, functions, triggers, indexes, and storage policies.
+Do not execute the schema files blindly against the existing production project. Before creating a replayable migration baseline, reconcile the existing production migration history and verify the resulting schema, RLS, grants, functions, triggers, indexes, enums, and storage policies.
 
 ## Rules
 
-1. Supabase remains the source of truth for live data.
+1. Supabase remains the source of truth for live data and current production migration history.
 2. Do not copy production customer, order, payment, or authentication data into GitHub.
 3. Never commit Supabase service-role keys, JWT secrets, API keys, or passwords.
 4. Do not run schema snapshots directly against production without first verifying migration state.
-5. New database changes should eventually be added as ordered migrations after the existing production migration history has been reconciled.
-6. RLS policies, grants, constraints, indexes, triggers, functions, and storage policies are part of the database architecture and must be version-controlled.
-7. Inventory source of truth is `product_variants.stock`; a separate inventory table is intentionally not introduced for the MVP.
+5. New database changes should be added as ordered migrations once the real production migration bodies are available in Git.
+6. RLS policies, grants, constraints, indexes, triggers, functions, enums, and storage policies are part of the database architecture and must be version-controlled.
+7. `product_variants.stock` is the current inventory balance/source used by commerce logic; `inventory_movements` is the audit/history layer.
 8. Orders and payments are historical financial records and should not be hard-deleted as part of normal admin CRUD.
 9. AI provider secrets remain server-side; `try_on_jobs` stores job state and storage paths, not provider secrets.
 10. Every database change must be checked against the database contract before changing application code.
 11. Prefer additive, backward-compatible changes; avoid destructive DDL until dependent application code and data have been audited.
 12. Any production schema change must be verified in a non-production environment before deployment.
+13. Do not claim the repository has a replayable migration baseline until the exact historical SQL files have been committed and replay-tested.
 
 ## CRUD ownership
 
-- **Products / variants / product images:** admin CRUD through authenticated server/database boundaries; public users have published-catalog read access only.
-- **Orders:** customer creation goes through the existing atomic order RPC; admin users can read/update operational status. Do not hard-delete historical orders.
-- **Payments:** payment creation/verification is controlled by server/database functions; admin users can read/update where explicitly allowed. Do not hard-delete payment history.
-- **Payment events:** append-only audit history; application code should not rewrite or delete historical events.
-- **Try-on jobs:** users create/read/update their own jobs according to RLS; provider credentials remain server-side.
-- **Admin membership:** managed through privileged workflows; clients do not directly maintain `admin_users` membership.
-- **Site branding:** public read, admin-only update/storage mutation.
+- **Products / variants / product images:** admin/backoffice CRUD through authenticated database boundaries; public users have published-catalog read access only.
+- **Carts / wishlist / user vouchers:** authenticated users manage only their own records under RLS.
+- **Orders:** customer creation goes through the existing atomic order RPC; backoffice users can read/update operational status according to role. Do not hard-delete historical orders.
+- **Payments:** payment creation/verification is controlled by server/database functions; read/update access is role-scoped. Do not hard-delete payment history.
+- **Payment events / inventory movements:** append-only audit/history layers.
+- **Product reviews:** verified-buyer/customer and backoffice policies govern create/update/delete/read.
+- **Tags / product tags / vouchers / appearance / site content:** backoffice workflows governed by live RLS and RPC permissions.
+- **Try-on jobs / AI quota:** user/server workflow; provider credentials remain server-side.
+- **Admin membership / user roles:** privileged or admin role-management workflows; clients do not directly elevate themselves.
+- **Storage:** bucket-specific RLS policies govern public reads and admin/server mutations.
 
-## Existing production migration history
+## Production migration status
 
-The current Supabase project contains production migrations covering product CMS/security, variants and order-item linkage, atomic order creation, admin/RLS hardening, payment creation/verification, SePay webhook/idempotency handling, catalog seed data, product image storage, admin linkage, private Try-On storage/jobs, Product Vision attributes, and related backend functions.
+The live Supabase project currently reports **71 migrations**. The exact ordered version/name list is captured in `migrations/production-manifest.json`.
 
-The production migration history remains authoritative until a complete baseline is generated and verified.
+The SQL bodies are not yet present in this repository, so the project is **not yet a replayable migration baseline**. The next safe step is to export/retrieve the exact 71 migration SQL files, commit them unchanged in timestamp order, replay them on a disposable/non-production database, and compare the resulting catalog/RLS/RPC/storage surface against production.
+
+Until that parity test passes, `schema/` remains documentation/reference only and the live Supabase migration history remains authoritative.
