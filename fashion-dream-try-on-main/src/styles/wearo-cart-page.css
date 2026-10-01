@@ -1,0 +1,284 @@
+/* WEARO Cart — scoped visual layer. Keeps cart behavior unchanged. */
+.wearo-cart-page {
+  --cart-ink: #171717;
+  --cart-blue: #54728C;
+  --cart-blue-soft: #7794A6;
+  --cart-peach: #F2CEAE;
+  --cart-beige: #D9BBA9;
+  --cart-coral: #F2AD94;
+  --cart-paper: #F8F6F2;
+  --cart-white: #FFFFFF;
+  background: var(--cart-paper);
+  color: var(--cart-ink);
+  min-height: 100vh;
+}
+.wearo-cart-page .wearo-cart-main {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 148px 0 112px;
+}
+.wearo-cart-page .wearo-cart-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--cart-blue);
+  font: 600 11px/1.2 "Lexend", sans-serif;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.wearo-cart-page .wearo-cart-kicker::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: var(--cart-coral);
+}
+.wearo-cart-page .wearo-cart-heading {
+  margin-top: 12px;
+  font: 700 clamp(3rem, 7vw, 6.4rem)/.88 "Space Grotesk", sans-serif;
+  letter-spacing: -.055em;
+  color: var(--cart-ink);
+}
+.wearo-cart-page .wearo-cart-heading span { color: var(--cart-blue); }
+.wearo-cart-page .wearo-cart-subhead {
+  margin-top: 16px;
+  max-width: 560px;
+  color: #687985;
+  font: 400 14px/1.7 "Lexend", sans-serif;
+}
+.wearo-cart-page .wearo-cart-clear {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  border: 1px solid rgba(84,114,140,.22);
+  padding: 9px 13px;
+  background: transparent;
+  color: #687985;
+  font: 600 10px/1.2 "Lexend", sans-serif;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  transition: .2s ease;
+}
+.wearo-cart-page .wearo-cart-clear:hover {
+  border-color: var(--cart-coral);
+  color: var(--cart-ink);
+  background: rgba(242,173,148,.10);
+}
+.wearo-cart-page .wearo-cart-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(300px, .65fr);
+  gap: 42px;
+  margin-top: 48px;
+  align-items: start;
+}
+.wearo-cart-page .wearo-cart-list {
+  border-top: 1px solid var(--cart-beige);
+}
+.wearo-cart-page .wearo-cart-item {
+  display: grid;
+  grid-template-columns: 112px minmax(0,1fr) auto;
+  gap: 22px;
+  align-items: start;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(84,114,140,.16);
+}
+.wearo-cart-page .wearo-cart-image {
+  width: 112px;
+  height: 138px;
+  object-fit: cover;
+  background: #ece8e2;
+}
+.wearo-cart-page .wearo-cart-item-index {
+  color: var(--cart-blue-soft);
+  font: 600 10px/1 "Lexend", sans-serif;
+  letter-spacing: .16em;
+}
+.wearo-cart-page .wearo-cart-item-name {
+  margin-top: 8px;
+  font: 600 18px/1.25 "Be Vietnam Pro", sans-serif;
+  letter-spacing: -.02em;
+}
+.wearo-cart-page .wearo-cart-meta {
+  margin-top: 7px;
+  color: #687985;
+  font: 500 10px/1.5 "Lexend", sans-serif;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+.wearo-cart-page .wearo-cart-stock {
+  margin-top: 8px;
+  color: #687985;
+  font: 400 12px/1.5 "Lexend", sans-serif;
+}
+.wearo-cart-page .wearo-cart-stock.is-alert { color: #A64E48; }
+.wearo-cart-page .wearo-cart-controls {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-top: 20px;
+}
+.wearo-cart-page .wearo-cart-qty {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(84,114,140,.22);
+}
+.wearo-cart-page .wearo-cart-qty button {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  background: var(--cart-white);
+  border: 0;
+  color: var(--cart-blue);
+}
+.wearo-cart-page .wearo-cart-qty button:hover:not(:disabled) { background: var(--cart-peach); }
+.wearo-cart-page .wearo-cart-qty button:disabled { opacity: .3; }
+.wearo-cart-page .wearo-cart-qty span {
+  min-width: 36px;
+  text-align: center;
+  font: 600 12px/1 "Lexend", sans-serif;
+}
+.wearo-cart-page .wearo-cart-remove {
+  width: 34px;
+  height: 34px;
+  margin-left: 8px;
+  display: grid;
+  place-items: center;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #687985;
+}
+.wearo-cart-page .wearo-cart-remove:hover {
+  color: #A64E48;
+  border-color: rgba(166,78,72,.22);
+  background: rgba(166,78,72,.05);
+}
+.wearo-cart-page .wearo-cart-price {
+  min-width: 120px;
+  text-align: right;
+  color: var(--cart-blue);
+  font: 700 20px/1 "Space Grotesk", sans-serif;
+  letter-spacing: -.025em;
+}
+.wearo-cart-page .wearo-cart-summary {
+  position: sticky;
+  top: 116px;
+  border: 1px solid rgba(84,114,140,.20);
+  background: var(--cart-white);
+  padding: 28px;
+}
+.wearo-cart-page .wearo-cart-summary-label {
+  color: var(--cart-blue);
+  font: 600 10px/1.2 "Lexend", sans-serif;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+.wearo-cart-page .wearo-cart-summary-title {
+  margin-top: 7px;
+  font: 600 24px/1.15 "Be Vietnam Pro", sans-serif;
+}
+.wearo-cart-page .wearo-cart-alert {
+  margin-top: 18px;
+  border-left: 3px solid var(--cart-coral);
+  background: #fff7f3;
+  padding: 12px 13px;
+  color: #704842;
+  font: 400 12px/1.6 "Lexend", sans-serif;
+}
+.wearo-cart-page .wearo-cart-summary-lines {
+  margin-top: 24px;
+  display: grid;
+  gap: 13px;
+  font: 400 13px/1.5 "Lexend", sans-serif;
+}
+.wearo-cart-page .wearo-cart-summary-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+}
+.wearo-cart-page .wearo-cart-summary-line span:first-child { color: #687985; }
+.wearo-cart-page .wearo-cart-total {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  margin-top: 20px;
+  padding-top: 19px;
+  border-top: 1px solid rgba(84,114,140,.18);
+  font: 700 20px/1.1 "Space Grotesk", sans-serif;
+}
+.wearo-cart-page .wearo-cart-total strong { color: var(--cart-blue); }
+.wearo-cart-page .wearo-cart-checkout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 52px;
+  margin-top: 24px;
+  background: var(--cart-blue);
+  color: var(--cart-white);
+  font: 600 11px/1.2 "Lexend", sans-serif;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  transition: .2s ease;
+}
+.wearo-cart-page .wearo-cart-checkout:hover { background: #7794A6; transform: translateY(-1px); }
+.wearo-cart-page .wearo-cart-checkout.is-disabled { opacity: .42; pointer-events: none; }
+.wearo-cart-page .wearo-cart-shipping-note {
+  margin-top: 15px;
+  color: #687985;
+  text-align: center;
+  font: 400 11px/1.5 "Lexend", sans-serif;
+}
+.wearo-cart-page .wearo-cart-empty,
+.wearo-cart-page .wearo-cart-loading {
+  margin-top: 48px;
+  border: 1px solid rgba(84,114,140,.18);
+  background: var(--cart-white);
+  padding: 72px 28px;
+  text-align: center;
+}
+.wearo-cart-page .wearo-cart-empty-mark {
+  margin: 0 auto 22px;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--cart-beige);
+  border-radius: 50%;
+  color: var(--cart-blue);
+}
+.wearo-cart-page .wearo-cart-empty h2 {
+  font: 600 26px/1.15 "Be Vietnam Pro", sans-serif;
+}
+.wearo-cart-page .wearo-cart-empty p {
+  margin-top: 8px;
+  color: #687985;
+  font: 400 13px/1.6 "Lexend", sans-serif;
+}
+.wearo-cart-page .wearo-cart-shop-link {
+  display: inline-flex;
+  margin-top: 24px;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 25px;
+  background: var(--cart-blue);
+  color: var(--cart-white);
+  font: 600 10px/1.2 "Lexend", sans-serif;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+@media (max-width: 900px) {
+  .wearo-cart-page .wearo-cart-main { width: min(100% - 32px, 700px); padding-top: 128px; }
+  .wearo-cart-page .wearo-cart-layout { grid-template-columns: 1fr; gap: 30px; }
+  .wearo-cart-page .wearo-cart-summary { position: static; }
+}
+@media (max-width: 620px) {
+  .wearo-cart-page .wearo-cart-main { width: calc(100% - 28px); padding: 116px 0 72px; }
+  .wearo-cart-page .wearo-cart-heading { font-size: clamp(2.8rem, 16vw, 4.4rem); }
+  .wearo-cart-page .wearo-cart-layout { margin-top: 34px; }
+  .wearo-cart-page .wearo-cart-item { grid-template-columns: 82px minmax(0,1fr); gap: 14px; }
+  .wearo-cart-page .wearo-cart-image { width: 82px; height: 104px; }
+  .wearo-cart-page .wearo-cart-price { grid-column: 2; min-width: 0; text-align: left; margin-top: -4px; font-size: 18px; }
+  .wearo-cart-page .wearo-cart-summary { padding: 22px; }
+}
