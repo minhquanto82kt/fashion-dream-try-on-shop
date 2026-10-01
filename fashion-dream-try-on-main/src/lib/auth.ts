@@ -19,7 +19,11 @@ function setSignupCooldown(email: string, seconds: number) { if (typeof window =
 function getRecoveryCooldownKey(email: string) { return `${RECOVERY_COOLDOWN_PREFIX}${normalizeEmail(email)}`; }
 function getRecoveryCooldownRemaining(email: string) { if (typeof window === "undefined") return 0; const value = Number(window.sessionStorage.getItem(getRecoveryCooldownKey(email)) || 0); return Math.max(0, Math.ceil((value - Date.now()) / 1000)); }
 function setRecoveryCooldown(email: string, seconds: number) { if (typeof window === "undefined") return; window.sessionStorage.setItem(getRecoveryCooldownKey(email), String(Date.now() + seconds * 1000)); }
-export function getCustomerAccessToken(): string | null {\n  return getMockUserToken() ?? getCustomerSession()?.access_token ?? null;\n}\n\nexport function getCustomerSession(): Session | null { if (typeof window === "undefined") return null; try { const raw = window.localStorage.getItem(CUSTOMER_SESSION_KEY); return raw ? (JSON.parse(raw) as Session) : null; } catch { return null; } }
+export function getCustomerAccessToken(): string | null {
+  return getMockUserToken() ?? getCustomerSession()?.access_token ?? null;
+}
+
+export function getCustomerSession(): Session | null { if (typeof window === "undefined") return null; try { const raw = window.localStorage.getItem(CUSTOMER_SESSION_KEY); return raw ? (JSON.parse(raw) as Session) : null; } catch { return null; } }
 function setCustomerSession(session: Session | null) { if (typeof window === "undefined") return; if (session) window.localStorage.setItem(CUSTOMER_SESSION_KEY, JSON.stringify(session)); else window.localStorage.removeItem(CUSTOMER_SESSION_KEY); }
 function dispatchAuthEvent(type: "login" | "logout" | "recovery") { if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(`upthink:auth:${type}`)); }
 function dispatchCartChanged() { if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent("upthink:cart:changed")); }
