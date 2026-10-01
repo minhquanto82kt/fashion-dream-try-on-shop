@@ -5,11 +5,5 @@
     "api/[...path].py": {
       "maxDuration": 60
     }
-  },
-  "crons": [
-    {
-      "path": "/api/try-on/internal/worker/reconcile",
-      "schedule": "* * * * *"
-    }
-  ]
+  }
 }
