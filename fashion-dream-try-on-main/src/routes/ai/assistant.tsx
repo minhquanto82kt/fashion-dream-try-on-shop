@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { WearoAiAssistant } from "@/components/wearo-ai-assistant";
-import { getCustomerUser } from "@/lib/auth";\nimport { isMockUserMode } from "@/lib/mock-user";
+import { getCustomerUser } from "@/lib/auth";
+import { isMockUserMode } from "@/lib/mock-user";
 
 export const Route = createFileRoute("/ai/assistant")({
   head: () => ({
@@ -17,7 +18,8 @@ export const Route = createFileRoute("/ai/assistant")({
 
 function AiAssistantPage() {
   const [checking, setChecking] = useState(true);
-  const [member, setMember] = useState(false);\n  const [mock, setMock] = useState(false);
+  const [member, setMember] = useState(false);
+  const [mock, setMock] = useState(false);
 
   useEffect(() => {
     let active = true;
