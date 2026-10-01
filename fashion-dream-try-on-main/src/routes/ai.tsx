@@ -9,7 +9,7 @@ import {
 } from "@/lib/ai.functions";
 import { generateWearoAiReply } from "@/lib/wearo-ai-chat.functions";
 import { getStylistRecommendations } from "@/lib/stylist.functions";
-import { getCustomerSession } from "@/lib/auth";
+import { getCustomerAccessToken } from "@/lib/auth";
 
 const STYLES = ["Street", "Minimal", "Smart casual", "Y2K"];
 const OCCASIONS = ["Đi học", "Đi làm", "Hẹn hò", "Đi chơi"];
@@ -179,7 +179,7 @@ function TryOnStudio({
 
     try {
       const job = await generateTryOn({
-        data: { accessToken: getCustomerSession()?.access_token, personImage, productId, note: note.trim() || undefined },
+        data: { accessToken: getCustomerAccessToken(), personImage, productId, note: note.trim() || undefined },
       });
       setStatus("processing");
       await waitForResult(job.jobId);
