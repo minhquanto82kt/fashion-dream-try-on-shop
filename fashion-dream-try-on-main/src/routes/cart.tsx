@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Minus, Plus, Trash2, X } from "lucide-react";
+import { Minus, Plus, ShoppingBag, Trash2, X } from "lucide-react";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { formatPrice } from "@/lib/i18n";
 import { useCart } from "@/lib/cart";
 import { useI18n } from "@/lib/i18n";
+import "@/styles/wearo-cart-page.css";
 
 export const Route = createFileRoute("/cart")({
   head: () => ({
@@ -30,69 +31,97 @@ function CartPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="wearo-cart-page">
       <SiteNav />
-      <main className="mx-auto max-w-5xl px-6 pb-24 pt-28 sm:px-12">
-        <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
-          <div className="min-w-0">
-            <h1 className="text-4xl leading-tight sm:text-5xl">{t("Giỏ hàng", "Shopping Cart")}</h1>
-            {items.length > 0 && <p className="mt-2 text-sm leading-6 text-silver">{items.length} {t("sản phẩm", items.length === 1 ? "item" : "items")}</p>}
+      <main className="wearo-cart-main">
+        <header>
+          <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
+            <div>
+              <div className="wearo-cart-kicker">{t("WEARO / GIỎ HÀNG", "WEARO / SHOPPING BAG")}</div>
+              <h1 className="wearo-cart-heading">{t("Giỏ hàng", "Shopping Bag")}<span>.</span></h1>
+              <p className="wearo-cart-subhead">
+                {items.length > 0
+                  ? ${items.length} ${t("sản phẩm đã chọn", "items selected")}. ${t("Kiểm tra lựa chọn trước khi thanh toán.", "Review your selection before checkout.")}
+                  : t("Những món đồ bạn chọn sẽ xuất hiện tại đây.", "The pieces you select will appear here.")}
+              </p>
+            </div>
+            {items.length > 0 && (
+              <button type="button" onClick={handleClear} className="wearo-cart-clear">
+                <X className="size-3.5" /> {t("Xóa tất cả", "Clear all")}
+              </button>
+            )}
           </div>
-          {items.length > 0 && (
-            <button type="button" onClick={handleClear} className="flex min-h-10 shrink-0 items-center gap-2 border border-border px-4 py-2 text-xs uppercase tracking-[0.15em] text-silver transition-colors hover:border-destructive hover:text-destructive">
-              <X className="size-3.5 shrink-0" /> {t("Xóa tất cả", "Clear all")}
-            </button>
-          )}
-        </div>
+        </header>
 
         {loading && items.length === 0 ? (
-          <div className="mt-10 border border-border bg-card p-8 text-center sm:p-10"><p className="leading-6 text-silver">{t("Đang kiểm tra tồn kho...", "Checking stock...")}</p></div>
+          <div className="wearo-cart-loading">
+            <p className="wearo-cart-kicker">{t("Đang kiểm tra tồn kho", "Checking stock")}</p>
+          </div>
         ) : items.length === 0 ? (
-          <div className="mt-10 border border-border bg-card p-8 text-center sm:p-10">
-            <p className="leading-6 text-beige">{t("Giỏ hàng đang trống.", "Your cart is empty.")}</p>
-            <Link to="/shop" className="mt-6 inline-flex min-h-11 items-center justify-center bg-primary px-7 py-3 text-xs uppercase tracking-[0.15em] text-primary-foreground">{t("Mua sắm ngay", "Shop now")}</Link>
+          <div className="wearo-cart-empty">
+            <div className="wearo-cart-empty-mark"><ShoppingBag className="size-5" /></div>
+            <h2>{t("Giỏ hàng đang trống", "Your bag is empty")}</h2>
+            <p>{t("Khám phá các thiết kế mới của WEARO và thêm món đồ đầu tiên vào giỏ.", "Explore WEARO and add your first piece to the bag.")}</p>
+            <Link to="/shop" className="wearo-cart-shop-link">{t("Khám phá cửa hàng", "Explore shop")}</Link>
           </div>
         ) : (
-          <div className="mt-10 grid gap-6 lg:grid-cols-[1.4fr_0.6fr] lg:gap-10">
-            <div className="divide-y divide-border border border-border">
+          <div className="wearo-cart-layout">
+            <section className="wearo-cart-list" aria-label={t("Sản phẩm trong giỏ", "Cart items")}>
               {items.map((item, i) => {
                 const unavailable = !item.variant || item.stock <= 0;
                 const exceedsStock = item.variant !== null && item.qty > item.stock;
                 return (
-                  <div key={`${item.productId}-${item.size}-${item.color}`} className="flex min-w-0 flex-wrap gap-4 p-4 sm:flex-nowrap">
-                    <img src={item.product.image} alt={item.product.name} className="size-20 shrink-0 object-cover sm:size-24" />
-                    <div className="min-w-0 flex-1">
-                      <p className="font-medium leading-6">{item.product.name}</p>
-                      <p className="mt-1 text-xs uppercase leading-5 tracking-[0.15em] text-silver">{item.size} · {item.color}</p>
-                      <p className={`mt-1 text-xs leading-5 ${unavailable || exceedsStock ? "text-destructive" : "text-silver"}`}>
-                        {unavailable ? t("Biến thể không còn khả dụng", "This variant is no longer available") : exceedsStock ? t(`Chỉ còn ${item.stock} sản phẩm`, `Only ${item.stock} left`) : t(`Còn ${item.stock} sản phẩm`, `${item.stock} in stock`)}
+                  <article key={${item.productId}-${item.size}-${item.color}} className="wearo-cart-item">
+                    <img src={item.product.image} alt={item.product.name} className="wearo-cart-image" />
+                    <div className="min-w-0">
+                      <div className="wearo-cart-item-index">0{i + 1} / WEARO</div>
+                      <h2 className="wearo-cart-item-name">{item.product.name}</h2>
+                      <p className="wearo-cart-meta">{item.size} · {item.color}</p>
+                      <p className={`wearo-cart-stock ${unavailable || exceedsStock ? "is-alert" : ""}`}>
+                        {unavailable
+                          ? t("Biến thể không còn khả dụng", "This variant is no longer available")
+                          : exceedsStock
+                            ? t(`Chỉ còn ${item.stock} sản phẩm`, `Only ${item.stock} left`)
+                            : t(`Còn ${item.stock} sản phẩm`, `${item.stock} in stock`)}
                       </p>
-                      <div className="mt-3 flex flex-wrap items-center gap-3">
-                        <button type="button" disabled={item.qty <= 1} onClick={() => setQty(i, item.qty - 1)} className="flex size-9 shrink-0 items-center justify-center border border-border disabled:cursor-not-allowed disabled:opacity-30" aria-label={t("Giảm số lượng", "Decrease quantity")}><Minus className="size-3" /></button>
-                        <span className="min-w-5 text-center text-sm">{item.qty}</span>
-                        <button type="button" disabled={unavailable || item.qty >= item.stock} onClick={() => setQty(i, item.qty + 1)} className="flex size-9 shrink-0 items-center justify-center border border-border disabled:cursor-not-allowed disabled:opacity-30" aria-label={t("Tăng số lượng", "Increase quantity")}><Plus className="size-3" /></button>
-                        <button type="button" onClick={() => remove(i)} className="ml-1 flex size-9 shrink-0 items-center justify-center text-silver hover:text-destructive" aria-label={t(`Xóa ${item.product.name}`, `Remove ${item.product.name}`)}><Trash2 className="size-4" /></button>
+                      <div className="wearo-cart-controls">
+                        <div className="wearo-cart-qty" aria-label={t("Số lượng", "Quantity")}>
+                          <button type="button" disabled={item.qty <= 1} onClick={() => setQty(i, item.qty - 1)} aria-label={t("Giảm số lượng", "Decrease quantity")}><Minus className="size-3" /></button>
+                          <span>{item.qty}</span>
+                          <button type="button" disabled={unavailable || item.qty >= item.stock} onClick={() => setQty(i, item.qty + 1)} aria-label={t("Tăng số lượng", "Increase quantity")}><Plus className="size-3" /></button>
+                        </div>
+                        <button type="button" onClick={() => remove(i)} className="wearo-cart-remove" aria-label={t(`Xóa ${item.product.name}`, `Remove ${item.product.name}`)}><Trash2 className="size-4" /></button>
                       </div>
                     </div>
-                    <p className="w-full shrink-0 text-left font-display leading-tight text-primary sm:w-auto sm:max-w-[40%] sm:text-right">{price(item.product.price * item.qty)}</p>
-                  </div>
+                    <p className="wearo-cart-price">{price(item.product.price * item.qty)}</p>
+                  </article>
                 );
               })}
-            </div>
+            </section>
 
-            <aside className="h-fit border border-border bg-card p-5 sm:p-6">
-              <p className="eyebrow">{t("Tổng kết", "Summary")}</p>
-              {hasStockIssues && <div className="mt-4 border border-destructive/40 bg-destructive/5 p-3 text-sm leading-6 text-destructive">{t("Một hoặc nhiều sản phẩm trong giỏ đã thay đổi tồn kho. Vui lòng điều chỉnh số lượng hoặc xóa sản phẩm không khả dụng trước khi thanh toán.", "One or more products have changed stock levels. Adjust the quantity or remove unavailable items before checkout.")}</div>}
-              <div className="mt-4 space-y-3 text-sm">
-                <div className="flex items-start justify-between gap-4"><span className="text-silver">{t("Tạm tính", "Subtotal")}</span><span className="text-right">{price(subtotal)}</span></div>
-                <div className="flex items-start justify-between gap-4"><span className="text-silver">{t("Vận chuyển", "Shipping")}</span><span className="text-right">{shipping === 0 ? t("Miễn phí", "Free") : price(shipping)}</span></div>
-              </div>
-              <div className="mt-4 flex items-start justify-between gap-4 border-t border-border pt-4 font-display text-lg leading-tight"><span>{t("Tổng", "Total")}</span><span className="text-right text-primary">{price(subtotal + shipping)}</span></div>
-              {hasStockIssues ? (
-                <button type="button" disabled className="mt-6 flex min-h-11 w-full cursor-not-allowed items-center justify-center bg-primary px-6 py-3 text-center text-xs uppercase tracking-[0.15em] text-primary-foreground opacity-40">{t("Kiểm tra tồn kho trước", "Check stock before checkout")}</button>
-              ) : (
-                <Link to="/checkout" className="mt-6 flex min-h-11 items-center justify-center bg-primary px-6 py-3 text-center text-xs uppercase tracking-[0.15em] text-primary-foreground">{t("Thanh toán", "Checkout")}</Link>
+            <aside className="wearo-cart-summary">
+              <div className="wearo-cart-summary-label">{t("02 / Tổng kết", "02 / Order summary")}</div>
+              <h2 className="wearo-cart-summary-title">{t("Đơn hàng của bạn", "Your order")}</h2>
+              {hasStockIssues && (
+                <div className="wearo-cart-alert">
+                  {t("Một hoặc nhiều sản phẩm đã thay đổi tồn kho. Hãy điều chỉnh số lượng hoặc xóa sản phẩm không khả dụng trước khi thanh toán.", "One or more products have changed stock levels. Adjust the quantity or remove unavailable products before checkout.")}
+                </div>
               )}
+              <div className="wearo-cart-summary-lines">
+                <div className="wearo-cart-summary-line"><span>{t("Tạm tính", "Subtotal")}</span><strong>{price(subtotal)}</strong></div>
+                <div className="wearo-cart-summary-line"><span>{t("Vận chuyển", "Shipping")}</span><strong>{shipping === 0 ? t("Miễn phí", "Free") : price(shipping)}</strong></div>
+              </div>
+              <div className="wearo-cart-total"><span>{t("Tổng", "Total")}</span><strong>{price(subtotal + shipping)}</strong></div>
+              {hasStockIssues ? (
+                <div className="wearo-cart-checkout is-disabled">{t("Kiểm tra tồn kho trước", "Check stock before checkout")}</div>
+              ) : (
+                <Link to="/checkout" className="wearo-cart-checkout">{t("Tiến hành thanh toán", "Proceed to checkout")}</Link>
+              )}
+              <p className="wearo-cart-shipping-note">
+                {shipping === 0
+                  ? t("Đơn hàng đủ điều kiện miễn phí vận chuyển.", "Your order qualifies for free shipping.")
+                  : t("Miễn phí vận chuyển cho đơn từ 1.000.000₫.", "Free shipping on orders from 1,000,000₫.")}
+              </p>
             </aside>
           </div>
         )}
