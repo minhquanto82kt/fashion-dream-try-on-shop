@@ -121,6 +121,7 @@ export const generateConcept = createServerFn({ method: "POST" })
   });
 
 const TryOnInput = z.object({
+  accessToken: z.string().trim().min(1).max(5000).optional(),
   personImage: z.string().min(20).max(8_500_000),
   productId: z.string().trim().min(1).max(100),
   note: z.string().trim().max(MAX_NOTE_LENGTH).optional(),
@@ -170,7 +171,7 @@ async function internalTryOnRequest<T>(path: string, init: RequestInit): Promise
 export const generateTryOn = createServerFn({ method: "POST" })
   .validator((input: unknown) => TryOnInput.parse(input))
   .handler(async ({ data }) => {
-    const context = assertTryOnEntitlement(await resolveCustomerContext());
+    const context = assertTryOnEntitlement(await resolveCustomerContext(data.accessToken));
     const enabled = await getAiTryOnEnabled();
     if (!enabled) throw new Error("AI Virtual Try-On hiện đang tạm tắt. Vui lòng thử lại sau.");
     validatePersonImage(data.personImage);
