@@ -55,8 +55,8 @@ async function isAdminUser(userId: string): Promise<boolean> {
   return rows.some((row) => row.user_id === userId);
 }
 
-export async function resolveCustomerContext(): Promise<CustomerContext> {
-  const accessToken = getAccessTokenFromRequest();
+export async function resolveCustomerContext(accessTokenOverride?: string): Promise<CustomerContext> {
+  const accessToken = accessTokenOverride?.trim() || getAccessTokenFromRequest();
 
   if (!accessToken) {
     return { kind: "guest", plan: "guest-basic", userId: null };
