@@ -7,7 +7,7 @@ export const MOCK_USER = {
   name: "WEARO Preview User",
 } as const;
 
-const STORAGE_KEY = "wearo:mock-user-mode";
+const STORAGE_KEY = "wearo:mock-user-mode";\nconst TOKEN_KEY = "wearo:mock-user-token";
 const PREVIEW_PARAM = "preview";
 const MOCK_SESSION_EVENT = "wearo:mock-user:changed";
 
@@ -32,7 +32,7 @@ export function isMockUserMode(): boolean {
   return window.sessionStorage.getItem(STORAGE_KEY) === "1";
 }
 
-export function enterMockUserMode(): void {
+export function setMockUserToken(accessToken: string): void {\n  if (typeof window === "undefined") return;\n  window.sessionStorage.setItem(TOKEN_KEY, accessToken);\n}\n\nexport function getMockUserToken(): string | null {\n  if (typeof window === "undefined" || !isMockUserMode()) return null;\n  return window.sessionStorage.getItem(TOKEN_KEY);\n}\n\nexport function enterMockUserMode(): void {
   if (typeof window === "undefined") return;
   if (isMockUserMode()) return;
   window.sessionStorage.setItem(STORAGE_KEY, "1");
@@ -43,7 +43,7 @@ export function enterMockUserMode(): void {
 export function exitMockUserMode(): void {
   if (typeof window === "undefined") return;
   if (!isMockUserMode()) return;
-  window.sessionStorage.removeItem(STORAGE_KEY);
+  window.sessionStorage.removeItem(STORAGE_KEY);\n  window.sessionStorage.removeItem(TOKEN_KEY);
   dispatchMockUserChanged(false);
   dispatchMockAuthEvent("logout");
 }
