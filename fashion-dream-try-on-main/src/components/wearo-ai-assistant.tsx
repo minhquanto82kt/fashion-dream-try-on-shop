@@ -9,7 +9,7 @@ import {
 } from "@assistant-ui/react";
 import { ArrowUp, Sparkles } from "lucide-react";
 import { generateWearoAiReply } from "@/lib/wearo-ai-chat.functions";
-import { getCustomerSession } from "@/lib/auth";
+import { getCustomerAccessToken } from "@/lib/auth";
 
 const modelAdapter: ChatModelAdapter = {
   async run({ messages }) {
@@ -25,7 +25,7 @@ const modelAdapter: ChatModelAdapter = {
       }))
       .filter((message) => message.content.trim().length > 0);
 
-    const result = await generateWearoAiReply({ data: { accessToken: session.access_token, messages: normalized } });
+    const result = await generateWearoAiReply({ data: { accessToken, messages: normalized } });
     return { content: [{ type: "text", text: result.text }] };
   },
 };
