@@ -41,7 +41,7 @@ function CartPage() {
               <h1 className="wearo-cart-heading">{t("Giỏ hàng", "Shopping Bag")}<span>.</span></h1>
               <p className="wearo-cart-subhead">
                 {items.length > 0
-                  ? ${items.length} ${t("sản phẩm đã chọn", "items selected")}. ${t("Kiểm tra lựa chọn trước khi thanh toán.", "Review your selection before checkout.")}
+                  ? `${items.length} ${t("sản phẩm đã chọn", "items selected")}. ${t("Kiểm tra lựa chọn trước khi thanh toán.", "Review your selection before checkout.")}`
                   : t("Những món đồ bạn chọn sẽ xuất hiện tại đây.", "The pieces you select will appear here.")}
               </p>
             </div>
@@ -71,7 +71,7 @@ function CartPage() {
                 const unavailable = !item.variant || item.stock <= 0;
                 const exceedsStock = item.variant !== null && item.qty > item.stock;
                 return (
-                  <article key={${item.productId}-${item.size}-${item.color}} className="wearo-cart-item">
+                  <article key={`${item.productId}-${item.size}-${item.color}`} className="wearo-cart-item">
                     <img src={item.product.image} alt={item.product.name} className="wearo-cart-image" />
                     <div className="min-w-0">
                       <div className="wearo-cart-item-index">0{i + 1} / WEARO</div>
