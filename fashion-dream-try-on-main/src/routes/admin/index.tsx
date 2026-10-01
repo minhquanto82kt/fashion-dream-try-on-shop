@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { enterMockUserMode } from "@/lib/mock-user";
+import { enterMockUserMode, setMockUserToken } from "@/lib/mock-user";\nimport { getSession } from "@/lib/upthink-supabase";\nimport { startAdminMockSession } from "@/lib/mock-user.functions";
 
 export const Route = createFileRoute("/admin/")({
   component: AdminDashboardPage,
@@ -46,7 +46,7 @@ function AdminDashboardPage() {
           <button type="button" className="up-admin-dashboard-action" onClick={startMockUser}>
             <div className="up-admin-dashboard-action-title">🧪 Mock User</div>
             <div className="up-admin-dashboard-action-desc">Xem trước website như một khách hàng mà không cần đăng nhập tài khoản khác.</div>
-            <span>Start preview →</span>
+            <span>{mockStarting ? "Starting sandbox…" : "Start preview →"}</span>
           </button>
           {cards.map(([title, description, href]) => href === "#" ? (
             <div key={title} className="up-admin-dashboard-action up-admin-dashboard-action--soon" aria-disabled="true">
