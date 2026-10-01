@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { WearoAiAssistant } from "@/components/wearo-ai-assistant";
-import { getCustomerUser } from "@/lib/auth";
+import { getCustomerUser } from "@/lib/auth";\nimport { isMockUserMode } from "@/lib/mock-user";
 
 export const Route = createFileRoute("/ai/assistant")({
   head: () => ({
@@ -17,13 +17,13 @@ export const Route = createFileRoute("/ai/assistant")({
 
 function AiAssistantPage() {
   const [checking, setChecking] = useState(true);
-  const [member, setMember] = useState(false);
+  const [member, setMember] = useState(false);\n  const [mock, setMock] = useState(false);
 
   useEffect(() => {
     let active = true;
     getCustomerUser()
       .then((user) => {
-        if (active) setMember(Boolean(user?.id));
+        if (active) { setMember(Boolean(user?.id)); setMock(isMockUserMode()); }
       })
       .finally(() => {
         if (active) setChecking(false);
@@ -40,10 +40,10 @@ function AiAssistantPage() {
         <div className="wearo-ai-assistant-shell">
           <div className="wearo-ai-assistant-topbar">
             <div>
-              <p className="wearo-ai-kicker">WEARO / AI STYLIST · LOYALTY PLAN</p>
+              <p className="wearo-ai-kicker">WEARO / AI STYLIST · {mock ? "ADMIN SANDBOX" : "LOYALTY PLAN"}</p>
               <h1 className="wearo-ai-assistant-title wearo-ai-display">Personal Style Assistant</h1>
               <p className="wearo-ai-assistant-lede">
-                AI Personal Stylist là quyền lợi của tài khoản WEARO thành viên: tư vấn outfit, màu sắc, form dáng và cách phối đồ theo nhu cầu của bạn.
+                AI Personal Stylist là quyền lợi của tài khoản WEARO thành viên và Admin Mock Sandbox: tư vấn outfit, màu sắc, form dáng và cách phối đồ theo nhu cầu của bạn.
               </p>
             </div>
             <Link to="/ai" className="wearo-ai-assistant-back">← AI Studio</Link>
