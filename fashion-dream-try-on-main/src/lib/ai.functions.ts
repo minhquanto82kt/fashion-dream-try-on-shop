@@ -3,6 +3,7 @@ import { getRequestHeader } from "@tanstack/react-start/server";
 import { generateImage } from "ai";
 import { z } from "zod";
 import { getAiTryOnEnabled } from "@/lib/feature-flags.server";
+import { assertTryOnEntitlement, resolveCustomerContext } from "@/lib/customer-context.server";
 
 const CONCEPT_IMAGE_MODEL = "openai/gpt-image-2.5-flare";
 const MAX_PERSON_IMAGE_BYTES = 6 * 1024 * 1024;
@@ -169,6 +170,7 @@ async function internalTryOnRequest<T>(path: string, init: RequestInit): Promise
 export const generateTryOn = createServerFn({ method: "POST" })
   .validator((input: unknown) => TryOnInput.parse(input))
   .handler(async ({ data }) => {
+    const context = assertTryOnEntitlement(await resolveCustomerContext());
     const enabled = await getAiTryOnEnabled();
     if (!enabled) throw new Error("AI Virtual Try-On hiện đang tạm tắt. Vui lòng thử lại sau.");
     validatePersonImage(data.personImage);
@@ -184,7 +186,7 @@ export const generateTryOn = createServerFn({ method: "POST" })
         client_key: clientKey,
       }),
     });
-    return { jobId: job.id, status: job.status };
+    return { jobId: job.id, status: job.status, plan: context.plan };
   });
 
 export const getTryOnJob = createServerFn({ method: "GET" })
