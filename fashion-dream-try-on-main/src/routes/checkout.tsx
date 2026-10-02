@@ -204,9 +204,8 @@ function CheckoutPage() {
               try {
                 const session = mockMode ? null : getCustomerSession();
                 const orderItems = items.map((item) => {
-                  const variantId = item.variantId ?? item.variant?.id;
-                  if (!variantId) throw new Error(`Không xác định được biến thể của "${item.product.name}". Vui lòng chọn lại size/màu và thêm sản phẩm vào giỏ.`);
-                  return { productId: item.productId, variantId, size: item.size, color: item.color, quantity: item.qty };
+                  if (!item.variantId) throw new Error(`Không xác định được biến thể của "${item.product.name}". Vui lòng tải lại giỏ hàng và thử lại.`);
+                  return { variantId: item.variantId, quantity: item.qty };
                 });
 
                 if (mockMode) {
