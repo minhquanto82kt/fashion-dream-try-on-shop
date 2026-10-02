@@ -308,8 +308,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   [lines, products]);
 
   const hasStockIssues = useMemo(
-    () => items.some((item) => item.stock <= 0 || item.qty > item.stock),
-    [items],
+    () => items.length !== lines.length || items.some((item) => item.stock <= 0 || item.qty > item.stock),
+    [items, lines],
   );
   const count = useMemo(() => lines.reduce((sum, line) => sum + line.qty, 0), [lines]);
   const subtotal = useMemo(
