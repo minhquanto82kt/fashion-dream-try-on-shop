@@ -134,7 +134,7 @@ function CheckoutPage() {
 
   if (paymentInfo) {
     return (
-      <div className="min-h-screen">
+      <div className="wearo-checkout-page min-h-screen">
         <SiteNav />
         <main className="mx-auto max-w-2xl px-6 pb-24 pt-32 text-center sm:px-12">
           <p className="eyebrow">Thanh toán VietQR</p>
@@ -163,7 +163,7 @@ function CheckoutPage() {
 
   if (done) {
     return (
-      <div className="min-h-screen">
+      <div className="wearo-checkout-page min-h-screen">
         <SiteNav />
         <main className="mx-auto max-w-2xl px-6 pb-24 pt-32 text-center sm:px-12">
           <p className="eyebrow">{mockMode ? "Mock User · Xem trước đơn hàng" : "Đơn hàng đã được xác nhận"}</p>
@@ -181,7 +181,7 @@ function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="wearo-checkout-page min-h-screen">
       <SiteNav />
       <main className="mx-auto max-w-5xl px-6 pb-24 pt-28 sm:px-12">
         <p className="eyebrow">{mockMode ? "SANDBOX CHECKOUT" : "WEARO CHECKOUT"}</p>
