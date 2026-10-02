@@ -68,15 +68,15 @@ function CartPage() {
           <div className="wearo-cart-layout">
             <section className="wearo-cart-list" aria-label={t("Sản phẩm trong giỏ", "Cart items")}>
               {items.map((item, i) => {
-                const unavailable = !item.variant || item.stock <= 0;
-                const exceedsStock = item.variant !== null && item.qty > item.stock;
+                const unavailable = item.stock <= 0;
+                const exceedsStock = item.qty > item.stock;
                 return (
-                  <article key={`${item.productId}-${item.size}-${item.color}`} className="wearo-cart-item">
+                  <article key={`${item.variantId}`} className="wearo-cart-item">
                     <img src={item.product.image} alt={item.product.name} className="wearo-cart-image" />
                     <div className="min-w-0">
                       <div className="wearo-cart-item-index">0{i + 1} / WEARO</div>
                       <h2 className="wearo-cart-item-name">{item.product.name}</h2>
-                      <p className="wearo-cart-meta">{item.size} · {item.color}</p>
+                      <p className="wearo-cart-meta">{item.variant.size} · {item.variant.color}</p>
                       <p className={`wearo-cart-stock ${unavailable || exceedsStock ? "is-alert" : ""}`}>
                         {unavailable
                           ? t("Biến thể không còn khả dụng", "This variant is no longer available")
