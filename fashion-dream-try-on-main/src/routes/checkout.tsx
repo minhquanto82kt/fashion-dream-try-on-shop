@@ -280,7 +280,7 @@ function CheckoutPage() {
             <aside className="h-fit min-w-0 border border-border bg-card p-5 sm:p-6 lg:sticky lg:top-24">
               <p className="eyebrow">Đơn hàng</p>
               <div className="mt-4 space-y-3 text-sm">
-                {items.map((item) => <div key={item.variantId ?? `${item.productId}-${item.size}-${item.color}`} className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] gap-3"><span className="min-w-0 break-words text-beige leading-6">{item.product.name} × {item.qty}<span className="block text-xs leading-5 text-silver">{item.size} · {item.color}</span></span><span className="whitespace-nowrap text-right">{formatVnd(item.product.price * item.qty)}</span></div>)}
+                {items.map((item) => <div key={item.variantId ?? `${item.variantId}`} className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] gap-3"><span className="min-w-0 break-words text-beige leading-6">{item.product.name} × {item.qty}<span className="block text-xs leading-5 text-silver">{item.variant.size} · {item.variant.color}</span></span><span className="whitespace-nowrap text-right">{formatVnd(item.product.price * item.qty)}</span></div>)}
               </div>
               <div className="mt-4 flex items-start justify-between gap-4 border-t border-border pt-4 text-sm"><span className="text-silver">Vận chuyển</span><span>{shipping === 0 ? "Miễn phí" : formatVnd(shipping)}</span></div>
               <div className="mt-3 flex items-start justify-between gap-4 font-display text-lg leading-tight"><span>Tổng</span><span className="text-primary">{formatVnd(subtotal + shipping)}</span></div>
