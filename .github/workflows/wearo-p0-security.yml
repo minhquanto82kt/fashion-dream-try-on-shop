@@ -1,0 +1,44 @@
+name: WEARO P0 Security
+
+on:
+  push:
+    branches:
+      - feature/product-admin
+  pull_request:
+    branches:
+      - feature/product-admin
+
+defaults:
+  run:
+    working-directory: fashion-dream-try-on-main
+
+jobs:
+  security-and-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: fashion-dream-try-on-main/package-lock.json
+
+      - name: Install from lockfile
+        run: npm ci --legacy-peer-deps --no-audit --no-fund
+
+      - name: Verify TanStack Start security baseline
+        run: |
+          node -e "const p=require('./package-lock.json'); const v=p.packages?.['node_modules/@tanstack/react-start']?.version; const c=p.packages?.['node_modules/@tanstack/start-server-core']?.version; if (v !== '1.168.60') throw new Error('Unexpected @tanstack/react-start: '+v); if (!c || !/^1\\.(?:16[9-9]|17[0-9])\\./.test(c)) throw new Error('Unexpected @tanstack/start-server-core: '+c); console.log({reactStart:v,startServerCore:c})"
+
+      - name: Dependency audit
+        run: npm audit --audit-level=high
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Production build
+        run: npm run build
