@@ -1,0 +1,233 @@
+/* WEARO Checkout — scoped page layer.
+   Keeps order/payment logic and shared navigation/footer untouched. */
+.wearo-checkout-page {
+  --checkout-ink: #171717;
+  --checkout-blue: #54728C;
+  --checkout-blue-soft: #7794A6;
+  --checkout-peach: #F2CEAE;
+  --checkout-beige: #D9BBA9;
+  --checkout-coral: #F2AD94;
+  --checkout-paper: #F8F6F2;
+  --checkout-white: #FFFFFF;
+  min-height: 100vh;
+  background: var(--checkout-paper);
+  color: var(--checkout-ink);
+}
+.wearo-checkout-page main {
+  width: min(1180px, calc(100% - 48px));
+  margin-inline: auto;
+  padding-top: 148px;
+  padding-bottom: 112px;
+}
+.wearo-checkout-page main > .eyebrow,
+.wearo-checkout-page .eyebrow {
+  color: var(--checkout-blue);
+  font: 600 11px/1.2 "Lexend", sans-serif;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.wearo-checkout-page h1 {
+  margin-top: 12px;
+  color: var(--checkout-ink);
+  font: 700 clamp(3rem, 7vw, 5.8rem)/.9 "Space Grotesk", sans-serif;
+  letter-spacing: -.055em;
+}
+.wearo-checkout-page h1 .text-primary,
+.wearo-checkout-page .text-primary {
+  color: var(--checkout-blue);
+}
+.wearo-checkout-page p {
+  color: #687985;
+}
+.wearo-checkout-page form {
+  align-items: start;
+}
+.wearo-checkout-page form > div:first-child {
+  min-width: 0;
+  padding-right: 8px;
+}
+.wearo-checkout-page form label.block {
+  color: var(--checkout-ink);
+}
+.wearo-checkout-page form label.block > span:first-child {
+  color: #687985;
+  font: 500 11px/1.4 "Lexend", sans-serif;
+  letter-spacing: .06em;
+}
+.wearo-checkout-page input:not([type="radio"]) {
+  border: 1px solid rgba(84,114,140,.24);
+  border-radius: 0;
+  background: rgba(255,255,255,.72);
+  color: var(--checkout-ink);
+  font: 400 14px/1.4 "Lexend", sans-serif;
+  transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.wearo-checkout-page input:not([type="radio"]):hover {
+  border-color: rgba(84,114,140,.42);
+}
+.wearo-checkout-page input:not([type="radio"]):focus {
+  border-color: var(--checkout-blue);
+  box-shadow: 0 0 0 3px rgba(84,114,140,.08);
+  background: var(--checkout-white);
+}
+.wearo-checkout-page input::placeholder {
+  color: #9aa5aa;
+}
+.wearo-checkout-page form > div:first-child > p.pt-4 {
+  margin-top: 10px;
+  padding-top: 24px;
+  color: var(--checkout-blue);
+  border-top: 1px solid rgba(84,114,140,.16);
+  font: 600 10px/1.2 "Lexend", sans-serif;
+  letter-spacing: .18em;
+}
+.wearo-checkout-page form .border.border-border.bg-card {
+  border: 1px solid rgba(84,114,140,.20);
+  border-radius: 0;
+  background: var(--checkout-white);
+  color: var(--checkout-ink);
+  box-shadow: 0 10px 35px rgba(36,52,62,.05);
+}
+.wearo-checkout-page form .border.border-border.bg-card .eyebrow {
+  color: var(--checkout-blue);
+}
+.wearo-checkout-page form .border.border-border.bg-card .text-beige {
+  color: #4f606b;
+}
+.wearo-checkout-page form .border.border-border.bg-card .text-primary {
+  color: var(--checkout-blue);
+}
+.wearo-checkout-page form .border.border-border.bg-card .border-t {
+  border-color: rgba(84,114,140,.16);
+}
+.wearo-checkout-page form .border.border-border.bg-card button[type="submit"] {
+  border: 0;
+  border-radius: 0;
+  background: var(--checkout-blue);
+  color: var(--checkout-white);
+  font: 600 10px/1.2 "Lexend", sans-serif;
+  letter-spacing: .16em;
+  transition: background .2s ease, transform .2s ease;
+}
+.wearo-checkout-page form .border.border-border.bg-card button[type="submit"]:hover:not(:disabled) {
+  background: var(--checkout-blue-soft);
+  transform: translateY(-1px);
+}
+.wearo-checkout-page form .border.border-border.bg-card button[type="submit"]:disabled {
+  opacity: .45;
+}
+.wearo-checkout-page form label.block.border {
+  border-color: rgba(84,114,140,.18);
+  background: rgba(255,255,255,.58);
+}
+.wearo-checkout-page form label.block.border:hover {
+  border-color: rgba(84,114,140,.38);
+  background: rgba(255,255,255,.9);
+}
+.wearo-checkout-page form label.block.border.border-primary {
+  border-color: var(--checkout-blue);
+  background: rgba(84,114,140,.055);
+}
+.wearo-checkout-page form label.block.border .font-medium {
+  color: #33434d;
+}
+.wearo-checkout-page form label.block.border.border-primary .font-medium {
+  color: var(--checkout-blue);
+}
+.wearo-checkout-page form label.block.border .border-primary {
+  border-color: var(--checkout-blue);
+}
+.wearo-checkout-page form label.block.border .bg-primary {
+  background: var(--checkout-blue);
+}
+.wearo-checkout-page .text-silver {
+  color: #7c8a91;
+}
+.wearo-checkout-page .border-red-500\/30 {
+  border-color: rgba(166,78,72,.28);
+  background: rgba(166,78,72,.055);
+}
+.wearo-checkout-page .bg-primary\/5,
+.wearo-checkout-page .bg-primary\/\[0\.05\] {
+  background: rgba(84,114,140,.055);
+}
+.wearo-checkout-page > main > div.mt-5 {
+  border-color: rgba(84,114,140,.20);
+  background: rgba(84,114,140,.055);
+  color: #586a75;
+}
+.wearo-checkout-page > main > div.mt-5.text-sm {
+  border-left: 3px solid var(--checkout-coral);
+}
+.wearo-checkout-page main.mx-auto.max-w-2xl {
+  width: min(680px, calc(100% - 48px));
+  text-align: center;
+}
+.wearo-checkout-page main.mx-auto.max-w-2xl h1 {
+  margin-top: 12px;
+}
+.wearo-checkout-page main.mx-auto.max-w-2xl .border-border {
+  border-color: rgba(84,114,140,.20);
+}
+.wearo-checkout-page main.mx-auto.max-w-2xl .bg-card {
+  background: var(--checkout-white);
+}
+.wearo-checkout-page main.mx-auto.max-w-2xl .text-beige {
+  color: #596a74;
+}
+.wearo-checkout-page main.mx-auto.max-w-2xl .text-silver {
+  color: #7c8a91;
+}
+.wearo-checkout-page main.mx-auto.max-w-2xl button.bg-primary,
+.wearo-checkout-page main.mx-auto.max-w-2xl a.border-primary {
+  border-color: var(--checkout-blue);
+  background: var(--checkout-blue);
+  color: var(--checkout-white);
+}
+.wearo-checkout-page main.mx-auto.max-w-2xl button.bg-primary:hover,
+.wearo-checkout-page main.mx-auto.max-w-2xl a.border-primary:hover {
+  background: var(--checkout-blue-soft);
+}
+.wearo-checkout-page main.mx-auto.max-w-2xl a.border-border {
+  border-color: rgba(84,114,140,.22);
+  color: var(--checkout-ink);
+}
+.wearo-checkout-page main.mx-auto.max-w-2xl a.border-border:hover {
+  border-color: var(--checkout-blue);
+  color: var(--checkout-blue);
+}
+.wearo-checkout-page main.mx-auto.max-w-2xl img {
+  display: block;
+  max-width: 100%;
+}
+@media (max-width: 900px) {
+  .wearo-checkout-page main {
+    width: min(100% - 32px, 720px);
+    padding-top: 128px;
+  }
+  .wearo-checkout-page form {
+    grid-template-columns: 1fr !important;
+  }
+  .wearo-checkout-page form > div:first-child {
+    padding-right: 0;
+  }
+  .wearo-checkout-page form aside {
+    position: static !important;
+  }
+}
+@media (max-width: 620px) {
+  .wearo-checkout-page main {
+    width: calc(100% - 28px);
+    padding-top: 116px;
+    padding-bottom: 72px;
+  }
+  .wearo-checkout-page h1 {
+    font-size: clamp(2.8rem, 16vw, 4.4rem);
+  }
+  .wearo-checkout-page main.mx-auto.max-w-2xl {
+    width: calc(100% - 28px);
+  }
+  .wearo-checkout-page form .border.border-border.bg-card {
+    padding: 20px;
+  }
+}
