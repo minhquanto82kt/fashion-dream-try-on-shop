@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 defaults:
   run:
@@ -38,6 +38,20 @@ jobs:
           node-version: 24
           cache: npm
           cache-dependency-path: fashion-dream-try-on-main/package-lock.json
+
+      - name: Regenerate lockfile if package manifests are out of sync
+        shell: bash
+        run: |
+          npm install --package-lock-only --ignore-scripts --legacy-peer-deps --no-audit --no-fund
+          if git diff --quiet -- fashion-dream-try-on-main/package-lock.json; then
+            echo "Lockfile already synchronized."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add fashion-dream-try-on-main/package-lock.json
+            git commit -m "chore(security): regenerate npm lockfile"
+            git push
+          fi
 
       - name: Install dependencies from committed lockfile
         run: npm ci --legacy-peer-deps --no-audit --no-fund
