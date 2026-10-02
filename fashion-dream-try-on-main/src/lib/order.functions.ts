@@ -3,7 +3,7 @@ import { supabaseRequest, type SupabaseRequestError } from "./supabase.server";
 import { supabaseUserRequest } from "./supabase-user.server";
 import { createRequestId, fetchWithTimeoutAndRetry } from "./server-reliability";
 
-type OrderItemInput = { productId: string; variantId: string; size: string; color: string; quantity: number };
+type OrderItemInput = { variantId: string; quantity: number };
 type CreateOrderInput = { customerName: string; phone: string; email?: string; address: string; city: string; district: string; paymentMethod: "cod" | "vietqr" | "momo" | "mastercard"; items: OrderItemInput[]; accessToken?: string; idempotencyKey?: string };
 export type CustomerOrder = { id: string; order_code: string; customer_name: string; phone: string; email: string | null; address: string; city: string; district: string; payment_method: string; payment_status: string; order_status: string; subtotal: number; shipping_fee: number; total: number; note: string | null; created_at: string; user_id?: string | null; voucher_id?: string | null; voucher_code?: string | null; discount_amount?: number };
 export type CustomerOrderItem = { id: string; order_id: string; product_id: string; product_name: string; size: string; color: string; quantity: number; unit_price: number; variant_id: string | null; created_at: string };
@@ -18,12 +18,46 @@ export const createOrder = createServerFn({ method: "POST" }).validator((data: C
   if (!data.items?.length) throw new Error("Giỏ hàng đang trống.");
   if (!data.customerName?.trim() || !data.phone?.trim() || !data.address?.trim() || !data.city?.trim() || !data.district?.trim()) throw new Error("Vui lòng nhập đầy đủ thông tin giao hàng.");
   if (!["cod", "vietqr", "momo", "mastercard"].includes(data.paymentMethod)) throw new Error("Phương thức thanh toán không hợp lệ.");
-  for (const item of data.items) { if (!item.variantId || !item.productId || !item.size || !item.color) throw new Error("Thông tin biến thể sản phẩm trong giỏ hàng không hợp lệ."); if (!Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > 99) throw new Error("Số lượng sản phẩm không hợp lệ."); }
+  for (const item of data.items) {
+    if (!item.variantId) throw new Error("Thông tin biến thể sản phẩm trong giỏ hàng không hợp lệ.");
+    if (!Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > 99) throw new Error("Số lượng sản phẩm không hợp lệ.");
+  }
+
+  const variantIds = Array.from(new Set(data.items.map((item) => item.variantId)));
+  const encodedVariantIds = variantIds.map((id) => encodeURIComponent(id)).join(",");
+  const variants = await supabaseRequest<{ id: string; product_id: string; size: string; color: string; stock: number }[]>(
+    `product_variants?id=in.(${encodedVariantIds})&select=id,product_id,size,color,stock`,
+  );
+  if (variants.length !== variantIds.length) throw new Error("Một hoặc nhiều biến thể trong giỏ hàng không còn tồn tại.");
+
+  const productIds = Array.from(new Set(variants.map((variant) => variant.product_id)));
+  const encodedProductIds = productIds.map((id) => encodeURIComponent(id)).join(",");
+  const products = await supabaseRequest<{ id: string; active: boolean; status: string }[]>(
+    `products?id=in.(${encodedProductIds})&select=id,active,status`,
+  );
+  const productById = new Map(products.map((product) => [product.id, product]));
+  const variantById = new Map(variants.map((variant) => [variant.id, variant]));
+
+  const orderItems = data.items.map((item) => {
+    const variant = variantById.get(item.variantId);
+    const product = variant ? productById.get(variant.product_id) : undefined;
+    if (!variant || !product || !product.active || product.status !== "published") {
+      throw new Error("Một sản phẩm trong giỏ hàng không còn khả dụng.");
+    }
+    return {
+      productId: variant.product_id,
+      variantId: variant.id,
+      size: variant.size,
+      color: variant.color,
+      quantity: item.quantity,
+    };
+  });
+
   let verifiedUserId: string | null = null;
   if (data.accessToken?.trim()) verifiedUserId = (await resolveCustomerFromToken(data.accessToken)).id;
   const orderCode = createOrderCode();
   const idempotencyKey = data.idempotencyKey?.trim() || undefined;
-  const body: Record<string, unknown> = { p_order_code: orderCode, p_customer_name: data.customerName.trim(), p_phone: data.phone.trim(), p_email: data.email?.trim() || null, p_address: data.address.trim(), p_city: data.city.trim(), p_district: data.district.trim(), p_payment_method: data.paymentMethod, p_items: data.items.map((item) => ({ productId: item.productId, variantId: item.variantId, size: item.size, color: item.color, quantity: item.quantity })), p_note: null, p_user_id: verifiedUserId, p_idempotency_key: idempotencyKey ?? null };
+  const body: Record<string, unknown> = { p_order_code: orderCode, p_customer_name: data.customerName.trim(), p_phone: data.phone.trim(), p_email: data.email?.trim() || null, p_address: data.address.trim(), p_city: data.city.trim(), p_district: data.district.trim(), p_payment_method: data.paymentMethod, p_items: orderItems, p_note: null, p_user_id: verifiedUserId, p_idempotency_key: idempotencyKey ?? null };
   try { const result = await supabaseRequest<{ order_id: string; order_code: string; total: number }[]>("rpc/create_order_atomic_v2", { method: "POST", body: JSON.stringify(body) }); const order = result[0]; if (!order) throw new Error("Không thể tạo đơn hàng."); let total = order.total; let voucher: { total: number; discount: number; voucher_code: string | null } | null = null; if (verifiedUserId) { const applied = await supabaseRequest<{ total: number; discount: number; voucher_code: string | null }[]>("rpc/apply_best_member_voucher", { method: "POST", body: JSON.stringify({ p_order_id: order.order_id, p_user_id: verifiedUserId }) }); voucher = applied[0] ?? null; if (voucher) total = voucher.total; } return { orderId: order.order_id, orderCode: order.order_code, total, discount: voucher?.discount ?? 0, voucherCode: voucher?.voucher_code ?? null, mock: false, customerType: verifiedUserId ? "member" : "guest" }; } catch (error) { if ((error as SupabaseRequestError)?.status === 409) throw new Error("Đơn hàng đã được tạo trước đó."); throw error; }
 });
 export const listMyOrders = createServerFn({ method: "POST" }).validator((data: { accessToken: string; limit?: number; offset?: number }) => data).handler(async ({ data }) => { try { return { orders: await listCustomerOrdersByToken(data.accessToken, { limit: data.limit, offset: data.offset }) }; } catch (error) { if (error instanceof Error && error.message === "UNAUTHORIZED") throw new Error("Vui lòng đăng nhập để xem lịch sử đơn hàng."); throw error; } });
