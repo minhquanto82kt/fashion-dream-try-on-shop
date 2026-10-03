@@ -233,214 +233,299 @@
 }
 
 
-/* SUCCESS STATE */
+/* -------------------------------------------------------------
+   WEARO SUCCESS / INVOICE
+   Public storefront visual system:
+   #54728C primary / #7794A6 secondary / #F2CEAE peach /
+   #D9BBA9 beige / #F2AD94 coral + white / black contrast.
+   ------------------------------------------------------------- */
+.wearo-checkout-page:has(.wearo-checkout-success) {
+  background: #F8F6F2 !important;
+  color: #171717 !important;
+}
+
+.wearo-checkout-page:has(.wearo-checkout-success) main.wearo-checkout-success {
+  width: min(920px, calc(100% - 48px)) !important;
+  margin-inline: auto !important;
+  padding-top: 132px !important;
+  padding-bottom: 88px !important;
+  background: transparent !important;
+}
+
 .wearo-checkout-success {
-  width: min(760px, calc(100% - 48px));
-  margin-inline: auto;
-  color: var(--checkout-ink);
+  color: #171717 !important;
+  font-family: var(--wearo-font-body, "Lexend", sans-serif) !important;
 }
 
 .wearo-checkout-success__hero {
-  padding: 12px 0 34px;
+  padding: 10px 0 34px !important;
   text-align: center;
 }
 
 .wearo-checkout-success__eyebrow {
-  margin: 0;
-  color: var(--checkout-coral);
-  font: 700 10px/1.2 "Lexend", sans-serif;
-  letter-spacing: .18em;
+  margin: 0 !important;
+  color: #F2AD94 !important;
+  font-family: var(--wearo-font-body, "Lexend", sans-serif) !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  letter-spacing: .18em !important;
+  text-transform: uppercase !important;
 }
 
 .wearo-checkout-success__mark {
-  width: 58px;
-  height: 58px;
-  margin: 24px auto 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(84,114,140,.28);
-  border-radius: 50%;
-  color: var(--checkout-blue);
-  background: rgba(84,114,140,.06);
-  font: 700 25px/1 "Space Grotesk", sans-serif;
+  width: 56px !important;
+  height: 56px !important;
+  margin: 22px auto 18px !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid #54728C !important;
+  border-radius: 50% !important;
+  background: #FFFFFF !important;
+  color: #54728C !important;
+  font-family: var(--wearo-font-display, "Space Grotesk", sans-serif) !important;
+  font-size: 23px !important;
+  font-weight: 700 !important;
+  box-shadow: 0 6px 20px rgba(84,114,140,.12) !important;
 }
 
 .wearo-checkout-success__hero h1 {
-  margin: 0;
-  font: 700 clamp(3.2rem, 8vw, 6.2rem)/.88 "Space Grotesk", sans-serif;
-  letter-spacing: -.065em;
+  margin: 0 !important;
+  color: #171717 !important;
+  font-family: var(--wearo-font-display, "Space Grotesk", sans-serif) !important;
+  font-size: clamp(3.25rem, 7vw, 6rem) !important;
+  font-weight: 700 !important;
+  line-height: .9 !important;
+  letter-spacing: -.055em !important;
+  text-transform: uppercase !important;
 }
 
 .wearo-checkout-success__hero h1 span {
-  color: var(--checkout-blue);
+  color: #54728C !important;
 }
 
 .wearo-checkout-success__order {
-  margin: 18px 0 0;
-  color: #687985;
-  font: 400 13px/1.6 "Lexend", sans-serif;
+  margin: 18px 0 0 !important;
+  color: #54728C !important;
+  font-family: var(--wearo-font-body, "Lexend", sans-serif) !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  line-height: 1.6 !important;
 }
 
 .wearo-checkout-success__order strong {
-  color: var(--checkout-blue);
-  font-weight: 600;
+  color: #54728C !important;
+  font-weight: 600 !important;
 }
 
 .wearo-checkout-success__note {
-  max-width: 620px;
-  margin: 12px auto 0;
-  color: #7c8a91;
-  font: 400 12px/1.6 "Lexend", sans-serif;
+  max-width: 620px !important;
+  margin: 10px auto 0 !important;
+  color: #7794A6 !important;
+  font-family: var(--wearo-font-body, "Lexend", sans-serif) !important;
+  font-size: 11px !important;
+  line-height: 1.6 !important;
 }
 
+/* Invoice panel: white surface, beige border, coral marker. */
 .wearo-checkout-success__invoice {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 28px;
-  margin-top: 6px;
-  padding: 26px 28px;
-  border: 1px solid rgba(84,114,140,.20);
-  background: #fff;
-  box-shadow: 0 14px 38px rgba(36,52,62,.06);
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: 28px !important;
+  margin-top: 8px !important;
+  padding: 28px 30px 28px 32px !important;
+  border: 1px solid #D9BBA9 !important;
+  border-radius: 0 !important;
+  background: #FFFFFF !important;
+  color: #171717 !important;
+  box-shadow: 0 10px 30px rgba(84,114,140,.10) !important;
+}
+
+.wearo-checkout-success__invoice::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: -1px;
+  bottom: -1px;
+  width: 4px;
+  background: #F2AD94;
 }
 
 .wearo-checkout-success__invoice-label {
-  margin: 0 0 7px;
-  color: var(--checkout-coral);
-  font: 700 9px/1.2 "Lexend", sans-serif;
-  letter-spacing: .16em;
+  margin: 0 0 7px !important;
+  color: #54728C !important;
+  font-family: var(--wearo-font-body, "Lexend", sans-serif) !important;
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  letter-spacing: .18em !important;
 }
 
 .wearo-checkout-success__invoice h2 {
-  margin: 0;
-  color: var(--checkout-ink);
-  font: 650 clamp(18px, 2.5vw, 25px)/1.15 "Space Grotesk", sans-serif;
-  letter-spacing: -.02em;
+  margin: 0 !important;
+  color: #171717 !important;
+  font-family: var(--wearo-font-heading, "Be Vietnam Pro", sans-serif) !important;
+  font-size: clamp(18px, 2.4vw, 24px) !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  letter-spacing: -.018em !important;
 }
 
 .wearo-checkout-success__invoice p:last-child {
-  max-width: 560px;
-  margin: 8px 0 0;
-  color: #687985;
-  font: 400 12px/1.6 "Lexend", sans-serif;
+  max-width: 580px !important;
+  margin: 8px 0 0 !important;
+  color: #7794A6 !important;
+  font-family: var(--wearo-font-body, "Lexend", sans-serif) !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  line-height: 1.65 !important;
 }
 
+/* Countdown uses the secondary blue, not the old orange/yellow system. */
 .wearo-checkout-success__countdown {
-  width: 86px;
-  height: 86px;
-  flex: 0 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(84,114,140,.28);
-  background: rgba(84,114,140,.055);
-  color: var(--checkout-blue);
+  width: 82px !important;
+  height: 82px !important;
+  display: flex !important;
+  flex: 0 0 auto !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid #7794A6 !important;
+  border-radius: 0 !important;
+  background: #F2CEAE !important;
+  color: #54728C !important;
 }
 
 .wearo-checkout-success__countdown strong {
-  font: 700 31px/.95 "Space Grotesk", sans-serif;
+  color: #54728C !important;
+  font-family: var(--wearo-font-display, "Space Grotesk", sans-serif) !important;
+  font-size: 30px !important;
+  font-weight: 700 !important;
+  line-height: .95 !important;
 }
 
 .wearo-checkout-success__countdown span {
-  margin-top: 6px;
-  font: 700 8px/1 "Lexend", sans-serif;
-  letter-spacing: .14em;
+  margin-top: 6px !important;
+  color: #54728C !important;
+  font-family: var(--wearo-font-body, "Lexend", sans-serif) !important;
+  font-size: 8px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  letter-spacing: .14em !important;
 }
 
+/* Print CTA: blue primary with white text. */
 .wearo-checkout-success__print {
-  min-width: 188px;
-  min-height: 52px;
-  border: 1px solid var(--checkout-blue);
-  border-radius: 0;
-  padding: 0 24px;
-  color: #fff !important;
-  background: var(--checkout-blue) !important;
-  cursor: pointer;
-  font: 700 10px/1 "Lexend", sans-serif;
-  letter-spacing: .16em;
-  box-shadow: 0 8px 20px rgba(84,114,140,.16);
-  transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+  min-width: 188px !important;
+  min-height: 50px !important;
+  border: 1px solid #54728C !important;
+  border-radius: 0 !important;
+  padding: 0 24px !important;
+  background: #54728C !important;
+  color: #FFFFFF !important;
+  cursor: pointer !important;
+  font-family: var(--wearo-font-body, "Lexend", sans-serif) !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  letter-spacing: .16em !important;
+  box-shadow: 0 6px 18px rgba(84,114,140,.14) !important;
+  transition: background .2s ease, transform .2s ease, box-shadow .2s ease !important;
 }
 
 .wearo-checkout-success__print:hover {
-  background: var(--checkout-blue-soft) !important;
-  border-color: var(--checkout-blue-soft);
-  transform: translateY(-1px);
-  box-shadow: 0 12px 24px rgba(84,114,140,.20);
+  border-color: #7794A6 !important;
+  background: #7794A6 !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 10px 24px rgba(84,114,140,.18) !important;
 }
 
 .wearo-checkout-success__print:focus-visible {
-  outline: 2px solid var(--checkout-coral);
-  outline-offset: 3px;
+  outline: 2px solid #F2AD94 !important;
+  outline-offset: 3px !important;
 }
 
+/* Secondary actions: never hide text against their own background. */
 .wearo-checkout-success__actions {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 24px;
+  display: flex !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  margin-top: 22px !important;
 }
 
 .wearo-checkout-success__actions a {
-  min-height: 46px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 22px;
-  border: 1px solid rgba(84,114,140,.24);
-  color: var(--checkout-ink);
-  background: transparent;
-  text-decoration: none;
-  font: 700 9px/1 "Lexend", sans-serif;
-  letter-spacing: .14em;
-  transition: color .2s ease, background .2s ease, border-color .2s ease, transform .2s ease;
+  min-height: 44px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 22px !important;
+  border: 1px solid #D9BBA9 !important;
+  border-radius: 0 !important;
+  color: #54728C !important;
+  background: #FFFFFF !important;
+  text-decoration: none !important;
+  font-family: var(--wearo-font-body, "Lexend", sans-serif) !important;
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  letter-spacing: .14em !important;
+  transition: color .2s ease, background .2s ease, border-color .2s ease, transform .2s ease !important;
 }
 
 .wearo-checkout-success__actions a:hover {
-  border-color: var(--checkout-blue);
-  color: #fff;
-  background: var(--checkout-blue);
-  transform: translateY(-1px);
+  border-color: #54728C !important;
+  color: #FFFFFF !important;
+  background: #54728C !important;
+  transform: translateY(-1px) !important;
 }
 
 .wearo-checkout-success__actions .wearo-checkout-success__account {
-  color: var(--checkout-blue);
-  border-color: rgba(84,114,140,.20);
-  background: #fff;
+  color: #54728C !important;
+  border-color: #D9BBA9 !important;
+  background: #FFFFFF !important;
 }
 
 @media (max-width: 620px) {
-  .wearo-checkout-success {
-    width: calc(100% - 28px);
+  .wearo-checkout-page:has(.wearo-checkout-success) main.wearo-checkout-success {
+    width: calc(100% - 28px) !important;
+    padding-top: 112px !important;
+    padding-bottom: 64px !important;
   }
 
   .wearo-checkout-success__hero h1 {
-    font-size: clamp(3rem, 17vw, 5rem);
+    font-size: clamp(3rem, 16vw, 5rem) !important;
   }
 
   .wearo-checkout-success__invoice {
-    grid-template-columns: 1fr;
-    gap: 18px;
-    padding: 22px;
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+    padding: 24px 22px 24px 26px !important;
+  }
+
+  .wearo-checkout-success__countdown,
+  .wearo-checkout-success__print {
+    width: 100% !important;
   }
 
   .wearo-checkout-success__countdown {
-    width: 72px;
-    height: 72px;
+    height: 62px !important;
+    flex-direction: row !important;
+    gap: 8px !important;
   }
 
-  .wearo-checkout-success__print {
-    width: 100%;
+  .wearo-checkout-success__countdown strong {
+    font-size: 26px !important;
   }
 
   .wearo-checkout-success__actions {
-    flex-direction: column;
+    flex-direction: column !important;
   }
 
   .wearo-checkout-success__actions a {
-    width: 100%;
+    width: 100% !important;
   }
 }
+
