@@ -159,6 +159,7 @@ function CheckoutPage() {
 
   if (done) {
     const invoiceReady = Boolean(invoice && countdown === 0);
+    const memberMode = Boolean(!mockMode && getCustomerSession()?.access_token);
 
     return (
       <div className="wearo-checkout-page min-h-screen">
@@ -205,7 +206,7 @@ function CheckoutPage() {
 
           <div className="wearo-checkout-success__actions">
             <Link to="/shop" className="wearo-checkout-success__shop">TIẾP TỤC MUA SẮM</Link>
-            <Link to="/account" className="wearo-checkout-success__account">TÀI KHOẢN</Link>
+            <Link to={memberMode ? "/account/orders" : "/account"} className="wearo-checkout-success__account">{memberMode ? "LỊCH SỬ ĐƠN HÀNG" : "TÀI KHOẢN"}</Link>
           </div>
         </main>
         <SiteFooter />
