@@ -123,14 +123,10 @@ function CheckoutPage() {
   }, [mockMode]);
 
   useEffect(() => {
-    if (countdown === null) return;
-    if (countdown === 0) {
-      if (invoice) void openInvoicePdfClient(invoice);
-      return;
-    }
+    if (countdown === null || countdown <= 0) return;
     const timer = window.setTimeout(() => setCountdown((value) => value === null ? null : value - 1), 1000);
     return () => window.clearTimeout(timer);
-  }, [countdown, invoice]);
+  }, [countdown]);
 
   if (paymentInfo) {
     return (
@@ -162,17 +158,54 @@ function CheckoutPage() {
   }
 
   if (done) {
+    const invoiceReady = Boolean(invoice && countdown === 0);
+
     return (
       <div className="wearo-checkout-page min-h-screen">
         <SiteNav />
-        <main className="mx-auto max-w-2xl px-6 pb-24 pt-32 text-center sm:px-12">
-          <p className="eyebrow">{mockMode ? "Mock User · Xem trước đơn hàng" : "Đơn hàng đã được xác nhận"}</p>
-          <h1 className="mt-3 text-4xl leading-tight sm:text-5xl">{mockMode ? "Xem trước thành công" : "Cảm ơn bạn"}<span className="text-primary">!</span></h1>
-          <p className="mt-4 leading-7 text-beige">Mã {mockMode ? "đơn xem trước" : "đơn hàng"}: <span className="break-words text-primary">{done}</span>.</p>
-          {mockMode && <p className="mt-4 text-sm leading-6 text-silver">Mock order — không được ghi vào hệ thống đơn hàng production.</p>}
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <Link to="/shop" className="inline-flex min-h-11 items-center justify-center border border-primary px-7 py-3 text-xs uppercase tracking-[0.15em] text-primary">Tiếp tục mua sắm</Link>
-            <Link to="/account" className="inline-flex min-h-11 items-center justify-center border border-border px-7 py-3 text-xs uppercase tracking-[0.15em]">Tài khoản</Link>
+        <main className="wearo-checkout-success mx-auto max-w-3xl px-6 pb-24 pt-28 sm:px-12">
+          <section className="wearo-checkout-success__hero">
+            <p className="wearo-checkout-success__eyebrow">{mockMode ? "MOCK USER · SANDBOX" : "ĐƠN HÀNG ĐÃ ĐƯỢC XÁC NHẬN"}</p>
+            <div className="wearo-checkout-success__mark" aria-hidden="true">✓</div>
+            <h1>{mockMode ? "XEM TRƯỚC THÀNH CÔNG" : "CẢM ƠN BẠN"}<span>!</span></h1>
+            <p className="wearo-checkout-success__order">
+              Mã {mockMode ? "đơn xem trước" : "đơn hàng"}: <strong>{done}</strong>
+            </p>
+            {mockMode && <p className="wearo-checkout-success__note">Mock order — không ghi vào hệ thống đơn hàng production.</p>}
+          </section>
+
+          {invoice && (
+            <section className="wearo-checkout-success__invoice" aria-live="polite">
+              <div>
+                <p className="wearo-checkout-success__invoice-label">HÓA ĐƠN</p>
+                <h2>{invoiceReady ? "Hóa đơn đã sẵn sàng." : "Chuẩn bị hóa đơn..."}</h2>
+                <p>
+                  {invoiceReady
+                    ? "Bạn có thể tự bấm nút bên dưới để mở hóa đơn PDF và in khi cần."
+                    : "Vui lòng chờ hết 5 giây. Nút in hóa đơn sẽ xuất hiện sau khi bộ đếm hoàn tất."}
+                </p>
+              </div>
+
+              {invoiceReady ? (
+                <button
+                  type="button"
+                  className="wearo-checkout-success__print"
+                  onClick={() => void openInvoicePdfClient(invoice)}
+                >
+                  IN HÓA ĐƠN
+                </button>
+              ) : (
+                <div className="wearo-checkout-success__countdown" aria-label={`Hóa đơn sẵn sàng sau ${countdown ?? 0} giây`}>
+                  <strong>{countdown ?? 0}</strong>
+                  <span>GIÂY</span>
+                </div>
+              )}
+            </section>
+          )}
+
+          <div className="wearo-checkout-success__actions">
+            <Link to="/shop" className="wearo-checkout-success__shop">TIẾP TỤC MUA SẮM</Link>
+            <Link to="/account" className="wearo-checkout-success__account">TÀI KHOẢN</Link>
           </div>
         </main>
         <SiteFooter />
