@@ -7,7 +7,6 @@ import { ProductCard } from "@/components/product-card";
 import { PRODUCTS } from "@/data/products";
 import { readPublishedSiteContent, type SiteContentFields } from "@/lib/site-content";
 import { canonicalLink } from "@/lib/seo";
-import "@/styles/wearo-reference-landing.css";
 
 const REFERENCE_IMAGES = {
   hero: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000&auto=format&fit=crop",
