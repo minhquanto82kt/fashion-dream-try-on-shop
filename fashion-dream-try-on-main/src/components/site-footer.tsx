@@ -41,10 +41,8 @@ export function SiteFooter() {
             </div>
             <button type="submit">{t("ĐĂNG KÝ NGAY", "SUBSCRIBE NOW")}</button>
           </form>
-
-        )}
-
         </section>
+        )}
 
         <div className="wearo-footer__grid">
           <section className="wearo-footer__brand">
