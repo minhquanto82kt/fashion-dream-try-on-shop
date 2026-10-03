@@ -40,3 +40,5 @@ Học phần: Ý tưởng khởi nghiệp
 Trường: Trường Đại học Công nghiệp TP. Hồ Chí Minh (IUH)
 
 Fashion Dream – Bringing AI into the fashion shopping experience.
+
+<!-- rollback deployment trigger -->
