@@ -35,8 +35,8 @@
   --color-cyan: var(--y2k-cyan);
   --color-mustard: var(--ft-mustard);
   --color-olive: var(--ft-olive);
-  --font-display: "Anton", sans-serif;
-  --font-sans: "Space Grotesk", sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-sans: "Lexend", sans-serif;
 }
 
 :root {
@@ -91,9 +91,9 @@
 
 :root {
   --ft-paper:#fff89c; --ft-ink:#010626; --ft-acid:#f2e205; --ft-muted:#594b02;
-  --ft-serif:"Bodoni Moda",Georgia,serif; --ft-editorial:"Bodoni Moda",Georgia,serif;
-  --ft-display:"Anton",Impact,sans-serif; --ft-body:"Space Grotesk",sans-serif;
-  --ft-meta:"Oswald",Arial,sans-serif; --ft-sans:"Space Grotesk",sans-serif; --ft-impact:"Anton",Impact,sans-serif;
+  --ft-serif:"Be Vietnam Pro",sans-serif; --ft-editorial:"Be Vietnam Pro",sans-serif;
+  --ft-display:"Space Grotesk",sans-serif; --ft-body:"Lexend",sans-serif;
+  --ft-meta:"Lexend",sans-serif; --ft-sans:"Lexend",sans-serif; --ft-impact:"Space Grotesk",sans-serif;
 }
 :root[data-theme="cream"] { --background:#010626; --foreground:#fff89c; --card:#010626; --card-foreground:#fff89c; --popover:#010626; --popover-foreground:#fff89c; --muted:#594b02; --muted-foreground:#fff89c; --border:#594b02; --primary:#f2e205; --primary-foreground:#010626; --accent:#fff89c; --accent-foreground:#010626; --input:#010626; --ring:#f2e205; --electric:#f2e205; --beige:#594b02; --silver:#d9b504; }
 .fashion-site{font-family:var(--ft-sans);background:var(--background);color:var(--foreground)}
