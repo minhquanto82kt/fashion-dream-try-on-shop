@@ -6,7 +6,6 @@ import { useCart } from "@/lib/cart";
 import { getCustomerUser } from "@/lib/auth";
 import { useI18n, type Language } from "@/lib/i18n";
 import "@/styles/header-enhancements.css";
-import "@/styles/wearo-header-ux.css";
 import "@/styles/wearo-language-modal.css";
 
 const DISCOVERY_LINKS = [
