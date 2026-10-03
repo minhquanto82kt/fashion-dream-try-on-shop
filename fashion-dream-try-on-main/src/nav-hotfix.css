@@ -8,8 +8,8 @@
   align-items: center;
   justify-content: center;
   gap: 34px;
-  border-bottom: 1px solid #1b1a17;
-  background: #f0a500;
+  border-bottom: 1px solid rgba(84,114,140,.18);
+  background: #54728C;
   color: #1b1a17;
   font: 700 8px/1 var(--ft-meta);
   letter-spacing: .16em;
@@ -20,7 +20,7 @@
 }
 
 .fashion-nav__announcement span {
-  color: #1b1a17 !important;
+  color: #FFFFFF !important;
 }
 
 .fashion-nav__announcement span:first-child {
