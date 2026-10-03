@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 import { Clock, Facebook, Instagram, Mail, MapPin, Music2, Phone, Youtube } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import "@/styles/wearo-footer-unified.css";
@@ -7,12 +7,21 @@ const linkClass = "wearo-footer__link";
 
 export function SiteFooter() {
   const { t } = useI18n();
+  const pathname = useLocation({ select: (location) => location.pathname });
+  const hideNewsletter =
+    pathname === "/cart" ||
+    pathname === "/checkout" ||
+    pathname.startsWith("/checkout/") ||
+    pathname === "/track-order" ||
+    pathname === "/account" ||
+    pathname.startsWith("/account/orders");
 
   return (
     <footer className="wearo-footer" aria-label={t("Chân trang WEARO", "WEARO footer")}>
       <div className="wearo-footer__accent" aria-hidden="true" />
 
       <div className="wearo-footer__inner">
+        {!hideNewsletter && (
         <section className="wearo-footer__newsletter" aria-labelledby="wearo-newsletter-title">
           <div className="wearo-footer__newsletter-copy">
             <span className="wearo-footer__newsletter-kicker">[ {t("PRE-FOOTER: KHỐI ĐĂNG KÝ NHẬN TIN", "PRE-FOOTER: NEWSLETTER SIGN-UP")} ]</span>
@@ -32,6 +41,9 @@ export function SiteFooter() {
             </div>
             <button type="submit">{t("ĐĂNG KÝ NGAY", "SUBSCRIBE NOW")}</button>
           </form>
+
+        )}
+
         </section>
 
         <div className="wearo-footer__grid">
