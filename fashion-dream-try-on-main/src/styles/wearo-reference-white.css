@@ -85,8 +85,26 @@
 
 .wearo-reference-journal { border-top-color: var(--wr-line); }
 .wearo-reference-journal-head > a { color: #54728C; }
-.wearo-reference-journal-copy h3 { color: var(--wr-text); }
-.wearo-reference-journal-copy span { color: #54728C; }
+
+/* Journal cards: light surface + dark text (prevent title sinking into dark card) */
+.wearo-reference-journal-grid article {
+  background: #fff !important;
+  border-color: rgba(84,114,140,.18) !important;
+  box-shadow: 0 8px 28px rgba(23,23,23,.06);
+}
+.wearo-reference-journal-copy {
+  background: #fff;
+  color: var(--wr-text);
+}
+.wearo-reference-journal-copy h3 {
+  color: #171717 !important;
+}
+.wearo-reference-journal-copy span {
+  color: #54728C !important;
+}
+.wearo-reference-journal-copy p {
+  color: rgba(23,23,23,.62) !important;
+}
 
 .wearo-reference-about {
   background: #fff !important;
