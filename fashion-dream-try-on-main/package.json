@@ -23,7 +23,8 @@
     "test:phase-f-security": "node tests/security/phase-f-security.mjs",
     "test:customer-experience": "node tests/smoke/customer-experience.mjs",
     "audit:architecture": "node scripts/audit-architecture.mjs",
-    "audit:dependencies": "npm audit --audit-level=high"
+    "audit:dependencies": "npm audit --audit-level=high",
+    "test:customer-flows": "node tests/smoke/customer-commerce-flows.mjs"
   },
   "overrides": {
     "rolldown": "1.2.1"
