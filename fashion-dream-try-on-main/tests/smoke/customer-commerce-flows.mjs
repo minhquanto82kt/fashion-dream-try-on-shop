@@ -40,7 +40,7 @@ mustMatch(invoice, /if \(!isCod && !isPaidOnline\) throw new Error\("INVOICE_NOT
 mustMatch(checkout, /setCountdown\(5\)/, "success page starts the five-second invoice countdown");
 mustMatch(checkout, /const invoiceReady = Boolean\(invoice && countdown === 0\)/, "invoice action stays locked until countdown reaches zero");
 mustMatch(checkout, /className="wearo-checkout-success__print"\s+onClick=\{\(\) => void openInvoicePdfClient\(invoice\)\}/s, "invoice opens only from the explicit print button");
-mustNotMatch(checkout, /finish\([^)]*\)[\\s\\S]{0,300}openInvoicePdfClient\(invoice\)/, "invoice is not auto-opened by finish");
+mustNotMatch(checkout, /finish\([^)]*\)[\s\S]{0,300}openInvoicePdfClient\(invoice\)/, "invoice is not auto-opened by finish");
 
 console.log("FLOW 1 CONTRACT: Guest Product -> Cart -> Checkout -> COD -> Invoice PASS");
 
@@ -57,6 +57,8 @@ mustMatch(history, /listMyOrders\(\{ data: \{ accessToken: session\.access_token
 mustMatch(history, /to="/account/orders/\$id"/, "member history links to order detail");
 mustMatch(detail, /getMyOrder\(\{ data: \{ accessToken: session\.access_token/, "member order detail uses the authenticated access token");
 mustMatch(detail, /order\.items\.map/, "member order detail renders persisted order items");
+mustMatch(checkout, /memberMode \? "\/account\/orders" : "\/account"/, "member success page links directly to order history");
+mustMatch(account, /to="\/account\/orders"/, "member account dashboard exposes order history");
 
 console.log("FLOW 2 CONTRACT: Member Register -> Login -> Cart -> Order -> History PASS");
 
