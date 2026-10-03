@@ -6,7 +6,7 @@ const root = new URL("../../", import.meta.url).pathname;
 const baseUrl = (process.env.BASE_URL || "http://127.0.0.1:8080").replace(/\/$/, "");
 const read = (file) => readFile(join(root, file), "utf8");
 
-const [product, cart, checkout, order, auth, history, detail, invoice] = await Promise.all([
+const [product, cart, checkout, order, auth, history, detail, invoice, account] = await Promise.all([
   read("src/routes/product.$id.tsx"),
   read("src/lib/cart.tsx"),
   read("src/routes/checkout.tsx"),
@@ -15,6 +15,7 @@ const [product, cart, checkout, order, auth, history, detail, invoice] = await P
   read("src/routes/account/orders.tsx"),
   read("src/routes/account/orders/$id.tsx"),
   read("src/lib/invoice.functions.ts"),
+  read("src/routes/account.tsx"),
 ]);
 
 function mustMatch(text, pattern, label) {
