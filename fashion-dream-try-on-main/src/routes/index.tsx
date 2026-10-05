@@ -7,7 +7,7 @@ import { ProductCard } from "@/components/product-card";
 import { PRODUCTS } from "@/data/products";
 import { readPublishedSiteContent, type SiteContentFields } from "@/lib/site-content";
 import { canonicalLink } from "@/lib/seo";
-import { JOURNAL_ARTICLES } from "@/data/journal";
+import { listPublishedJournalArticles, type JournalArticle } from "@/lib/journal.functions";
 
 const REFERENCE_IMAGES = {
   hero: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000&auto=format&fit=crop",
@@ -103,7 +103,7 @@ function applyContentMeta(content: SiteContentFields) {
 }
 
 function Index() {
-  const [content, setContent] = useState<SiteContentFields>(DEFAULT_CONTENT);
+  const [content, setContent] = useState<SiteContentFields>(DEFAULT_CONTENT);\n  const [journal, setJournal] = useState<JournalArticle[]>([]);
   const [activeCategory, setActiveCategory] = useState<(typeof CATEGORIES)[number]["slug"]>("all");
 
   useEffect(() => {
