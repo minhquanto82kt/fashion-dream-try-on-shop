@@ -80,9 +80,11 @@ export function AdminShell() {
   .up-admin-login form { display: grid; gap: 15px; }
   .up-admin-login input { width: 100%; }
   .up-admin-error { background: #fff0ef; color: #a32727; border: 1px solid #f0c4c0; padding: 10px; font-size: 11px; }
-  .up-admin-dashboard-stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; margin-bottom: 24px; }
-  .up-admin-dashboard-card, .up-admin-dashboard-section { background: #fff; border: 1px solid #e3e2dc; border-radius: 16px; }
-  .up-admin-dashboard-card { padding: 22px; }
+  .up-admin-dashboard-kpis { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .up-admin-dashboard-kpi, .up-admin-dashboard-section { background: #fff; border: 1px solid #e3e2dc; border-radius: 14px; }
+  .up-admin-dashboard-kpi { padding: 18px; min-width: 0; }
+  .up-admin-dashboard-kpi:first-child { border-top: 2px solid #f2a900; }
+  .up-admin-dashboard-kpi:nth-child(4) .up-admin-dashboard-value { color: #a52c2c; }
   .up-admin-dashboard-label { color: #777; font-size: 13px; }
   .up-admin-dashboard-value { font-size: 28px; font-weight: 800; margin: 14px 0 4px; }
   .up-admin-dashboard-muted { font-size: 12px; color: #999; }
@@ -93,12 +95,13 @@ export function AdminShell() {
   .up-admin-dashboard-action { display: block; border: 1px solid #e6e6e1; border-radius: 14px; padding: 20px; color: #111; text-decoration: none; }
   .up-admin-dashboard-action-title { font-weight: 800; font-size: 17px; }
   .up-admin-dashboard-action-desc { color: #777; font-size: 13px; margin: 7px 0 14px; }
-  .up-admin-dashboard-action span { font-size: 13px; font-weight: 700; }
+  .up-admin-dashboard-action span { font-size: 10px; font-weight: 800; letter-spacing: .08em; }
+  .up-admin-dashboard-action--preview { background: #fffdf4; border-color: #ead9a8; }
   .up-admin-dashboard-action--soon { background: #eef3f7; border-color: #d6e0e8; color: #334452; cursor: not-allowed; }
   .up-admin-dashboard-action--soon .up-admin-dashboard-action-title { color: #2d3e4d; }
   .up-admin-dashboard-action--soon .up-admin-dashboard-action-desc { color: #6f7f8d; }
   .up-admin-dashboard-action--soon span { color: #58738c; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; }
-  @media (max-width: 900px) { .up-admin-sidebar { width: 190px; } .up-admin-main { margin-left: 190px; width: calc(100% - 190px); padding: 30px 20px; } .up-admin-stats { grid-template-columns: 1fr 1fr; } .up-admin-dashboard-stats { grid-template-columns: 1fr 1fr; } .up-editor-grid { grid-template-columns: 1fr; } .up-admin-dashboard-actions { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) { .up-admin-sidebar { width: 190px; } .up-admin-main { margin-left: 190px; width: calc(100% - 190px); padding: 30px 20px; } .up-admin-stats { grid-template-columns: 1fr 1fr; } .up-admin-dashboard-kpis { grid-template-columns: 1fr 1fr; } .up-editor-grid { grid-template-columns: 1fr; } .up-admin-dashboard-actions { grid-template-columns: 1fr; } }
   @media (max-width: 640px) { .up-admin-sidebar { display: none; } .up-admin-main { margin: 0; width: 100%; } .up-admin-toolbar { flex-direction: column; } .up-admin-table { min-width: 720px; } .up-admin-table-wrap { overflow: auto; } }
 `}</style>
 
