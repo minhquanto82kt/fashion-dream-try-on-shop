@@ -349,7 +349,15 @@ function PaymentMethodIcon({ method }: { method: PaymentMethod }) {
   if (method === "momo") {
     return (
       <span className="flex h-12 w-12 shrink-0 items-center justify-center border border-border bg-white">
-        <img src="/payment/momo.svg" alt="MoMo" className="h-10 w-10 object-contain" />
+        <img src="/payment/MoMo_Logo_App.svg" alt="MoMo" className="h-10 w-10 object-contain" />
+      </span>
+    );
+  }
+
+  if (method === "vietqr") {
+    return (
+      <span className="flex h-12 w-[92px] shrink-0 items-center justify-center border border-border bg-white px-2">
+        <img src="/payment/VietQR_Logo.svg" alt="VietQR" className="h-8 w-full object-contain" />
       </span>
     );
   }
