@@ -82,7 +82,8 @@ function applyContentMeta(content: SiteContentFields) {
 }
 
 function Index() {
-  const [content, setContent] = useState<SiteContentFields>(DEFAULT_CONTENT);\n  const [journal, setJournal] = useState<JournalArticle[]>([]);
+  const [content, setContent] = useState<SiteContentFields>(DEFAULT_CONTENT);
+  const [journal, setJournal] = useState<JournalArticle[]>([]);
   const [activeCategory, setActiveCategory] = useState<(typeof CATEGORIES)[number]["slug"]>("all");
 
   useEffect(() => {
