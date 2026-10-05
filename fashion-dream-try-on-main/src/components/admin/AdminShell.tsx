@@ -117,6 +117,7 @@ export function AdminShell() {
             <Link to="/admin/products" className={location.pathname.startsWith("/admin/products") ? "active" : ""}>Products</Link>
             <Link to="/admin/tags" className={location.pathname.startsWith("/admin/tags") ? "active" : ""}>Tags</Link>
             <Link to="/admin/orders" className={location.pathname.startsWith("/admin/orders") ? "active" : ""}>Orders</Link>
+            <Link to="/admin/journal" className={location.pathname.startsWith("/admin/journal") ? "active" : ""}>Journal</Link>
             <button type="button" className="up-admin-nav-disabled" disabled>Customers<span>SOON</span></button>
             <Link to="/admin/inventory" className={location.pathname.startsWith("/admin/inventory") ? "active" : ""}>Inventory</Link>
 
