@@ -1,10 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
+import { listPublishedJournalArticles, type JournalArticle } from "@/lib/journal.functions";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
-import { JOURNAL_ARTICLES } from "@/data/journal";
 import "@/styles/journal.css";
 
 export const Route = createFileRoute("/journal")({
+  loader: () => listPublishedJournalArticles(),
   head: () => ({
     meta: [
       { title: "WEARO Journal — Insights & Styles" },
@@ -14,9 +16,22 @@ export const Route = createFileRoute("/journal")({
   component: JournalPage,
 });
 
-const CATEGORIES = ["TẤT CẢ", ...Array.from(new Set(JOURNAL_ARTICLES.map((article) => article.category)))];
+function formatDate(article: JournalArticle) {
+  const value = article.published_at ?? article.scheduled_at ?? article.created_at;
+  return new Intl.DateTimeFormat("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" }).format(new Date(value));
+}
+
+function readingTime(article: JournalArticle) {
+  const words = article.content.trim().split(/\s+/).filter(Boolean).length;
+  return `${Math.max(3, Math.ceil(words / 180))} phút đọc`;
+}
 
 function JournalPage() {
+  const articles = Route.useLoaderData();
+  const [category, setCategory] = useState("TẤT CẢ");
+  const categories = useMemo(() => ["TẤT CẢ", ...Array.from(new Set(articles.map((article) => article.category)))], [articles]);
+  const visibleArticles = category === "TẤT CẢ" ? articles : articles.filter((article) => article.category === category);
+
   return (
     <div className="wearo-journal-shell">
       <SiteNav />
@@ -29,11 +44,11 @@ function JournalPage() {
                 <h1>WEARO JOURNAL</h1>
                 <p>Góc nhìn về thời trang Unisex, AI Fashion Tech, phối đồ và phong cách sống hiện đại.</p>
               </div>
-              <span className="wearo-journal-count">{JOURNAL_ARTICLES.length} STORIES</span>
+              <span className="wearo-journal-count">{articles.length} STORIES</span>
             </div>
             <div className="wearo-journal-filters" aria-label="Danh mục Journal">
-              {CATEGORIES.map((category, index) => (
-                <span key={category} className={index === 0 ? "is-active" : ""}>{category}</span>
+              {categories.map((item) => (
+                <button key={item} type="button" className={category === item ? "is-active" : ""} onClick={() => setCategory(item)}>{item}</button>
               ))}
             </div>
           </div>
@@ -41,24 +56,31 @@ function JournalPage() {
 
         <section className="wearo-journal-grid-section">
           <div className="wearo-journal-container">
-            <div className="wearo-journal-grid">
-              {JOURNAL_ARTICLES.map((article) => (
-                <article key={article.slug} className="wearo-journal-card">
-                  <Link to="/journal/$slug" params={{ slug: article.slug }} className="wearo-journal-card-image">
-                    <img src={article.image} alt={article.title} loading="lazy" />
-                  </Link>
-                  <div className="wearo-journal-card-copy">
-                    <div className="wearo-journal-card-meta">
-                      <span>{article.category}</span>
-                      <time>{article.date}</time>
+            {visibleArticles.length ? (
+              <div className="wearo-journal-grid">
+                {visibleArticles.map((article) => (
+                  <article key={article.id} className="wearo-journal-card">
+                    <Link to="/journal/$slug" params={{ slug: article.slug }} className="wearo-journal-card-image">
+                      {article.image_url ? <img src={article.image_url} alt={article.title} loading="lazy" /> : <div className="wearo-journal-card-image-fallback">WEARO / JOURNAL</div>}
+                    </Link>
+                    <div className="wearo-journal-card-copy">
+                      <div className="wearo-journal-card-meta">
+                        <span>{article.category}</span>
+                        <time>{formatDate(article)}</time>
+                      </div>
+                      <h2><Link to="/journal/$slug" params={{ slug: article.slug }}>{article.title}</Link></h2>
+                      <p>{article.excerpt}</p>
+                      <div className="wearo-journal-card-bottom">
+                        <span>{readingTime(article)}</span>
+                        <Link to="/journal/$slug" params={{ slug: article.slug }} className="wearo-journal-read">ĐỌC BÀI →</Link>
+                      </div>
                     </div>
-                    <h2><Link to="/journal/$slug" params={{ slug: article.slug }}>{article.title}</Link></h2>
-                    <p>{article.excerpt}</p>
-                    <Link to="/journal/$slug" params={{ slug: article.slug }} className="wearo-journal-read">ĐỌC BÀI →</Link>
-                  </div>
-                </article>
-              ))}
-            </div>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <div className="wearo-journal-empty">Chưa có bài viết trong danh mục này.</div>
+            )}
           </div>
         </section>
       </main>
