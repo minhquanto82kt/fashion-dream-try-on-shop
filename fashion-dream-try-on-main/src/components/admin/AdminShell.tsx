@@ -121,12 +121,16 @@ export function AdminShell() {
             <button type="button" className="up-admin-nav-disabled" disabled>Customers<span>SOON</span></button>
             <Link to="/admin/inventory" className={location.pathname.startsWith("/admin/inventory") ? "active" : ""}>Inventory</Link>
 
-            <div className="up-admin-nav-section">SYSTEM</div>
+            <div className="up-admin-nav-section">DESIGN</div>
             <Link to="/admin/ai-studio" className={location.pathname.startsWith("/admin/ai-studio") ? "active" : ""}>AI Studio</Link>
             <Link to="/admin/appearance" className={location.pathname === "/admin/appearance" ? "active" : ""}>Appearance</Link>
             <Link to="/admin/appearance/workflow" className={location.pathname.startsWith("/admin/appearance/workflow") ? "active" : ""}>Theme Workflow</Link>
             <Link to="/admin/design-system" className={location.pathname.startsWith("/admin/design-system") ? "active" : ""}>Design System</Link>
+            <Link to="/admin/design-system" className={location.pathname.startsWith("/admin/design-system") ? "active" : ""}>Design System</Link>
+
+            <div className="up-admin-nav-section">CONTENT</div>
             <Link to="/admin/content" className={location.pathname.startsWith("/admin/content") ? "active" : ""}>Content</Link>
+            <Link to="/admin/journal" className={location.pathname.startsWith("/admin/journal") ? "active" : ""}>Journal</Link>
             <button type="button" className="up-admin-nav-disabled" disabled>Settings<span>SOON</span></button>
           </nav>
 
