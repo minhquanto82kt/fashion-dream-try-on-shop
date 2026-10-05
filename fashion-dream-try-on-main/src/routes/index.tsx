@@ -38,27 +38,6 @@ const CATEGORIES = [
   { slug: "new", label: "Hàng mới về" },
 ] as const;
 
-const JOURNAL = [
-  {
-    image: REFERENCE_IMAGES.journal1,
-    tag: "FASHION TECH",
-    title: "Công nghệ AI thay đổi cách chọn size quần áo như thế nào?",
-    description: "Khám phá giải pháp AI Virtual Try-On 2D giải quyết nỗi đau lệch size mua sắm trực tuyến.",
-  },
-  {
-    image: REFERENCE_IMAGES.journal2,
-    tag: "STREETWEAR TRENDS",
-    title: "Phối đồ Unisex chuẩn gu cho giới trẻ đô thị 2026",
-    description: "Bí quyết chọn Full-Set Outfit vừa lịch sự đi làm vừa tự tin xuống phố cuối tuần.",
-  },
-  {
-    image: REFERENCE_IMAGES.journal3,
-    tag: "AI STYLIST",
-    title: "5 cách tối ưu hóa gợi ý phối đồ từ AI Personal Stylist",
-    description: "Tận dụng công nghệ để định hình phong cách cá nhân độc bản.",
-  },
-];
-
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -218,7 +197,7 @@ function Index() {
       <section id="journal" className="wearo-reference-journal">
         <div className="wearo-reference-container">
           <div className="wearo-reference-journal-head"><div><span className="wearo-reference-section-label">INSIGHTS & STYLES</span><h2>WEARO JOURNAL</h2></div><Link to="/journal">ĐỌC THÊM →</Link></div>
-          <div className="wearo-reference-journal-grid">{JOURNAL.map((article) => <article key={article.title}><div className="wearo-reference-journal-image"><img src={article.image} alt={article.title} loading="lazy" /></div><div className="wearo-reference-journal-copy"><span>{article.tag}</span><h3>{article.title}</h3><p>{article.description}</p></div></article>)}</div>
+          <div className="wearo-reference-journal-grid">{journal.map((article) => <article key={article.id}><Link to="/journal/$slug" params={{ slug: article.slug }} className="wearo-reference-journal-image">{article.image_url ? <img src={article.image_url} alt={article.title} loading="lazy" /> : <span>WEARO / JOURNAL</span>}</Link><div className="wearo-reference-journal-copy"><span>{article.category}</span><h3><Link to="/journal/$slug" params={{ slug: article.slug }}>{article.title}</Link></h3><p>{article.excerpt}</p></div></article>)}</div>
         </div>
       </section>
 
