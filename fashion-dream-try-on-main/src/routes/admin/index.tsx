@@ -21,9 +21,11 @@ const cards = [
 
 function AdminDashboardPage() {
   const navigate = useNavigate();
+  const [mockStarting, setMockStarting] = useState(false);
   const startMockUser = () => {
+    setMockStarting(true);
     enterMockUserMode();
-    void navigate({ to: "/account", search: { preview: "1" } as never });
+    void navigate({ to: "/account", search: { preview: "1" } as never }).finally(() => setMockStarting(false));
   };
 
   return (
