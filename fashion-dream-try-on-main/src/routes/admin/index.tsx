@@ -13,6 +13,7 @@ const cards = [
   ["Products", "Manage catalog, pricing and publishing", "/admin/products"],
   ["Tags", "Manage catalog labels and product relationships", "/admin/tags"],
   ["Orders", "Review and manage customer orders", "/admin/orders"],
+  ["Journal", "Manage SEO articles, drafts and publishing schedule", "/admin/journal"],
   ["Customers", "View customer accounts and activity", "#"],
   ["Inventory", "Track stock and availability", "/admin/inventory"],
   ["Appearance", "Control WEARO's global color theme and visual system", "/admin/appearance"],
@@ -40,6 +41,7 @@ function AdminDashboardPage() {
         <div className="up-admin-dashboard-card"><div className="up-admin-dashboard-label">Tags</div><div className="up-admin-dashboard-value">CRUDL</div><div className="up-admin-dashboard-muted">Python Admin API</div></div>
         <div className="up-admin-dashboard-card"><div className="up-admin-dashboard-label">Orders</div><div className="up-admin-dashboard-value">ORDERS</div><div className="up-admin-dashboard-muted">Order lifecycle</div></div>
         <div className="up-admin-dashboard-card"><div className="up-admin-dashboard-label">AI</div><div className="up-admin-dashboard-value">STUDIO</div><div className="up-admin-dashboard-muted">Try-On controls</div></div>
+        <div className="up-admin-dashboard-card"><div className="up-admin-dashboard-label">Journal</div><div className="up-admin-dashboard-value">CMS</div><div className="up-admin-dashboard-muted">SEO & publishing workflow</div></div>
       </section>
 
       <section className="up-admin-dashboard-section">
