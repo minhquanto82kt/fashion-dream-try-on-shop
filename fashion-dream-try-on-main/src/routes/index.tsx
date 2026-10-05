@@ -7,6 +7,7 @@ import { ProductCard } from "@/components/product-card";
 import { PRODUCTS } from "@/data/products";
 import { readPublishedSiteContent, type SiteContentFields } from "@/lib/site-content";
 import { canonicalLink } from "@/lib/seo";
+import { JOURNAL_ARTICLES } from "@/data/journal";
 
 const REFERENCE_IMAGES = {
   hero: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000&auto=format&fit=crop",
@@ -216,7 +217,7 @@ function Index() {
 
       <section id="journal" className="wearo-reference-journal">
         <div className="wearo-reference-container">
-          <div className="wearo-reference-journal-head"><div><span className="wearo-reference-section-label">INSIGHTS & STYLES</span><h2>WEARO JOURNAL</h2></div><Link to="/about">ĐỌC THÊM →</Link></div>
+          <div className="wearo-reference-journal-head"><div><span className="wearo-reference-section-label">INSIGHTS & STYLES</span><h2>WEARO JOURNAL</h2></div><Link to="/journal">ĐỌC THÊM →</Link></div>
           <div className="wearo-reference-journal-grid">{JOURNAL.map((article) => <article key={article.title}><div className="wearo-reference-journal-image"><img src={article.image} alt={article.title} loading="lazy" /></div><div className="wearo-reference-journal-copy"><span>{article.tag}</span><h3>{article.title}</h3><p>{article.description}</p></div></article>)}</div>
         </div>
       </section>
