@@ -80,7 +80,7 @@ export function AdminShell() {
   .up-admin-login form { display: grid; gap: 15px; }
   .up-admin-login input { width: 100%; }
   .up-admin-error { background: #fff0ef; color: #a32727; border: 1px solid #f0c4c0; padding: 10px; font-size: 11px; }
-  .up-admin-dashboard-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .up-admin-dashboard-stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; margin-bottom: 24px; }
   .up-admin-dashboard-card, .up-admin-dashboard-section { background: #fff; border: 1px solid #e3e2dc; border-radius: 16px; }
   .up-admin-dashboard-card { padding: 22px; }
   .up-admin-dashboard-label { color: #777; font-size: 13px; }
