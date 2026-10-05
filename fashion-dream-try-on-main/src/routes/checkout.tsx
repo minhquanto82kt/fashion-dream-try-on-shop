@@ -336,7 +336,44 @@ function SummaryRow({ label, value, highlight = false }: { label: string; value:
   return <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-4"><span className="text-silver">{label}</span><span className={`text-right ${highlight ? "text-primary" : ""}`}>{value}</span></div>;
 }
 
+function PaymentMethodIcon({ method }: { method: PaymentMethod }) {
+  if (method === "mastercard") {
+    return (
+      <span className="flex h-12 w-[92px] shrink-0 items-center justify-center gap-1 border border-border bg-white px-1.5">
+        <img src="/payment/visa.svg" alt="Visa" className="h-8 w-[48px] object-contain" />
+        <img src="/payment/mastercard.svg" alt="Mastercard" className="h-8 w-[48px] object-contain" />
+      </span>
+    );
+  }
+
+  if (method === "momo") {
+    return (
+      <span className="flex h-12 w-12 shrink-0 items-center justify-center border border-border bg-white">
+        <img src="/payment/momo.svg" alt="MoMo" className="h-10 w-10 object-contain" />
+      </span>
+    );
+  }
+
+  return (
+    <span className={`flex h-12 w-12 shrink-0 items-center justify-center border text-[10px] font-medium uppercase tracking-[0.08em] ${method === "cod" ? "text-silver" : "text-primary"}`}>
+      {method === "cod" ? "COD" : "QR"}
+    </span>
+  );
+}
+
 function PaymentOption({ method, current, onChange, title, description }: { method: PaymentMethod; current: PaymentMethod; onChange: (method: PaymentMethod) => void; title: string; description: string }) {
   const selected = current === method;
-  return <label className={`block cursor-pointer border transition ${selected ? "border-primary bg-primary/5" : "border-border"}`}><input type="radio" name="paymentMethod" value={method} checked={selected} onChange={() => onChange(method)} className="sr-only" /><span className="flex min-h-[76px] items-center gap-4 p-4"><span className={`flex h-12 w-12 shrink-0 items-center justify-center border text-[10px] font-medium uppercase tracking-[0.08em] ${selected ? "border-primary text-primary" : "border-border text-silver"}`}>{method === "mastercard" ? "CARD" : method === "momo" ? "MOMO" : method === "cod" ? "COD" : "QR"}</span><span className="min-w-0 flex-1"><span className={`block font-medium leading-6 ${selected ? "text-primary" : "text-beige"}`}>{title}</span><span className="mt-1 block text-xs leading-5 text-silver">{description}</span></span><span className={`h-4 w-4 shrink-0 rounded-full border ${selected ? "border-primary bg-primary" : "border-silver"}`} /></span></label>;
+  return (
+    <label className={`block cursor-pointer border transition ${selected ? "border-primary bg-primary/5" : "border-border"}`}>
+      <input type="radio" name="paymentMethod" value={method} checked={selected} onChange={() => onChange(method)} className="sr-only" />
+      <span className="flex min-h-[76px] items-center gap-4 p-4">
+        <PaymentMethodIcon method={method} />
+        <span className="min-w-0 flex-1">
+          <span className={`block font-medium leading-6 ${selected ? "text-primary" : "text-beige"}`}>{title}</span>
+          <span className="mt-1 block text-xs leading-5 text-silver">{description}</span>
+        </span>
+        <span className={`h-4 w-4 shrink-0 rounded-full border ${selected ? "border-primary bg-primary" : "border-silver"}`} />
+      </span>
+    </label>
+  );
 }
