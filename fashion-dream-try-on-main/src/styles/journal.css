@@ -43,4 +43,5 @@
 .wearo-journal-empty a{color:#54728c;font-size:11px;font-weight:800;letter-spacing:.12em;text-decoration:none}
 @media (max-width:900px){.wearo-journal-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.wearo-journal-header-row{align-items:flex-start;flex-direction:column;gap:20px}}
 @media (max-width:640px){.wearo-journal-container{width:min(100% - 32px,1180px)}.wearo-journal-header{padding:60px 0 32px}.wearo-journal-header h1{font-size:clamp(40px,14vw,62px)}.wearo-journal-grid-section{padding:32px 0 72px}.wearo-journal-grid{grid-template-columns:1fr;gap:22px}.wearo-journal-card-copy{padding:16px}.wearo-journal-card h2{font-size:19px}.wearo-journal-article-header{padding:46px 0 32px}.wearo-journal-article-header h1{font-size:clamp(38px,11vw,58px)}.wearo-journal-article-body{margin-top:34px}.wearo-journal-article-body p{font-size:15px}.wearo-journal-article-footer{flex-direction:column}}
-\n.wearo-journal-card-image-fallback{width:100%;height:100%;display:grid;place-items:center;background:#f2ceae;color:#54728c;font-size:10px;font-weight:800;letter-spacing:.18em}\n
+
+.wearo-journal-card-image-fallback{width:100%;height:100%;display:grid;place-items:center;background:#f2ceae;color:#54728c;font-size:10px;font-weight:800;letter-spacing:.18em}
