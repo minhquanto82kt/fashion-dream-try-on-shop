@@ -8,8 +8,8 @@
 .wearo-journal-header p{max-width:620px;margin:22px 0 0;color:#54728c;font-size:15px;line-height:1.65}
 .wearo-journal-count{padding-bottom:7px;color:#54728c;font-size:10px;font-weight:800;letter-spacing:.14em;white-space:nowrap}
 .wearo-journal-filters{display:flex;flex-wrap:wrap;gap:8px;margin-top:34px}
-.wearo-journal-filters span{padding:8px 11px;border:1px solid rgba(84,114,140,.22);color:#54728c;background:#fff;font-size:9px;font-weight:800;letter-spacing:.1em}
-.wearo-journal-filters span.is-active{border-color:#54728c;background:#54728c;color:#fff}
+.wearo-journal-filters button{padding:8px 11px;border:1px solid rgba(84,114,140,.22);color:#54728c;background:#fff;font-size:9px;font-weight:800;letter-spacing:.1em;cursor:pointer}.wearo-journal-filters button:hover{border-color:#54728c}
+.wearo-journal-filters button.is-active{border-color:#54728c;background:#54728c;color:#fff}
 .wearo-journal-grid-section{padding:46px 0 100px}
 .wearo-journal-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:34px 22px}
 .wearo-journal-card{min-width:0;border:1px solid rgba(84,114,140,.16);background:#fff;box-shadow:0 12px 30px rgba(84,114,140,.07);transition:transform .2s ease,box-shadow .2s ease}
@@ -23,7 +23,7 @@
 .wearo-journal-card-meta time{color:#7794a6;font-weight:600;letter-spacing:.04em}
 .wearo-journal-card h2{margin:0;color:#171717;font-size:18px;line-height:1.18;font-weight:800;letter-spacing:-.025em}
 .wearo-journal-card h2 a{color:inherit;text-decoration:none}
-.wearo-journal-card p{margin:11px 0 17px;color:#6f7f8c;font-size:12px;line-height:1.65}
+.wearo-journal-card p{margin:11px 0 17px;color:#6f7f8c;font-size:12px;line-height:1.65}.wearo-journal-card-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#9aa6ae;font-size:9px;font-weight:700;letter-spacing:.04em}
 .wearo-journal-read{color:#54728c;font-size:9px;font-weight:900;letter-spacing:.13em;text-decoration:none}
 .wearo-journal-read:hover{color:#f2ad94}
 .wearo-journal-back{display:inline-flex;margin-top:48px;color:#54728c;font-size:10px;font-weight:800;letter-spacing:.12em;text-decoration:none}
@@ -43,3 +43,4 @@
 .wearo-journal-empty a{color:#54728c;font-size:11px;font-weight:800;letter-spacing:.12em;text-decoration:none}
 @media (max-width:900px){.wearo-journal-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.wearo-journal-header-row{align-items:flex-start;flex-direction:column;gap:20px}}
 @media (max-width:640px){.wearo-journal-container{width:min(100% - 32px,1180px)}.wearo-journal-header{padding:60px 0 32px}.wearo-journal-header h1{font-size:clamp(40px,14vw,62px)}.wearo-journal-grid-section{padding:32px 0 72px}.wearo-journal-grid{grid-template-columns:1fr;gap:22px}.wearo-journal-card-copy{padding:16px}.wearo-journal-card h2{font-size:19px}.wearo-journal-article-header{padding:46px 0 32px}.wearo-journal-article-header h1{font-size:clamp(38px,11vw,58px)}.wearo-journal-article-body{margin-top:34px}.wearo-journal-article-body p{font-size:15px}.wearo-journal-article-footer{flex-direction:column}}
+\n.wearo-journal-card-image-fallback{width:100%;height:100%;display:grid;place-items:center;background:#f2ceae;color:#54728c;font-size:10px;font-weight:800;letter-spacing:.18em}\n
