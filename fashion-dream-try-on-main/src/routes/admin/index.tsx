@@ -1,23 +1,12 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { enterMockUserMode, setMockUserToken } from "@/lib/mock-user";
+import { enterMockUserMode } from "@/lib/mock-user";
 import { getSession } from "@/lib/upthink-supabase";
-import { startAdminMockSession } from "@/lib/mock-user.functions";
 
 export const Route = createFileRoute("/admin/")({
   component: AdminDashboardPage,
   head: () => ({ meta: [{ title: "Admin Dashboard — UpThink" }] }),
 });
-
-const cards = [
-  ["Products", "Manage catalog, pricing and publishing", "/admin/products"],
-  ["Tags", "Manage catalog labels and product relationships", "/admin/tags"],
-  ["Orders", "Review and manage customer orders", "/admin/orders"],
-  ["Journal", "Manage SEO articles, drafts and publishing schedule", "/admin/journal"],
-  ["Customers", "View customer accounts and activity", "#"],
-  ["Inventory", "Track stock and availability", "/admin/inventory"],
-  ["Appearance", "Control WEARO's global color theme and visual system", "/admin/appearance"],
-] as const;
 
 function AdminDashboardPage() {
   const navigate = useNavigate();
