@@ -339,25 +339,25 @@ function SummaryRow({ label, value, highlight = false }: { label: string; value:
 function PaymentMethodIcon({ method }: { method: PaymentMethod }) {
   if (method === "mastercard") {
     return (
-      <span className="flex h-12 w-[92px] shrink-0 items-center justify-center gap-1 border border-border bg-white px-1.5">
-        <img src="/payment/visa.svg" alt="Visa" className="h-8 w-[48px] object-contain" />
-        <img src="/payment/mastercard.svg" alt="Mastercard" className="h-8 w-[48px] object-contain" />
+      <span className="flex h-14 w-[104px] shrink-0 items-center justify-center gap-1 rounded-sm border border-border bg-white px-2">
+        <img src="/payment/visa.svg" alt="Visa" className="h-9 w-[48px] object-contain" />
+        <img src="/payment/mastercard.svg" alt="Mastercard" className="h-9 w-[48px] object-contain" />
       </span>
     );
   }
 
   if (method === "momo") {
     return (
-      <span className="flex h-12 w-12 shrink-0 items-center justify-center border border-border bg-white">
-        <img src="/payment/MoMo_Logo_App.svg" alt="MoMo" className="h-10 w-10 object-contain" />
+      <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-sm border border-border bg-white p-1">
+        <img src="/payment/MoMo_Logo_App.svg" alt="MoMo" className="h-11 w-11 object-contain" />
       </span>
     );
   }
 
   if (method === "vietqr") {
     return (
-      <span className="flex h-12 w-[92px] shrink-0 items-center justify-center border border-border bg-white px-2">
-        <img src="/payment/VietQR_Logo.svg" alt="VietQR" className="h-8 w-full object-contain" />
+      <span className="flex h-14 w-[104px] shrink-0 items-center justify-center rounded-sm border border-border bg-white px-3">
+        <img src="/payment/VietQR_Logo.svg" alt="VietQR" className="h-9 w-full object-contain" />
       </span>
     );
   }
