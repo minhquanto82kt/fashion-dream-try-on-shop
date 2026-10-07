@@ -1,7 +1,7 @@
 /* WEARO AI Studio — Phase 2 visual foundation
    Scope: /ai + /ai/assistant. Brand palette + typography + compact AI workspace.
+   Typography is loaded once by the root document to avoid CSS @import ordering warnings.
 */
-@import url("https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=Space+Grotesk:wght@400;500;600;700&display=swap");
 
 body:has(.wearo-ai-phase2) {
   --ai-blue: #54728C;
