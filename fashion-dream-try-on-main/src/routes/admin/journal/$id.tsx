@@ -102,7 +102,7 @@ function JournalEditorPage() {
 
   const wordCount = useMemo(() => form.content.trim() ? form.content.trim().split(/\s+/).length : 0, [form.content]);
   const paragraphCount = useMemo(
-    () => form.content.trim() ? form.content.trim().split(/\n\\s*\n/).filter(Boolean).length : 0,
+    () => form.content.trim() ? form.content.trim().split(/\n\s*\n/).filter(Boolean).length : 0,
     [form.content],
   );
   const seoTitleLength = form.seo_title.length;
@@ -112,9 +112,9 @@ function JournalEditorPage() {
     const normalizedTitleWords = form.title
       .toLowerCase()
       .normalize("NFD")
-      .replace(/[\\u0300-\\u036f]/g, "")
+      .replace(/[\u0300-\u036f]/g, "")
       .replace(/đ/g, "d")
-      .split(/\\s+/)
+      .split(/\s+/)
       .map((word) => word.replace(/[^a-z0-9]/g, ""))
       .filter((word) => word.length >= 4)
       .slice(0, 3);
