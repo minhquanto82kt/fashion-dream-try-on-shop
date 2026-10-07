@@ -42,3 +42,17 @@
 .wearo-journal-seo-meter.good{background:#e7f4ed;color:#27734b}
 @media (max-width:1000px){.wearo-journal-editor{grid-template-columns:1fr}.wearo-journal-editor-side{grid-template-columns:1fr 1fr}.wearo-journal-editor-side .wearo-journal-editor-card:last-child{grid-column:1/-1}}
 @media (max-width:720px){.wearo-journal-admin-toolbar{align-items:stretch;flex-direction:column}.wearo-journal-admin-toolbar>input{width:100%}.wearo-journal-form-two{grid-template-columns:1fr}.wearo-journal-editor-side{grid-template-columns:1fr}.wearo-journal-editor-side .wearo-journal-editor-card:last-child{grid-column:auto}.wearo-journal-editor-foot{flex-direction:column}}
+
+.wearo-journal-seo-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.wearo-journal-seo-heading strong{min-width:58px;text-align:center;padding:8px 9px;background:#f4f3ef;color:#9b7650;font-size:12px;letter-spacing:.04em}
+.wearo-journal-seo-heading strong.good{background:#e7f4ed;color:#27734b}
+.wearo-journal-seo-heading strong.warn{background:#fff1c9;color:#916b00}
+.wearo-journal-seo-heading strong.bad{background:#fff0ef;color:#a32727}
+.wearo-journal-seo-note{margin:-7px 0 0!important}
+.wearo-journal-seo-checklist{display:grid;gap:7px}
+.wearo-journal-seo-check{display:flex;align-items:flex-start;gap:9px;padding:9px;background:#f7f6f2}
+.wearo-journal-seo-check>span{width:18px;height:18px;display:grid;place-items:center;flex:0 0 auto;font-size:10px;font-weight:900}
+.wearo-journal-seo-check.good>span{background:#dcefe4;color:#27734b}
+.wearo-journal-seo-check.bad>span{background:#fff0ef;color:#a32727}
+.wearo-journal-seo-check strong{display:block;color:#555;font-size:10px;line-height:1.35;letter-spacing:normal}
+.wearo-journal-seo-check small{display:block;margin-top:3px;color:#999;font-size:9px;line-height:1.35;letter-spacing:normal}
