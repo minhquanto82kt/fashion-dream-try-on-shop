@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { getSession } from "@/lib/upthink-supabase";
 import {
   createAdminJournalArticle,
@@ -7,6 +7,7 @@ import {
   updateAdminJournalArticle,
   type JournalStatus,
 } from "@/lib/journal.functions";
+import { analyzeJournalMarkdown, JournalMarkdown } from "@/lib/journal-markdown";
 import "@/styles/journal-admin.css";
 
 export const Route = createFileRoute("/admin/journal/$id")({
@@ -67,6 +68,8 @@ function JournalEditorPage() {
   const [slugEdited, setSlugEdited] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [contentMode, setContentMode] = useState<"editor" | "preview">("editor");
+  const contentRef = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
     if (isNew) return;
@@ -107,6 +110,10 @@ function JournalEditorPage() {
   );
   const seoTitleLength = form.seo_title.length;
   const seoDescriptionLength = form.seo_description.length;
+  const markdownAnalysis = useMemo(() => analyzeJournalMarkdown(form.content), [form.content]);
+  const h2OrH3Count = markdownAnalysis.headings.filter((heading) => heading.level >= 2).length;
+  const internalLinkCount = markdownAnalysis.links.filter((link) => link.href.startsWith("/")).length;
+  const imagesWithoutAlt = markdownAnalysis.images.filter((image) => !image.alt).length;
 
   const seoChecks = useMemo(() => {
     const normalizedTitleWords = form.title
@@ -122,7 +129,7 @@ function JournalEditorPage() {
     const normalizedSeoTitle = form.seo_title
       .toLowerCase()
       .normalize("NFD")
-      .replace(/[\\u0300-\\u036f]/g, "")
+      .replace(/[\u0300-\u036f]/g, "")
       .replace(/đ/g, "d");
 
     const keywordCoverage = normalizedTitleWords.length > 0 &&
@@ -171,8 +178,26 @@ function JournalEditorPage() {
         detail: form.image_url ? "Đã thêm ảnh" : "Chưa có ảnh",
         good: Boolean(form.image_url.trim()),
       },
+      {
+        key: "headings",
+        label: "Có H2/H3 để chia cấu trúc bài",
+        detail: `${h2OrH3Count} heading trong nội dung`,
+        good: h2OrH3Count >= 1,
+      },
+      {
+        key: "internal-links",
+        label: "Có internal link",
+        detail: `${internalLinkCount} liên kết nội bộ`,
+        good: internalLinkCount >= 1,
+      },
+      {
+        key: "image-alt",
+        label: "Ảnh trong nội dung có alt text",
+        detail: markdownAnalysis.images.length ? `${imagesWithoutAlt} ảnh thiếu alt` : "Chưa có ảnh trong nội dung",
+        good: markdownAnalysis.images.length > 0 && imagesWithoutAlt === 0,
+      },
     ];
-  }, [form.content, form.excerpt, form.image_url, form.seo_description, form.seo_title, form.slug, form.title, paragraphCount, seoDescriptionLength, seoTitleLength, wordCount]);
+  }, [form.content, form.excerpt, form.image_url, form.seo_description, form.seo_title, form.slug, form.title, h2OrH3Count, imagesWithoutAlt, internalLinkCount, markdownAnalysis.images.length, paragraphCount, seoDescriptionLength, seoTitleLength, wordCount]);
 
   const seoScore = useMemo(
     () => Math.round((seoChecks.filter((check) => check.good).length / seoChecks.length) * 100),
@@ -190,6 +215,22 @@ function JournalEditorPage() {
       slug: slugEdited ? current.slug : slugify(value),
       seo_title: current.seo_title ? current.seo_title : value,
     }));
+  }
+
+  function insertMarkdown(before: string, after = "", placeholder = "nội dung") {
+    const textarea = contentRef.current;
+    if (!textarea) return;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selected = form.content.slice(start, end) || placeholder;
+    const replacement = `${before}${selected}${after}`;
+    const nextContent = form.content.slice(0, start) + replacement + form.content.slice(end);
+    setField("content", nextContent);
+    requestAnimationFrame(() => {
+      textarea.focus();
+      const selectionStart = start + before.length;
+      textarea.setSelectionRange(selectionStart, selectionStart + selected.length);
+    });
   }
 
   async function handleSave() {
@@ -266,13 +307,44 @@ function JournalEditorPage() {
             <textarea rows={4} value={form.excerpt} onChange={(e) => setField("excerpt", e.target.value)} placeholder="Mô tả ngắn dùng cho card Journal và chia sẻ nội dung." />
           </label>
 
-          <label>NỘI DUNG BÀI VIẾT
-            <textarea className="wearo-journal-content-editor" rows={22} value={form.content} onChange={(e) => setField("content", e.target.value)} placeholder={"Viết nội dung bài viết…\n\nNgăn cách các đoạn bằng một dòng trống."} />
-          </label>
+          <div className="wearo-journal-content-block">
+            <div className="wearo-journal-content-head">
+              <label>NỘI DUNG BÀI VIẾT</label>
+              <div className="wearo-journal-content-mode">
+                <button type="button" className={contentMode === "editor" ? "is-active" : ""} onClick={() => setContentMode("editor")}>EDITOR</button>
+                <button type="button" className={contentMode === "preview" ? "is-active" : ""} onClick={() => setContentMode("preview")}>PREVIEW</button>
+              </div>
+            </div>
 
-          <div className="wearo-journal-editor-foot">
-            <span>{wordCount} từ</span>
-            <span>Khuyến nghị ≥ 600 từ cho bài SEO chuyên sâu</span>
+            {contentMode === "editor" ? (
+              <>
+                <div className="wearo-journal-markdown-toolbar" aria-label="Định dạng Markdown">
+                  <button type="button" onClick={() => insertMarkdown("## ", "", "Tiêu đề phụ")}>H2</button>
+                  <button type="button" onClick={() => insertMarkdown("### ", "", "Tiêu đề nhỏ")}>H3</button>
+                  <button type="button" onClick={() => insertMarkdown("**", "**", "chữ đậm")}>B</button>
+                  <button type="button" onClick={() => insertMarkdown("*", "*", "chữ nghiêng")}>I</button>
+                  <button type="button" onClick={() => insertMarkdown("[", "](https://example.com)", "văn bản liên kết")}>LINK</button>
+                  <button type="button" onClick={() => insertMarkdown("![", "](https://example.com/image.jpg)", "mô tả ảnh")}>IMAGE</button>
+                  <button type="button" onClick={() => insertMarkdown("- ", "", "mục danh sách")}>LIST</button>
+                  <button type="button" onClick={() => insertMarkdown("> ", "", "trích dẫn")}>QUOTE</button>
+                </div>
+                <textarea
+                  ref={contentRef}
+                  className="wearo-journal-content-editor"
+                  rows={22}
+                  value={form.content}
+                  onChange={(e) => setField("content", e.target.value)}
+                  placeholder={"## Tiêu đề phụ\n\nViết đoạn văn ở đây.\n\n### Tiêu đề nhỏ\n\n[Liên kết nội bộ](/journal)\n\n![Mô tả ảnh](https://...)\n\nNgăn cách các đoạn bằng một dòng trống."}
+                />
+              </>
+            ) : (
+              <JournalMarkdown className="wearo-journal-admin-preview" content={form.content || "Chưa có nội dung để xem trước."} />
+            )}
+
+            <div className="wearo-journal-editor-foot">
+              <span>{wordCount} từ · {markdownAnalysis.headings.length} heading · {markdownAnalysis.links.length} link · {markdownAnalysis.images.length} ảnh</span>
+              <span>Markdown an toàn · Không cho phép HTML tùy ý</span>
+            </div>
           </div>
         </section>
 
