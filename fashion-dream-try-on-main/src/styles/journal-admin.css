@@ -56,3 +56,20 @@
 .wearo-journal-seo-check.bad>span{background:#fff0ef;color:#a32727}
 .wearo-journal-seo-check strong{display:block;color:#555;font-size:10px;line-height:1.35;letter-spacing:normal}
 .wearo-journal-seo-check small{display:block;margin-top:3px;color:#999;font-size:9px;line-height:1.35;letter-spacing:normal}
+
+.wearo-journal-content-block{display:grid;gap:8px}
+.wearo-journal-content-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.wearo-journal-content-head>label{display:block!important}
+.wearo-journal-content-mode{display:flex;gap:4px}
+.wearo-journal-content-mode button,.wearo-journal-markdown-toolbar button{border:1px solid #dddcd5;background:#fff;color:#54728c;padding:7px 9px;font-size:8px;font-weight:800;letter-spacing:.08em;cursor:pointer}
+.wearo-journal-content-mode button.is-active{background:#54728c;border-color:#54728c;color:#fff}
+.wearo-journal-markdown-toolbar{display:flex;flex-wrap:wrap;gap:5px;padding:8px;background:#f7f6f2;border:1px solid #e3e2dc;border-bottom:0}
+.wearo-journal-markdown-toolbar button:hover{border-color:#54728c;background:#fff}
+.wearo-journal-admin-preview{min-height:460px;padding:20px 22px;border:1px solid #dddcd5;background:#fff;color:#303b43;font-size:13px;line-height:1.75}
+.wearo-journal-admin-preview h1,.wearo-journal-admin-preview h2,.wearo-journal-admin-preview h3{margin:26px 0 10px;color:#171717;line-height:1.2}
+.wearo-journal-admin-preview h2{font-size:23px}.wearo-journal-admin-preview h3{font-size:18px}
+.wearo-journal-admin-preview p{margin:0 0 16px}
+.wearo-journal-admin-preview ul,.wearo-journal-admin-preview ol{padding-left:22px;margin:0 0 16px}
+.wearo-journal-admin-preview blockquote{margin:18px 0;padding:12px 15px;border-left:3px solid #f2ad94;background:#faf5f1;color:#54728c}
+.wearo-journal-admin-preview a{color:#54728c;text-decoration:underline}
+.wearo-journal-admin-preview img{max-width:100%;height:auto;display:block;margin:18px 0}
