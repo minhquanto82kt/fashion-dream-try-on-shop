@@ -149,7 +149,7 @@ export function analyzeJournalMarkdown(content: string) {
     level: match[1].length,
     text: match[2].trim(),
   }));
-  const links = Array.from(content.matchAll(/\[([^\]]+)\]\(([^)]+)\)/g)).map((match) => ({
+  const links = Array.from(content.matchAll(/(?<!\!)\[([^\]]+)\]\(([^)]+)\)/g)).map((match) => ({
     text: match[1].trim(),
     href: match[2].trim(),
   }));
