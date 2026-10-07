@@ -93,9 +93,7 @@ function JournalArticlePage() {
           <figure className="wearo-journal-article-hero">
             {article.image_url ? <img src={article.image_url} alt={article.title} /> : <div className="wearo-journal-card-image-fallback">WEARO / JOURNAL</div>}
           </figure>
-          <JournalMarkdown className="wearo-journal-article-body">
-            {article.content}
-          </JournalMarkdown>
+          <JournalMarkdown className="wearo-journal-article-body" content={article.content} />
           <div className="wearo-journal-article-footer">
             <span>WEARO JOURNAL</span>
             <Link to="/journal">XEM THÊM BÀI VIẾT →</Link>
