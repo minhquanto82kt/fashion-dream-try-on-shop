@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { getPublishedJournalArticle } from "@/lib/journal.functions";
+import { absoluteUrl, canonicalLink, jsonLdScript } from "@/lib/seo";
+import { JournalMarkdown } from "@/lib/journal-markdown";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import "@/styles/journal.css";
@@ -17,11 +19,32 @@ export const Route = createFileRoute("/journal/$slug")({
         { name: "description", content: article.seo_description },
         { property: "og:title", content: article.seo_title },
         { property: "og:description", content: article.seo_description },
+        { property: "og:url", content: absoluteUrl(`/journal/${article.slug}`) },
         ...(article.image_url ? [{ property: "og:image", content: article.image_url }] : []),
         { property: "og:type", content: "article" },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: article.seo_title },
         { name: "twitter:description", content: article.seo_description },
+      ],
+      links: [canonicalLink(`/journal/${article.slug}`)],
+      scripts: [
+        jsonLdScript({
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: article.title,
+          description: article.seo_description,
+          url: absoluteUrl(`/journal/${article.slug}`),
+          mainEntityOfPage: {
+            "@type": "WebPage",
+            "@id": absoluteUrl(`/journal/${article.slug}`),
+          },
+          image: article.image_url ? [absoluteUrl(article.image_url)] : undefined,
+          datePublished: article.published_at ?? article.scheduled_at ?? article.created_at,
+          dateModified: article.updated_at,
+          author: { "@type": "Organization", name: "WEARO", url: absoluteUrl("/") },
+          publisher: { "@type": "Organization", name: "WEARO", url: absoluteUrl("/") },
+          articleSection: article.category,
+        }),
       ],
     };
   },
@@ -70,9 +93,9 @@ function JournalArticlePage() {
           <figure className="wearo-journal-article-hero">
             {article.image_url ? <img src={article.image_url} alt={article.title} /> : <div className="wearo-journal-card-image-fallback">WEARO / JOURNAL</div>}
           </figure>
-          <div className="wearo-journal-article-body">
-            {article.content.split(/\n\s*\n/).filter(Boolean).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-          </div>
+          <JournalMarkdown className="wearo-journal-article-body">
+            {article.content}
+          </JournalMarkdown>
           <div className="wearo-journal-article-footer">
             <span>WEARO JOURNAL</span>
             <Link to="/journal">XEM THÊM BÀI VIẾT →</Link>
