@@ -101,8 +101,83 @@ function JournalEditorPage() {
   }, [id, isNew]);
 
   const wordCount = useMemo(() => form.content.trim() ? form.content.trim().split(/\s+/).length : 0, [form.content]);
+  const paragraphCount = useMemo(
+    () => form.content.trim() ? form.content.trim().split(/\n\\s*\n/).filter(Boolean).length : 0,
+    [form.content],
+  );
   const seoTitleLength = form.seo_title.length;
   const seoDescriptionLength = form.seo_description.length;
+
+  const seoChecks = useMemo(() => {
+    const normalizedTitleWords = form.title
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\\u0300-\\u036f]/g, "")
+      .replace(/đ/g, "d")
+      .split(/\\s+/)
+      .map((word) => word.replace(/[^a-z0-9]/g, ""))
+      .filter((word) => word.length >= 4)
+      .slice(0, 3);
+
+    const normalizedSeoTitle = form.seo_title
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\\u0300-\\u036f]/g, "")
+      .replace(/đ/g, "d");
+
+    const keywordCoverage = normalizedTitleWords.length > 0 &&
+      normalizedTitleWords.filter((word) => normalizedSeoTitle.includes(word)).length >= Math.min(2, normalizedTitleWords.length);
+
+    return [
+      {
+        key: "seo-title-length",
+        label: "SEO title 30–60 ký tự",
+        detail: `${seoTitleLength}/60 ký tự`,
+        good: seoTitleLength >= 30 && seoTitleLength <= 60,
+      },
+      {
+        key: "seo-title-relevance",
+        label: "SEO title bám theo tiêu đề bài",
+        detail: keywordCoverage ? "Có từ khóa chính" : "Nên đưa từ khóa chính vào",
+        good: keywordCoverage,
+      },
+      {
+        key: "seo-description-length",
+        label: "SEO description 70–160 ký tự",
+        detail: `${seoDescriptionLength}/160 ký tự`,
+        good: seoDescriptionLength >= 70 && seoDescriptionLength <= 160,
+      },
+      {
+        key: "slug",
+        label: "Slug thân thiện",
+        detail: form.slug ? `/${form.slug}` : "Chưa có slug",
+        good: /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(form.slug) && form.slug.length >= 3 && form.slug.length <= 75,
+      },
+      {
+        key: "content-depth",
+        label: "Nội dung đủ chiều sâu",
+        detail: `${wordCount} từ · ${paragraphCount} đoạn`,
+        good: wordCount >= 600 && paragraphCount >= 3,
+      },
+      {
+        key: "excerpt",
+        label: "Có excerpt mô tả rõ chủ đề",
+        detail: `${form.excerpt.length} ký tự`,
+        good: form.excerpt.trim().length >= 80,
+      },
+      {
+        key: "image",
+        label: "Có thumbnail / ảnh đại diện",
+        detail: form.image_url ? "Đã thêm ảnh" : "Chưa có ảnh",
+        good: Boolean(form.image_url.trim()),
+      },
+    ];
+  }, [form.content, form.excerpt, form.image_url, form.seo_description, form.seo_title, form.slug, form.title, paragraphCount, seoDescriptionLength, seoTitleLength, wordCount]);
+
+  const seoScore = useMemo(
+    () => Math.round((seoChecks.filter((check) => check.good).length / seoChecks.length) * 100),
+    [seoChecks],
+  );
 
   function setField<K extends keyof FormState>(field: K, value: FormState[K]) {
     setForm((current) => ({ ...current, [field]: value }));
@@ -224,15 +299,34 @@ function JournalEditorPage() {
           </div>
 
           <div className="wearo-journal-editor-card">
-            <h2>SEO</h2>
+            <div className="wearo-journal-seo-heading">
+              <h2>SEO CHECKER</h2>
+              <strong className={seoScore >= 80 ? "good" : seoScore >= 60 ? "warn" : "bad"}>{seoScore}/100</strong>
+            </div>
+            <p className="wearo-journal-seo-note">Bộ kiểm tra nội bộ của WEARO. Điểm này là checklist biên tập, không phải điểm xếp hạng của Google.</p>
+
             <label>SEO TITLE <span>{seoTitleLength}/60</span>
               <input value={form.seo_title} onChange={(e) => setField("seo_title", e.target.value)} maxLength={70} placeholder="Tiêu đề hiển thị trên Google" />
             </label>
             <label>SEO DESCRIPTION <span>{seoDescriptionLength}/160</span>
               <textarea rows={6} value={form.seo_description} onChange={(e) => setField("seo_description", e.target.value)} maxLength={180} placeholder="Mô tả hiển thị trên Google." />
             </label>
-            <div className={`wearo-journal-seo-meter ${seoTitleLength >= 30 && seoTitleLength <= 60 ? "good" : ""}`}>SEO title: {seoTitleLength >= 30 && seoTitleLength <= 60 ? "TỐT" : "CẦN TỐI ƯU"}</div>
-            <div className={`wearo-journal-seo-meter ${seoDescriptionLength >= 70 && seoDescriptionLength <= 160 ? "good" : ""}`}>SEO description: {seoDescriptionLength >= 70 && seoDescriptionLength <= 160 ? "TỐT" : "CẦN TỐI ƯU"}</div>
+
+            <div className="wearo-journal-seo-checklist">
+              {seoChecks.map((check) => (
+                <div key={check.key} className={`wearo-journal-seo-check ${check.good ? "good" : "bad"}`}>
+                  <span aria-hidden="true">{check.good ? "✓" : "!"}</span>
+                  <div>
+                    <strong>{check.label}</strong>
+                    <small>{check.detail}</small>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="wearo-journal-seo-meter">
+              {seoScore >= 80 ? "SEO FOUNDATION TỐT" : seoScore >= 60 ? "SEO FOUNDATION CẦN BỔ SUNG" : "SEO FOUNDATION CẦN TỐI ƯU"}
+            </div>
           </div>
 
           <div className="wearo-journal-editor-card">
