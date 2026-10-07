@@ -1,4 +1,4 @@
-const DEFAULT_SITE_URL = "https://fashion-dream-try-on-main-l56ej9gpx-up-think.vercel.app";
+const DEFAULT_SITE_URL = "https://fashion-dream-try-on-main.vercel.app";
 
 export const SITE_URL = (import.meta.env.VITE_SITE_URL || DEFAULT_SITE_URL).replace(/\/$/, "");
 
