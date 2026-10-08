@@ -28,11 +28,10 @@ jobs:
         run: |
           const { execFileSync } = require("node:child_process");
           const fs = require("node:fs");
-          const before = JSON.parse(execFileSync("git", ["show", "HEAD:package-lock.json"], { encoding: "utf8" }));
+          const before = JSON.parse(execFileSync("git", ["show", "HEAD:fashion-dream-try-on-main/package-lock.json"], { encoding: "utf8" }));
           const after = JSON.parse(fs.readFileSync("package-lock.json", "utf8"));
           const added = {};
           for (const [key, value] of Object.entries(after.packages)) {
             if (!before.packages[key]) added[key] = value;
           }
-          const changedRoot = { ...after.packages[""]?.devDependencies };
-          console.log(JSON.stringify({ added, changedRoot }, null, 2));
+          console.log(JSON.stringify({ added, rootDevDependencies: after.packages[""].devDependencies }, null, 2));
