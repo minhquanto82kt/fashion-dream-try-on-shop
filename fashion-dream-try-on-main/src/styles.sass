@@ -1,3 +1,4 @@
+@use "sass:meta"
 @use "./styles/wearo-core"
 @use "./styles/home-fixes"
 @use "./styles/account-dashboard"
@@ -72,15 +73,15 @@
   color: #171717
   border-color: #D9BBA9
 
-@import "./tw-animate"
-@import "./ui-stabilization"
-@import "./topbar"
-@import "./nav-hotfix"
-@import "./admin-ui"
-@import "./admin-comfort"
-@import "./palette"
-@import "./ux-foundation"
-@import "./styles/home-composition-guard"
-@import "./styles/wearo-canonical-lock"
-@import "./styles/wearo-ui-v2"
-@import "./styles/wearo-ui-v2-final"
+@include meta.load-css("./tw-animate")
+@include meta.load-css("./ui-stabilization")
+@include meta.load-css("./topbar")
+@include meta.load-css("./nav-hotfix")
+@include meta.load-css("./admin-ui")
+@include meta.load-css("./admin-comfort")
+@include meta.load-css("./palette")
+@include meta.load-css("./ux-foundation")
+@include meta.load-css("./styles/home-composition-guard")
+@include meta.load-css("./styles/wearo-canonical-lock")
+@include meta.load-css("./styles/wearo-ui-v2")
+@include meta.load-css("./styles/wearo-ui-v2-final")
