@@ -81,18 +81,17 @@
 .fashion-site { background: var(--page-background); color: var(--text-primary); }
 .fashion-nav { background: color-mix(in oklab, var(--page-background) 94%, transparent); border-color: var(--border); }
 .fashion-brand__mark { background: var(--brand-primary); color: var(--wearo-white); }
-.fashion-cart-btn span, .fashion-product-badge { background: var(--brand-accent); color: var(--wearo-ink); }
+.fashion-cart-btn span { background: var(--brand-accent); color: var(--wearo-ink); }
 .fashion-hero__label { background: transparent; color: var(--brand-primary); }
-.fashion-nav__links a:hover, .fashion-nav__links a.is-active, .fashion-brand__name span, .fashion-brand__meta, .fashion-eyebrow, .fashion-section-number, .fashion-feature-list b, .fashion-text-link, .fashion-section-number--mustard, .fashion-accent, .statement-line--accent-small, .statement-line--accent-display, .fashion-product-price { color: var(--brand-primary); }
+.fashion-nav__links a:hover, .fashion-nav__links a.is-active, .fashion-brand__name span, .fashion-brand__meta, .fashion-eyebrow, .fashion-section-number, .fashion-feature-list b, .fashion-text-link, .fashion-section-number--mustard, .fashion-accent, .statement-line--accent-small, .statement-line--accent-display { color: var(--brand-primary); }
 .fashion-ai-btn, .fashion-btn, .fashion-hero__art, .fashion-ai-feature__visual { border-color: var(--brand-primary); }
 .fashion-ai-btn:hover, .fashion-btn:not(.fashion-btn--ghost):hover, .fashion-category-filter:hover, .fashion-category-filter.is-active { background: var(--brand-primary); color: var(--wearo-white); }
 .fashion-btn { background: var(--brand-primary); color: var(--wearo-white); }
 .fashion-btn--ghost { background: transparent; color: var(--text-primary); }
 .fashion-btn--light { background: var(--wearo-white); color: var(--brand-primary); border-color: var(--wearo-white); }
-.fashion-product-image { background: var(--wearo-blue-light); color: var(--wearo-white); }
 .fashion-products-section { background: var(--wearo-off-white); color: var(--wearo-ink); border-color: var(--border); }
-.fashion-product-image, .fashion-product-meta, .fashion-feature-list, .fashion-feature-list div { border-color: var(--border); }
-.fashion-product-badge--olive, .fashion-category-filter--olive { background: var(--wearo-blue-light); border-color: var(--brand-primary); color: var(--wearo-white); }
+.fashion-feature-list, .fashion-feature-list div { border-color: var(--border); }
+.fashion-category-filter--olive { background: var(--wearo-blue-light); border-color: var(--brand-primary); color: var(--wearo-white); }
 .fashion-category-filter--olive:hover, .fashion-category-filter--olive.is-active { background: var(--wearo-blue-light); border-color: var(--brand-primary); color: var(--wearo-white); }
 .fashion-hero__art { box-shadow: none; background: transparent; }
 .fashion-ai-feature__visual { box-shadow: 9px 9px 0 color-mix(in oklab, var(--brand-accent) 45%, transparent); }
@@ -167,7 +166,6 @@
 .fashion-products-section { background: var(--wearo-off-white); }
 .fashion-category-filter { color: var(--wearo-blue); background: transparent; border-color: var(--wearo-beige); }
 .fashion-category-filter:hover, .fashion-category-filter.is-active { background: var(--wearo-blue); color: var(--wearo-white); border-color: var(--wearo-blue); }
-.fashion-product-badge { background: var(--wearo-coral); }
 .fashion-flow { background: var(--wearo-white); color: var(--wearo-ink); }
 .fashion-flow__steps div { border-color: var(--wearo-beige); }
 .fashion-flow__steps span { color: var(--wearo-blue); }
