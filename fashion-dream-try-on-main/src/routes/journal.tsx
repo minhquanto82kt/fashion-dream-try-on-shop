@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { listPublishedJournalArticles, type JournalArticle } from "@/lib/journal.functions";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
-import "@/styles/journal.css";
+import "@/styles/journal.scss";
 
 export const Route = createFileRoute("/journal")({
   loader: () => listPublishedJournalArticles(),
