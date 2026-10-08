@@ -4,18 +4,19 @@
 */
 
 :root {
-  --wearo-v2-blue: #54728C;
-  --wearo-v2-blue-light: #7794A6;
-  --wearo-v2-peach: #F2CEAE;
-  --wearo-v2-beige: #D9BBA9;
-  --wearo-v2-coral: #F2AD94;
-  --wearo-v2-paper: #F8F6F2;
-  --wearo-v2-white: #FFFFFF;
-  --wearo-v2-ink: #171717;
-  --wearo-v2-line: rgba(84,114,140,.18);
-  --wearo-v2-line-strong: rgba(84,114,140,.32);
-  --wearo-v2-muted: #586A74;
-  --wearo-v2-shadow: 0 12px 30px rgba(23,23,23,.08);
+  /* Semantic UI aliases: palette.scss remains the only brand-color source. */
+  --wearo-v2-blue: var(--wearo-blue);
+  --wearo-v2-blue-light: var(--wearo-blue-light);
+  --wearo-v2-peach: var(--wearo-peach);
+  --wearo-v2-beige: var(--wearo-beige);
+  --wearo-v2-coral: var(--wearo-coral);
+  --wearo-v2-paper: var(--wearo-off-white);
+  --wearo-v2-white: var(--wearo-white);
+  --wearo-v2-ink: var(--wearo-ink);
+  --wearo-v2-line: color-mix(in oklab, var(--wearo-blue) 18%, transparent);
+  --wearo-v2-line-strong: color-mix(in oklab, var(--wearo-blue) 32%, transparent);
+  --wearo-v2-muted: color-mix(in oklab, var(--wearo-blue) 78%, var(--wearo-white));
+  --wearo-v2-shadow: 0 12px 30px color-mix(in oklab, var(--wearo-ink) 8%, transparent);
 }
 
 body.wearo-ui-v2 {
