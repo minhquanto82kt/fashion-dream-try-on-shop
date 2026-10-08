@@ -1,7 +1,8 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Outlet, Link, createRootRouteWithContext, useRouter, HeadContent, Scripts } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
-import appCss from "../styles.sass?url";
+import appCss from "../styles.css?url";
+import sassCss from "../styles.sass?url";
 import { Toaster } from "@/components/ui/sonner";
 import { CartProvider } from "@/lib/cart";
 import { getCustomerUser, getSafeReturnPath, startCustomerSessionWatcher } from "@/lib/auth";
@@ -26,7 +27,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     { charSet: "utf-8" }, { name: "viewport", content: "width=device-width, initial-scale=1" }, { title: "WEARO — Mặc theo cách của riêng bạn" },
     { name: "description", content: "WEARO — cửa hàng thời trang trực tuyến kết hợp AI Virtual Try-On, AI Personal Stylist và Hybrid Stylist 1:1." }, { name: "author", content: "WEARO" }, { property: "og:title", content: "WEARO — Mặc theo cách của riêng bạn" }, { property: "og:description", content: "Thử đồ ảo trên ảnh thật, phối Full-Set theo vóc dáng và nhận tư vấn stylist 1:1." }, { property: "og:type", content: "website" }
   ], links: [
-    canonicalLink("/"), { rel: "stylesheet", href: appCss }, { rel: "icon", href: "/favicon.ico", type: "image/x-icon" }, { rel: "preconnect", href: "https://fonts.googleapis.com" }, { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+    canonicalLink("/"), { rel: "stylesheet", href: appCss }, { rel: "stylesheet", href: sassCss }, { rel: "icon", href: "/favicon.ico", type: "image/x-icon" }, { rel: "preconnect", href: "https://fonts.googleapis.com" }, { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
     { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Anton&family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Bodoni+Moda:opsz,wght@6..96,400..700&family=Dancing+Script:wght@600;700&family=Lexend:ital,wght@0,400;1,400&family=Oswald:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" }
   ], scripts: siteStructuredData.map(jsonLdScript) }), shellComponent: RootShell, component: RootComponent, notFoundComponent: NotFoundComponent, errorComponent: ErrorComponent,
 });
