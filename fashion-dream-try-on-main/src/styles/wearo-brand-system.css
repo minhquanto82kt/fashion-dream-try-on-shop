@@ -158,7 +158,6 @@ select:focus {
 }
 
 .fashion-hero__badge,
-.fashion-product-badge,
 .fashion-cart-btn span {
   background: var(--wearo-gradient-coral) !important;
   color: var(--wearo-brand-primary) !important;
@@ -189,19 +188,8 @@ select:focus {
   box-shadow: none;
 }
 
-.fashion-product-image {
-  background: var(--wearo-gradient-cool) !important;
-  color: #FFFFFF !important;
-  box-shadow: var(--wearo-shadow-subtle);
-}
 
-/* Product/content surfaces gain restrained depth. */
-.fashion-product-card,
-.product-card,
-[class*="product-card"],
-[class*="product-grid"] > article {
-  box-shadow: var(--wearo-shadow-card);
-}
+/* Product card presentation is owned by wearo-product-card-v1.css. */
 
 /* -------------------------------------------------------------
    AI STUDIO
