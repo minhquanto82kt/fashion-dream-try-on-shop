@@ -32,11 +32,3 @@
 @import "./styles/wearo-reference-landing.css";
 @import "./styles/wearo-brand-system.css";
 @import "./styles/wearo-reference-white.css";
-
-.type-display,.font-display { font-family:var(--wearo-font-display,"Space Grotesk",sans-serif); font-weight:700; letter-spacing:-.01em; }
-.type-editorial { font-family:var(--wearo-font-heading,"Be Vietnam Pro",sans-serif); font-weight:600; letter-spacing:-.02em; }
-.type-body,.font-sans { font-family:var(--wearo-font-body,"Lexend",sans-serif); }
-.type-meta { font-family:var(--wearo-font-body,"Lexend",sans-serif); font-weight:500; letter-spacing:.12em; text-transform:uppercase; }
-
-.wearo-social-placeholder { display:grid; place-items:center; width:48px; height:48px; border:1px solid rgba(84,114,140,.22); border-radius:999px; background:#fff; color:#54728C; font-size:.62rem; font-weight:800; letter-spacing:.12em; transition:transform .2s ease,background .2s ease,color .2s ease,border-color .2s ease; }
-.wearo-social-placeholder:hover { transform:translateY(-2px); background:#F2CEAE; color:#171717; border-color:#D9BBA9; }
