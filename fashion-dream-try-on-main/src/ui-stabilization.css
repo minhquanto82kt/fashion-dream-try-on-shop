@@ -178,66 +178,6 @@ p, li, a, button, label, span, h1, h2, h3, h4, h5, h6 {
   min-width: 0;
 }
 
-/* Product cards: normalize metadata height and stop long product names from breaking layout. */
-.fashion-product-card {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.fashion-product-image {
-  flex: 0 0 auto;
-}
-
-.fashion-product-meta {
-  min-width: 0;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.fashion-product-meta > div:first-child {
-  min-width: 0;
-  flex: 1 1 auto;
-}
-
-.fashion-product-title {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-  line-height: 1.15;
-  text-wrap: balance;
-}
-
-.fashion-product-spec {
-  min-height: 1.35em;
-  margin-top: 7px;
-}
-
-.fashion-product-price-wrap {
-  flex: 0 0 auto;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.fashion-product-price {
-  white-space: nowrap;
-}
-
-.fashion-heart {
-  flex: 0 0 auto;
-}
-
-.fashion-product-badge,
-.fashion-product-index,
-.fashion-product-arrow {
-  line-height: 1.2;
-}
-
 /* Footer: long email/address strings must wrap instead of forcing horizontal overflow. */
 footer a,
 footer p,
@@ -487,18 +427,6 @@ main textarea {
     gap: 30px;
   }
 
-  .fashion-product-meta {
-    gap: 12px;
-  }
-
-  .fashion-product-title {
-    -webkit-line-clamp: 3;
-  }
-
-  .fashion-product-price-wrap {
-    gap: 7px;
-  }
-
   /* Public Tailwind pages: use consistent mobile gutters. */
   main.max-w-7xl,
   main.max-w-5xl,
@@ -589,15 +517,6 @@ main textarea {
 
   .fashion-display {
     font-size: clamp(52px, 16vw, 72px);
-  }
-
-  .fashion-product-meta {
-    display: block;
-  }
-
-  .fashion-product-price-wrap {
-    justify-content: space-between;
-    margin-top: 10px;
   }
 
   main.max-w-7xl,
