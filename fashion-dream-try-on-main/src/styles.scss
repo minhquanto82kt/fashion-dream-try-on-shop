@@ -40,3 +40,23 @@
 
 .wearo-social-placeholder { display:grid; place-items:center; width:48px; height:48px; border:1px solid rgba(84,114,140,.22); border-radius:999px; background:#fff; color:#54728C; font-size:.62rem; font-weight:800; letter-spacing:.12em; transition:transform .2s ease,background .2s ease,color .2s ease,border-color .2s ease; }
 .wearo-social-placeholder:hover { transform:translateY(-2px); background:#F2CEAE; color:#171717; border-color:#D9BBA9; }
+/* =============================================================================
+   WEARO STYLE ENTRYPOINT
+   Keep global stylesheet order in one place. This preserves the established
+   cascade while making the root route responsible only for Tailwind + app CSS.
+   ============================================================================= */
+
+/* Runtime foundation */
+@import "./ui-stabilization.scss";
+@import "./topbar.scss";
+@import "./nav-hotfix.scss";
+@import "./admin-ui.scss";
+@import "./admin-comfort.scss";
+@import "./palette.scss";
+@import "./ux-foundation.scss";
+
+/* Canonical convergence / compatibility */
+@import "./styles/home-composition-guard.scss";
+@import "./styles/wearo-canonical-lock.scss";
+@import "./styles/wearo-ui-v2.scss";
+@import "./styles/wearo-ui-v2-final.scss";
