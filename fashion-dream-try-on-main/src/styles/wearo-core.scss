@@ -1,6 +1,6 @@
 @import "tailwindcss" source(none);
 @source "../";
-@import "tw-animate-css";
+/* tw-animate-css is loaded by the native Tailwind CSS entrypoint to preserve Tailwind v4 syntax. */
 
 @custom-variant dark (&:is(.dark *));
 
