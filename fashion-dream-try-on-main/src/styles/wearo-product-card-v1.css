@@ -1,6 +1,7 @@
-/* WEARO Product Card v1
- * One visual contract across Home / Shop / related-product grids.
- * Uses the 5-color brand palette; black/white remain accents only.
+/* WEARO Product Card — canonical storefront card contract
+ * Single source of visual truth for Home / Shop / related-product grids.
+ * Product data stays in ProductCard; this file only owns presentation.
+ * Palette: #54728C #7794A6 #F2CEAE #D9BBA9 #F2AD94
  */
 
 .fashion-product-card {
@@ -79,14 +80,27 @@
   opacity: 1;
 }
 
-.fashion-product-badge {
+/* Labels: status + product attributes share one controlled overlay. */
+.fashion-product-labels {
+  position: absolute;
+  inset: 12px auto auto 12px;
+  z-index: 10;
+  display: flex;
+  max-width: calc(100% - 24px);
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.fashion-product-badge,
+.fashion-product-tag {
   display: inline-flex;
-  align-items: center;
   min-height: 22px;
+  align-items: center;
   padding: 4px 8px;
   border: 1px solid rgba(84, 114, 140, 0.28);
   border-radius: 3px;
-  background: rgba(242, 206, 174, 0.88);
   color: var(--wearo-card-primary);
   font-size: 8px;
   font-weight: 700;
@@ -94,29 +108,33 @@
   line-height: 1;
   text-transform: uppercase;
   backdrop-filter: blur(8px);
-  transition: transform 240ms ease, background-color 240ms ease;
+  transition: transform 240ms ease, background-color 240ms ease, border-color 240ms ease;
 }
 
-.fashion-product-card:hover .fashion-product-badge {
-  transform: translateY(-1px);
+.fashion-product-badge {
   background: rgba(242, 173, 148, 0.92);
 }
 
-.fashion-product-index {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  z-index: 4;
-  color: rgba(84, 114, 140, 0.78);
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: .14em;
-  transition: opacity 220ms ease, transform 220ms ease;
+.fashion-product-badge--sale {
+  background: rgba(242, 206, 174, 0.94);
 }
 
-.fashion-product-card:hover .fashion-product-index {
-  transform: translateX(-2px);
-  opacity: .95;
+.fashion-product-tag {
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.fashion-product-card:hover .fashion-product-badge,
+.fashion-product-card:hover .fashion-product-tag {
+  transform: translateY(-1px);
+}
+
+.fashion-product-card:hover .fashion-product-badge {
+  border-color: rgba(84, 114, 140, 0.42);
+}
+
+.fashion-product-card:hover .fashion-product-tag {
+  border-color: rgba(242, 173, 148, 0.78);
+  background: rgba(242, 206, 174, 0.92);
 }
 
 .fashion-product-arrow {
@@ -171,7 +189,7 @@
   font-size: 14px;
   font-weight: 700;
   line-height: 1.35;
-  transition: color 200ms ease, transform 240ms ease;
+  transition: color 200ms ease;
 }
 
 .fashion-product-title::after {
@@ -254,6 +272,11 @@
 
   .fashion-product-card:hover {
     transform: translateY(-3px);
+  }
+
+  .fashion-product-labels {
+    inset: 10px auto auto 10px;
+    max-width: calc(100% - 20px);
   }
 }
 
