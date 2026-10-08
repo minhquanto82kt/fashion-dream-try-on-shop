@@ -1,11 +1,4 @@
-/* WEARO P1 — commerce enhancements. Keep the existing editorial system intact. */
-.fashion-product-image.has-hover-gallery{position:relative;overflow:hidden}
-.fashion-product-image.has-hover-gallery .fashion-product-image__primary,.fashion-product-image.has-hover-gallery .fashion-product-image__secondary{transition:opacity .35s ease,transform .65s cubic-bezier(.2,.65,.2,1)}
-.fashion-product-image.has-hover-gallery .fashion-product-image__secondary{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.02)}
-.fashion-product-image.has-hover-gallery:hover .fashion-product-image__primary{opacity:0;transform:scale(1.02)}
-.fashion-product-image.has-hover-gallery:hover .fashion-product-image__secondary{opacity:1;transform:scale(1)}
-.fashion-product-price-wrap{display:grid;grid-template-columns:auto auto;align-items:center;gap:5px 8px}
-.fashion-product-price-old{grid-column:1/-1;justify-self:end;font-size:10px;color:var(--silver);text-decoration:line-through;opacity:.72}
+/* WEARO P1 — commerce enhancements. Product-card presentation is owned by wearo-product-card-v1.css. */
 
 .wearo-p1-outfits,.wearo-p1-community{padding:clamp(56px,7vw,104px) max(24px,calc((100% - 1240px)/2));background:var(--background);color:var(--foreground)}
 .wearo-p1-outfits{border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
@@ -55,8 +48,6 @@
 .wearo-p1-size-note{margin-top:14px!important;font-size:10px!important}
 
 @media (max-width:800px){
-  .fashion-product-image.has-hover-gallery:hover .fashion-product-image__primary{opacity:1;transform:none}
-  .fashion-product-image.has-hover-gallery:hover .fashion-product-image__secondary{opacity:0;transform:none}
   .wearo-p1-outfits,.wearo-p1-community{padding-left:20px;padding-right:20px}
   .wearo-p1-section-head,.wearo-p1-community-head{align-items:flex-start;flex-direction:column}
   .wearo-p1-size-trigger{align-self:flex-start}
