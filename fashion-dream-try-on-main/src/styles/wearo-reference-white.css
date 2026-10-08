@@ -73,14 +73,7 @@
   border-color: rgba(84,114,140,.22);
 }
 .wearo-reference-category-tabs button:hover { color: var(--wr-text); }
-.wearo-reference-product-grid .fashion-product-card {
-  background: #fff;
-  border-color: rgba(84,114,140,.16);
-}
-.wearo-reference-product-grid .fashion-product-image { background: #f1f3f4; }
-.wearo-reference-product-grid .fashion-product-title,
-.wearo-reference-product-grid .fashion-product-price { color: var(--wr-text); }
-.wearo-reference-product-grid .fashion-product-index { color: rgba(23,23,23,.5); }
+/* Product card presentation is shared with the storefront via wearo-product-card-v1.css. */
 .wearo-reference-view-all a { color: var(--wr-text); border-color: rgba(84,114,140,.35); }
 
 .wearo-reference-journal { border-top-color: var(--wr-line); }
