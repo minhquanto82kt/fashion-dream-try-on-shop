@@ -1,0 +1,38 @@
+name: Temporary Sass Lock Bootstrap
+
+on:
+  push:
+    branches:
+      - feature/sass-migration
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: fashion-dream-try-on-main
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: fashion-dream-try-on-main/package-lock.json
+      - name: Generate lockfile
+        run: npm install --package-lock-only --legacy-peer-deps --no-audit --no-fund
+      - name: Print Sass lock delta
+        shell: node {0}
+        run: |
+          const { execFileSync } = require("node:child_process");
+          const fs = require("node:fs");
+          const before = JSON.parse(execFileSync("git", ["show", "HEAD:package-lock.json"], { encoding: "utf8" }));
+          const after = JSON.parse(fs.readFileSync("package-lock.json", "utf8"));
+          const added = {};
+          for (const [key, value] of Object.entries(after.packages)) {
+            if (!before.packages[key]) added[key] = value;
+          }
+          const changedRoot = { ...after.packages[""]?.devDependencies };
+          console.log(JSON.stringify({ added, changedRoot }, null, 2));
