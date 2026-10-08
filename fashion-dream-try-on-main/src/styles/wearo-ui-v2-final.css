@@ -101,15 +101,8 @@ body.wearo-ui-v2 main.mx-auto.max-w-7xl input[type="search"] {
   min-height: 48px;
 }
 
-body.wearo-ui-v2 main.mx-auto.max-w-7xl .fashion-product-card,
-body.wearo-ui-v2 main.mx-auto.max-w-7xl .group {
-  transition: transform .22s cubic-bezier(.22,1,.36,1), box-shadow .22s ease;
-}
-
-body.wearo-ui-v2 main.mx-auto.max-w-7xl .fashion-product-card:hover,
-body.wearo-ui-v2 main.mx-auto.max-w-7xl .group:hover {
-  transform: translateY(-3px);
-}
+/* Product card motion is owned by wearo-product-card-v1.css.
+   Do not add card-specific overrides here. */
 
 /* Product detail — image, selectors and commerce actions become one system. */
 body.wearo-ui-v2 main.mx-auto.max-w-7xl img.aspect-\[4\/5\] {
