@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { getSession } from "@/lib/upthink-supabase";
 import { deleteAdminJournalArticle, listAdminJournalArticles, type JournalArticle, type JournalStatus } from "@/lib/journal.functions";
-import "@/styles/journal-admin.css";
+import "@/styles/journal-admin.scss";
 
 export const Route = createFileRoute("/admin/journal/")({
   component: JournalAdminPage,
