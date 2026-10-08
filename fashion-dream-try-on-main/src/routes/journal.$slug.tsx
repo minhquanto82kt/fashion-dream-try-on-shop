@@ -4,7 +4,7 @@ import { absoluteUrl, canonicalLink, jsonLdScript } from "@/lib/seo";
 import { JournalMarkdown } from "@/lib/journal-markdown";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
-import "@/styles/journal.css";
+import "@/styles/journal.scss";
 
 export const Route = createFileRoute("/journal/$slug")({
   loader: ({ params }) => getPublishedJournalArticle({ data: { slug: params.slug } }),
