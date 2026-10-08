@@ -222,19 +222,7 @@
 .wearo-reference-category-tabs button:hover { color: var(--wr-white); border-color: var(--wr-blue-soft); }
 .wearo-reference-category-tabs button.is-active { background: var(--wr-coral); color: var(--wr-black); border-color: var(--wr-coral); }
 .wearo-reference-product-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 25px; padding-top: 30px; }
-.wearo-reference-product-grid .fashion-product-card { background: #202020; border: 1px solid rgba(119,148,166,.2); border-radius: 12px; overflow: hidden; transition: transform .22s ease, border-color .22s ease; }
-.wearo-reference-product-grid .fashion-product-card:hover { transform: translateY(-4px); border-color: rgba(242,173,148,.6); }
-.wearo-reference-product-grid .fashion-product-image { aspect-ratio: 3 / 4; background: #101010; }
-.wearo-reference-product-grid .fashion-product-image__primary,.wearo-reference-product-grid .fashion-product-image__secondary { object-fit: cover; }
-.wearo-reference-product-grid .fashion-product-meta { padding: 15px; }
-.wearo-reference-product-grid .fashion-product-category { color: var(--wr-blue-soft); }
-.wearo-reference-product-grid .fashion-product-title { color: var(--wr-white); }
-.wearo-reference-product-grid .fashion-product-title:hover { color: var(--wr-coral); }
-.wearo-reference-product-grid .fashion-product-price { color: var(--wr-white); }
-.wearo-reference-product-grid .fashion-product-index { color: rgba(255,255,255,.5); }
-.wearo-reference-product-grid .fashion-product-arrow { color: var(--wr-coral); background: rgba(23,23,23,.82); }
-.wearo-reference-product-grid .fashion-heart { color: var(--wr-blue-soft); }
-.wearo-reference-product-grid .fashion-heart.is-saved { color: var(--wr-coral); }
+/* Product card presentation is shared with the storefront via wearo-product-card-v1.css. */
 .wearo-reference-view-all { display: flex; justify-content: center; margin-top: 45px; }
 .wearo-reference-view-all a { padding: 13px 22px; border: 1px solid rgba(119,148,166,.45); color: rgba(255,255,255,.72); font: 10px var(--ft-impact); letter-spacing: .14em; text-transform: uppercase; transition: all .18s ease; }
 .wearo-reference-view-all a:hover { border-color: var(--wr-coral); color: var(--wr-coral); }
@@ -286,7 +274,6 @@
   .wearo-reference-storefront-head,.wearo-reference-journal-head { align-items: flex-start; flex-direction: column; }
   .wearo-reference-category-tabs { justify-content: flex-start; }
   .wearo-reference-product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-  .wearo-reference-product-grid .fashion-product-meta { padding: 11px; }
   .wearo-reference-journal { padding: 60px 0; }
   .wearo-reference-journal-grid { grid-template-columns: 1fr; }
   .wearo-reference-ai-features { grid-template-columns: 1fr 1fr; }
