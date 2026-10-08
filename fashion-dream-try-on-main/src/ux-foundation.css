@@ -102,36 +102,6 @@ body {
   line-height: 1.45;
 }
 
-/* Product cards: make the information scan in a stable order. */
-.fashion-product-category {
-  font-size: 11px;
-  line-height: 1.35;
-  letter-spacing: .12em;
-}
-
-.fashion-product-title {
-  font-size: 15px;
-  line-height: 1.3;
-  letter-spacing: -.01em;
-}
-
-.fashion-product-spec {
-  font-size: 12px;
-  line-height: 1.45;
-  opacity: .82;
-}
-
-.fashion-product-price {
-  font-size: 14px;
-  line-height: 1.3;
-}
-
-.fashion-product-badge,
-.fashion-product-index {
-  font-size: 10px;
-  line-height: 1.25;
-}
-
 /* Editorial flow: avoid tiny body copy being mistaken for decorative metadata. */
 .fashion-flow__steps h3 {
   line-height: 1.2;
