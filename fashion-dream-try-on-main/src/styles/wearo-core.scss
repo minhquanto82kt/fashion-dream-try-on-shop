@@ -4,13 +4,20 @@
 .fashion-category-filter--olive:hover,.fashion-category-filter--olive.is-active { background:var(--ft-olive); border-color:var(--ft-mustard); color:var(--ft-paper); }
 .fashion-section-number--mustard { color:var(--ft-mustard); }
 
+/* Typography aliases only. Color tokens are owned by palette.scss. */
 :root {
-  --ft-paper:#fff89c; --ft-ink:#010626; --ft-acid:#f2e205; --ft-muted:#594b02;
-  --ft-serif:"Be Vietnam Pro",sans-serif; --ft-editorial:"Be Vietnam Pro",sans-serif;
-  --ft-display:"Space Grotesk",sans-serif; --ft-body:"Lexend",sans-serif;
-  --ft-meta:"Lexend",sans-serif; --ft-sans:"Lexend",sans-serif; --ft-impact:"Space Grotesk",sans-serif;
+  --ft-paper: var(--wearo-off-white);
+  --ft-ink: var(--wearo-ink);
+  --ft-acid: var(--wearo-coral);
+  --ft-muted: var(--wearo-blue-light);
+  --ft-serif:"Be Vietnam Pro",sans-serif;
+  --ft-editorial:"Be Vietnam Pro",sans-serif;
+  --ft-display:"Space Grotesk",sans-serif;
+  --ft-body:"Lexend",sans-serif;
+  --ft-meta:"Lexend",sans-serif;
+  --ft-sans:"Lexend",sans-serif;
+  --ft-impact:"Space Grotesk",sans-serif;
 }
-:root[data-theme="cream"] { --background:#010626; --foreground:#fff89c; --card:#010626; --card-foreground:#fff89c; --popover:#010626; --popover-foreground:#fff89c; --muted:#594b02; --muted-foreground:#fff89c; --border:#594b02; --primary:#f2e205; --primary-foreground:#010626; --accent:#fff89c; --accent-foreground:#010626; --input:#010626; --ring:#f2e205; --electric:#f2e205; --beige:#594b02; --silver:#d9b504; }
 .fashion-site{font-family:var(--ft-sans);background:var(--background);color:var(--foreground)}
 .fashion-nav{position:fixed;inset:0 0 auto;z-index:50;border-bottom:1px solid var(--border);background:color-mix(in oklab,var(--background) 90%,transparent);backdrop-filter:blur(14px)}
 .fashion-nav__inner{width:min(1240px,calc(100% - 48px));height:74px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:24px}
