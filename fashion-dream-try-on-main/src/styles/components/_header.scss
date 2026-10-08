@@ -1,0 +1,13 @@
+/* WEARO Header module
+ * P1 architecture layer: keep the established cascade intact while giving
+ * header styles one ownership boundary. Legacy files remain intentionally
+ * separate until each rule can be consolidated without visual regressions.
+ */
+
+@import "../styles/wearo-header-unified.scss";
+@import "../styles/wearo-header-final.scss";
+@import "../styles/wearo-header-final-strong.scss";
+@import "../styles/wearo-menu-contrast.scss";
+@import "../styles/wearo-mega-menu-v2.scss";
+@import "../styles/wearo-mega-menu-v2-fix.scss";
+@import "../styles/wearo-header-production.scss";
