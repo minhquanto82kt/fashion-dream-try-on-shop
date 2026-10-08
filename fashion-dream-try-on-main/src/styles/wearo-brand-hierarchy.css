@@ -88,9 +88,6 @@
 .fashion-category-filter { color: var(--wearo-primary) !important; border-color: rgba(84,114,140,.3) !important; background: transparent !important; }
 .fashion-category-filter:hover,
 .fashion-category-filter.is-active { background: var(--wearo-primary) !important; color: var(--wearo-white) !important; border-color: var(--wearo-primary) !important; }
-.fashion-product-image { background: var(--wearo-paper) !important; border-color: rgba(84,114,140,.16) !important; }
-.fashion-product-badge { background: var(--wearo-secondary) !important; color: var(--wearo-ink) !important; }
-.fashion-product-price,
 .fashion-product-title:hover,
 .fashion-heart:hover,
 .fashion-heart.is-saved { color: var(--wearo-primary) !important; }
