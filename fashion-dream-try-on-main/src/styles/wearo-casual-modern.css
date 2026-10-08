@@ -54,13 +54,7 @@ body { background:var(--wearo-paper); color:var(--wearo-ink); }
 .fashion-products-section { background:var(--wearo-paper)!important; }
 .fashion-category-filter { border-color:var(--wearo-beige)!important; color:var(--wearo-blue)!important; background:transparent!important; }
 .fashion-category-filter:hover,.fashion-category-filter.is-active { background:var(--wearo-blue)!important; border-color:var(--wearo-blue)!important; color:#fff!important; }
-.fashion-product-image { background:#eee8e1!important; border-color:rgba(84,114,140,.12)!important; }
-.fashion-product-image img { transition:transform .5s cubic-bezier(.2,.65,.2,1),filter .3s ease!important; }
-.fashion-product-card:hover .fashion-product-image img { transform:scale(1.035)!important; filter:saturate(1.04)!important; }
-.fashion-product-badge { background:var(--wearo-coral)!important; color:var(--wearo-ink)!important; }
-.fashion-product-index,.fashion-product-category,.fashion-product-spec { color:#687985!important; }
-.fashion-product-title { color:var(--wearo-ink)!important; }
-.fashion-product-title:hover,.fashion-heart:hover,.fashion-heart.is-saved { color:var(--wearo-blue)!important; }
+/* Product card presentation is owned by wearo-product-card-v1.css. */
 .fashion-flow { background:var(--wearo-blue)!important; color:#fff!important; }
 .fashion-flow .fashion-section-title,.fashion-flow .fashion-accent { color:#fff!important; }
 .fashion-flow .fashion-accent { color:var(--wearo-peach)!important; }
