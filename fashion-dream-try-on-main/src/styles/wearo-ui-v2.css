@@ -88,46 +88,8 @@ body.wearo-ui-v2 {
   transform: translateY(-1px);
 }
 
-/* Storefront product/card language. */
-.wearo-ui-v2 .fashion-product-card {
-  position: relative;
-}
-
-.wearo-ui-v2 .fashion-product-image {
-  border: 1px solid var(--wearo-v2-line) !important;
-  border-radius: 12px;
-  background: var(--wearo-v2-paper) !important;
-  box-shadow: 0 0 0 0 rgba(84,114,140,0);
-  transition: box-shadow .22s ease, border-color .22s ease, transform .22s ease;
-}
-
-.wearo-ui-v2 .fashion-product-card:hover .fashion-product-image {
-  border-color: var(--wearo-v2-line-strong) !important;
-  box-shadow: var(--wearo-v2-shadow);
-  transform: translateY(-2px);
-}
-
-.wearo-ui-v2 .fashion-product-meta {
-  border-bottom-color: var(--wearo-v2-line) !important;
-}
-
-.wearo-ui-v2 .fashion-category-filter {
-  border-color: var(--wearo-v2-line-strong) !important;
-  border-radius: 999px;
-}
-
-.wearo-ui-v2 .fashion-category-filter:hover,
-.wearo-ui-v2 .fashion-category-filter.is-active {
-  background: var(--wearo-v2-blue) !important;
-  color: var(--wearo-v2-white) !important;
-  border-color: var(--wearo-v2-blue) !important;
-}
-
-.wearo-ui-v2 .fashion-product-badge {
-  background: var(--wearo-v2-coral) !important;
-  color: var(--wearo-v2-ink) !important;
-  border-radius: 999px;
-}
+/* Product card presentation lives exclusively in wearo-product-card-v1.css.
+   Keep this layer focused on global UI/theme rules to prevent selector drift. */
 
 /* About: readability + interactive design-language cards. */
 .wearo-ui-v2 .wearo-about-hero + section .text-beige { color: var(--wearo-v2-ink) !important; }
