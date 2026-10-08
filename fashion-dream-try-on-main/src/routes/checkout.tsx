@@ -10,7 +10,7 @@ import { getCustomerSession } from "@/lib/auth";
 import { isMockUserMode } from "@/lib/mock-user";
 import { getInvoiceData, type InvoiceData } from "@/lib/invoice.functions";
 import { createVietQrUrl } from "@/lib/vietqr";
-import "@/styles/wearo-checkout-page.css";
+import "@/styles/wearo-checkout-page.scss";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({ meta: [{ title: "Thanh toán | WEARO" }] }),

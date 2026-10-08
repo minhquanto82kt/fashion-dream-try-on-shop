@@ -8,7 +8,7 @@ import {
   type JournalStatus,
 } from "@/lib/journal.functions";
 import { analyzeJournalMarkdown, JournalMarkdown } from "@/lib/journal-markdown";
-import "@/styles/journal-admin.css";
+import "@/styles/journal-admin.scss";
 
 export const Route = createFileRoute("/admin/journal/$id")({
   component: JournalEditorPage,

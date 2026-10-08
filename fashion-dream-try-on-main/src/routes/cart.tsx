@@ -5,7 +5,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { formatPrice } from "@/lib/i18n";
 import { useCart } from "@/lib/cart";
 import { useI18n } from "@/lib/i18n";
-import "@/styles/wearo-cart-page.css";
+import "@/styles/wearo-cart-page.scss";
 
 export const Route = createFileRoute("/cart")({
   head: () => ({

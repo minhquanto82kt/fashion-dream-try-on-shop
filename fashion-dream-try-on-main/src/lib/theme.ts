@@ -1,7 +1,7 @@
-import "../admin-theme.css";
-import "../wearo-contrast.css";
-import "../styles/admin-appearance-fixes.css";
-import "../styles/wearo-brand-system.css";
+import "../admin-theme.scss";
+import "../wearo-contrast.scss";
+import "../styles/admin-appearance-fixes.scss";
+import "../styles/wearo-brand-system.scss";
 import "./branding";
 
 export type ThemeColors = { primary: string; secondary: string; background: string; surface: string; accent: string; foreground: string };
