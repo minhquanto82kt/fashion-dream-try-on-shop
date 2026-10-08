@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Outlet, Link, createRootRouteWithContext, useRouter, HeadContent, Scripts } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
-import appCss from "../styles.css?url";
+import appCss from "../styles.scss?url";
 import uiStabilizationCss from "../ui-stabilization.css?url";
 import topbarCss from "../topbar.css?url";
 import navHotfixCss from "../nav-hotfix.css?url";

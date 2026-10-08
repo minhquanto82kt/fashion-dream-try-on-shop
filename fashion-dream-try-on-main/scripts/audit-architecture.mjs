@@ -3,7 +3,7 @@ import path from "node:path";
 
 const root = path.resolve("src");
 const violations = [];
-const textExtensions = new Set([".ts", ".tsx", ".css"]);
+const textExtensions = new Set([".ts", ".tsx", ".css", ".scss", ".sass"]);
 
 async function walk(dir) {
   for (const entry of await readdir(dir, { withFileTypes: true })) {

@@ -1,0 +1,42 @@
+@import "./styles/wearo-core.scss";
+@import "./styles/home-fixes.scss";
+@import "./styles/account-dashboard.scss";
+@import "./styles/wearo-casual-modern.scss";
+@import "./styles/wearo-brand-hierarchy.scss";
+@import "./styles/wearo-typography.scss";
+@import "./styles/wearo-admin-polish.scss";
+@import "./styles/wearo-admin-copy.scss";
+@import "./styles/wearo-header-unified.scss";
+@import "./styles/wearo-header-final.scss";
+@import "./styles/wearo-header-final-strong.scss";
+@import "./styles/about-polish.scss";
+@import "./styles/ai-workspace-v2.scss";
+@import "./styles/wearo-ai-consent.scss";
+@import "./styles/wearo-p0-ux-refinement.scss";
+@import "./styles/wearo-contrast-guard.scss";
+@import "./styles/wearo-menu-contrast.scss";
+@import "./styles/wearo-mega-menu-v2.scss";
+@import "./styles/wearo-mega-menu-v2-fix.scss";
+@import "./styles/wearo-header-production.scss";
+@import "./styles/wearo-p3-final.scss";
+@import "./styles/wearo-product-page-fix.scss";
+@import "./styles/wearo-ai-production-fix.scss";
+@import "./styles/wearo-ai-phase2.scss";
+@import "./styles/wearo-cart-feedback.scss";
+@import "./styles/wearo-commerce-hierarchy.scss";
+@import "./styles/wearo-manifesto-original-image.scss";
+@import "./styles/wearo-hero-carousel.scss";
+@import "./styles/wearo-home-navigation.scss";
+@import "./styles/wearo-editorial-newsletter.scss";
+@import "./styles/wearo-footer-unified.scss";
+@import "./styles/wearo-reference-landing.scss";
+@import "./styles/wearo-brand-system.scss";
+@import "./styles/wearo-reference-white.scss";
+
+.type-display,.font-display { font-family:var(--wearo-font-display,"Space Grotesk",sans-serif); font-weight:700; letter-spacing:-.01em; }
+.type-editorial { font-family:var(--wearo-font-heading,"Be Vietnam Pro",sans-serif); font-weight:600; letter-spacing:-.02em; }
+.type-body,.font-sans { font-family:var(--wearo-font-body,"Lexend",sans-serif); }
+.type-meta { font-family:var(--wearo-font-body,"Lexend",sans-serif); font-weight:500; letter-spacing:.12em; text-transform:uppercase; }
+
+.wearo-social-placeholder { display:grid; place-items:center; width:48px; height:48px; border:1px solid rgba(84,114,140,.22); border-radius:999px; background:#fff; color:#54728C; font-size:.62rem; font-weight:800; letter-spacing:.12em; transition:transform .2s ease,background .2s ease,color .2s ease,border-color .2s ease; }
+.wearo-social-placeholder:hover { transform:translateY(-2px); background:#F2CEAE; color:#171717; border-color:#D9BBA9; }
