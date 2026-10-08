@@ -23,15 +23,17 @@ jobs:
           cache-dependency-path: fashion-dream-try-on-main/package-lock.json
       - name: Generate lockfile
         run: npm install --package-lock-only --legacy-peer-deps --no-audit --no-fund
-      - name: Print Sass lock delta
+      - name: Print compressed Sass lock delta
         shell: node {0}
         run: |
           const { execFileSync } = require("node:child_process");
           const fs = require("node:fs");
+          const zlib = require("node:zlib");
           const before = JSON.parse(execFileSync("git", ["show", "HEAD:fashion-dream-try-on-main/package-lock.json"], { encoding: "utf8" }));
           const after = JSON.parse(fs.readFileSync("package-lock.json", "utf8"));
           const added = {};
           for (const [key, value] of Object.entries(after.packages)) {
             if (!before.packages[key]) added[key] = value;
           }
-          console.log(JSON.stringify({ added, rootDevDependencies: after.packages[""].devDependencies }, null, 2));
+          const payload = JSON.stringify({ added, rootDevDependencies: after.packages[""].devDependencies });
+          console.log("SASS_LOCK_DELTA_BASE64=" + zlib.gzipSync(payload, { level: 9 }).toString("base64"));
