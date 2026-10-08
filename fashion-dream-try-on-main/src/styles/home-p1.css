@@ -57,4 +57,4 @@
   .wearo-p1-outfit-action{align-items:flex-start;flex-direction:row}
   .wearo-p1-community-grid article{min-height:360px}
 }
-@media (prefers-reduced-motion:reduce){.fashion-product-image.has-hover-gallery img,.wearo-p1-outfit-images img,.wearo-p1-community-grid img{transition:none}}
+@media (prefers-reduced-motion:reduce){.wearo-p1-outfit-images img,.wearo-p1-community-grid img{transition:none}}
