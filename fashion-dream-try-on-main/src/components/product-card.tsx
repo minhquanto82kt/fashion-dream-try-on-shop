@@ -68,13 +68,12 @@ export function ProductCard({ product }: { product: Product }) {
       <Link to="/product/$id" params={{ id: product.id }} className={`fashion-product-image${secondaryImage ? " has-hover-gallery" : ""}`}>
         <img src={product.image} alt={product.name} loading="lazy" decoding="async" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" className="fashion-product-image__primary" />
         {secondaryImage && <img src={secondaryImage} alt="" aria-hidden="true" loading="lazy" decoding="async" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" className="fashion-product-image__secondary" />}
-        <div className="pointer-events-none absolute inset-x-3 top-3 z-10 flex flex-wrap gap-1.5">
+        <div className="fashion-product-labels" aria-label="Product labels">
           {product.badge && <span className="fashion-product-badge">{product.badge}</span>}
-          {hasSale && <span className="fashion-product-badge">SALE</span>}
-          {tags.map((tag) => <span key={tag} className="border border-primary/40 bg-background/80 px-2 py-1 text-[8px] uppercase tracking-[0.12em] text-primary backdrop-blur-sm">{tag}</span>)}
+          {hasSale && <span className="fashion-product-badge fashion-product-badge--sale">SALE</span>}
+          {tags.map((tag) => <span key={tag} className="fashion-product-tag">{tag}</span>)}
         </div>
-        <span className="fashion-product-index">/{product.id.toUpperCase()}</span>
-        <span className="fashion-product-arrow"><ArrowUpRight size={16} /></span>
+        <span className="fashion-product-arrow" aria-hidden="true"><ArrowUpRight size={16} /></span>
       </Link>
       <div className="fashion-product-meta">
         <div className="min-w-0">
