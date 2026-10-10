@@ -88,6 +88,21 @@ function Index() {
 
   useEffect(() => {
     let mounted = true;
+    void listPublishedJournalArticles()
+      .then((articles) => {
+        if (mounted) setJournal(articles.slice(0, 3));
+      })
+      .catch(() => {
+        // Keep the homepage usable if the journal service is unavailable.
+        if (mounted) setJournal([]);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
     const params = new URLSearchParams(window.location.search);
     const previewRaw = params.get("content_data");
     if (params.get("content_preview") === "1" && previewRaw) {
