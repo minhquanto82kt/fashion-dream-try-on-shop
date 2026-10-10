@@ -192,21 +192,22 @@ function TryOnStudio({
   return (
     <section className="wearo-ai-card mt-6">
       <div className="wearo-ai-card-header">
-        <span className="wearo-ai-card-title">03 · Virtual Try-On</span>
+        <span className="wearo-ai-card-title">01–04 · Quy trình thử đồ</span>
         <span className="wearo-ai-kicker">AI / IMAGE</span>
       </div>
 
       <div className="wearo-ai-card-body">
         <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
           <div>
-            <span className="wearo-ai-field-label">Ảnh của bạn</span>
+            <span className="wearo-ai-field-label">03 · Tải ảnh của bạn</span>
             <label className="mt-2 flex min-h-[260px] cursor-pointer items-center justify-center border border-[rgba(84,114,140,.18)] bg-[rgba(242,206,174,.10)] p-4 text-center">
               {personPreview ? (
                 <img src={personPreview} alt="Ảnh người dùng đã tải lên" className="max-h-[330px] w-full object-contain" />
               ) : (
                 <span className="text-sm leading-6 text-silver">
-                  Tải ảnh JPG, PNG hoặc WEBP<br />
-                  tối đa 6MB
+                  <strong className="block text-[#54728C]">Chọn ảnh toàn thân</strong>
+                  JPG, PNG hoặc WEBP · tối đa 6MB<br />
+                  Ánh sáng tốt · nền gọn · chỉ một người
                 </span>
               )}
               <input
@@ -216,10 +217,15 @@ function TryOnStudio({
                 onChange={(event) => handlePersonImage(event.target.files?.[0])}
               />
             </label>
+            {personPreview ? <div className="mt-2 flex flex-wrap gap-3 text-xs">
+              <label className="cursor-pointer font-semibold text-[#54728C] underline underline-offset-4">Thay ảnh<input type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={(event) => { handlePersonImage(event.target.files?.[0]); event.currentTarget.value = ""; }} /></label>
+              <button type="button" className="font-semibold text-[#54728C] underline underline-offset-4" onClick={() => { setPersonImage(""); setPersonPreview(""); setResultImage(""); setStatus("idle"); setError(""); }}>Xóa ảnh</button>
+            </div> : null}
+            <p className="mt-2 text-xs leading-5 text-silver">Ảnh được gửi tới pipeline AI để tạo ảnh thử đồ. Tránh tải ảnh nhạy cảm; cách lưu và thời gian lưu phụ thuộc dịch vụ xử lý đang dùng.</p>
           </div>
 
           <div>
-            <label htmlFor="wearo-tryon-product" className="wearo-ai-field-label">Sản phẩm WEARO</label>
+            <label htmlFor="wearo-tryon-product" className="wearo-ai-field-label">02 · Chọn sản phẩm WEARO</label>
             <select
               id="wearo-tryon-product"
               value={productId}
@@ -279,16 +285,17 @@ function TryOnStudio({
         </div>
 
         <div className="mt-7 border-t border-[rgba(84,114,140,.14)] pt-6">
-          <span className="wearo-ai-field-label">Kết quả</span>
+          <span className="wearo-ai-field-label">04 · Kết quả thử đồ</span>
           <div className="mt-2 min-h-[300px] border border-[rgba(84,114,140,.18)] bg-[rgba(242,206,174,.08)] p-4">
             {resultImage ? (
               <img src={resultImage} alt="Kết quả thử đồ ảo WEARO" className="mx-auto max-h-[620px] w-full object-contain" />
             ) : (
               <div className="flex min-h-[270px] items-center justify-center text-center text-sm leading-6 text-silver">
-                {status === "processing" ? "Đang chờ AI hoàn tất kết quả…" : "Kết quả thử đồ ảo sẽ xuất hiện tại đây."}
+                {status === "uploading" ? "Đang gửi ảnh…" : status === "processing" ? "Đang thử đồ…" : status === "failed" ? "Chưa tạo được kết quả. Kiểm tra ảnh và thử lại." : "Chọn sản phẩm, tải ảnh phù hợp rồi bấm “Thử đồ bằng AI”."}
               </div>
             )}
           </div>
+          {resultImage ? <div className="mt-3 flex flex-wrap gap-3"><button type="button" className="wearo-ai-text-action" onClick={handleTryOn} disabled={status === "uploading" || status === "processing"}>Thử lại</button><button type="button" className="wearo-ai-text-action" onClick={() => { setResultImage(""); setStatus("idle"); }}>Đổi sản phẩm</button><button type="button" className="wearo-ai-text-action" onClick={() => { const link = document.createElement("a"); link.href = resultImage; link.download = "wearo-virtual-try-on.png"; link.click(); }}>Lưu ảnh</button></div> : null}
         </div>
       </div>
     </section>
@@ -311,6 +318,7 @@ function AiPage() {
   const [recommendations, setRecommendations] = useState<StylistRecommendation[]>([]);
   const [recommendationsLoading, setRecommendationsLoading] = useState(false);
   const [recommendationsError, setRecommendationsError] = useState("");
+  const [mode, setMode] = useState<"concept" | "tryon">(search.product ? "tryon" : "concept");
 
   useEffect(() => {
     setConsented(window.localStorage.getItem(CONSENT_KEY) === "accepted");
@@ -408,23 +416,27 @@ function AiPage() {
             <header>
               <p className="wearo-ai-kicker">WEARO / AI STUDIO · BETA</p>
               <h1 className="wearo-ai-title wearo-ai-display">
-                AI <span className="wearo-ai-title-accent">Dashboard</span>
+                WEARO <span className="wearo-ai-title-accent">AI Studio</span>
               </h1>
-              <p className="wearo-ai-lede">
-                Chọn phong cách, dịp sử dụng và mô tả mong muốn. WEARO AI Stylist sẽ giúp bạn định hình outfit theo cách của riêng bạn.
-              </p>
+              <p className="wearo-ai-lede">Bắt đầu bằng cách tạo outfit theo phong cách của bạn hoặc chọn một sản phẩm để thử trực tiếp.</p>
             </header>
 
+            <div className="wearo-ai-start-choices" role="group" aria-label="Chọn cách bắt đầu">
+              <button type="button" data-active={mode === "concept"} onClick={() => setMode("concept")}><span>01</span><strong>Tạo outfit với AI</strong><small>Chọn phong cách và dịp sử dụng</small></button>
+              <button type="button" data-active={mode === "tryon"} onClick={() => setMode("tryon")}><span>02</span><strong>Thử một sản phẩm</strong><small>Chọn sản phẩm và tải ảnh của bạn</small></button>
+            </div>
+
+            {mode === "concept" ? <>
             <div className="wearo-ai-grid">
               <section className="wearo-ai-card">
                 <div className="wearo-ai-card-header">
-                  <span className="wearo-ai-card-title">01 · Tạo concept</span>
+                  <span className="wearo-ai-card-title">01 · Chọn phong cách</span>
                   <span className="wearo-ai-kicker">Input</span>
                 </div>
 
                 <div className="wearo-ai-card-body">
                   <div>
-                    <span className="wearo-ai-field-label">Phong cách</span>
+                    <span className="wearo-ai-field-label">01 · Phong cách <small>· chọn một</small></span>
                     <div className="wearo-ai-chip-group">
                       {STYLES.map((item) => (
                         <button key={item} type="button" className="wearo-ai-chip" data-active={style === item} onClick={() => setStyle(item)}>
@@ -435,7 +447,7 @@ function AiPage() {
                   </div>
 
                   <div className="mt-6">
-                    <span className="wearo-ai-field-label">Dịp sử dụng</span>
+                    <span className="wearo-ai-field-label">02 · Dịp sử dụng <small>· chọn một</small></span>
                     <div className="wearo-ai-chip-group">
                       {OCCASIONS.map((item) => (
                         <button key={item} type="button" className="wearo-ai-chip" data-active={occasion === item} onClick={() => setOccasion(item)}>
@@ -453,8 +465,8 @@ function AiPage() {
                   ) : null}
 
                   <div className="mt-6">
-                    <label htmlFor="wearo-ai-brief" className="wearo-ai-field-label">Mô tả outfit</label>
-                    <textarea id="wearo-ai-brief" value={brief} onChange={(event) => setBrief(event.target.value)} className="wearo-ai-textarea" placeholder="Ví dụ: form rộng, tông trung tính, phối cùng sneaker trắng…" />
+                    <label htmlFor="wearo-ai-brief" className="wearo-ai-field-label">Mô tả outfit <small>· không bắt buộc</small></label>
+                    <textarea id="wearo-ai-brief" value={brief} onChange={(event) => setBrief(event.target.value)} className="wearo-ai-textarea" placeholder="Ví dụ: áo form rộng, màu navy, quần ống suông và sneaker trắng…" />
                   </div>
 
                   <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
@@ -496,7 +508,7 @@ function AiPage() {
               </aside>
             </div>
 
-            <section className="wearo-ai-card mt-6" aria-labelledby="wearo-ai-recommendations-title">
+            {result ? <section className="wearo-ai-card mt-6" aria-labelledby="wearo-ai-recommendations-title">
               <div className="wearo-ai-card-header">
                 <span id="wearo-ai-recommendations-title" className="wearo-ai-card-title">03 · Sản phẩm AI đề xuất</span>
                 <span className="wearo-ai-kicker">CATALOG / REAL DATA</span>
@@ -542,8 +554,8 @@ function AiPage() {
                   </div>
                 )}
               </div>
-            </section>
-
+            </section> : null}
+            </> : (
             <div className="mt-6">
               {productsLoading ? (
                 <section className="wearo-ai-card">
@@ -557,6 +569,7 @@ function AiPage() {
                 <TryOnStudio products={products} initialProductId={search.product} />
               )}
             </div>
+            )}
           </div>
         </main>
       )}
