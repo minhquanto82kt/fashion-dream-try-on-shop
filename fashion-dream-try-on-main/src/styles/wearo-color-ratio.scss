@@ -1,0 +1,138 @@
+/* WEARO — target color-ratio system
+   Visual allocation target: white 30%, slate blue 20%, coral peach 10%.
+   Remaining 40% is shared by the secondary blue, warm peach, dusty beige,
+   and neutral text/borders. Ratios are design targets, not pixel-measured analytics.
+*/
+:root {
+  --wearo-ratio-white: 30%;
+  --wearo-ratio-slate: 20%;
+  --wearo-ratio-coral-peach: 10%;
+  --wearo-ratio-supporting: 40%;
+
+  /* Keep the established five-color brand palette intact. */
+  --wearo-brand-primary: #54728C !important;
+  --wearo-brand-secondary: #7794A6 !important;
+  --wearo-brand-peach: #F2CEAE !important;
+  --wearo-brand-beige: #D9BBA9 !important;
+  --wearo-brand-coral: #F2AD94 !important;
+
+  /* White is the dominant canvas; slate is the main brand/action color. */
+  --wearo-white: #FFFFFF;
+  --wearo-off-white: #FFFFFF;
+  --page-background: #FFFFFF !important;
+  --surface: #FFFFFF !important;
+  --background: #FFFFFF !important;
+  --foreground: #171717 !important;
+  --text-primary: #171717 !important;
+  --brand-primary: #54728C !important;
+  --brand-secondary: #7794A6 !important;
+  --brand-accent: #F2AD94 !important;
+  --primary: #54728C !important;
+  --primary-foreground: #FFFFFF !important;
+  --secondary: #7794A6 !important;
+  --secondary-foreground: #FFFFFF !important;
+  --accent: #F2AD94 !important;
+  --accent-foreground: #171717 !important;
+  --card: #FFFFFF !important;
+  --card-foreground: #171717 !important;
+  --popover: #FFFFFF !important;
+  --popover-foreground: #171717 !important;
+  --input: #FFFFFF !important;
+  --ring: #54728C !important;
+  --border: rgba(84, 114, 140, .22) !important;
+}
+
+/* Public storefront only: preserve admin layout and component structure. */
+.fashion-site {
+  background: #FFFFFF !important;
+  color: #171717 !important;
+}
+.fashion-site .fashion-nav {
+  background: rgba(255, 255, 255, .94) !important;
+  color: #171717 !important;
+  border-bottom-color: rgba(84, 114, 140, .22) !important;
+}
+.fashion-site .fashion-nav__links a:hover,
+.fashion-site .fashion-nav__links a.is-active,
+.fashion-site .fashion-brand__name span,
+.fashion-site .fashion-brand__meta,
+.fashion-site .fashion-eyebrow,
+.fashion-site .fashion-section-number,
+.fashion-site .fashion-text-link {
+  color: #54728C !important;
+}
+.fashion-site .fashion-hero {
+  background: #FFFFFF !important;
+  color: #171717 !important;
+}
+.fashion-site .fashion-hero__copy,
+.fashion-site .fashion-flow,
+.fashion-site .fashion-ai-feature,
+.fashion-site .fashion-section-head {
+  color: #171717;
+}
+.fashion-site .fashion-hero__lede,
+.fashion-site .fashion-ai-feature__copy > p:not(.fashion-eyebrow),
+.fashion-site .fashion-intro-copy {
+  color: #171717;
+}
+.fashion-site .fashion-btn,
+.fashion-site .fashion-ai-btn:hover,
+.fashion-site .fashion-category-filter:hover,
+.fashion-site .fashion-category-filter.is-active {
+  background: #54728C !important;
+  border-color: #54728C !important;
+  color: #FFFFFF !important;
+}
+.fashion-site .fashion-btn--ghost {
+  background: transparent !important;
+  color: #54728C !important;
+  border-color: #54728C !important;
+}
+.fashion-site .fashion-btn--light {
+  background: #F2AD94 !important;
+  border-color: #F2AD94 !important;
+  color: #171717 !important;
+}
+.fashion-site .fashion-cart-btn span,
+.fashion-site .fashion-product-badge,
+.fashion-site .fashion-product-badge--olive {
+  background: #F2AD94 !important;
+  border-color: #F2AD94 !important;
+  color: #171717 !important;
+}
+.fashion-site .fashion-products-section {
+  background: #FFFFFF !important;
+  color: #171717 !important;
+}
+.fashion-site .fashion-product-image {
+  background: #F7F8F8;
+  border-color: rgba(84, 114, 140, .22);
+}
+.fashion-site .fashion-product-price {
+  color: #54728C !important;
+}
+.fashion-site .fashion-editorial {
+  background: #54728C !important;
+  color: #FFFFFF !important;
+}
+.fashion-site .fashion-editorial .fashion-accent {
+  color: #F2AD94 !important;
+}
+.fashion-site .fashion-hero__label {
+  background: #F2AD94 !important;
+  color: #171717 !important;
+}
+.fashion-site .fashion-hero__art {
+  border-left-color: #54728C !important;
+  box-shadow: 8px 8px 0 #F2AD94 !important;
+}
+.fashion-site .fashion-feature-list,
+.fashion-site .fashion-flow__steps,
+.fashion-site .fashion-product-meta {
+  border-color: rgba(84, 114, 140, .22);
+}
+.fashion-site .fashion-flow__steps span,
+.fashion-site .fashion-feature-list b {
+  color: #54728C !important;
+}
