@@ -136,3 +136,184 @@
 .fashion-site .fashion-feature-list b {
   color: #54728C !important;
 }
+
+
+/* ------------------------------------------------------------------
+   WEARO color-balance refinement
+   Reduce the flat all-white impression with alternating warm/cool zones.
+   Keep white as breathing room, not the background of every section.
+   ------------------------------------------------------------------ */
+:root {
+  --wearo-off-white: #F8F6F2;
+  --page-background: #F2CEAE !important;
+  --surface: #F8F6F2 !important;
+  --background: #F2CEAE !important;
+  --card: #F8F6F2 !important;
+  --popover: #F8F6F2 !important;
+  --border: rgba(84, 114, 140, .24) !important;
+}
+
+/* Warm canvas around the storefront, with clean readable content surfaces. */
+html,
+body {
+  background: #F2CEAE !important;
+  color: #171717;
+}
+.fashion-site {
+  background: #F2CEAE !important;
+  color: #171717 !important;
+}
+
+/* Header / index rail: warm-tinted rather than pure white. */
+.fashion-site .fashion-nav,
+.fashion-canvas-nav {
+  background: rgba(242, 206, 174, .96) !important;
+  color: #54728C !important;
+  border-color: rgba(84, 114, 140, .24) !important;
+}
+.fashion-site .fashion-nav__inner {
+  background: transparent !important;
+}
+
+/* Hero: cream-beige field + slate typography and peach micro accents. */
+.fashion-site .fashion-hero {
+  background: linear-gradient(125deg, #F8F6F2 0%, #F2CEAE 76%, #D9BBA9 100%) !important;
+  color: #171717 !important;
+}
+.fashion-site .fashion-hero__copy {
+  background: transparent !important;
+}
+.fashion-site .fashion-hero__art {
+  background: #D9BBA9 !important;
+  border-color: rgba(84, 114, 140, .34) !important;
+  box-shadow: 10px 10px 0 #F2AD94 !important;
+}
+.fashion-site .fashion-hero__label {
+  background: #F2AD94 !important;
+  color: #171717 !important;
+}
+.fashion-site .fashion-hero__badge {
+  background: #54728C !important;
+  color: #FFFFFF !important;
+}
+
+/* Product discovery becomes a soft peach section instead of another white slab. */
+.fashion-site .fashion-products-section {
+  background: #F2CEAE !important;
+  color: #171717 !important;
+  border-top: 1px solid rgba(84, 114, 140, .18);
+  border-bottom: 1px solid rgba(84, 114, 140, .18);
+}
+.fashion-site .fashion-products-section .fashion-product-card,
+.fashion-site .fashion-products-section [class*="product-card"] {
+  background: #F8F6F2 !important;
+  border-color: rgba(84, 114, 140, .22) !important;
+  box-shadow: 0 8px 22px rgba(84, 114, 140, .10);
+}
+.fashion-site .fashion-product-image {
+  background: #D9BBA9 !important;
+  border-color: rgba(84, 114, 140, .20) !important;
+}
+.fashion-site .fashion-product-price {
+  color: #54728C !important;
+}
+
+/* Trust strip and AI sections supply the deeper slate blocks for rhythm. */
+.fashion-site .wearo-mvp-trust {
+  background: #54728C !important;
+  color: #FFFFFF !important;
+}
+.fashion-site .fashion-ai-feature {
+  background: linear-gradient(135deg, #54728C 0%, #7794A6 100%) !important;
+  color: #FFFFFF !important;
+  border-color: rgba(255, 255, 255, .18) !important;
+}
+.fashion-site .fashion-ai-feature h2,
+.fashion-site .fashion-ai-feature h3,
+.fashion-site .fashion-ai-feature strong {
+  color: #FFFFFF !important;
+}
+.fashion-site .fashion-ai-feature .fashion-eyebrow,
+.fashion-site .fashion-ai-feature a {
+  color: #F2CEAE !important;
+}
+
+/* Editorial section is the warm highlight, not another plain white area. */
+.fashion-site .fashion-editorial {
+  background: linear-gradient(125deg, #54728C 0%, #7794A6 58%, #D9BBA9 100%) !important;
+  color: #FFFFFF !important;
+  border-top: 3px solid #F2AD94;
+  border-bottom: 3px solid #F2AD94;
+}
+.fashion-site .fashion-editorial h2,
+.fashion-site .fashion-editorial p {
+  color: #FFFFFF !important;
+}
+.fashion-site .fashion-editorial .fashion-accent {
+  color: #F2AD94 !important;
+}
+
+/* Flow / feature rows use alternating warm surfaces and slate details. */
+.fashion-site .fashion-flow {
+  background: #D9BBA9 !important;
+  color: #171717 !important;
+}
+.fashion-site .fashion-flow__steps > *,
+.fashion-site .fashion-feature-list > * {
+  border-color: rgba(84, 114, 140, .25) !important;
+}
+.fashion-site .fashion-flow__steps span,
+.fashion-site .fashion-feature-list b {
+  color: #54728C !important;
+}
+
+/* Footer remains the strongest anchor, matching the slate brand color. */
+.wearo-footer,
+.fashion-footer,
+.site-footer {
+  background: #54728C !important;
+  color: #FFFFFF !important;
+  border-top: 3px solid #F2AD94 !important;
+}
+.wearo-footer h1,
+.wearo-footer h2,
+.wearo-footer h3,
+.wearo-footer p,
+.wearo-footer a,
+.wearo-footer strong,
+.fashion-footer,
+.site-footer {
+  color: #FFFFFF;
+}
+.wearo-footer .wearo-footer__newsletter {
+  background: #7794A6 !important;
+  border-color: rgba(255,255,255,.24) !important;
+}
+.wearo-footer .wearo-footer__newsletter-form button {
+  background: #F2AD94 !important;
+  color: #171717 !important;
+  border-color: #F2AD94 !important;
+}
+
+/* Keep fields readable while carrying the warm palette. */
+.fashion-site input,
+.fashion-site textarea,
+.fashion-site select {
+  background-color: #F8F6F2 !important;
+  color: #171717 !important;
+  border-color: rgba(84, 114, 140, .28) !important;
+}
+.fashion-site input::placeholder,
+.fashion-site textarea::placeholder {
+  color: rgba(23, 23, 23, .56) !important;
+}
+
+/* Mobile retains the same section rhythm without horizontal overflow. */
+@media (max-width: 700px) {
+  .fashion-site .fashion-hero {
+    background: linear-gradient(160deg, #F8F6F2 0%, #F2CEAE 100%) !important;
+  }
+  .fashion-site .fashion-products-section {
+    background: #F2CEAE !important;
+  }
+}
