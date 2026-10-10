@@ -112,3 +112,113 @@ body:has(.wearo-ai-phase2) .wearo-ai-assistant-links a { color: var(--ai-blue); 
   body:has(.wearo-ai-phase2) .wearo-ai-thread-viewport { padding: 14px; }
   body:has(.wearo-ai-phase2) .wearo-ai-assistant-links { flex-direction: column; }
 }
+
+
+/* AI Studio journey: clear first action, compact result states, accessible controls. */
+body:has(.wearo-ai-phase2) .wearo-ai-shell {
+  width: min(1120px, calc(100% - 40px));
+  padding-top: 30px;
+}
+body:has(.wearo-ai-phase2) .wearo-ai-title {
+  font-size: clamp(2.2rem, 4vw, 3.6rem);
+  line-height: 1.02;
+}
+body:has(.wearo-ai-phase2) .wearo-ai-lede {
+  max-width: 680px;
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.65;
+}
+body:has(.wearo-ai-phase2) .wearo-ai-start-choices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 22px 0 18px;
+}
+body:has(.wearo-ai-phase2) .wearo-ai-start-choices button {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  align-items: center;
+  gap: 3px 12px;
+  min-height: 82px;
+  border: 1px solid rgba(84,114,140,.22);
+  background: #fff;
+  padding: 16px;
+  text-align: left;
+  transition: border-color .18s ease, background .18s ease, transform .18s ease;
+}
+body:has(.wearo-ai-phase2) .wearo-ai-start-choices button > span {
+  grid-row: span 2;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  background: rgba(242,206,174,.45);
+  color: #54728C;
+  font-size: 11px;
+  font-weight: 700;
+}
+body:has(.wearo-ai-phase2) .wearo-ai-start-choices button strong {
+  color: #171717;
+  font-size: 14px;
+}
+body:has(.wearo-ai-phase2) .wearo-ai-start-choices button small {
+  color: #687985;
+  font-size: 11px;
+  line-height: 1.5;
+}
+body:has(.wearo-ai-phase2) .wearo-ai-start-choices button[data-active="true"] {
+  border-color: #54728C;
+  background: linear-gradient(110deg, rgba(242,206,174,.28), #fff 72%);
+  box-shadow: inset 3px 0 #54728C;
+}
+body:has(.wearo-ai-phase2) .wearo-ai-start-choices button:hover {
+  border-color: #54728C;
+  transform: translateY(-1px);
+}
+body:has(.wearo-ai-phase2) .wearo-ai-start-choices button:focus-visible,
+body:has(.wearo-ai-phase2) .wearo-ai-text-action:focus-visible {
+  outline: 2px solid #54728C;
+  outline-offset: 3px;
+}
+body:has(.wearo-ai-phase2) .wearo-ai-text-action {
+  border: 1px solid rgba(84,114,140,.35);
+  padding: 8px 12px;
+  color: #54728C;
+  font-size: 11px;
+  font-weight: 600;
+}
+body:has(.wearo-ai-phase2) .wearo-ai-text-action:disabled {
+  cursor: not-allowed;
+  opacity: .45;
+}
+body:has(.wearo-ai-phase2) .wearo-ai-result-empty {
+  min-height: 190px;
+}
+body:has(.wearo-ai-phase2) .wearo-ai-chip:focus-visible,
+body:has(.wearo-ai-phase2) .wearo-ai-generate:focus-visible {
+  outline: 2px solid #54728C;
+  outline-offset: 3px;
+}
+@media (max-width: 640px) {
+  body:has(.wearo-ai-phase2) .wearo-ai-shell {
+    width: calc(100% - 24px);
+    padding-top: 22px;
+  }
+  body:has(.wearo-ai-phase2) .wearo-ai-start-choices {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  body:has(.wearo-ai-phase2) .wearo-ai-start-choices button {
+    min-height: 72px;
+    padding: 13px;
+  }
+  body:has(.wearo-ai-phase2) .wearo-ai-start-choices button strong {
+    font-size: 13px;
+  }
+  body:has(.wearo-ai-phase2) .wearo-ai-generate {
+    width: 100%;
+    min-height: 44px;
+  }
+}
