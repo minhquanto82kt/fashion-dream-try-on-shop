@@ -317,3 +317,93 @@ body {
     background: #F2CEAE !important;
   }
 }
+
+
+/* Journal cards: keep title and meta description visible on the thumbnail. */
+.wearo-reference-journal .wearo-reference-journal-grid > article {
+  min-width: 0;
+}
+.wearo-reference-journal .wearo-reference-journal-image {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 4 / 4.5;
+  border-radius: 10px;
+  isolation: isolate;
+  background: #54728C;
+  color: #FFFFFF;
+  text-decoration: none;
+}
+.wearo-reference-journal .wearo-reference-journal-image > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .45s ease;
+}
+.wearo-reference-journal .wearo-reference-journal-image:hover > img {
+  transform: scale(1.04);
+}
+.wearo-reference-journal .wearo-reference-journal-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 9px;
+  padding: clamp(16px, 2vw, 25px);
+  color: #FFFFFF;
+  background: linear-gradient(180deg, rgba(15, 25, 31, 0) 20%, rgba(15, 25, 31, .28) 45%, rgba(15, 25, 31, .88) 100%);
+}
+.wearo-reference-journal .wearo-reference-journal-overlay > span:first-child {
+  align-self: flex-start;
+  padding: 5px 8px;
+  border: 1px solid rgba(255,255,255,.6);
+  border-radius: 3px;
+  color: #FFFFFF;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.wearo-reference-journal .wearo-reference-journal-overlay h3 {
+  margin: 0;
+  color: #FFFFFF;
+  font-size: clamp(17px, 1.7vw, 23px);
+  font-weight: 700;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+.wearo-reference-journal .wearo-reference-journal-overlay p {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 0;
+  color: rgba(255,255,255,.9);
+  font-size: 12px;
+  line-height: 1.55;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+.wearo-reference-journal .wearo-reference-journal-read {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 3px;
+  color: #F2AD94 !important;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .1em;
+}
+@media (max-width: 700px) {
+  .wearo-reference-journal .wearo-reference-journal-image {
+    aspect-ratio: 4 / 4.5;
+  }
+  .wearo-reference-journal .wearo-reference-journal-overlay {
+    padding: 14px;
+    gap: 7px;
+  }
+  .wearo-reference-journal .wearo-reference-journal-overlay p {
+    -webkit-line-clamp: 2;
+  }
+}
