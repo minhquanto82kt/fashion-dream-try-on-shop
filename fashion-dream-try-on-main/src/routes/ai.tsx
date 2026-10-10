@@ -537,13 +537,14 @@ function AiPage() {
                           </div>
                           {price > 0 ? <p className="mt-4 text-sm font-semibold text-[#171717]">{price.toLocaleString("vi-VN")} ₫</p> : null}
                           <p className="mt-3 min-h-[60px] text-xs leading-5 text-silver">{item.reason}</p>
-                          <Link
-                            to="/product/$id"
-                            params={{ id: productId }}
-                            className="mt-4 inline-flex w-full items-center justify-center border border-[#54728C] px-3 py-2 text-xs font-semibold uppercase tracking-[.12em] text-[#54728C] transition hover:bg-[#54728C] hover:text-white"
-                          >
-                            Xem sản phẩm →
-                          </Link>
+                          <div className="mt-4 grid gap-2">
+                            <Link to="/ai" search={{ product: productId }} className="inline-flex w-full items-center justify-center bg-[#54728C] px-3 py-2.5 text-xs font-semibold uppercase tracking-[.12em] text-white transition hover:bg-[#45647A]">Thử sản phẩm bằng AI →</Link>
+                            <Link
+                              to="/product/$id"
+                              params={{ id: productId }}
+                              className="inline-flex w-full items-center justify-center border border-[#54728C] px-3 py-2 text-xs font-semibold uppercase tracking-[.12em] text-[#54728C] transition hover:bg-[#54728C] hover:text-white"
+                            >Xem chi tiết sản phẩm</Link>
+                          </div>
                         </article>
                       );
                     })}
