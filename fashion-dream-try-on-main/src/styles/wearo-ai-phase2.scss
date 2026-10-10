@@ -222,3 +222,44 @@ body:has(.wearo-ai-phase2) .wearo-ai-generate:focus-visible {
     min-height: 44px;
   }
 }
+
+
+/* Header spacing fix: prevent the page title from sitting beneath the sticky site navigation. */
+body:has(.wearo-ai-phase2) .wearo-ai-shell {
+  box-sizing: border-box;
+  padding-top: 88px;
+}
+body:has(.wearo-ai-phase2) .wearo-ai-shell > header {
+  position: relative;
+  display: block;
+  min-width: 0;
+  padding-top: 4px;
+}
+body:has(.wearo-ai-phase2) .wearo-ai-title {
+  display: block;
+  max-width: 100%;
+  margin: 12px 0 0;
+  padding: 0 0 0.12em;
+  font-size: clamp(2.1rem, 4.4vw, 3.65rem);
+  line-height: 1.14;
+  overflow: visible;
+  overflow-wrap: anywhere;
+}
+body:has(.wearo-ai-phase2) .wearo-ai-title-accent {
+  white-space: normal;
+}
+body:has(.wearo-ai-phase2) .wearo-ai-lede {
+  margin-top: 10px;
+}
+body:has(.wearo-ai-phase2) .wearo-ai-start-choices {
+  margin-top: 20px;
+}
+@media (max-width: 640px) {
+  body:has(.wearo-ai-phase2) .wearo-ai-shell {
+    padding-top: 72px;
+  }
+  body:has(.wearo-ai-phase2) .wearo-ai-title {
+    font-size: clamp(2rem, 8.5vw, 2.8rem);
+    line-height: 1.12;
+  }
+}
