@@ -213,7 +213,7 @@ function Index() {
       <section id="journal" className="wearo-reference-journal">
         <div className="wearo-reference-container">
           <div className="wearo-reference-journal-head"><div><span className="wearo-reference-section-label">INSIGHTS & STYLES</span><h2>WEARO JOURNAL</h2></div><Link to="/journal">ĐỌC THÊM →</Link></div>
-          <div className="wearo-reference-journal-grid">{journal.map((article) => <article key={article.id}><Link to="/journal/$slug" params={{ slug: article.slug }} className="wearo-reference-journal-image">{article.image_url ? <img src={article.image_url} alt={article.title} loading="lazy" /> : <span>WEARO / JOURNAL</span>}</Link><div className="wearo-reference-journal-copy"><span>{article.category}</span><h3><Link to="/journal/$slug" params={{ slug: article.slug }}>{article.title}</Link></h3><p>{article.excerpt}</p></div></article>)}</div>
+          <div className="wearo-reference-journal-grid">{journal.map((article) => <article key={article.id}><Link to="/journal/$slug" params={{ slug: article.slug }} className="wearo-reference-journal-image" aria-label={article.title}>{article.image_url ? <img src={article.image_url} alt={article.title} loading="lazy" /> : <span>WEARO / JOURNAL</span>}<div className="wearo-reference-journal-overlay"><span>{article.category}</span><h3>{article.title}</h3><p>{article.excerpt}</p><span className="wearo-reference-journal-read">ĐỌC BÀI <span aria-hidden="true">↗</span></span></div></Link></article>)}</div>
         </div>
       </section>
 
