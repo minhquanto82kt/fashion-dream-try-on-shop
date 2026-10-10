@@ -354,6 +354,7 @@ function AiPage() {
     const userBrief = brief.trim() || "Hãy đề xuất một outfit phù hợp với phong cách và dịp đã chọn.";
     setIsLoading(true);
     setError("");
+    setResult("");
     setRecommendations([]);
     setRecommendationsError("");
 
@@ -431,7 +432,7 @@ function AiPage() {
               <section className="wearo-ai-card">
                 <div className="wearo-ai-card-header">
                   <span className="wearo-ai-card-title">01 · Chọn phong cách</span>
-                  <span className="wearo-ai-kicker">Input</span>
+                  <span className="wearo-ai-kicker">BƯỚC 1</span>
                 </div>
 
                 <div className="wearo-ai-card-body">
@@ -480,8 +481,8 @@ function AiPage() {
 
               <aside className="wearo-ai-card wearo-ai-result">
                 <div className="wearo-ai-card-header">
-                  <span className="wearo-ai-card-title">02 · AI Result</span>
-                  <span className="wearo-ai-kicker">Output</span>
+                  <span className="wearo-ai-card-title">02 · Kết quả concept</span>
+                  <span className="wearo-ai-kicker">BƯỚC 2</span>
                 </div>
 
                 <div className="wearo-ai-card-body">
@@ -496,7 +497,7 @@ function AiPage() {
                     </div>
                   ) : (
                     <div className="wearo-ai-result-empty">
-                      <div><div className="wearo-ai-result-mark">✦</div><h3>Concept outfit của bạn sẽ ở đây</h3><p>Chọn style, dịp và brief ở bên trái rồi bấm “Tạo concept”.</p></div>
+                      <div><div className="wearo-ai-result-mark">{isLoading ? "…" : "✦"}</div><h3>{isLoading ? "Đang tạo outfit…" : "Sẵn sàng tạo concept"}</h3><p>{isLoading ? "WEARO AI Stylist đang xây dựng gợi ý dựa trên lựa chọn của bạn." : "Chọn một phong cách và một dịp, thêm mô tả nếu muốn, rồi bấm “Tạo concept”."}</p></div>
                     </div>
                   )}
 
